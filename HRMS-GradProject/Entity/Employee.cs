@@ -21,13 +21,15 @@ namespace HRMS_GradProject.Entity
         public bool isActive { get; set; }
 
         // Relationships
-
         public int DepartmentId { get; set; }
-
         public Department Department { get; set; }
-
         public int userId { get; set; }
         public User User { get; set; }
+        public ICollection<Attendance> Attendances { get; set; } = new List<Attendance>();
+        public ICollection<Salary> Salaries { get; set; } = new List<Salary>();
+        public ICollection<LeaveRequest> leaveRequests { get; set; } = new List<LeaveRequest>();
+
+        
 
 
 
