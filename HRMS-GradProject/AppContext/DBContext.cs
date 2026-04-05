@@ -9,7 +9,13 @@ namespace HRMS_GradProject.AppContext
         {
 
         }
+       
+        DbSet<Position> Positions { get; set; }
 
+        DbSet<LeaveRequest> LeaveRequests { get; set; }
+
+        DbSet<Attendance> Attendances { get; set; }
+        DbSet<Salary> Salaries { get; set; }
 
         DbSet<Employee> Employees { get; set; }
 
@@ -47,6 +53,31 @@ namespace HRMS_GradProject.AppContext
                .HasForeignKey(e => e.DepartmentId)
                .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<LeaveRequest>()
+               .HasOne(l => l.employee)
+               .WithMany(e => e.leaveRequests)
+               .HasForeignKey(e =>e.employeeId)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<LeaveRequest>()
+               .HasOne(l => l.user)
+               .WithMany(u => u.LeaveRequests)
+               .HasForeignKey(e => e.approved_by)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Attendance>()
+               .HasOne(a => a.employee)
+               .WithMany(e => e.Attendances)
+               .HasForeignKey(e => e.employeeId)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Salary>()
+               .HasOne(s => s.employee)
+               .WithMany(e => e.Salaries)
+               .HasForeignKey(e => e.employeeId)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            
 
 
 
