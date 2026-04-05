@@ -12,7 +12,9 @@ namespace HRMS_GradProject.Entity
         public string location { get; set; }
 
         // Relationships
-        public ICollection<Employee> Employees { get; set; } 
+        public ICollection<Employee> Employees { get; set; } = new List<Employee>();
+
+        public ICollection<Position> Positions { get; set; } = new List<Position>();
 
 
 

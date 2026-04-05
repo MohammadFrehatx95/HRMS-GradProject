@@ -41,6 +41,12 @@ namespace HRMS_GradProject.AppContext
                .HasForeignKey<User>(u => u.EmployeeId)
                .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Position>()
+               .HasOne(p => p.Department)
+               .WithMany(e => e.Positions)
+               .HasForeignKey(e => e.DepartmentId)
+               .OnDelete(DeleteBehavior.Restrict);
+
 
 
 
