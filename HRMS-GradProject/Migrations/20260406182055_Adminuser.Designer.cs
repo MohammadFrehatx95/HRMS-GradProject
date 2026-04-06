@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HRMS_GradProject.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20260406161701_adminuser")]
-    partial class adminuser
+    [Migration("20260406182055_Adminuser")]
+    partial class Adminuser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -117,6 +117,9 @@ namespace HRMS_GradProject.Migrations
                     b.HasIndex("DepartmentId");
 
                     b.HasIndex("PositionId");
+
+                    b.HasIndex("userId")
+                        .IsUnique();
 
                     b.ToTable("Employees");
                 });
@@ -244,9 +247,6 @@ namespace HRMS_GradProject.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("EmployeeId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text");
@@ -260,9 +260,6 @@ namespace HRMS_GradProject.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId")
-                        .IsUnique();
 
                     b.ToTable("Users");
 
@@ -300,7 +297,15 @@ namespace HRMS_GradProject.Migrations
                         .WithMany("Employees")
                         .HasForeignKey("PositionId");
 
+                    b.HasOne("HRMS_GradProject.Entity.User", "User")
+                        .WithOne("Employee")
+                        .HasForeignKey("HRMS_GradProject.Entity.Employee", "userId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Department");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("HRMS_GradProject.Entity.LeaveRequest", b =>
@@ -344,16 +349,6 @@ namespace HRMS_GradProject.Migrations
                     b.Navigation("employee");
                 });
 
-            modelBuilder.Entity("HRMS_GradProject.Entity.User", b =>
-                {
-                    b.HasOne("HRMS_GradProject.Entity.Employee", "Employee")
-                        .WithOne("User")
-                        .HasForeignKey("HRMS_GradProject.Entity.User", "EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Employee");
-                });
-
             modelBuilder.Entity("HRMS_GradProject.Entity.Department", b =>
                 {
                     b.Navigation("Employees");
@@ -367,9 +362,6 @@ namespace HRMS_GradProject.Migrations
 
                     b.Navigation("Salaries");
 
-                    b.Navigation("User")
-                        .IsRequired();
-
                     b.Navigation("leaveRequests");
                 });
 
@@ -380,6 +372,9 @@ namespace HRMS_GradProject.Migrations
 
             modelBuilder.Entity("HRMS_GradProject.Entity.User", b =>
                 {
+                    b.Navigation("Employee")
+                        .IsRequired();
+
                     b.Navigation("LeaveRequests");
                 });
 #pragma warning restore 612, 618

@@ -13,3 +13,9 @@ namespace HRMS_GradProject.Controllers
 
     }
 }
+
+//repository pattern 
+// Generic repository => CRUD operations for all entities  => Clean Artitecture 
+// Auto Mapper => DTOs => Data Transfer Objects => Avoid exposing internal data structures => Security and flexibility
+
+

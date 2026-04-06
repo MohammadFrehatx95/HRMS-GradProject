@@ -13,8 +13,8 @@
         public string Role { get; set; }
 
         // Relationships
-        public int? EmployeeId { get; set; }
-        public Employee Employee { get; set; }
+        
+        public Employee Employee { get; set; } 
         public ICollection<LeaveRequest> LeaveRequests { get; set; } = new List<LeaveRequest>();
     }
 }
