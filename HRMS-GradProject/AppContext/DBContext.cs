@@ -35,8 +35,8 @@ namespace HRMS_GradProject.AppContext
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<User>()
-                .HasOne(u=>u.Employee)
-                .WithOne(e=>e.User)
+                .HasOne(u => u.Employee)
+                .WithOne(e => e.User)
                 .HasForeignKey<Employee>(e => e.userId)
 
                 .OnDelete(DeleteBehavior.Restrict);
@@ -56,7 +56,7 @@ namespace HRMS_GradProject.AppContext
             modelBuilder.Entity<LeaveRequest>()
                .HasOne(l => l.employee)
                .WithMany(e => e.leaveRequests)
-               .HasForeignKey(e =>e.employeeId)
+               .HasForeignKey(e => e.employeeId)
                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<LeaveRequest>()
@@ -77,7 +77,25 @@ namespace HRMS_GradProject.AppContext
                .HasForeignKey(e => e.employeeId)
                .OnDelete(DeleteBehavior.Restrict);
 
-            
+
+            modelBuilder.Entity<User>()
+                .HasData(
+                    new User
+                    {
+                        Id = 1,
+                        Username = "Abood",
+                        Email = "Admin123@Gmail.com",
+                        PasswordHash = "Admin123",
+                        Role = "Admin"
+                      
+                    });
+
+         
+
+
+
+
+
 
 
 
@@ -85,10 +103,5 @@ namespace HRMS_GradProject.AppContext
 
 
         }
-
-
-
-
-
     }
 }
