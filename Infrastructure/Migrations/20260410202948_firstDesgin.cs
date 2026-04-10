@@ -4,10 +4,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace HRMS_GradProject.Migrations
+namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class FristDesginDB : Migration
+    public partial class firstDesgin : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,12 +18,28 @@ namespace HRMS_GradProject.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    location = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Location = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Departments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Username = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    PasswordHash = table.Column<string>(type: "text", nullable: false),
+                    Role = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -32,9 +48,9 @@ namespace HRMS_GradProject.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    title = table.Column<string>(type: "text", nullable: false),
-                    salary_min = table.Column<decimal>(type: "numeric", nullable: false),
-                    salary_max = table.Column<decimal>(type: "numeric", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    SalaryMin = table.Column<decimal>(type: "numeric", nullable: false),
+                    SalaryMax = table.Column<decimal>(type: "numeric", nullable: false),
                     DepartmentId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -54,14 +70,14 @@ namespace HRMS_GradProject.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    firstName = table.Column<string>(type: "text", nullable: false),
-                    lastName = table.Column<string>(type: "text", nullable: false),
-                    email = table.Column<string>(type: "text", nullable: false),
-                    phoneNumber = table.Column<string>(type: "text", nullable: false),
-                    hireDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    isActive = table.Column<bool>(type: "boolean", nullable: false),
+                    FirstName = table.Column<string>(type: "text", nullable: false),
+                    LastName = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    HireDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     DepartmentId = table.Column<int>(type: "integer", nullable: false),
-                    userId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
                     PositionId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
@@ -78,6 +94,12 @@ namespace HRMS_GradProject.Migrations
                         column: x => x.PositionId,
                         principalTable: "Positions",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Employees_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -86,66 +108,16 @@ namespace HRMS_GradProject.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    clock_in = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
-                    clock_out = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
-                    employeeId = table.Column<int>(type: "integer", nullable: false)
+                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ClockIn = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
+                    ClockOut = table.Column<TimeOnly>(type: "time without time zone", nullable: true),
+                    EmployeeId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Attendances", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Attendances_Employees_employeeId",
-                        column: x => x.employeeId,
-                        principalTable: "Employees",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Salaries",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    base_amount = table.Column<decimal>(type: "numeric", nullable: false),
-                    allowances = table.Column<decimal>(type: "numeric", nullable: false),
-                    deductions = table.Column<decimal>(type: "numeric", nullable: false),
-                    gross_amount = table.Column<decimal>(type: "numeric", nullable: false),
-                    net_amount = table.Column<decimal>(type: "numeric", nullable: false),
-                    Month = table.Column<int>(type: "integer", nullable: false),
-                    Year = table.Column<int>(type: "integer", nullable: false),
-                    effective_date = table.Column<decimal>(type: "numeric", nullable: false),
-                    employeeId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Salaries", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Salaries_Employees_employeeId",
-                        column: x => x.employeeId,
-                        principalTable: "Employees",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Username = table.Column<string>(type: "text", nullable: false),
-                    Email = table.Column<string>(type: "text", nullable: false),
-                    PasswordHash = table.Column<string>(type: "text", nullable: false),
-                    Role = table.Column<string>(type: "text", nullable: false),
-                    EmployeeId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Users_Employees_EmployeeId",
+                        name: "FK_Attendances_Employees_EmployeeId",
                         column: x => x.EmployeeId,
                         principalTable: "Employees",
                         principalColumn: "Id",
@@ -158,35 +130,67 @@ namespace HRMS_GradProject.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    leaveType = table.Column<string>(type: "text", nullable: false),
-                    startDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    endDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    status = table.Column<string>(type: "text", nullable: false),
-                    rejectionReason = table.Column<string>(type: "text", nullable: false),
-                    employeeId = table.Column<int>(type: "integer", nullable: false),
-                    approved_by = table.Column<int>(type: "integer", nullable: false)
+                    LeaveType = table.Column<int>(type: "integer", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    RejectionReason = table.Column<string>(type: "text", nullable: true),
+                    EmployeeId = table.Column<int>(type: "integer", nullable: false),
+                    ApprovedBy = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_LeaveRequests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_LeaveRequests_Employees_employeeId",
-                        column: x => x.employeeId,
+                        name: "FK_LeaveRequests_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
                         principalTable: "Employees",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_LeaveRequests_Users_approved_by",
-                        column: x => x.approved_by,
+                        name: "FK_LeaveRequests_Users_ApprovedBy",
+                        column: x => x.ApprovedBy,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Salaries",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    BaseAmount = table.Column<decimal>(type: "numeric", nullable: false),
+                    Allowances = table.Column<decimal>(type: "numeric", nullable: false),
+                    Deductions = table.Column<decimal>(type: "numeric", nullable: false),
+                    GrossAmount = table.Column<decimal>(type: "numeric", nullable: false),
+                    NetAmount = table.Column<decimal>(type: "numeric", nullable: false),
+                    Month = table.Column<int>(type: "integer", nullable: false),
+                    Year = table.Column<int>(type: "integer", nullable: false),
+                    EffectiveDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    EmployeeId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Salaries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Salaries_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Email", "PasswordHash", "Role", "Username" },
+                values: new object[] { 1, "Admin123@Gmail.com", "Admin123", 0, "Abood" });
+
             migrationBuilder.CreateIndex(
-                name: "IX_Attendances_employeeId",
+                name: "IX_Attendances_EmployeeId",
                 table: "Attendances",
-                column: "employeeId");
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employees_DepartmentId",
@@ -199,14 +203,20 @@ namespace HRMS_GradProject.Migrations
                 column: "PositionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LeaveRequests_approved_by",
-                table: "LeaveRequests",
-                column: "approved_by");
+                name: "IX_Employees_UserId",
+                table: "Employees",
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_LeaveRequests_employeeId",
+                name: "IX_LeaveRequests_ApprovedBy",
                 table: "LeaveRequests",
-                column: "employeeId");
+                column: "ApprovedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LeaveRequests_EmployeeId",
+                table: "LeaveRequests",
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Positions_DepartmentId",
@@ -214,15 +224,9 @@ namespace HRMS_GradProject.Migrations
                 column: "DepartmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Salaries_employeeId",
+                name: "IX_Salaries_EmployeeId",
                 table: "Salaries",
-                column: "employeeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_EmployeeId",
-                table: "Users",
-                column: "EmployeeId",
-                unique: true);
+                column: "EmployeeId");
         }
 
         /// <inheritdoc />
@@ -238,13 +242,13 @@ namespace HRMS_GradProject.Migrations
                 name: "Salaries");
 
             migrationBuilder.DropTable(
-                name: "Users");
-
-            migrationBuilder.DropTable(
                 name: "Employees");
 
             migrationBuilder.DropTable(
                 name: "Positions");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Departments");
