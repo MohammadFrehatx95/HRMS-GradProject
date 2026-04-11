@@ -1,6 +1,8 @@
 
 
+using Domain.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     )
 );
 var app = builder.Build();
+// repositories and unit of work
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
 
 

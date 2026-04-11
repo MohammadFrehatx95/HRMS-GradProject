@@ -8,7 +8,7 @@ namespace Domain.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        //IEmployeeRepository Employees { get; }
+        IEmployeeRepository Employees { get; }
         //ILeaveRepository Leaves { get; }
         //IAttendanceRepository Attendances { get; }
         //ISalaryRepository Salaries { get; }
