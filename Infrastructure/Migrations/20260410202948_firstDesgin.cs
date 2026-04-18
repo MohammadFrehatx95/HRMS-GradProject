@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
-
+// linq => query lang => C#
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
@@ -23,7 +23,7 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Departments", x => x.Id);
+                    table.PrimaryKey("PK_Departments", x => x.Id); 
                 });
 
             migrationBuilder.CreateTable(

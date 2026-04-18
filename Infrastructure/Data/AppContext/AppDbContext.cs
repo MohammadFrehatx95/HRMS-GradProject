@@ -17,8 +17,8 @@ public class AppDbContext : DbContext
     public DbSet<Position> Positions { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<LeaveRequest> LeaveRequests { get; set; }
-    public DbSet<Attendance> Attendances { get; set; }
-    public DbSet<Salary> Salaries { get; set; }
+    public DbSet<Attendance> Attendances { get; set; } 
+    public DbSet<Salary> Salaries { get; set; } 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -73,7 +73,7 @@ public class AppDbContext : DbContext
             Username = "Abood",
             Email = "Admin123@Gmail.com",
             PasswordHash = "Admin123",
-            Role = UserRole.Admin
+            Role = "Admin"
         });
     }
 }

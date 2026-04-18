@@ -1,47 +1,25 @@
-﻿
+﻿using Domain.Interfaces;
+using Infrastructure.Data;
+using Infrastructure.Data.Repositories;
 
-using Domain.Interfaces;
+namespace Infrastructure.Repositories;
 
-
-namespace Infrastructure.Data.Repositories
+public class UnitOfWork(AppDbContext context) : IUnitOfWork
 {
-    public  class UnitOfWork : IUnitOfWork
+    private readonly Dictionary<Type, object> _repositories = [];
+
+    public IGenericRepository<T> Repository<T>() where T : class
     {
-        private readonly AppDbContext context;
+        var type = typeof(T);
 
+        if (!_repositories.ContainsKey(type))
+            _repositories[type] = new GenericRepository<T>(context);
 
-
-        public IEmployeeRepository Employees { get; }
-        //public ILeaveRepository Leaves { get; }
-        //public IAttendanceRepository Attendances { get; }
-        //public ISalaryRepository Salaries { get; }
-
-        public UnitOfWork(AppDbContext context,
-            IEmployeeRepository Employees
-            //ILeaveRepository leaves,
-            //IAttendanceRepository attendances,
-            //ISalaryRepository salaries)
-        )
-        {
-            this.context = context;
-            this.Employees = Employees;
-            //Leaves = leaves;
-            //Attendances = attendances;
-            //Salaries = salaries;
-        }
-
-      
-        public async Task<int> SaveChangesAsync()
-        {
-            return await context.SaveChangesAsync();
-        }
-
-        public void Dispose()
-        {
-            context.Dispose();
-        }
+        return (IGenericRepository<T>)_repositories[type];
     }
+
+    public async Task<int> SaveChangesAsync() =>
+        await context.SaveChangesAsync();
+
+    public void Dispose() => context.Dispose();
 }
-
-
-

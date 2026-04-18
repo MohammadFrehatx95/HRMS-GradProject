@@ -3,79 +3,86 @@ using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Implementations;
 
-public class EmployeeService : IEmployeeService
+public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
 {
-    private readonly IUnitOfWork _uow;
-    private readonly IMapper _mapper;
-
-    public EmployeeService(IUnitOfWork uow, IMapper mapper)
-    {
-        _uow = uow;
-        _mapper = mapper;
-    }
-
     public async Task<IEnumerable<EmployeeDto>> GetAllAsync()
     {
-        var employees = await _uow.Employees.GetAllAsync(
-            e => e.Department);  // ← include Department 
+        var employees = await uow.Repository<Employee>()
+                                 .GetAllQueryable()
+                                 .Include(e => e.Department)
+                                 .ToListAsync();
 
-
-        return _mapper.Map<IEnumerable<EmployeeDto>>(employees);
+        return mapper.Map<IEnumerable<EmployeeDto>>(employees);
     }
 
     public async Task<EmployeeDto?> GetByIdAsync(int id)
     {
-        var employee = await _uow.Employees.GetAsync(
-            e => e.Id == id,
-            e => e.Department);
+        var employee = await uow.Repository<Employee>()
+                                .GetAllQueryable()
+                                .Include(e => e.Department)
+                                .FirstOrDefaultAsync(e => e.Id == id);
 
-        return employee is null ? null : _mapper.Map<EmployeeDto>(employee);
+        return employee is null ? null : mapper.Map<EmployeeDto>(employee);
     }
 
     public async Task<EmployeeDto> CreateAsync(CreateEmployeeDto dto)
     {
-        // validate email 
-        var isUnique = await _uow.Employees.IsEmailUniqueAsync(dto.Email);
-        if (!isUnique)
+        var isUnique = await uow.Repository<Employee>()
+                                .GetAllQueryable()
+                                .AnyAsync(e => e.Email == dto.Email);
+
+        if (isUnique)
             throw new Exception("Previously used email");
 
-        var employee = _mapper.Map<Employee>(dto);
+        var employee = mapper.Map<Employee>(dto);
         employee.IsActive = true;
 
-        await _uow.Employees.AddAsync(employee);
-        await _uow.SaveChangesAsync();
+        await uow.Repository<Employee>().AddAsync(employee);
+        await uow.SaveChangesAsync();
 
-        return _mapper.Map<EmployeeDto>(employee);
+        return mapper.Map<EmployeeDto>(employee);
     }
 
     public async Task<EmployeeDto?> UpdateAsync(int id, UpdateEmployeeDto dto)
     {
-        var employee = await _uow.Employees.GetAsync(e => e.Id == id);
+        var employee = await uow.Repository<Employee>()
+                                .GetAllQueryable()
+                                .FirstOrDefaultAsync(e => e.Id == id);
+
         if (employee is null) return null;
 
-        _mapper.Map(dto, employee);
-        _uow.Employees.Update(employee);
-        await _uow.SaveChangesAsync();
+        mapper.Map(dto, employee);
+        uow.Repository<Employee>().Update(employee);
+        await uow.SaveChangesAsync();
 
-        return _mapper.Map<EmployeeDto>(employee);
+        return mapper.Map<EmployeeDto>(employee);
     }
 
     public async Task<bool> DeleteAsync(int id)
     {
-        var employee = await _uow.Employees.GetAsync(e => e.Id == id);
+        var employee = await uow.Repository<Employee>()
+                                .GetAllQueryable()
+                                .FirstOrDefaultAsync(e => e.Id == id);
+
         if (employee is null) return false;
 
-        _uow.Employees.Delete(employee);
-        await _uow.SaveChangesAsync();
+        uow.Repository<Employee>().Delete(employee);
+        await uow.SaveChangesAsync();
         return true;
     }
 
     public async Task<IEnumerable<EmployeeDto>> GetByDepartmentAsync(int departmentId)
     {
-        var employees = await _uow.Employees.GetByDepartmentAsync(departmentId);
-        return _mapper.Map<IEnumerable<EmployeeDto>>(employees);
+        var employees = await uow.Repository<Employee>()
+                                 .GetAllQueryable()
+                                 .Where(e => e.DepartmentId == departmentId)
+                                 .Include(e => e.Department)
+                                 .ToListAsync();
+
+        return mapper.Map<IEnumerable<EmployeeDto>>(employees);
     }
 }
