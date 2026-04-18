@@ -39,6 +39,8 @@ namespace Infrastructure.Data.Repositories
 
         }
 
+        public IQueryable<T> GetAllQueryable() => context.Set<T>().AsQueryable();
+
         public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
         {
             IQueryable<T> query = dbSet;

@@ -4,6 +4,7 @@ using Application.Services.Interfaces;
 using Domain.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
+using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

@@ -20,6 +20,8 @@ namespace Domain.Interfaces
             Expression<Func<T, bool>> predicate,
             params Expression<Func<T, object>>[] includes);
 
+        IQueryable<T> GetAllQueryable();
+
         Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate);
 
         Task AddAsync(T entity);
