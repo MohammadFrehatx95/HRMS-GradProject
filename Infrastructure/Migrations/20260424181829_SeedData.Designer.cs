@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260424181829_SeedData")]
+    partial class SeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -211,64 +214,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("DepartmentId");
 
                     b.ToTable("Positions");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            DepartmentId = 1,
-                            SalaryMax = 0m,
-                            SalaryMin = 0m,
-                            Title = "HR Manager"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            DepartmentId = 1,
-                            SalaryMax = 0m,
-                            SalaryMin = 0m,
-                            Title = "HR Specialist"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            DepartmentId = 2,
-                            SalaryMax = 0m,
-                            SalaryMin = 0m,
-                            Title = "Software Engineer"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            DepartmentId = 2,
-                            SalaryMax = 0m,
-                            SalaryMin = 0m,
-                            Title = "IT Manager"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            DepartmentId = 3,
-                            SalaryMax = 0m,
-                            SalaryMin = 0m,
-                            Title = "Accountant"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            DepartmentId = 3,
-                            SalaryMax = 0m,
-                            SalaryMin = 0m,
-                            Title = "Finance Manager"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            DepartmentId = 4,
-                            SalaryMax = 0m,
-                            SalaryMin = 0m,
-                            Title = "Operations Manager"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Salary", b =>

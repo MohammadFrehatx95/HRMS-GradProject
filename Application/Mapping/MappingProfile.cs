@@ -30,6 +30,12 @@ public class MappingProfile : Profile
             .ForAllMembers(opt => opt.Condition(
                 (src, dest, srcMember) => srcMember != null));  // Ignore null values during update
 
+        CreateMap<Employee, EmployeeProfileDto>()
+            .ForMember(d => d.FullName, o => o.MapFrom(s => $"{s.FirstName} {s.LastName}"))
+            .ForMember(dest => dest.DepartmentName,
+                    opt => opt.MapFrom(src => src.Department != null ? src.Department.Name : string.Empty))
+          .ForMember(d => d.PositionTitle, o => o.MapFrom(s => s.Position != null ? s.Position.Title : string.Empty));
+
 
 
 

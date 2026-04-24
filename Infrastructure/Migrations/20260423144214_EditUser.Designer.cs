@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260423144214_EditUser")]
+    partial class EditUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,32 +71,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Departments");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Location = "",
-                            Name = "Human Resources"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Location = "",
-                            Name = "Information Technology"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Location = "",
-                            Name = "Finance"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Location = "",
-                            Name = "Operations"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Employee", b =>
@@ -129,7 +106,7 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("PositionId")
+                    b.Property<int?>("PositionId")
                         .HasColumnType("integer");
 
                     b.Property<int>("UserId")
@@ -211,64 +188,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("DepartmentId");
 
                     b.ToTable("Positions");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            DepartmentId = 1,
-                            SalaryMax = 0m,
-                            SalaryMin = 0m,
-                            Title = "HR Manager"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            DepartmentId = 1,
-                            SalaryMax = 0m,
-                            SalaryMin = 0m,
-                            Title = "HR Specialist"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            DepartmentId = 2,
-                            SalaryMax = 0m,
-                            SalaryMin = 0m,
-                            Title = "Software Engineer"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            DepartmentId = 2,
-                            SalaryMax = 0m,
-                            SalaryMin = 0m,
-                            Title = "IT Manager"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            DepartmentId = 3,
-                            SalaryMax = 0m,
-                            SalaryMin = 0m,
-                            Title = "Accountant"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            DepartmentId = 3,
-                            SalaryMax = 0m,
-                            SalaryMin = 0m,
-                            Title = "Finance Manager"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            DepartmentId = 4,
-                            SalaryMax = 0m,
-                            SalaryMin = 0m,
-                            Title = "Operations Manager"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Salary", b =>
@@ -370,11 +289,9 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Position", "Position")
+                    b.HasOne("Domain.Entities.Position", null)
                         .WithMany("Employees")
-                        .HasForeignKey("PositionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PositionId");
 
                     b.HasOne("Domain.Entities.User", "User")
                         .WithOne("Employee")
@@ -383,8 +300,6 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Department");
-
-                    b.Navigation("Position");
 
                     b.Navigation("User");
                 });

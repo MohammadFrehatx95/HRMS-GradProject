@@ -66,14 +66,22 @@ public class AppDbContext : DbContext
             .HasForeignKey(s => s.EmployeeId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // Seed Admin User
-        modelBuilder.Entity<User>().HasData(new User
-        {
-            Id = 1,
-            Username = "Abood",
-            Email = "Admin123@Gmail.com",
-            PasswordHash = "Admin123",
-            Role = "Admin"
-        });
+        modelBuilder.Entity<Department>().HasData(
+           new Department { Id = 1, Name = "Human Resources" },
+           new Department { Id = 2, Name = "Information Technology" },
+           new Department { Id = 3, Name = "Finance" },
+           new Department { Id = 4, Name = "Operations" });
+
+        modelBuilder.Entity<Position>().HasData(
+    new Position { Id = 1, Title = "HR Manager", DepartmentId = 1 },
+    new Position { Id = 2, Title = "HR Specialist", DepartmentId = 1 },
+    new Position { Id = 3, Title = "Software Engineer", DepartmentId = 2 },
+    new Position { Id = 4, Title = "IT Manager", DepartmentId = 2 },
+    new Position { Id = 5, Title = "Accountant", DepartmentId = 3 },
+    new Position { Id = 6, Title = "Finance Manager", DepartmentId = 3 },
+    new Position { Id = 7, Title = "Operations Manager", DepartmentId = 4 }
+);
+
+
     }
 }

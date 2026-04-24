@@ -14,6 +14,8 @@ public class RegisterDto
 
     [Required]
     [MinLength(6)]
+    [RegularExpression(@"^(?=.*[A-Z])(?=.*\d).{8,}$",
+    ErrorMessage = "Must have uppercase letter and number")]    
     public string Password { get; set; } = string.Empty;
 
     public UserRole Role { get; set; } = UserRole.Employee;

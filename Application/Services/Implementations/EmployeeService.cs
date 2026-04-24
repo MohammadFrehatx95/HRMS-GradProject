@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Employee;
+﻿using Application.Common;
+using Application.DTOs.Employee;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -9,14 +10,21 @@ namespace Application.Services.Implementations;
 
 public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
 {
-    public async Task<IEnumerable<EmployeeDto>> GetAllAsync()
+    public async Task<PagedResult<EmployeeDto>> GetAllAsync(int pageNumber, int pageSize)
     {
-        var employees = await uow.Repository<Employee>()
-                                 .GetAllQueryable()
-                                 .Include(e => e.Department)
-                                 .ToListAsync();
+        var query = uow.Repository<Employee>()
+                       .GetAllQueryable()
+                       .Include(e => e.Department);
 
-        return mapper.Map<IEnumerable<EmployeeDto>>(employees);
+        var total = await query.CountAsync();
+
+        var items = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        var dtos = mapper.Map<List<EmployeeDto>>(items);
+        return PagedResult<EmployeeDto>.Create(dtos, total, pageNumber, pageSize);
     }
 
     public async Task<EmployeeDto?> GetByIdAsync(int id)
@@ -84,5 +92,17 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
                                  .ToListAsync();
 
         return mapper.Map<IEnumerable<EmployeeDto>>(employees);
+    }
+
+    public async Task<EmployeeProfileDto?> GetProfileAsync(int id)
+    {
+        var employee = await uow.Repository<Employee>()
+                                .GetAllQueryable()
+                                .Include(e => e.Department)
+                                .Include(e => e.Position)
+                                
+                                .FirstOrDefaultAsync(e => e.Id == id);
+
+        return employee is null ? null : mapper.Map<EmployeeProfileDto>(employee);
     }
 }
