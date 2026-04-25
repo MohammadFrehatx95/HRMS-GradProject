@@ -4,6 +4,7 @@
 // It includes mappings for the Employee entity, allowing for both retrieval (mapping to EmployeeDto) and creation/update (mapping from CreateEmployeeDto and UpdateEmployeeDto).
 // The update mapping is configured to ignore null values, enabling partial updates without overwriting existing data with nulls.
 
+using Application.DTOs.Department;
 using Application.DTOs.Employee;
 using AutoMapper;
 using Domain.Entities;
@@ -36,7 +37,12 @@ public class MappingProfile : Profile
                     opt => opt.MapFrom(src => src.Department != null ? src.Department.Name : string.Empty))
           .ForMember(d => d.PositionTitle, o => o.MapFrom(s => s.Position != null ? s.Position.Title : string.Empty));
 
+        CreateMap<Department, DepartmentDto>()
+          .ForMember(d => d.EmployeeCount,
+            o => o.MapFrom(s => s.Employees != null ? s.Employees.Count : 0));
 
+           CreateMap<CreateDepartmentDto, Department>();
+           CreateMap<UpdateDepartmentDto, Department>();
 
 
 

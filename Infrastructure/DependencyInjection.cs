@@ -23,8 +23,7 @@ public static class DependencyInjection
             options.UseNpgsql(
                 configuration.GetConnectionString("DefaultConnection")));
 
-        // Repositories
-        services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+      
 
         // UnitOfWork
         services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -40,6 +39,7 @@ public static class DependencyInjection
 
         // Services
         services.AddScoped<IEmployeeService, EmployeeService>();
+        services.AddScoped<IDepartmentService, DepartmentService>();
 
         return services;
     }

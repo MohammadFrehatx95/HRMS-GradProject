@@ -32,7 +32,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
             _  => (HttpStatusCode.InternalServerError, ex.InnerException?.Message ?? ex.Message)
         };
 
-        context.Response.StatusCode = (int)statusCode;
+        context.Response.StatusCode = (int) statusCode;
 
         var response = ApiResponse.Fail(message);
         var json = JsonSerializer.Serialize(response, new JsonSerializerOptions
