@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace Domain.Enums
 {
-    public enum LeaveType { Annual, Sick, Unpaid }
+    
+    public enum LeaveType
+    {
+        Annual,
+        Sick,
+        Emergency,
+        Unpaid
+    }
 
 }
