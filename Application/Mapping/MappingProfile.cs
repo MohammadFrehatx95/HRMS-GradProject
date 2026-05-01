@@ -6,6 +6,8 @@
 
 using Application.DTOs.Department;
 using Application.DTOs.Employee;
+using Application.DTOs.Leave;
+using Application.DTOs.Position;
 using AutoMapper;
 using Domain.Entities;
 
@@ -44,9 +46,27 @@ public class MappingProfile : Profile
            CreateMap<CreateDepartmentDto, Department>();
            CreateMap<UpdateDepartmentDto, Department>();
 
+        CreateMap<Position, PositionDto>()
+      .ForMember(d => d.DepartmentName,
+          o => o.MapFrom(s => s.Department != null ? s.Department.Name : string.Empty))
+      .ForMember(d => d.EmployeeCount,
+          o => o.MapFrom(s => s.Employees != null ? s.Employees.Count : 0));
+
+        CreateMap<CreatePositionDto, Position>();
+
+        CreateMap<UpdatePositionDto, Position>()
+            .ForAllMembers(opt => opt.Condition(
+                (src, dest, srcMember) => srcMember != null));
 
 
 
+        CreateMap<Leave, LeaveDto>()
+            .ForMember(d => d.EmployeeName,
+                o => o.MapFrom(s => s.Employee != null
+                    ? $"{s.Employee.FirstName} {s.Employee.LastName}"
+                    : string.Empty))
+            .ForMember(d => d.LeaveType, o => o.MapFrom(s => s.LeaveType.ToString()))
+            .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()));
 
 
 

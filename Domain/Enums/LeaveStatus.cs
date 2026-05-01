@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace Domain.Enums
 {
-    public enum LeaveStatus { Pending, Approved, Rejected }
+    public enum LeaveStatus
+    {
+        Pending,
+        Approved,
+        Rejected
+    }
 
 }
