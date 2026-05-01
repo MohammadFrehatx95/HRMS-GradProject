@@ -16,7 +16,7 @@ public class AppDbContext : DbContext
     public DbSet<Department> Departments { get; set; }
     public DbSet<Position> Positions { get; set; }
     public DbSet<User> Users { get; set; }
-    public DbSet<LeaveRequest> LeaveRequests { get; set; }
+    public DbSet<Leave> Leaves => Set<Leave>();
     public DbSet<Attendance> Attendances { get; set; } 
     public DbSet<Salary> Salaries { get; set; } 
 
@@ -42,17 +42,14 @@ public class AppDbContext : DbContext
             .HasForeignKey(p => p.DepartmentId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<LeaveRequest>()
+        modelBuilder.Entity<Leave>()
             .HasOne(l => l.Employee)
             .WithMany(e => e.LeaveRequests)
             .HasForeignKey(l => l.EmployeeId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<LeaveRequest>()
-            .HasOne(l => l.ApprovedByUser)
-            .WithMany()
-            .HasForeignKey(l => l.ApprovedBy)
-            .OnDelete(DeleteBehavior.Restrict);
+    
+
 
         modelBuilder.Entity<Attendance>()
             .HasOne(a => a.Employee)

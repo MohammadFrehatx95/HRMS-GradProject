@@ -22,5 +22,5 @@ public class Employee
     public Position Position { get; set; } = null!;
     public ICollection<Attendance> Attendances { get; set; } = new List<Attendance>();
     public ICollection<Salary> Salaries { get; set; } = new List<Salary>();
-    public ICollection<LeaveRequest> LeaveRequests { get; set; } = new List<LeaveRequest>();
+    public ICollection<Leave> LeaveRequests { get; set; } = new List<Leave>();
 }
