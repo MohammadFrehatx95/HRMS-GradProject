@@ -4,7 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class EmployeeService {
-  // نقلنا البيانات إلى هنا لتصبح مركزية
   private employeesList = [
     {
       id: 1,
@@ -29,8 +28,14 @@ export class EmployeeService {
     },
   ];
 
-  // (Method) لإرجاع البيانات لأي مكون يطلبها
   getEmployees() {
     return this.employeesList;
+  }
+
+  // الدالة الجديدة لإضافة موظف
+  addEmployee(employee: any) {
+    // توليد ID جديد بناءً على طول المصفوفة لضمان عدم التكرار
+    employee.id = this.employeesList.length + 1;
+    this.employeesList.push(employee);
   }
 }

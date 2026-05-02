@@ -1,10 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { EmployeeService } from '../../core/services/employee.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-employees',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './employees.component.html',
   styleUrl: './employees.component.css',
 })
