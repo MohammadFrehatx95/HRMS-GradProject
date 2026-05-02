@@ -1,0 +1,15 @@
+$kind: http-request
+name: Get All Leaves (Admin/HR)
+method: GET
+url: '{{baseUrl}}/api/leaves'
+order: 1000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+queryParams:
+  - key: pageNumber
+    value: '1'
+  - key: pageSize
+    value: '10'

@@ -1,0 +1,23 @@
+$kind: http-request
+name: Update Employee
+method: PUT
+url: '{{baseUrl}}/api/employees/{{employeeId}}'
+order: 6000
+headers:
+  - key: Content-Type
+    value: application/json
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+body:
+  type: json
+  content: |-
+    {
+      "firstName": "John",
+      "lastName": "Smith",
+      "phoneNumber": "+1234567890",
+      "isActive": true,
+      "departmentId": 2
+    }

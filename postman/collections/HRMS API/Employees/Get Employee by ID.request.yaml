@@ -1,0 +1,5 @@
+$kind: http-request
+name: Get Employee by ID
+method: GET
+url: '{{baseUrl}}/api/employees/{{employeeId}}'
+order: 2000
