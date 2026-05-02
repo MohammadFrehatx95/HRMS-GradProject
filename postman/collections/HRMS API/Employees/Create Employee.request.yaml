@@ -1,0 +1,21 @@
+$kind: http-request
+name: Create Employee
+method: POST
+url: '{{baseUrl}}/api/employees'
+order: 5000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "firstName": "John",
+      "lastName": "Doe",
+      "email": "john.doe@company.com",
+      "phoneNumber": "+1234567890",
+      "hireDate": "2024-01-15T00:00:00",
+      "departmentId": 1,
+      "userId": 1,
+      "positionId": 1
+    }

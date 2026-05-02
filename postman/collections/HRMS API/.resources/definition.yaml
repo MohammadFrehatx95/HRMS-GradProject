@@ -1,0 +1,16 @@
+$kind: collection
+name: HRMS API
+description: Human Resource Management System API collection covering Auth, Employees, Departments, Positions, and Leaves.
+variables:
+  - key: baseUrl
+    value: 'http://localhost:5093'
+  - key: authToken
+    value: ''
+  - key: employeeId
+    value: '1'
+  - key: departmentId
+    value: '1'
+  - key: positionId
+    value: '1'
+  - key: leaveId
+    value: '1'

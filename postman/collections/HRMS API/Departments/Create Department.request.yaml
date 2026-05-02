@@ -1,0 +1,19 @@
+$kind: http-request
+name: Create Department (Admin)
+method: POST
+url: '{{baseUrl}}/api/departments'
+order: 3000
+headers:
+  - key: Content-Type
+    value: application/json
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+body:
+  type: json
+  content: |-
+    {
+      "name": "Engineering"
+    }

@@ -1,0 +1,20 @@
+$kind: http-request
+name: Update Leave Status (Admin/HR)
+method: PUT
+url: '{{baseUrl}}/api/leaves/{{leaveId}}/status'
+order: 5000
+headers:
+  - key: Content-Type
+    value: application/json
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+body:
+  type: json
+  content: |-
+    {
+      "status": 1,
+      "rejectionReason": null
+    }
