@@ -479,7 +479,7 @@ dotnet ef migrations remove --project Infrastructure --startup-project HRMS_API
 |---|---|
 | **Abedalqader Alfaqeeh** | Backend Lead · Architecture |
 | **Mohammad Frehat** | Frontend Developer |
-| **Saad** | UI/UX |
+| **Saad Rabadi** | UI/UX |
 | **Mohammad Alghazo** | Frontend Developer |
 
 ---
