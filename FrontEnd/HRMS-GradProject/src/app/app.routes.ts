@@ -5,6 +5,7 @@ import { DepartmentsComponent } from './features/departments/departments.compone
 import { LeaveComponent } from './features/leave/leave.component';
 import { AttendanceComponent } from './features/attendance/attendance.component';
 import { SalaryComponent } from './features/salary/salary.component';
+import { EmployeeFormComponent } from './features/employee-form/employee-form.component';
 
 export const routes: Routes = [
   // 1. التوجيه التلقائي للمسار الجذري
@@ -17,7 +18,8 @@ export const routes: Routes = [
   { path: 'leave', component: LeaveComponent },
   { path: 'attendance', component: AttendanceComponent },
   { path: 'salary', component: SalaryComponent },
+  { path: 'employee-form', component: EmployeeFormComponent },
 
   // 3. شبكة الأمان للمسارات الخاطئة (يجب أن تكون في النهاية)
-  { path: '**', redirectTo: 'dashboard' }, // ** يلتقط أي مسار غير معروف ويعيد توجيه المستخدم إلى لوحة التحكم
+  { path: '**', redirectTo: 'dashboard' },
 ];
