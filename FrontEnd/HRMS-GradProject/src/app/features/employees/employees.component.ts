@@ -1,33 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { EmployeeService } from '../../core/services/employee.service';
 
 @Component({
   selector: 'app-employees',
+  standalone: true,
   imports: [],
   templateUrl: './employees.component.html',
   styleUrl: './employees.component.css',
 })
-export class EmployeesComponent {
-  employeesList = [
-    {
-      id: 1,
-      name: 'Ahmad Salem',
-      position: 'Frontend Developer',
-      department: 'IT',
-      status: 'Active',
-    },
-    {
-      id: 2,
-      name: 'Sara Ali',
-      position: 'HR Manager',
-      department: 'HR',
-      status: 'On Leave',
-    },
-    {
-      id: 3,
-      name: 'Omar Zaid',
-      position: 'Backend Developer',
-      department: 'IT',
-      status: 'Active',
-    },
-  ];
+export class EmployeesComponent implements OnInit {
+  // 1. تعريف مصفوفة فارغة لاستقبال البيانات
+  employeesList: any[] = [];
+
+  // 2. حقن الخدمة داخل المكون Dependency Injection
+  private employeeService = inject(EmployeeService);
+
+  // 3. جلب البيانات بمجرد تهيئة المكون
+  ngOnInit() {
+    this.employeesList = this.employeeService.getEmployees();
+  }
 }
