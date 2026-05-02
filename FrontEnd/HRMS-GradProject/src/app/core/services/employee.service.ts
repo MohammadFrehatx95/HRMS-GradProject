@@ -34,7 +34,7 @@ export class EmployeeService {
 
   // الدالة الجديدة لإضافة موظف
   addEmployee(employee: any) {
-    // توليد ID جديد بناءً على طول المصفوفة لضمان عدم التكرار
+    // توليد ID جديد بناءً على طول المصفوفة لضمان عدم التكرار (في حالة عدم حذف موظفين)
     employee.id = this.employeesList.length + 1;
     this.employeesList.push(employee);
   }
