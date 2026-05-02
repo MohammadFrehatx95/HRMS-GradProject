@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   ReactiveFormsModule,
   FormGroup,
   FormControl,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
+import { EmployeeService } from '../../core/services/employee.service';
 
 @Component({
   selector: 'app-employee-form',
@@ -14,19 +16,23 @@ import {
   styleUrl: './employee-form.component.css',
 })
 export class EmployeeFormComponent {
-  // 1. تعريف هيكل النموذج وشروط التحقق
+  private employeeService = inject(EmployeeService);
+  private router = inject(Router); // حقن محرك التوجيه للتحكم بالمسارات برمجياً
+
   employeeForm = new FormGroup({
     name: new FormControl('', Validators.required),
     position: new FormControl('', Validators.required),
     department: new FormControl('', Validators.required),
-    status: new FormControl('Active'), // قيمة افتراضية
+    status: new FormControl('Active'),
   });
 
-  // 2. دالة تُنفذ عند الضغط على زر الحفظ
   onSubmit() {
     if (this.employeeForm.valid) {
-      // طباعة البيانات في وحدة التحكم مؤقتاً للتأكد من عملها
-      console.log('Form Data:', this.employeeForm.value);
+      // 1. إرسال البيانات للخدمة لحفظها
+      this.employeeService.addEmployee(this.employeeForm.value);
+
+      // 2. إعادة توجيه المستخدم برمجياً إلى شاشة الموظفين
+      this.router.navigate(['/employees']);
     }
   }
 }
