@@ -46,7 +46,15 @@ namespace HRMS_GradProject.Controllers
         [ValidateModel]
         public async Task<IActionResult> Create([FromBody] CreateLeaveDto dto)
         {
-            var employeeId = int.Parse(User.FindFirstValue("employeeId")!);
+            var employeeIdClaim = User.FindFirstValue("employeeId");
+
+            if (string.IsNullOrWhiteSpace(employeeIdClaim) ||
+                !int.TryParse(employeeIdClaim, out int employeeId))
+            {
+                return BadRequest(ApiResponse.Fail(
+                    "Your account is not linked to an employee profile"));
+            }
+
             var result = await leaveService.CreateAsync(employeeId, dto);
             return CreatedAtAction(nameof(GetById), new { id = result.Id },
                 ApiResponse<LeaveDto>.Ok(result, "Leave request submitted successfully"));
