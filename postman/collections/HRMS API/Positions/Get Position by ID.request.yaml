@@ -1,0 +1,10 @@
+$kind: http-request
+name: Get Position by ID
+method: GET
+url: '{{baseUrl}}/api/positions/{{positionId}}'
+order: 3000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'

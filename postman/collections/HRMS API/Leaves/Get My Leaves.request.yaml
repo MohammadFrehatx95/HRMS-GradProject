@@ -1,0 +1,15 @@
+$kind: http-request
+name: Get My Leaves
+method: GET
+url: '{{baseUrl}}/api/leaves/my'
+order: 2000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+queryParams:
+  - key: pageNumber
+    value: '1'
+  - key: pageSize
+    value: '10'

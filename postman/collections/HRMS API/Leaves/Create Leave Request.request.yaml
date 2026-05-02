@@ -1,0 +1,22 @@
+$kind: http-request
+name: Create Leave Request
+method: POST
+url: '{{baseUrl}}/api/leaves'
+order: 4000
+headers:
+  - key: Content-Type
+    value: application/json
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+body:
+  type: json
+  content: |-
+    {
+      "leaveType": 0,
+      "startDate": "2024-06-01T00:00:00",
+      "endDate": "2024-06-05T00:00:00",
+      "reason": "Annual vacation leave request"
+    }

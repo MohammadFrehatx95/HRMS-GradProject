@@ -1,0 +1,19 @@
+$kind: http-request
+name: Update Department (Admin)
+method: PUT
+url: '{{baseUrl}}/api/departments/{{departmentId}}'
+order: 4000
+headers:
+  - key: Content-Type
+    value: application/json
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+body:
+  type: json
+  content: |-
+    {
+      "name": "Software Engineering"
+    }

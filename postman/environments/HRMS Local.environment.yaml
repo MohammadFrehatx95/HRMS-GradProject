@@ -1,0 +1,26 @@
+name: HRMS Local
+values:
+  - key: baseUrl
+    value: 'http://localhost:5093'
+    type: default
+    enabled: true
+  - key: authToken
+    value: ''
+    type: secret
+    enabled: true
+  - key: employeeId
+    value: '1'
+    type: default
+    enabled: true
+  - key: departmentId
+    value: '1'
+    type: default
+    enabled: true
+  - key: positionId
+    value: '1'
+    type: default
+    enabled: true
+  - key: leaveId
+    value: '1'
+    type: default
+    enabled: true

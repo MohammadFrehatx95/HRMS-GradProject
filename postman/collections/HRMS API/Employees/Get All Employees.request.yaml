@@ -1,0 +1,10 @@
+$kind: http-request
+name: Get All Employees
+method: GET
+url: '{{baseUrl}}/api/employees'
+order: 1000
+queryParams:
+  - key: pageNumber
+    value: '1'
+  - key: pageSize
+    value: '10'

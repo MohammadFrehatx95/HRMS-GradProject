@@ -1,0 +1,10 @@
+$kind: http-request
+name: Delete Employee
+method: DELETE
+url: '{{baseUrl}}/api/employees/{{employeeId}}'
+order: 7000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'

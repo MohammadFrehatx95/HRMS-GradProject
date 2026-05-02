@@ -1,0 +1,22 @@
+$kind: http-request
+name: Create Position (Admin)
+method: POST
+url: '{{baseUrl}}/api/positions'
+order: 4000
+headers:
+  - key: Content-Type
+    value: application/json
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+body:
+  type: json
+  content: |-
+    {
+      "title": "Software Engineer",
+      "salaryMin": 50000.00,
+      "salaryMax": 90000.00,
+      "departmentId": 1
+    }

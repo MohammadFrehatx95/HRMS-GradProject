@@ -1,0 +1,7 @@
+# Use this workspace to collaborate
+workspace:
+  id: a50146ba-e32c-496b-9eb3-c705828cadf3
+
+localResources:
+  specs:
+    - ..\HRMS-GradProject\obj\Debug\net8.0\EndpointInfo\HRMS_API.json

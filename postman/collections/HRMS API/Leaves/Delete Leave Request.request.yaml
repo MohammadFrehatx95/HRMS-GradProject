@@ -1,0 +1,10 @@
+$kind: http-request
+name: Delete Leave Request
+method: DELETE
+url: '{{baseUrl}}/api/leaves/{{leaveId}}'
+order: 6000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'

@@ -1,0 +1,23 @@
+$kind: http-request
+name: Register (Admin only)
+method: POST
+url: '{{baseUrl}}/api/auth/register'
+order: 2000
+headers:
+  - key: Content-Type
+    value: application/json
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+body:
+  type: json
+  content: |-
+    {
+      "username": "john.doe",
+      "email": "john.doe@hrms.com",
+      "password": "Employee1",
+      "role": 2,
+      "employeeId": null
+    }
