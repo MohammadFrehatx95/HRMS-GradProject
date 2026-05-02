@@ -53,41 +53,41 @@ namespace Application.Services.Implementations
 
         public async Task<LeaveDto> CreateAsync(int employeeId, CreateLeaveDto dto)
         {
-            // Validate dates
-            if (dto.StartDate.Date < DateTime.UtcNow.Date)
+           
+            var startDate = DateTime.SpecifyKind(dto.StartDate.Date, DateTimeKind.Utc);
+            var endDate = DateTime.SpecifyKind(dto.EndDate.Date, DateTimeKind.Utc);
+            var today = DateTime.SpecifyKind(DateTime.UtcNow.Date, DateTimeKind.Utc);
+
+            if (startDate < today)
                 throw new ArgumentException("Start date cannot be in the past");
 
-            if (dto.EndDate.Date < dto.StartDate.Date)
+            if (endDate < startDate)
                 throw new ArgumentException("End date cannot be before start date");
 
-            // Check for overlapping leaves
             var hasOverlap = await uow.Repository<Leave>()
                                       .GetAllQueryable()
                                       .AnyAsync(l =>
                                           l.EmployeeId == employeeId &&
                                           l.Status != LeaveStatus.Rejected &&
-                                          l.StartDate.Date <= dto.EndDate.Date &&
-                                          l.EndDate.Date >= dto.StartDate.Date);
+                                          l.StartDate <= endDate &&
+                                          l.EndDate >= startDate);
 
             if (hasOverlap)
-                throw new InvalidOperationException("You already have a leave request overlapping these dates");
+                throw new InvalidOperationException(
+                    "You already have a leave request overlapping these dates");
 
             var leave = new Leave
             {
                 EmployeeId = employeeId,
                 LeaveType = dto.LeaveType,
-                StartDate = dto.StartDate.Date,
-                EndDate = dto.EndDate.Date,
-                TotalDays = (int)(dto.EndDate.Date - dto.StartDate.Date).TotalDays + 1,
-                Reason = dto.Reason,
-                Status = LeaveStatus.Pending,
-                RequestedAt = DateTime.UtcNow
+                StartDate = startDate,
+                EndDate = endDate,
+                Status = LeaveStatus.Pending
             };
 
             await uow.Repository<Leave>().AddAsync(leave);
             await uow.SaveChangesAsync();
 
-            // Reload with Employee for mapping
             return (await GetByIdAsync(leave.Id))!;
         }
 

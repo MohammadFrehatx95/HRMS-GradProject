@@ -4,10 +4,12 @@
 // It includes mappings for the Employee entity, allowing for both retrieval (mapping to EmployeeDto) and creation/update (mapping from CreateEmployeeDto and UpdateEmployeeDto).
 // The update mapping is configured to ignore null values, enabling partial updates without overwriting existing data with nulls.
 
+using Application.DTOs.Attendance;
 using Application.DTOs.Department;
 using Application.DTOs.Employee;
 using Application.DTOs.Leave;
 using Application.DTOs.Position;
+using Application.DTOs.Salary;
 using AutoMapper;
 using Domain.Entities;
 
@@ -43,8 +45,8 @@ public class MappingProfile : Profile
           .ForMember(d => d.EmployeeCount,
             o => o.MapFrom(s => s.Employees != null ? s.Employees.Count : 0));
 
-           CreateMap<CreateDepartmentDto, Department>();
-           CreateMap<UpdateDepartmentDto, Department>();
+        CreateMap<CreateDepartmentDto, Department>();
+        CreateMap<UpdateDepartmentDto, Department>();
 
         CreateMap<Position, PositionDto>()
       .ForMember(d => d.DepartmentName,
@@ -73,10 +75,33 @@ public class MappingProfile : Profile
 
 
 
+        CreateMap<Attendance, AttendanceDto>()
+            .ForMember(d => d.EmployeeName,
+                o => o.MapFrom(s => s.Employee != null
+                    ? $"{s.Employee.FirstName} {s.Employee.LastName}"
+                    : string.Empty))
+            .ForMember(d => d.TotalHours,
+                o => o.MapFrom(s => s.ClockOut.HasValue
+                    ? FormatHours(s.ClockIn, s.ClockOut.Value)
+                    : null));
 
-
-
-
-
+        // MappingProfile.cs
+        CreateMap<Salary, SalaryDto>()
+            .ForMember(d => d.EmployeeName,
+                o => o.MapFrom(s => s.Employee != null
+                    ? $"{s.Employee.FirstName} {s.Employee.LastName}"
+                    : string.Empty));
     }
+
+// Helper method في نفس الـ MappingProfile
+private static string FormatHours(TimeOnly clockIn, TimeOnly clockOut)
+    {
+        var duration = clockOut.ToTimeSpan() - clockIn.ToTimeSpan();
+        return $"{(int)duration.TotalHours}h {duration.Minutes}m";
+    }
+
+
+
+
+
 }
