@@ -1,0 +1,42 @@
+<div class="container-fluid mt-4">
+    <div class="card w-50">
+        <div class="card-header text-bg-primary">
+            <h5 class="mb-0">Add New Employee</h5>
+        </div>
+
+        <div class="card-body">
+            <!-- ربط النموذج بالكائن البرمجي وتحديد دالة الإرسال -->
+            <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+
+                <div class="mb-3">
+                    <label class="form-label">Employee Name</label>
+                    <!-- ربط حقل الإدخال بالـ FormControl -->
+                    <input type="text" class="form-control"
+                        formControlName="name">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Position</label>
+                    <input type="text" class="form-control"
+                        formControlName="position">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Department</label>
+                    <select class="form-select" formControlName="department">
+                        <option value disabled>Select Department</option>
+                        <option value="IT">IT</option>
+                        <option value="HR">HR</option>
+                        <option value="Finance">Finance</option>
+                    </select>
+                </div>
+
+                <!-- الزر معطل برمجياً إذا كانت الحقول فارغة -->
+                <button type="submit" class="btn btn-success"
+                    [disabled]="employeeForm.invalid">
+                    Save Employee
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
