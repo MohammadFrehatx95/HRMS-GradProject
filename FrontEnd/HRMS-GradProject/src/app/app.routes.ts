@@ -6,20 +6,41 @@ import { LeaveComponent } from './features/leave/leave.component';
 import { AttendanceComponent } from './features/attendance/attendance.component';
 import { SalaryComponent } from './features/salary/salary.component';
 import { EmployeeFormComponent } from './features/employee-form/employee-form.component';
+import { LoginComponent } from './features/auth/login/login.component';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  // 1. التوجيه التلقائي للمسار الجذري
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
 
-  // 2. مسارات النظام الأساسية
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'employees', component: EmployeesComponent },
-  { path: 'departments', component: DepartmentsComponent },
-  { path: 'leave', component: LeaveComponent },
-  { path: 'attendance', component: AttendanceComponent },
-  { path: 'salary', component: SalaryComponent },
-  { path: 'employee-form', component: EmployeeFormComponent },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
 
-  // 3. شبكة الأمان للمسارات الخاطئة (يجب أن تكون في النهاية)
-  { path: '**', redirectTo: 'dashboard' },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'employees',
+    component: EmployeesComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'departments',
+    component: DepartmentsComponent,
+    canActivate: [authGuard],
+  },
+  { path: 'leave', component: LeaveComponent, canActivate: [authGuard] },
+  {
+    path: 'attendance',
+    component: AttendanceComponent,
+    canActivate: [authGuard],
+  },
+  { path: 'salary', component: SalaryComponent, canActivate: [authGuard] },
+  {
+    path: 'employee-form',
+    component: EmployeeFormComponent,
+    canActivate: [authGuard],
+  },
+
+  { path: '**', redirectTo: 'login' },
 ];
