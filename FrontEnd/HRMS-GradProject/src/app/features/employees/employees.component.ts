@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { EmployeeService } from '../../core/services/employee.service';
 import { RouterLink } from '@angular/router';
+import { EmployeeService } from '../../core/services/employee.service';
+import { Employee } from '../../core/models/employee.model';
 
 @Component({
   selector: 'app-employees',
@@ -10,13 +11,9 @@ import { RouterLink } from '@angular/router';
   styleUrl: './employees.component.css',
 })
 export class EmployeesComponent implements OnInit {
-  // 1. تعريف مصفوفة فارغة لاستقبال البيانات
-  employeesList: any[] = [];
-
-  // 2. حقن الخدمة داخل المكون Dependency Injection
+  employeesList: Employee[] = [];
   private employeeService = inject(EmployeeService);
 
-  // 3. جلب البيانات بمجرد تهيئة المكون
   ngOnInit() {
     this.employeesList = this.employeeService.getEmployees();
   }

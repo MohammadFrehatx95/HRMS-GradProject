@@ -1,39 +1,40 @@
 <div class="container-fluid mt-4">
-    <h2 class="mb-4">Dashboard Overview</h2>
+    <h2 class="mb-4">System Overview</h2>
 
     <div class="row">
-        <div class="col-md-3 mb-3">
-            <div class="card text-bg-primary h-100">
+        <div class="col-md-3 mb-4">
+            <div class="card text-bg-primary h-100 shadow">
                 <div class="card-body">
                     <h5 class="card-title">Total Employees</h5>
-                    <h2 class="card-text display-4">{{ totalEmployees }}</h2>
+                    <h2 class="display-5 fw-bold">{{ totalEmployees }}</h2>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3 mb-3">
-            <div class="card text-bg-success h-100">
+        <div class="col-md-3 mb-4">
+            <div class="card text-bg-success h-100 shadow">
                 <div class="card-body">
                     <h5 class="card-title">Departments</h5>
-                    <h2 class="card-text display-4">8</h2>
+                    <h2 class="display-5 fw-bold">{{ totalDepartments }}</h2>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3 mb-3">
-            <div class="card text-bg-info text-white h-100">
+        <div class="col-md-3 mb-4">
+            <div class="card text-bg-warning h-100 shadow">
                 <div class="card-body">
-                    <h5 class="card-title">Present Today</h5>
-                    <h2 class="card-text display-4">142</h2>
+                    <h5 class="card-title">Pending Leaves</h5>
+                    <h2 class="display-5 fw-bold">{{ pendingLeaves }}</h2>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3 mb-3">
-            <div class="card text-bg-warning text-white h-100">
+        <div class="col-md-3 mb-4">
+            <div class="card text-bg-danger h-100 shadow">
                 <div class="card-body">
-                    <h5 class="card-title">On Leave</h5>
-                    <h2 class="card-text display-4">8</h2>
+                    <h5 class="card-title">Monthly Payroll</h5>
+                    <h3 class="mt-3 fw-bold">{{ totalPayroll |
+                        currency:'JOD':'symbol' }}</h3>
                 </div>
             </div>
         </div>

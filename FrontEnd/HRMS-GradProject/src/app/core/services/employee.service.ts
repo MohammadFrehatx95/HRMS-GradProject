@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import { Employee } from '../models/employee.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EmployeeService {
-  private employeesList = [
+  private employeesList: Employee[] = [
     {
       id: 1,
       name: 'Ahmad Salem',
@@ -28,13 +29,11 @@ export class EmployeeService {
     },
   ];
 
-  getEmployees() {
+  getEmployees(): Employee[] {
     return this.employeesList;
   }
 
-  // الدالة الجديدة لإضافة موظف
-  addEmployee(employee: any) {
-    // توليد ID جديد بناءً على طول المصفوفة لضمان عدم التكرار (في حالة عدم حذف موظفين)
+  addEmployee(employee: Employee) {
     employee.id = this.employeesList.length + 1;
     this.employeesList.push(employee);
   }

@@ -1,34 +1,38 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow-sm">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">HRMS Pro</a>
+        <a class="navbar-brand fw-bold" routerLink="/dashboard">HRMS Pro</a>
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarNav" aria-controls="navbarNav"
-            aria-expanded="false" aria-label="Toggle navigation">
+            data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page"
-                        routerLink="/dashboard">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="/employees">Employees</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link"
-                        routerLink="/departments">Departments</a>
-                </li>
+            <ul class="navbar-nav ms-auto">
 
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/leave">Leave</a>
+                    <a class="nav-link" routerLink="/dashboard"
+                        routerLinkActive="active">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/attendance">Attendance</a>
+                    <a class="nav-link" routerLink="/employees"
+                        routerLinkActive="active">Employees</a>
                 </li>
-
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/salary">Salary</a>
+                    <a class="nav-link" routerLink="/departments"
+                        routerLinkActive="active">Departments</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/leave"
+                        routerLinkActive="active">Leave</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/attendance"
+                        routerLinkActive="active">Attendance</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/salary"
+                        routerLinkActive="active">Payroll</a>
                 </li>
 
             </ul>
