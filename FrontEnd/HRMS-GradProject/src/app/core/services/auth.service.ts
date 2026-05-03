@@ -12,8 +12,16 @@ export class AuthService {
   login(credentials: any) {
     return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
       tap((response: any) => {
-        if (response && response.token) {
-          localStorage.setItem('jwt_token', response.token);
+        if (
+          response &&
+          response.success &&
+          response.data &&
+          response.data.token
+        ) {
+          localStorage.setItem('jwt_token', response.data.token);
+
+          localStorage.setItem('user_role', response.data.role);
+          localStorage.setItem('user_name', response.data.username);
         }
       }),
     );
