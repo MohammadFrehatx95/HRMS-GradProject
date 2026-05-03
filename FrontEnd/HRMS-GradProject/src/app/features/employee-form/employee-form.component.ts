@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EmployeeService } from '../../core/services/employee.service';
+import { Employee } from '../../core/models/employee.model';
 
 @Component({
   selector: 'app-employee-form',
@@ -20,7 +21,7 @@ export class EmployeeFormComponent {
     throw new Error('Method not implemented.');
   }
   private employeeService = inject(EmployeeService);
-  private router = inject(Router); // حقن محرك التوجيه للتحكم بالمسارات برمجياً
+  private router = inject(Router);
 
   employeeForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -31,10 +32,22 @@ export class EmployeeFormComponent {
 
   onSubmit() {
     if (this.employeeForm.valid) {
-      // 1. إرسال البيانات للخدمة لحفظها
-      this.employeeService.addEmployee(this.employeeForm.value);
+      const formValue = this.employeeForm.value;
 
-      // 2. إعادة توجيه المستخدم برمجياً إلى شاشة الموظفين
+      const newEmployee: Employee = {
+        id: 0,
+        name: formValue.name ?? '',
+        position: formValue.position ?? '',
+        department: formValue.department ?? '',
+
+        status: (formValue.status ?? 'Active') as
+          | 'Active'
+          | 'On Leave'
+          | 'Terminated',
+      };
+
+      this.employeeService.addEmployee(newEmployee);
+
       this.router.navigate(['/employees']);
     }
   }
