@@ -8,7 +8,7 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav ms-auto align-items-center">
 
                 <li class="nav-item">
                     <a class="nav-link" routerLink="/dashboard"
@@ -35,6 +35,18 @@
                         routerLinkActive="active">Payroll</a>
                 </li>
 
+                <li class="nav-item ms-lg-3">
+                    <span class="navbar-text text-light me-2">
+                        Welcome, <strong>Admin</strong>
+                    </span>
+                </li>
+
+                <li class="nav-item">
+                    <button class="btn btn-sm btn-outline-danger fw-bold px-3"
+                        (click)="onLogout()">
+                        Logout
+                    </button>
+                </li>
             </ul>
         </div>
     </div>

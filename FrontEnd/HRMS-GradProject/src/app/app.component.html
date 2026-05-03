@@ -1,7 +1,7 @@
-<!-- شريط التنقل -->
+@if (authService.isLoggedIn()) {
 <app-navbar></app-navbar>
+}
 
-<!-- منطقة عرض الشاشات المتغيرة -->
 <main class="container-fluid pb-5">
     <router-outlet></router-outlet>
 </main>
