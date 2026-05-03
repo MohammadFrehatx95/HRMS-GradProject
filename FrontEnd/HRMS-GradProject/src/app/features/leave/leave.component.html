@@ -1,1 +1,42 @@
-<p>leave works!</p>
+<div class="container-fluid mt-4">
+    <h2 class="mb-4">Leave Requests</h2>
+
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Employee Name</th>
+                    <th>Leave Type</th>
+                    <th>Duration</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (req of leaveRequests; track req.id) {
+                <tr>
+                    <td>{{ req.id }}</td>
+                    <td>{{ req.employeeName }}</td>
+                    <td>{{ req.type }}</td>
+                    <td>{{ req.startDate }} to {{ req.endDate }}</td>
+                    <td>
+                        <span class="badge"
+                            [class.text-bg-success]="req.status === 'Approved'"
+                            [class.text-bg-warning]="req.status === 'Pending'"
+                            [class.text-bg-danger]="req.status === 'Rejected'">
+                            {{ req.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-success me-2"
+                            [disabled]="req.status !== 'Pending'">Approve</button>
+                        <button class="btn btn-sm btn-danger"
+                            [disabled]="req.status !== 'Pending'">Reject</button>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
