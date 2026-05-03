@@ -5,33 +5,51 @@
         </div>
 
         <div class="card-body">
-            <!-- ربط النموذج بالكائن البرمجي وتحديد دالة الإرسال -->
             <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
 
                 <div class="mb-3">
                     <label class="form-label">Employee Name</label>
-                    <!-- ربط حقل الإدخال بالـ FormControl -->
                     <input type="text" class="form-control"
-                        formControlName="name">
+                        formControlName="name"
+                        [class.is-invalid]="employeeForm.get('name')?.invalid && employeeForm.get('name')?.touched">
+
+                    @if (employeeForm.get('name')?.invalid &&
+                    employeeForm.get('name')?.touched) {
+                    <div class="text-danger mt-1 small">Employee name is
+                        required.</div>
+                    }
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Position</label>
                     <input type="text" class="form-control"
-                        formControlName="position">
+                        formControlName="position"
+                        [class.is-invalid]="employeeForm.get('position')?.invalid && employeeForm.get('position')?.touched">
+
+                    @if (employeeForm.get('position')?.invalid &&
+                    employeeForm.get('position')?.touched) {
+                    <div class="text-danger mt-1 small">Position is
+                        required.</div>
+                    }
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Department</label>
-                    <select class="form-select" formControlName="department">
+                    <select class="form-select" formControlName="department"
+                        [class.is-invalid]="employeeForm.get('department')?.invalid && employeeForm.get('department')?.touched">
                         <option value disabled>Select Department</option>
                         <option value="IT">IT</option>
                         <option value="HR">HR</option>
                         <option value="Finance">Finance</option>
                     </select>
+
+                    @if (employeeForm.get('department')?.invalid &&
+                    employeeForm.get('department')?.touched) {
+                    <div class="text-danger mt-1 small">Please select a
+                        department.</div>
+                    }
                 </div>
 
-                <!-- الزر معطل برمجياً إذا كانت الحقول فارغة -->
                 <button type="submit" class="btn btn-success"
                     [disabled]="employeeForm.invalid">
                     Save Employee

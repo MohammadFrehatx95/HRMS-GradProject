@@ -16,6 +16,9 @@ import { EmployeeService } from '../../core/services/employee.service';
   styleUrl: './employee-form.component.css',
 })
 export class EmployeeFormComponent {
+  onCancel() {
+    throw new Error('Method not implemented.');
+  }
   private employeeService = inject(EmployeeService);
   private router = inject(Router); // حقن محرك التوجيه للتحكم بالمسارات برمجياً
 

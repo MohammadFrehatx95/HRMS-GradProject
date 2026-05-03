@@ -1,1 +1,31 @@
-<p>departments works!</p>
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Departments Overview</h2>
+        <button class="btn btn-outline-primary">Add Department</button>
+    </div>
+
+    <div class="row">
+        @for (dept of departmentsList; track dept.id) {
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">{{ dept.name }}</h5>
+                    <hr>
+                    <p class="card-text">
+                        <strong>Manager:</strong> {{ dept.manager }}
+                    </p>
+                    <p class="card-text">
+                        <strong>Employees:</strong>
+                        <span class="badge text-bg-secondary">{{
+                            dept.employeeCount }}</span>
+                    </p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <button class="btn btn-sm btn-light w-100">View
+                        Details</button>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>

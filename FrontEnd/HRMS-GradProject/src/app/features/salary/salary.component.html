@@ -1,1 +1,36 @@
-<p>salary works!</p>
+<div class="container-fluid mt-4">
+    <h2 class="mb-4">Payroll Management</h2>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Employee Name</th>
+                            <th>Basic Salary</th>
+                            <th>Bonus</th>
+                            <th>Deductions</th>
+                            <th class="text-success">Final Salary</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (record of payrollData; track record.id) {
+                        <tr>
+                            <td><strong>{{ record.employeeName }}</strong></td>
+                            <td>{{ record.basicSalary | currency:'JOD':'symbol'
+                                }}</td>
+                            <td class="text-primary">+ {{ record.allowances |
+                                currency:'JOD':'symbol' }}</td>
+                            <td class="text-danger">- {{ record.deductions |
+                                currency:'JOD':'symbol' }}</td>
+                            <td class="text-success fw-bold">{{ record.netSalary
+                                | currency:'JOD':'symbol' }}</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

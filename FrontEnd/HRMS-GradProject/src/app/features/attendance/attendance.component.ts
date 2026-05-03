@@ -1,11 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { AttendanceService } from '../../core/services/attendance.service';
 
 @Component({
   selector: 'app-attendance',
-  imports: [],
+  standalone: true,
+  imports: [DatePipe],
   templateUrl: './attendance.component.html',
-  styleUrl: './attendance.component.css'
+  styleUrl: './attendance.component.css',
 })
-export class AttendanceComponent {
+export class AttendanceComponent implements OnInit {
+  records: any[] = [];
+  private attendanceService = inject(AttendanceService);
 
+  ngOnInit() {
+    this.records = this.attendanceService.getAttendance();
+  }
 }
