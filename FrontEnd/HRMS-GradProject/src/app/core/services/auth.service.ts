@@ -7,8 +7,8 @@ import { tap } from 'rxjs/operators';
 })
 export class AuthService {
   private http = inject(HttpClient);
-
   private apiUrl = 'https://localhost:7204/api/auth';
+
   login(credentials: any) {
     return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
       tap((response: any) => {
@@ -19,7 +19,6 @@ export class AuthService {
           response.data.token
         ) {
           localStorage.setItem('jwt_token', response.data.token);
-
           localStorage.setItem('user_role', response.data.role);
           localStorage.setItem('user_name', response.data.username);
         }
@@ -31,7 +30,17 @@ export class AuthService {
     return !!localStorage.getItem('jwt_token');
   }
 
+  getUserRole(): string | null {
+    return localStorage.getItem('user_role');
+  }
+
+  isAdmin(): boolean {
+    return this.getUserRole() === 'Admin';
+  }
+
   logout() {
     localStorage.removeItem('jwt_token');
+    localStorage.removeItem('user_role');
+    localStorage.removeItem('user_name');
   }
 }
