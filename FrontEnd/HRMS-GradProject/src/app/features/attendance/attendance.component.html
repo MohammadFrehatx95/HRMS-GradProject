@@ -1,54 +1,46 @@
-<div class="container-fluid mt-4">
-    <h2 class="mb-4">Daily Attendance Log</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-secondary">Attendance Tracking</h2>
+    <button class="btn btn-primary shadow-sm">Mark Attendance</button>
+</div>
 
-    <div class="card shadow-sm">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-striped table-hover mb-0">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Employee</th>
-                            <th>Date</th>
-                            <th>Check-In</th>
-                            <th>Check-Out</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (record of records; track record.id) {
-                        <tr>
-                            <td>{{ record.employeeName }}</td>
-                            <td>{{ record.date | date:'mediumDate' }}</td>
-
-                            <td>
-                                @if (record.checkIn) {
-                                {{ record.checkIn | date:'shortTime' }}
-                                } @else {
-                                <span class="text-muted">--:--</span>
-                                }
-                            </td>
-
-                            <td>
-                                @if (record.checkOut) {
-                                {{ record.checkOut | date:'shortTime' }}
-                                } @else {
-                                <span class="text-muted">--:--</span>
-                                }
-                            </td>
-
-                            <td>
-                                <span class="badge"
-                                    [class.text-bg-success]="record.status === 'Present'"
-                                    [class.text-bg-warning]="record.status === 'Late'"
-                                    [class.text-bg-danger]="record.status === 'Absent'">
-                                    {{ record.status }}
-                                </span>
-                            </td>
-                        </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
+@if (isLoading) {
+<div class="text-center my-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2 text-muted">Loading attendance data...</p>
+</div>
+} @else {
+<div class="card shadow-sm border-0">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Date</th>
+                    <th>Employee Name</th>
+                    <th>Check In</th>
+                    <th>Check Out</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (record of attendanceList; track record.id) {
+                <tr>
+                    <td>{{ record.date | date:'mediumDate' }}</td>
+                    <td class="fw-bold">{{ record.employeeName || 'Unknown'
+                        }}</td>
+                    <td>{{ record.checkInTime || '--:--' }}</td>
+                    <td>{{ record.checkOutTime || '--:--' }}</td>
+                    <td>
+                        <span class="badge rounded-pill"
+                            [class.bg-success]="record.status === 'Present'"
+                            [class.bg-danger]="record.status === 'Absent'"
+                            [class.bg-warning]="record.status === 'Late'">
+                            {{ record.status }}
+                        </span>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>
+}

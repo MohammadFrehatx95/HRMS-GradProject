@@ -1,37 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LeaveService {
-  private leaveRequests = [
-    {
-      id: 1,
-      employeeName: 'Ahmad Salem',
-      type: 'Annual',
-      startDate: '2026-06-01',
-      endDate: '2026-06-10',
-      status: 'Approved',
-    },
-    {
-      id: 2,
-      employeeName: 'Sara Ali',
-      type: 'Sick',
-      startDate: '2026-05-15',
-      endDate: '2026-05-16',
-      status: 'Pending',
-    },
-    {
-      id: 3,
-      employeeName: 'Omar Zaid',
-      type: 'Unpaid',
-      startDate: '2026-07-01',
-      endDate: '2026-07-05',
-      status: 'Rejected',
-    },
-  ];
+  private http = inject(HttpClient);
+  private apiUrl = 'https://localhost:7204/api/leaves';
 
-  getLeaveRequests() {
-    return this.leaveRequests;
+  getLeaves(): Observable<any[]> {
+    return this.http
+      .get<any>(this.apiUrl)
+      .pipe(map((response) => (response.success ? response.data : [])));
   }
 }

@@ -1,36 +1,54 @@
-<div class="container-fluid mt-4">
-    <h2 class="mb-4">Payroll Management</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-secondary">Payroll Management</h2>
+    <button class="btn btn-primary shadow-sm">Generate Payroll</button>
+</div>
 
-    <div class="card shadow-sm border-0">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover mb-0">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Employee Name</th>
-                            <th>Basic Salary</th>
-                            <th>Bonus</th>
-                            <th>Deductions</th>
-                            <th class="text-success">Final Salary</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (record of payrollData; track record.id) {
-                        <tr>
-                            <td><strong>{{ record.employeeName }}</strong></td>
-                            <td>{{ record.basicSalary | currency:'JOD':'symbol'
-                                }}</td>
-                            <td class="text-primary">+ {{ record.allowances |
-                                currency:'JOD':'symbol' }}</td>
-                            <td class="text-danger">- {{ record.deductions |
-                                currency:'JOD':'symbol' }}</td>
-                            <td class="text-success fw-bold">{{ record.netSalary
-                                | currency:'JOD':'symbol' }}</td>
-                        </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
+@if (isLoading) {
+<div class="text-center my-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2 text-muted">Calculating payroll data...</p>
+</div>
+} @else {
+<div class="card shadow-sm border-0">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Month/Year</th>
+                    <th>Employee</th>
+                    <th>Basic Salary</th>
+                    <th>Deductions</th>
+                    <th>Net Salary</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (salary of salaryList; track salary.id) {
+                <tr>
+                    <td>{{ salary.month }}/{{ salary.year }}</td>
+                    <td class="fw-bold">{{ salary.employeeName || 'Unknown'
+                        }}</td>
+                    <td>{{ salary.basicSalary | currency:'JOD':'symbol' }}</td>
+                    <td class="text-danger">{{ salary.deductions |
+                        currency:'JOD':'symbol' }}</td>
+                    <td class="fw-bold text-success">{{ salary.netSalary |
+                        currency:'JOD':'symbol' }}</td>
+                    <td>
+                        <span class="badge rounded-pill"
+                            [class.bg-success]="salary.status === 'Paid'"
+                            [class.bg-warning]="salary.status === 'Pending'">
+                            {{ salary.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-info">View
+                            Payslip</button>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>
+}
