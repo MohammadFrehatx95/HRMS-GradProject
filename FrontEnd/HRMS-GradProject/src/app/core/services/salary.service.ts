@@ -1,34 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SalaryService {
-  private payrollRecords = [
-    {
-      id: 1,
-      employeeName: 'Ahmad Salem',
-      basicSalary: 1500,
-      allowances: 300,
-      deductions: 50,
-    },
-    {
-      id: 2,
-      employeeName: 'Sara Ali',
-      basicSalary: 2000,
-      allowances: 400,
-      deductions: 0,
-    },
-    {
-      id: 3,
-      employeeName: 'Omar Zaid',
-      basicSalary: 1200,
-      allowances: 200,
-      deductions: 100,
-    },
-  ];
+  private http = inject(HttpClient);
+  private apiUrl = 'https://localhost:7204/api/salary';
 
-  getPayroll() {
-    return this.payrollRecords;
+  getSalaries(): Observable<any[]> {
+    return this.http
+      .get<any>(this.apiUrl)
+      .pipe(map((response) => (response.success ? response.data : [])));
   }
 }

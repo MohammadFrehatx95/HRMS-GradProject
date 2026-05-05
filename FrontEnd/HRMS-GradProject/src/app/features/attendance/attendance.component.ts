@@ -1,19 +1,32 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { AttendanceService } from '../../core/services/attendance.service';
 
 @Component({
   selector: 'app-attendance',
   standalone: true,
-  imports: [DatePipe],
+  imports: [CommonModule],
   templateUrl: './attendance.component.html',
-  styleUrl: './attendance.component.css',
 })
 export class AttendanceComponent implements OnInit {
-  records: any[] = [];
+  attendanceList: any[] = [];
+  isLoading: boolean = true;
   private attendanceService = inject(AttendanceService);
 
   ngOnInit() {
-    this.records = this.attendanceService.getAttendance();
+    this.loadAttendance();
+  }
+
+  loadAttendance() {
+    this.attendanceService.getAttendanceRecords().subscribe({
+      next: (data) => {
+        this.attendanceList = data;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching attendance records:', err);
+        this.isLoading = false;
+      },
+    });
   }
 }

@@ -1,38 +1,50 @@
-<div class="container-fluid mt-4">
-    <h2 class="mb-4">Leave Requests</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-secondary">Leave Requests</h2>
+    <button class="btn btn-primary shadow-sm">+ Apply Leave</button>
+</div>
 
+@if (isLoading) {
+<div class="text-center my-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2 text-muted">Loading leave records...</p>
+</div>
+} @else {
+<div class="card shadow-sm border-0">
     <div class="table-responsive">
-        <table class="table table-hover table-bordered align-middle">
+        <table class="table table-hover align-middle mb-0">
             <thead class="table-light">
                 <tr>
                     <th>ID</th>
-                    <th>Employee Name</th>
+                    <th>Employee</th>
                     <th>Leave Type</th>
-                    <th>Duration</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @for (req of leaveRequests; track req.id) {
+                @for (leave of leavesList; track leave.id) {
                 <tr>
-                    <td>{{ req.id }}</td>
-                    <td>{{ req.employeeName }}</td>
-                    <td>{{ req.type }}</td>
-                    <td>{{ req.startDate }} to {{ req.endDate }}</td>
+                    <td>#{{ leave.id }}</td>
+                    <td class="fw-bold">{{ leave.employeeName || 'Unknown'
+                        }}</td>
+                    <td>{{ leave.leaveType }}</td>
+                    <td>{{ leave.startDate | date:'shortDate' }}</td>
+                    <td>{{ leave.endDate | date:'shortDate' }}</td>
                     <td>
-                        <span class="badge"
-                            [class.text-bg-success]="req.status === 'Approved'"
-                            [class.text-bg-warning]="req.status === 'Pending'"
-                            [class.text-bg-danger]="req.status === 'Rejected'">
-                            {{ req.status }}
+                        <span class="badge rounded-pill"
+                            [class.bg-success]="leave.status === 'Approved'"
+                            [class.bg-warning]="leave.status === 'Pending'"
+                            [class.bg-danger]="leave.status === 'Rejected'">
+                            {{ leave.status }}
                         </span>
                     </td>
                     <td>
-                        <button class="btn btn-sm btn-success me-2"
-                            [disabled]="req.status !== 'Pending'">Approve</button>
-                        <button class="btn btn-sm btn-danger"
-                            [disabled]="req.status !== 'Pending'">Reject</button>
+                        <button
+                            class="btn btn-sm btn-outline-success me-1">Approve</button>
+                        <button
+                            class="btn btn-sm btn-outline-danger">Reject</button>
                     </td>
                 </tr>
                 }
@@ -40,3 +52,4 @@
         </table>
     </div>
 </div>
+}

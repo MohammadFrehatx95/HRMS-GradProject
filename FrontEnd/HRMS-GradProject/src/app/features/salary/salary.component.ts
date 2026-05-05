@@ -1,26 +1,32 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CurrencyPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { SalaryService } from '../../core/services/salary.service';
 
 @Component({
   selector: 'app-salary',
   standalone: true,
-  imports: [CurrencyPipe],
+  imports: [CommonModule],
   templateUrl: './salary.component.html',
-  styleUrl: './salary.component.css',
 })
 export class SalaryComponent implements OnInit {
-  payrollData: any[] = [];
+  salaryList: any[] = [];
+  isLoading: boolean = true;
   private salaryService = inject(SalaryService);
 
   ngOnInit() {
-    const rawData = this.salaryService.getPayroll();
+    this.loadSalaries();
+  }
 
-    this.payrollData = rawData.map((record) => {
-      return {
-        ...record,
-        netSalary: record.basicSalary + record.allowances - record.deductions,
-      };
+  loadSalaries() {
+    this.salaryService.getSalaries().subscribe({
+      next: (data) => {
+        this.salaryList = data;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching payroll records:', err);
+        this.isLoading = false;
+      },
     });
   }
 }
