@@ -20,6 +20,13 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'leave-form',
+    loadComponent: () =>
+      import('./features/leave-form/leave-form.component').then(
+        (m) => m.LeaveFormComponent,
+      ),
+  },
+  {
     path: 'employees',
     component: EmployeesComponent,
     canActivate: [authGuard],

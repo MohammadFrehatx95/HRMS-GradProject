@@ -12,16 +12,29 @@ export class LeaveService {
   getLeaves(): Observable<any[]> {
     return this.http.get<any>('https://localhost:7204/api/leaves').pipe(
       map((response) => {
+        if (response && response.data && response.data.items)
+          return response.data.items;
         if (Array.isArray(response)) return response;
-        if (response && response.data) return response.data;
+        if (response && Array.isArray(response.data)) return response.data;
         return [];
       }),
     );
   }
 
-  updateLeaveStatus(id: number, newStatus: string): Observable<any> {
-    return this.http.put(`https://localhost:7204/api/leaves/${id}/status`, {
-      status: newStatus,
-    });
+  applyLeave(leaveData: any): Observable<any> {
+    return this.http.post(this.apiUrl, leaveData);
+  }
+
+  updateLeaveStatus(
+    id: number,
+    status: 'Approved' | 'Rejected',
+    reason: string = '',
+  ): Observable<any> {
+    const url = `${this.apiUrl}/${id}/status`;
+    const body = {
+      status: status,
+      rejectionReason: reason,
+    };
+    return this.http.put(url, body);
   }
 }

@@ -12,13 +12,16 @@ export class EmployeeService {
   getEmployees(): Observable<any[]> {
     return this.http.get<any>(this.apiUrl).pipe(
       map((response) => {
+        if (response && response.data && response.data.items) {
+          return response.data.items;
+        }
         if (Array.isArray(response)) return response;
-        if (response && response.data) return response.data;
+        if (response && Array.isArray(response.data)) return response.data;
+
         return [];
       }),
     );
   }
-
   addEmployee(employee: any): Observable<any> {
     return this.http.post(this.apiUrl, employee);
   }

@@ -1,12 +1,31 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="fw-bold text-secondary">Attendance Tracking</h2>
-    <button class="btn btn-primary shadow-sm">Mark Attendance</button>
+
+    <div class="d-flex gap-2">
+        @if (!isCheckedInToday) {
+        <button class="btn btn-success shadow-sm fw-bold px-4"
+            (click)="onCheckIn()"
+            [disabled]="isProcessing">
+            <i class="bi bi-box-arrow-in-right"></i> Check In
+        </button>
+        } @else if (isCheckedInToday && !isCheckedOutToday) {
+        <button class="btn btn-warning shadow-sm fw-bold px-4 text-dark"
+            (click)="onCheckOut()"
+            [disabled]="isProcessing">
+            <i class="bi bi-box-arrow-right"></i> Check Out
+        </button>
+        } @else {
+        <span class="badge bg-secondary d-flex align-items-center px-3">
+            Shift Completed
+        </span>
+        }
+    </div>
 </div>
 
 @if (isLoading) {
 <div class="text-center my-5">
     <div class="spinner-border text-primary" role="status"></div>
-    <p class="mt-2 text-muted">Loading attendance data...</p>
+    <p class="mt-2 text-muted">Loading attendance records...</p>
 </div>
 } @else {
 <div class="card shadow-sm border-0">
@@ -15,26 +34,49 @@
             <thead class="table-light">
                 <tr>
                     <th>Date</th>
-                    <th>Employee Name</th>
-                    <th>Check In</th>
-                    <th>Check Out</th>
+                    <th>Employee ID</th>
+                    <th>Check-in Time</th>
+                    <th>Check-out Time</th>
+                    <th>Total Hours</th>
                     <th>Status</th>
                 </tr>
             </thead>
             <tbody>
-                @for (record of attendanceList; track record.id) {
+                @for (record of attendanceRecords; track record.id) {
                 <tr>
-                    <td>{{ record.date | date:'mediumDate' }}</td>
-                    <td class="fw-bold">{{ record.employeeName || 'Unknown'
-                        }}</td>
-                    <td>{{ record.checkInTime || '--:--' }}</td>
-                    <td>{{ record.checkOutTime || '--:--' }}</td>
+                    <td class="fw-bold">
+                        {{ (record.clockIn && record.clockIn !== '00:00:00') ?
+                        (record.clockIn | date:'mediumDate') : '--' }}
+                    </td>
+
+                    <td>#{{ record.employeeId }}</td>
+
+                    <td class="text-success fw-semibold">
+                        @if (record.clockIn && record.clockIn !== '00:00:00') {
+                        {{ record.clockIn | date:'shortTime' }}
+                        } @else {
+                        <span class="text-muted small">Not Recorded</span>
+                        }
+                    </td>
+
+                    <td class="text-danger fw-semibold">
+                        @if (record.clockOut && record.clockOut !== '00:00:00')
+                        {
+                        {{ record.clockOut | date:'shortTime' }}
+                        } @else {
+                        --:--
+                        }
+                    </td>
+
+                    <td>{{ record.totalHours > 0 ? record.totalHours + ' hrs' :
+                        'Working...' }}</td>
+
                     <td>
                         <span class="badge rounded-pill"
-                            [class.bg-success]="record.status === 'Present'"
-                            [class.bg-danger]="record.status === 'Absent'"
-                            [class.bg-warning]="record.status === 'Late'">
-                            {{ record.status }}
+                            [class.bg-success]="record.clockIn && record.clockIn !== '00:00:00'"
+                            [class.bg-warning]="!record.clockIn || record.clockIn === '00:00:00'">
+                            {{ (record.clockIn && record.clockIn !== '00:00:00')
+                            ? 'Present' : 'Absent' }}
                         </span>
                     </td>
                 </tr>

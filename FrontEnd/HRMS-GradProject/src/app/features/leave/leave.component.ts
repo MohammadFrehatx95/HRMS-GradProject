@@ -2,11 +2,12 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LeaveService } from '../../core/services/leave.service';
 import { AuthService } from '../../core/services/auth.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-leave',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './leave.component.html',
 })
 export class LeaveComponent implements OnInit {
@@ -35,9 +36,19 @@ export class LeaveComponent implements OnInit {
     });
   }
 
-  changeStatus(id: number, status: string) {
+  changeStatus(id: number, status: 'Approved' | 'Rejected') {
+    let reason = '';
+
+    if (status === 'Rejected') {
+      const inputReason = prompt('Please enter the rejection reason:');
+      if (inputReason === null) {
+        return;
+      }
+      reason = inputReason;
+    }
+
     if (confirm(`Are you sure you want to mark this leave as ${status}?`)) {
-      this.leaveService.updateLeaveStatus(id, status).subscribe({
+      this.leaveService.updateLeaveStatus(id, status, reason).subscribe({
         next: () => {
           const targetLeave = this.leavesList.find((l) => l.id === id);
           if (targetLeave) {

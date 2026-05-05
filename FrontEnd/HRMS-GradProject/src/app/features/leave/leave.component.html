@@ -1,12 +1,12 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold text-secondary">Leave Requests</h2>
-    <button class="btn btn-primary shadow-sm">+ Apply Leave</button>
-</div>
+    <h2 class="fw-bold text-secondary">Leave Management</h2>
+    <a routerLink="/leave-form" class="btn btn-primary shadow-sm">+ Apply
+        Leave</a></div>
 
 @if (isLoading) {
 <div class="text-center my-5">
     <div class="spinner-border text-primary" role="status"></div>
-    <p class="mt-2 text-muted">Loading leave records...</p>
+    <p class="mt-2 text-muted">Fetching leaves data...</p>
 </div>
 } @else {
 <div class="card shadow-sm border-0">
@@ -15,10 +15,10 @@
             <thead class="table-light">
                 <tr>
                     <th>ID</th>
-                    <th>Employee</th>
                     <th>Leave Type</th>
                     <th>Start Date</th>
                     <th>End Date</th>
+                    <th>Reason</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -27,11 +27,10 @@
                 @for (leave of leavesList; track leave.id) {
                 <tr>
                     <td>#{{ leave.id }}</td>
-                    <td class="fw-bold">{{ leave.employeeName || 'Unknown'
-                        }}</td>
-                    <td>{{ leave.leaveType }}</td>
+                    <td class="fw-bold">{{ leave.leaveType }}</td>
                     <td>{{ leave.startDate | date:'shortDate' }}</td>
                     <td>{{ leave.endDate | date:'shortDate' }}</td>
+                    <td>{{ leave.reason }}</td>
                     <td>
                         <span class="badge rounded-pill"
                             [class.bg-success]="leave.status === 'Approved'"
