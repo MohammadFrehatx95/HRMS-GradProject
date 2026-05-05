@@ -1,68 +1,39 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, map } from 'rxjs';
 import { Employee } from '../models/employee.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EmployeeService {
-  private employeesList: Employee[] = [];
+  private http = inject(HttpClient);
+  private apiUrl = 'https://localhost:7204/api/employees';
 
-  private readonly STORAGE_KEY = 'hrms_employees_data';
-
-  constructor() {
-    this.loadFromStorage();
+  private getHeaders() {
+    const token = localStorage.getItem('jwt_token');
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
   }
 
-  private loadFromStorage() {
-    const savedData = localStorage.getItem(this.STORAGE_KEY);
-
-    if (savedData) {
-      this.employeesList = JSON.parse(savedData);
-    } else {
-      this.employeesList = [
-        {
-          id: 1,
-          name: 'Ahmad Salem',
-          position: 'Frontend Developer',
-          department: 'IT',
-          status: 'Active',
-        },
-        {
-          id: 2,
-          name: 'Sara Ali',
-          position: 'HR Manager',
-          department: 'HR',
-          status: 'On Leave',
-        },
-        {
-          id: 3,
-          name: 'Omar Zaid',
-          position: 'Backend Developer',
-          department: 'IT',
-          status: 'Active',
-        },
-      ];
-      this.saveToStorage();
-    }
+  getEmployees(): Observable<Employee[]> {
+    return this.http.get<any>(this.apiUrl, { headers: this.getHeaders() }).pipe(
+      map((response) => {
+        return response.success ? response.data : [];
+      }),
+    );
   }
 
-  private saveToStorage() {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.employeesList));
+  addEmployee(employee: Employee): Observable<any> {
+    return this.http.post(this.apiUrl, employee, {
+      headers: this.getHeaders(),
+    });
   }
 
-  getEmployees(): Employee[] {
-    return this.employeesList;
-  }
-
-  addEmployee(employee: Employee) {
-    const maxId =
-      this.employeesList.length > 0
-        ? Math.max(...this.employeesList.map((e) => e.id))
-        : 0;
-
-    employee.id = maxId + 1;
-    this.employeesList.push(employee);
-
-    this.saveToStorage();
+  getEmployeeById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}`, {
+      headers: this.getHeaders(),
+    });
   }
 }
