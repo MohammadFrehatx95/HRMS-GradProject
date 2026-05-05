@@ -12,69 +12,74 @@
             <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
 
                 <div class="row">
-                    <!-- Name -->
                     <div class="col-md-6 mb-3">
-                        <label
-                            class="form-label fw-bold text-muted small uppercase">Full
+                        <label class="form-label fw-bold text-muted small">First
                             Name</label>
-                        <input type="text"
-                            class="form-control form-control-lg bg-light"
-                            formControlName="name" placeholder="John Doe">
+                        <input type="text" class="form-control bg-light"
+                            formControlName="firstName">
                     </div>
-
-                    <!-- Position -->
                     <div class="col-md-6 mb-3">
-                        <label
-                            class="form-label fw-bold text-muted small uppercase">Position</label>
-                        <input type="text"
-                            class="form-control form-control-lg bg-light"
-                            formControlName="position"
-                            placeholder="e.g. Software Engineer">
+                        <label class="form-label fw-bold text-muted small">Last
+                            Name</label>
+                        <input type="text" class="form-control bg-light"
+                            formControlName="lastName">
                     </div>
                 </div>
 
                 <div class="row">
-                    <!-- Department -->
                     <div class="col-md-6 mb-3">
                         <label
-                            class="form-label fw-bold text-muted small uppercase">Department</label>
-                        <input type="text"
-                            class="form-control form-control-lg bg-light"
-                            formControlName="department"
-                            placeholder="e.g. IT Department">
+                            class="form-label fw-bold text-muted small">Email</label>
+                        <input type="email" class="form-control bg-light"
+                            formControlName="email">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold text-muted small">Phone
+                            Number</label>
+                        <input type="text" class="form-control bg-light"
+                            formControlName="phoneNumber">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold text-muted small">Hire
+                            Date</label>
+                        <input type="date" class="form-control bg-light"
+                            formControlName="hireDate">
                     </div>
 
-                    <!-- Status -->
-                    <div class="col-md-6 mb-4">
+                    <div class="col-md-6 mb-3">
                         <label
-                            class="form-label fw-bold text-muted small uppercase">Status</label>
-                        <select class="form-select form-select-lg bg-light"
-                            formControlName="status">
-                            <option value="Active">Active</option>
-                            <option value="On Leave">On Leave</option>
-                            <option value="Terminated">Terminated</option>
+                            class="form-label fw-bold text-muted small">Department</label>
+                        <select class="form-select bg-light"
+                            formControlName="departmentId">
+                            <option value disabled selected>Select
+                                Department</option>
+                            @for (dept of departments; track dept.id) {
+                            <option [value]="dept.id">{{ dept.name }}</option>
+                            }
                         </select>
                     </div>
                 </div>
 
-                <!-- Submit Button -->
-                <div class="d-flex justify-content-end gap-2 mt-2">
-                    <a routerLink="/employees"
-                        class="btn btn-light btn-lg px-4 fw-bold text-muted">Cancel</a>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label
+                            class="form-label fw-bold text-muted small">Position
+                            ID</label>
+                        <input type="number" class="form-control bg-light"
+                            formControlName="positionId"
+                            placeholder="Enter Position ID">
+                    </div>
 
-                    <button type="submit"
-                        class="btn btn-primary btn-lg px-5 fw-bold"
-                        [disabled]="employeeForm.invalid || isLoading">
-                        @if (isLoading) {
-                        <span class="spinner-border spinner-border-sm me-2"
-                            role="status"></span> Saving...
-                        } @else {
-                        Save Employee
-                        }
-                    </button>
+                    <div class="col-md-6 mb-4 d-none">
+                        <input type="number" formControlName="userId">
+                    </div>
                 </div>
 
+                <button type="submit" class="btn btn-primary shadow-sm"
+                    [disabled]="employeeForm.invalid">Save Employee</button>
             </form>
         </div>
     </div>
-</div>

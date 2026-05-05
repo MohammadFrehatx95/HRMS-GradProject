@@ -10,8 +10,18 @@ export class LeaveService {
   private apiUrl = 'https://localhost:7204/api/leaves';
 
   getLeaves(): Observable<any[]> {
-    return this.http
-      .get<any>(this.apiUrl)
-      .pipe(map((response) => (response.success ? response.data : [])));
+    return this.http.get<any>('https://localhost:7204/api/leaves').pipe(
+      map((response) => {
+        if (Array.isArray(response)) return response;
+        if (response && response.data) return response.data;
+        return [];
+      }),
+    );
+  }
+
+  updateLeaveStatus(id: number, newStatus: string): Observable<any> {
+    return this.http.put(`https://localhost:7204/api/leaves/${id}/status`, {
+      status: newStatus,
+    });
   }
 }

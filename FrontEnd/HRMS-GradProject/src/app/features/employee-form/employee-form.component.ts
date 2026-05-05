@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
   FormGroup,
@@ -7,51 +8,62 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { EmployeeService } from '../../core/services/employee.service';
-import { Employee } from '../../core/models/employee.model';
+import { DepartmentService } from '../../core/services/department.service';
 
 @Component({
   selector: 'app-employee-form',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './employee-form.component.html',
 })
-export class EmployeeFormComponent {
+export class EmployeeFormComponent implements OnInit {
   private employeeService = inject(EmployeeService);
+  private departmentService = inject(DepartmentService);
   private router = inject(Router);
 
   isLoading = false;
+  departments: any[] = [];
 
   employeeForm = new FormGroup({
-    name: new FormControl('', Validators.required),
-    position: new FormControl('', Validators.required),
-    department: new FormControl('', Validators.required),
-    status: new FormControl('Active', Validators.required),
+    firstName: new FormControl('', Validators.required),
+    lastName: new FormControl('', Validators.required),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    phoneNumber: new FormControl('', Validators.required),
+    hireDate: new FormControl('', Validators.required),
+    departmentId: new FormControl('', Validators.required),
+    positionId: new FormControl('', Validators.required),
+    userId: new FormControl(1),
   });
+
+  ngOnInit() {
+    // جلب الأقسام من الباك إند فور تشغيل الشاشة
+    this.departmentService.getDepartments().subscribe({
+      next: (data) => (this.departments = data),
+      error: (err) => console.error('Error loading departments', err),
+    });
+  }
 
   onSubmit() {
     if (this.employeeForm.valid) {
       this.isLoading = true;
       const formValue = this.employeeForm.value;
 
-      const newEmployee: Employee = {
-        id: 0,
-        name: formValue.name ?? '',
-        position: formValue.position ?? '',
-        department: formValue.department ?? '',
-        status: (formValue.status ?? 'Active') as
-          | 'Active'
-          | 'On Leave'
-          | 'Terminated',
+      const newEmployee = {
+        firstName: formValue.firstName,
+        lastName: formValue.lastName,
+        email: formValue.email,
+        phoneNumber: formValue.phoneNumber,
+        hireDate: new Date(formValue.hireDate!).toISOString(),
+        departmentId: Number(formValue.departmentId),
+        positionId: Number(formValue.positionId),
+        userId: Number(formValue.userId),
       };
 
       this.employeeService.addEmployee(newEmployee).subscribe({
-        next: (res) => {
-          this.isLoading = false;
-          this.router.navigate(['/employees']);
-        },
+        next: () => this.router.navigate(['/employees']),
         error: (err) => {
           this.isLoading = false;
-          console.error('Error adding employee:', err);
+          console.error(err);
         },
       });
     }
