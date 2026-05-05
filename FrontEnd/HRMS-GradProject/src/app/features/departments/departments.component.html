@@ -1,31 +1,28 @@
-<div class="container-fluid mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Departments Overview</h2>
-        <button class="btn btn-outline-primary">Add Department</button>
-    </div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-secondary">Departments Management</h2>
+    <button class="btn btn-primary shadow-sm">+ Add Department</button>
+</div>
 
-    <div class="row">
-        @for (dept of departmentsList; track dept.id) {
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title text-primary">{{ dept.name }}</h5>
-                    <hr>
-                    <p class="card-text">
-                        <strong>Manager:</strong> {{ dept.manager }}
-                    </p>
-                    <p class="card-text">
-                        <strong>Employees:</strong>
-                        <span class="badge text-bg-secondary">{{
-                            dept.employeeCount }}</span>
-                    </p>
-                </div>
-                <div class="card-footer bg-transparent border-top-0">
-                    <button class="btn btn-sm btn-light w-100">View
-                        Details</button>
-                </div>
+@if (isLoading) {
+<div class="text-center my-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2 text-muted">Loading departments...</p>
+</div>
+} @else {
+<div class="row">
+    @for (dept of departmentsList; track dept.id) {
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <h5 class="card-title fw-bold">{{ dept.name }}</h5>
+                <p class="card-text text-muted small">{{ dept.description }}</p>
+            </div>
+            <div class="card-footer bg-white border-0 text-end">
+                <button class="btn btn-sm btn-outline-info">View
+                    Details</button>
             </div>
         </div>
-        }
     </div>
+    }
 </div>
+}

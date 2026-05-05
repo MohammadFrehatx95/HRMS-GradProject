@@ -1,16 +1,13 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CurrencyPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { EmployeeService } from '../../core/services/employee.service';
 import { DepartmentService } from '../../core/services/department.service';
-import { LeaveService } from '../../core/services/leave.service';
-import { SalaryService } from '../../core/services/salary.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CurrencyPipe],
+  imports: [CommonModule],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent implements OnInit {
   totalEmployees: number = 0;
@@ -20,30 +17,23 @@ export class DashboardComponent implements OnInit {
 
   private employeeService = inject(EmployeeService);
   private departmentService = inject(DepartmentService);
-  private leaveService = inject(LeaveService);
-  private salaryService = inject(SalaryService);
 
   ngOnInit() {
     this.employeeService.getEmployees().subscribe({
       next: (employees) => {
         this.totalEmployees = employees.length;
       },
-      error: (err) => {
-        console.error('Error fetching employees for dashboard:', err);
-        this.totalEmployees = 0;
-      },
+      error: (err) => console.error('Error fetching employees:', err),
     });
-    this.totalDepartments = this.departmentService.getDepartments().length;
 
-    const leaves = this.leaveService.getLeaveRequests();
-    this.pendingLeaves = leaves.filter(
-      (req) => req.status === 'Pending',
-    ).length;
+    this.departmentService.getDepartments().subscribe({
+      next: (departments) => {
+        this.totalDepartments = departments.length;
+      },
+      error: (err) => console.error('Error fetching departments:', err),
+    });
 
-    const payrolls = this.salaryService.getPayroll();
-    this.totalPayroll = payrolls.reduce((sum, record) => {
-      const net = record.basicSalary + record.allowances - record.deductions;
-      return sum + net;
-    }, 0);
+    this.pendingLeaves = 5;
+    this.totalPayroll = 15450;
   }
 }
