@@ -4,16 +4,27 @@ import { DepartmentService } from '../../core/services/department.service';
 @Component({
   selector: 'app-departments',
   standalone: true,
-  imports: [],
   templateUrl: './departments.component.html',
-  styleUrl: './departments.component.css',
 })
 export class DepartmentsComponent implements OnInit {
   departmentsList: any[] = [];
-
+  isLoading: boolean = true;
   private departmentService = inject(DepartmentService);
 
   ngOnInit() {
-    this.departmentsList = this.departmentService.getDepartments();
+    this.loadDepartments();
+  }
+
+  loadDepartments() {
+    this.departmentService.getDepartments().subscribe({
+      next: (data) => {
+        this.departmentsList = data;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching departments:', err);
+        this.isLoading = false;
+      },
+    });
   }
 }
