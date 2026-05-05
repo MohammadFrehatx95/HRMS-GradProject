@@ -24,7 +24,15 @@ export class DashboardComponent implements OnInit {
   private salaryService = inject(SalaryService);
 
   ngOnInit() {
-    this.totalEmployees = this.employeeService.getEmployees().length;
+    this.employeeService.getEmployees().subscribe({
+      next: (employees) => {
+        this.totalEmployees = employees.length;
+      },
+      error: (err) => {
+        console.error('Error fetching employees for dashboard:', err);
+        this.totalEmployees = 0;
+      },
+    });
     this.totalDepartments = this.departmentService.getDepartments().length;
 
     const leaves = this.leaveService.getLeaveRequests();

@@ -1,37 +1,53 @@
-<div class="container-fluid mt-4">
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-secondary">Employee Management</h2>
+    <a routerLink="/employee-form" class="btn btn-primary shadow-sm">+ Add New
+        Employee</a>
+</div>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Employees Directory</h2>
-        <a routerLink="/employee-form" class="btn btn-primary">Add New
-            Employee</a>
-    </div>
-
+@if (isLoading) {
+<div class="text-center my-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2 text-muted">Fetching data from server...</p>
+</div>
+} @else {
+<div class="card shadow-sm border-0">
     <div class="table-responsive">
-        <table class="table table-striped table-hover border">
-            <thead class="table-dark">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
                     <th>Position</th>
                     <th>Department</th>
                     <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-
                 @for (emp of employeesList; track emp.id) {
                 <tr>
-                    <td>{{ emp.id }}</td>
-                    <td>{{ emp.name }}</td>
+                    <td>#{{ emp.id }}</td>
+                    <td class="fw-bold">{{ emp.name }}</td>
                     <td>{{ emp.position }}</td>
                     <td>{{ emp.department }}</td>
                     <td>
-                        <span class="badge text-bg-primary">{{ emp.status
-                            }}</span> </td>
-
+                        <span class="badge rounded-pill"
+                            [class.bg-success]="emp.status === 'Active'"
+                            [class.bg-warning]="emp.status === 'On Leave'"
+                            [class.bg-danger]="emp.status === 'Terminated'">
+                            {{ emp.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <button
+                            class="btn btn-sm btn-outline-info me-1">View</button>
+                        <button
+                            class="btn btn-sm btn-outline-danger">Delete</button>
+                    </td>
                 </tr>
                 }
             </tbody>
         </table>
     </div>
 </div>
+}
