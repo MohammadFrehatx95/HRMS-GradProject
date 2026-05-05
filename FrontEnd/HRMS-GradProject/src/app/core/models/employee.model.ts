@@ -1,9 +1,9 @@
-// src/app/core/models/employee.model.ts
-
 export interface Employee {
   id: number;
-  name: string;
-  position: string;
-  department: string;
-  status: 'Active' | 'On Leave' | 'Terminated';
+  firstName: string;
+  lastName: string;
+  email: string;
+  departmentId: number;
+  isActive: boolean;
+  positionId?: number;
 }

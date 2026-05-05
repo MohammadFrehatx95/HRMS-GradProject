@@ -19,9 +19,9 @@
             <thead class="table-light">
                 <tr>
                     <th>ID</th>
-                    <th>Name</th>
-                    <th>Position</th>
-                    <th>Department</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Dept ID</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -30,15 +30,18 @@
                 @for (emp of employeesList; track emp.id) {
                 <tr>
                     <td>#{{ emp.id }}</td>
-                    <td class="fw-bold">{{ emp.name }}</td>
-                    <td>{{ emp.position }}</td>
-                    <td>{{ emp.department }}</td>
+                    <!-- دمج الاسم الأول والأخير -->
+                    <td class="fw-bold">{{ emp.firstName }} {{ emp.lastName
+                        }}</td>
+                    <td>{{ emp.email }}</td>
+                    <!-- عرض معرف القسم (مؤقتاً حتى نربطه باسم القسم لاحقاً) -->
+                    <td>{{ emp.departmentId }}</td>
                     <td>
+                        <!-- الباك إند يستخدم isActive كقيمة منطقية (Boolean) -->
                         <span class="badge rounded-pill"
-                            [class.bg-success]="emp.status === 'Active'"
-                            [class.bg-warning]="emp.status === 'On Leave'"
-                            [class.bg-danger]="emp.status === 'Terminated'">
-                            {{ emp.status }}
+                            [class.bg-success]="emp.isActive"
+                            [class.bg-danger]="!emp.isActive">
+                            {{ emp.isActive ? 'Active' : 'Inactive' }}
                         </span>
                     </td>
                     <td>

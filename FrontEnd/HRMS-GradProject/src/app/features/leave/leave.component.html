@@ -41,10 +41,14 @@
                         </span>
                     </td>
                     <td>
-                        <button
-                            class="btn btn-sm btn-outline-success me-1">Approve</button>
-                        <button
-                            class="btn btn-sm btn-outline-danger">Reject</button>
+                        @if (isAdmin && leave.status === 'Pending') {
+                        <button class="btn btn-sm btn-outline-success me-1"
+                            (click)="changeStatus(leave.id, 'Approved')">Approve</button>
+                        <button class="btn btn-sm btn-outline-danger"
+                            (click)="changeStatus(leave.id, 'Rejected')">Reject</button>
+                        } @else {
+                        <span class="text-muted small">No actions</span>
+                        }
                     </td>
                 </tr>
                 }
