@@ -12,8 +12,10 @@ export class DepartmentService {
   getDepartments(): Observable<any[]> {
     return this.http.get<any>('https://localhost:7204/api/departments').pipe(
       map((response) => {
+        if (response && response.data && response.data.items)
+          return response.data.items;
         if (Array.isArray(response)) return response;
-        if (response && response.data) return response.data;
+        if (response && Array.isArray(response.data)) return response.data;
         return [];
       }),
     );

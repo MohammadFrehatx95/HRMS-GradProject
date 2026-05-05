@@ -5,12 +5,12 @@ import { Observable, map } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class AttendanceService {
+export class PositionService {
   private http = inject(HttpClient);
-  private apiUrl = 'https://localhost:7204/api/attendance';
+  private apiUrl = 'https://localhost:7204/api/positions';
 
-  getMyAttendance(): Observable<any[]> {
-    return this.http.get<any>(`${this.apiUrl}/my`).pipe(
+  getPositionsByDepartment(departmentId: number): Observable<any[]> {
+    return this.http.get<any>(`${this.apiUrl}/department/${departmentId}`).pipe(
       map((response) => {
         if (response && response.data && response.data.items)
           return response.data.items;
@@ -19,13 +19,5 @@ export class AttendanceService {
         return [];
       }),
     );
-  }
-
-  checkIn(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/clockin`, {});
-  }
-
-  checkOut(): Observable<any> {
-    return this.http.put(`${this.apiUrl}/clockout`, {});
   }
 }

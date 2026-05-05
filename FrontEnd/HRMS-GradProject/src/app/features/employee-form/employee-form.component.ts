@@ -9,6 +9,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { EmployeeService } from '../../core/services/employee.service';
 import { DepartmentService } from '../../core/services/department.service';
+import { PositionService } from '../../core/services/position.service'; // 1. استيراد الخدمة
 
 @Component({
   selector: 'app-employee-form',
@@ -19,10 +20,12 @@ import { DepartmentService } from '../../core/services/department.service';
 export class EmployeeFormComponent implements OnInit {
   private employeeService = inject(EmployeeService);
   private departmentService = inject(DepartmentService);
+  private positionService = inject(PositionService); // 2. حقن الخدمة
   private router = inject(Router);
 
   isLoading = false;
   departments: any[] = [];
+  positions: any[] = []; // 3. مصفوفة لتخزين المسميات الوظيفية
 
   employeeForm = new FormGroup({
     firstName: new FormControl('', Validators.required),
@@ -31,15 +34,36 @@ export class EmployeeFormComponent implements OnInit {
     phoneNumber: new FormControl('', Validators.required),
     hireDate: new FormControl('', Validators.required),
     departmentId: new FormControl('', Validators.required),
-    positionId: new FormControl('', Validators.required),
+    positionId: new FormControl(
+      { value: '', disabled: true },
+      Validators.required,
+    ),
     userId: new FormControl(1),
   });
 
   ngOnInit() {
-    // جلب الأقسام من الباك إند فور تشغيل الشاشة
     this.departmentService.getDepartments().subscribe({
       next: (data) => (this.departments = data),
       error: (err) => console.error('Error loading departments', err),
+    });
+
+    this.employeeForm.get('departmentId')?.valueChanges.subscribe((deptId) => {
+      if (deptId) {
+        this.employeeForm.get('positionId')?.enable();
+
+        this.positionService
+          .getPositionsByDepartment(Number(deptId))
+          .subscribe({
+            next: (data) => {
+              this.positions = data;
+              this.employeeForm.get('positionId')?.setValue('');
+            },
+            error: (err) => console.error('Error loading positions', err),
+          });
+      } else {
+        this.employeeForm.get('positionId')?.disable();
+        this.positions = [];
+      }
     });
   }
 

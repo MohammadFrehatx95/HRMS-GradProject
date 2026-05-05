@@ -1,42 +1,70 @@
-<div class="container-fluid mt-4">
-    <h2 class="mb-4">System Overview</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-secondary">Dashboard Overview</h2>
+</div>
 
-    <div class="row">
-        <div class="col-md-3 mb-4">
-            <div class="card text-bg-primary h-100 shadow">
-                <div class="card-body">
-                    <h5 class="card-title">Total Employees</h5>
-                    <h2 class="display-5 fw-bold">{{ totalEmployees }}</h2>
-                </div>
-            </div>
-        </div>
+@if (isLoading) {
+<div class="text-center my-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2 text-muted">Calculating statistics...</p>
+</div>
+} @else {
+<div class="row g-4 mb-4">
 
-        <div class="col-md-3 mb-4">
-            <div class="card text-bg-success h-100 shadow">
-                <div class="card-body">
-                    <h5 class="card-title">Departments</h5>
-                    <h2 class="display-5 fw-bold">{{ totalDepartments }}</h2>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 mb-4">
-            <div class="card text-bg-warning h-100 shadow">
-                <div class="card-body">
-                    <h5 class="card-title">Pending Leaves</h5>
-                    <h2 class="display-5 fw-bold">{{ pendingLeaves }}</h2>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 mb-4">
-            <div class="card text-bg-danger h-100 shadow">
-                <div class="card-body">
-                    <h5 class="card-title">Monthly Payroll</h5>
-                    <h3 class="mt-3 fw-bold">{{ totalPayroll |
-                        currency:'JOD':'symbol' }}</h3>
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-primary text-white h-100">
+            <div class="card-body">
+                <h6 class="text-white-50 text-uppercase fw-bold">Total
+                    Employees</h6>
+                <h2 class="display-5 fw-bold mb-0">{{ totalEmployees }}</h2>
+                <div class="mt-2 small">
+                    <span>{{ activeEmployees }} Active</span>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-success text-white h-100">
+            <div class="card-body">
+                <h6
+                    class="text-white-50 text-uppercase fw-bold">Departments</h6>
+                <h2 class="display-5 fw-bold mb-0">{{ totalDepartments }}</h2>
+                <div class="mt-2 small">
+                    <a routerLink="/departments"
+                        class="text-white text-decoration-none border-bottom border-white">Manage
+                        &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-warning text-dark h-100">
+            <div class="card-body">
+                <h6 class="text-dark-50 text-uppercase fw-bold">Pending
+                    Leaves</h6>
+                <h2 class="display-5 fw-bold mb-0">{{ pendingLeaves }}</h2>
+                <div class="mt-2 small">
+                    <a routerLink="/leave"
+                        class="text-dark text-decoration-none border-bottom border-dark">Review
+                        Requests &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-info text-white h-100">
+            <div class="card-body">
+                <h6 class="text-white-50 text-uppercase fw-bold">System
+                    Status</h6>
+                <h2 class="display-6 fw-bold mb-0">Online</h2>
+                <div class="mt-2 small">
+                    <span>Connected to Supabase</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+}

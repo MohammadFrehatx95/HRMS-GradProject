@@ -63,21 +63,17 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-                        <label
-                            class="form-label fw-bold text-muted small">Position
-                            ID</label>
-                        <input type="number" class="form-control bg-light"
-                            formControlName="positionId"
-                            placeholder="Enter Position ID">
-                    </div>
-
-                    <div class="col-md-6 mb-4 d-none">
-                        <input type="number" formControlName="userId">
-                    </div>
+                <div class="col-md-6 mb-4">
+                    <label
+                        class="form-label fw-bold text-muted small">Position</label>
+                    <select class="form-select bg-light"
+                        formControlName="positionId">
+                        <option value disabled selected>Select Position</option>
+                        @for (pos of positions; track pos.id) {
+                        <option [value]="pos.id">{{ pos.title }}</option>
+                        }
+                    </select>
                 </div>
-
                 <button type="submit" class="btn btn-primary shadow-sm"
                     [disabled]="employeeForm.invalid">Save Employee</button>
             </form>
