@@ -3,6 +3,7 @@ using Application.DTOs.Salary;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,7 +15,7 @@ using System.Threading.Tasks;
 namespace Application.Services.Implementations
 {
     
-    public class SalaryService(IUnitOfWork uow, IMapper mapper) : ISalaryService
+    public class SalaryService(IUnitOfWork uow, IMapper mapper, INotificationService notificationService) : ISalaryService
     {
         public async Task<PagedResult<SalaryDto>> GetAllAsync(int pageNumber, int pageSize)
         {
@@ -112,6 +113,21 @@ namespace Application.Services.Implementations
             await uow.Repository<Salary>().AddAsync(salary);
             await uow.SaveChangesAsync();
 
+            var user = await uow.Repository<User>()
+                           .GetAllQueryable()
+                           .FirstOrDefaultAsync(u => u.EmployeeId == dto.EmployeeId);
+
+            if (user is not null)
+            {
+                await notificationService.CreateAsync(
+                    userId: user.Id,
+                    title: "Salary Statement Available ",
+                    message: $"Your salary for {dto.Month}/{dto.Year} has been added. " +
+                             $"Net Amount: {salary.NetAmount:C}",
+                    type: NotificationType.SalaryCreated
+                );
+            }
+
             return (await GetByIdAsync(salary.Id))!;
         }
 
@@ -140,6 +156,22 @@ namespace Application.Services.Implementations
 
             uow.Repository<Salary>().Update(salary);
             await uow.SaveChangesAsync();
+
+            var user = await uow.Repository<User>()
+                            .GetAllQueryable()
+                            .FirstOrDefaultAsync(u =>
+                                u.EmployeeId == salary.EmployeeId);
+
+            if (user is not null)
+            {
+                await notificationService.CreateAsync(
+                    userId: user.Id,
+                    title: "Salary Updated ",
+                    message: $"Your salary for {salary.Month}/{salary.Year} " +
+                             $"has been updated. Net Amount: {salary.NetAmount:C}",
+                    type: NotificationType.SalaryUpdated
+                );
+            }
 
             return mapper.Map<SalaryDto>(salary);
         }

@@ -8,6 +8,7 @@ using Application.DTOs.Attendance;
 using Application.DTOs.Department;
 using Application.DTOs.Employee;
 using Application.DTOs.Leave;
+using Application.DTOs.Notification;
 using Application.DTOs.Position;
 using Application.DTOs.Salary;
 using AutoMapper;
@@ -85,12 +86,17 @@ public class MappingProfile : Profile
                     ? FormatHours(s.ClockIn, s.ClockOut.Value)
                     : null));
 
-        // MappingProfile.cs
+        
         CreateMap<Salary, SalaryDto>()
             .ForMember(d => d.EmployeeName,
                 o => o.MapFrom(s => s.Employee != null
                     ? $"{s.Employee.FirstName} {s.Employee.LastName}"
                     : string.Empty));
+
+       
+        CreateMap<Notification, NotificationDto>()
+            .ForMember(d => d.Type,
+                o => o.MapFrom(s => s.Type.ToString()));
     }
 
 // Helper method في نفس الـ MappingProfile

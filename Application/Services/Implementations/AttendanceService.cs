@@ -3,14 +3,15 @@ using Application.DTOs.Attendance;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 
 namespace Application.Services.Implementations
 {
-   
-    public class AttendanceService(IUnitOfWork uow, IMapper mapper) : IAttendanceService
+
+    public class AttendanceService(IUnitOfWork uow,IMapper mapper,INotificationService notificationService) : IAttendanceService
     {
         public async Task<PagedResult<AttendanceDto>> GetAllAsync(int pageNumber, int pageSize)
         {
@@ -76,6 +77,20 @@ namespace Application.Services.Implementations
             await uow.Repository<Attendance>().AddAsync(attendance);
             await uow.SaveChangesAsync();
 
+            var user = await uow.Repository<User>()
+                           .GetAllQueryable()
+                           .FirstOrDefaultAsync(u => u.EmployeeId == employeeId);
+
+            if (user is not null)
+            {
+                await notificationService.CreateAsync(
+                    userId: user.Id,
+                    title: "Clock In Recorded ",
+                    message: $"Your attendance was recorded at {dto.ClockIn}",
+                    type: NotificationType.ClockIn
+                );
+            }
+
             return (await GetByIdAsync(attendance.Id))!;
         }
 
@@ -104,6 +119,21 @@ namespace Application.Services.Implementations
 
             uow.Repository<Attendance>().Update(attendance);
             await uow.SaveChangesAsync();
+
+            var user = await uow.Repository<User>()
+                           .GetAllQueryable()
+                           .FirstOrDefaultAsync(u => u.EmployeeId == employeeId);
+
+            if (user is not null)
+            {
+                await notificationService.CreateAsync(
+                    userId: user.Id,
+                    title: "Clock Out Recorded ",
+                    message: $"You clocked out at {dto.ClockOut}. " +
+                             $"Total: {attendance.ClockOut!.Value.ToTimeSpan() - attendance.ClockIn.ToTimeSpan():hh\\:mm}",
+                    type: NotificationType.ClockOut
+                );
+            }
 
             return mapper.Map<AttendanceDto>(attendance);
         }
