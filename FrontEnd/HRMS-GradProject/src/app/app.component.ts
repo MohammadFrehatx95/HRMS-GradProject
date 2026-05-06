@@ -7,10 +7,13 @@ import { AuthService } from './core/services/auth.service';
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, NavbarComponent],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  template: `
+    @if (authService.isLoggedIn()) {
+      <app-navbar></app-navbar>
+    }
+    <router-outlet></router-outlet>
+  `,
 })
 export class AppComponent {
-  title = 'HRMS-GradProject';
   authService = inject(AuthService);
 }

@@ -9,22 +9,25 @@ import { SalaryService } from '../../core/services/salary.service';
   templateUrl: './salary.component.html',
 })
 export class SalaryComponent implements OnInit {
-  salaryList: any[] = [];
-  isLoading: boolean = true;
   private salaryService = inject(SalaryService);
 
+  salaryRecords: any[] = [];
+  isLoading = true;
+
   ngOnInit() {
-    this.loadSalaries();
+    this.loadSalaryData();
   }
 
-  loadSalaries() {
-    this.salaryService.getSalaries().subscribe({
+  loadSalaryData() {
+    this.isLoading = true;
+
+    this.salaryService.getMyPayrolls().subscribe({
       next: (data) => {
-        this.salaryList = data;
+        this.salaryRecords = data;
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching payroll records:', err);
+        console.error('Error fetching salary:', err);
         this.isLoading = false;
       },
     });
