@@ -1,49 +1,46 @@
 <div class="container d-flex justify-content-center align-items-center vh-100">
-    <div class="card shadow-lg border-0"
-        style="width: 100%; max-width: 400px; border-radius: 15px;">
-        <div class="card-body p-5">
-            <div class="text-center mb-4">
-                <h2 class="fw-bold text-primary">HRMS Pro</h2>
-                <p class="text-muted">Sign in to your account</p>
-            </div>
-
-            @if (errorMessage) {
-            <div class="alert alert-danger text-center small" role="alert">
-                {{ errorMessage }}
-            </div>
-            }
-
-            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-                <div class="mb-3">
-                    <label class="form-label text-secondary fw-semibold">Email
-                        address</label>
-                    <input type="email"
-                        class="form-control form-control-lg bg-light"
-                        formControlName="email" placeholder="name@company.com"
-                        [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-                </div>
-
-                <div class="mb-4">
-                    <label
-                        class="form-label text-secondary fw-semibold">Password</label>
-                    <input type="password"
-                        class="form-control form-control-lg bg-light"
-                        formControlName="password" placeholder="••••••••"
-                        [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-                </div>
-
-                <button type="submit"
-                    class="btn btn-primary btn-lg w-100 fw-bold"
-                    [disabled]="loginForm.invalid || isLoading">
-                    @if (isLoading) {
-                    <span class="spinner-border spinner-border-sm me-2"
-                        role="status" aria-hidden="true"></span>
-                    Signing in...
-                    } @else {
-                    Sign In
-                    }
-                </button>
-            </form>
+    <div class="card shadow-lg border-0 p-4"
+        style="width: 100%; max-width: 400px;">
+        <div class="text-center mb-4">
+            <i class="bi bi-shield-lock text-primary"
+                style="font-size: 3rem;"></i>
+            <h2 class="fw-bold text-primary mt-2">HRMS Pro</h2>
+            <p class="text-muted">Sign in to your account</p>
         </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Email address</label>
+                <div class="input-group shadow-sm">
+                    <span class="input-group-text bg-white text-primary"><i
+                            class="bi bi-envelope"></i></span>
+                    <input type="email" class="form-control"
+                        formControlName="email" placeholder="name@example.com">
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-bold">Password</label>
+                <div class="input-group shadow-sm">
+                    <span class="input-group-text bg-white text-primary"><i
+                            class="bi bi-lock"></i></span>
+                    <input type="password" class="form-control"
+                        formControlName="password" placeholder="••••••••">
+                </div>
+            </div>
+
+            <button type="submit"
+                class="btn btn-primary w-100 py-2 fw-bold shadow-sm"
+                [disabled]="loginForm.invalid || isLoading">
+                @if (isLoading) {
+                <span class="spinner-border spinner-border-sm me-2"></span>
+                Signing in...
+                } @else {
+                <i class="bi bi-box-arrow-in-right me-2"></i> Sign In
+                }
+            </button>
+
+        </form>
     </div>
 </div>

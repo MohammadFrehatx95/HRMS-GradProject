@@ -1,10 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { forkJoin } from 'rxjs';
-import { EmployeeService } from '../../core/services/employee.service';
-import { DepartmentService } from '../../core/services/department.service';
-import { LeaveService } from '../../core/services/leave.service';
+import { AuthService } from '../../core/services/auth.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,43 +11,46 @@ import { LeaveService } from '../../core/services/leave.service';
   templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent implements OnInit {
-  private employeeService = inject(EmployeeService);
-  private departmentService = inject(DepartmentService);
-  private leaveService = inject(LeaveService);
+  private authService = inject(AuthService);
+  private http = inject(HttpClient);
 
-  isLoading = true;
+  isAdmin: boolean = false;
+  userName: string = '';
 
-  totalEmployees = 0;
-  totalDepartments = 0;
-  pendingLeaves = 0;
-  activeEmployees = 0;
+  totalEmployees: number = 0;
+  departmentsCount: number = 0;
+  pendingLeaves: number = 0;
+
+  employeeProfile: any = null;
 
   ngOnInit() {
-    this.loadDashboardData();
+    this.isAdmin = this.authService.isAdmin();
+
+    this.userName = localStorage.getItem('user_name') || 'User';
+
+    if (this.isAdmin) {
+      this.loadAdminDashboard();
+    } else {
+      this.loadEmployeeDashboard();
+    }
   }
 
-  loadDashboardData() {
-    forkJoin({
-      employees: this.employeeService.getEmployees(),
-      departments: this.departmentService.getDepartments(),
-      leaves: this.leaveService.getLeaves(),
-    }).subscribe({
-      next: (data) => {
-        this.totalEmployees = data.employees.length;
-        this.activeEmployees = data.employees.filter(
-          (emp) => emp.isActive,
-        ).length;
-        this.totalDepartments = data.departments.length;
-        this.pendingLeaves = data.leaves.filter(
-          (leave) => leave.status === 'Pending',
-        ).length;
+  loadAdminDashboard() {
+    this.totalEmployees = 12;
+    this.departmentsCount = 4;
+    this.pendingLeaves = 2;
+  }
 
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error loading dashboard data', err);
-        this.isLoading = false;
-      },
-    });
+  loadEmployeeDashboard() {
+    this.http
+      .get<any>('https://localhost:7204/api/employees/my-profile')
+      .subscribe({
+        next: (profile) => {
+          this.employeeProfile = profile;
+        },
+        error: (err) => {
+          console.error('Error fetching my profile:', err);
+        },
+      });
   }
 }

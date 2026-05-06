@@ -7,13 +7,13 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import Swal from 'sweetalert2'; // 👈 استيراد مكتبة التنبيهات
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
 })
 export class LoginComponent {
   private authService = inject(AuthService);
@@ -24,22 +24,32 @@ export class LoginComponent {
     password: new FormControl('', Validators.required),
   });
 
-  errorMessage: string = '';
   isLoading: boolean = false;
 
   onSubmit() {
     if (this.loginForm.valid) {
       this.isLoading = true;
-      this.errorMessage = '';
 
       this.authService.login(this.loginForm.value).subscribe({
         next: (res) => {
           this.isLoading = false;
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Welcome back!',
+            showConfirmButton: false,
+            timer: 1500,
+          });
           this.router.navigate(['/dashboard']);
         },
         error: (err) => {
           this.isLoading = false;
-          this.errorMessage = 'Invalid email or password. Please try again.';
+          Swal.fire({
+            icon: 'error',
+            title: 'Authentication Failed',
+            text: 'Invalid email or password. Please try again.',
+            confirmButtonColor: '#0d6efd',
+          });
           console.error(err);
         },
       });

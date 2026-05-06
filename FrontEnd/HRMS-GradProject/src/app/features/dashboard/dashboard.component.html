@@ -1,70 +1,98 @@
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold text-secondary">Dashboard Overview</h2>
+<div
+    class="d-flex justify-content-between align-items-center mb-5 border-bottom pb-3">
+    <h2 class="fw-bold text-secondary m-0">Dashboard Overview</h2>
+    <span class="fs-5 text-primary fw-bold">Welcome, {{ userName }}!</span>
 </div>
 
-@if (isLoading) {
-<div class="text-center my-5">
-    <div class="spinner-border text-primary" role="status"></div>
-    <p class="mt-2 text-muted">Calculating statistics...</p>
+@if (isAdmin) {
+<div class="row g-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h6 class="text-uppercase fw-bold mb-3">Total Employees</h6>
+                <h2 class="display-5 fw-bold mb-0">{{ totalEmployees }}</h2>
+                <small>Active</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h6 class="text-uppercase fw-bold mb-3">Departments</h6>
+                <h2 class="display-5 fw-bold mb-0">{{ departmentsCount }}</h2>
+                <small><a routerLink="/departments"
+                        class="text-white text-decoration-none">Manage
+                        →</a></small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-dark border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h6 class="text-uppercase fw-bold mb-3">Pending Leaves</h6>
+                <h2 class="display-5 fw-bold mb-0">{{ pendingLeaves }}</h2>
+                <small><a routerLink="/leave"
+                        class="text-dark text-decoration-none">Review Requests
+                        →</a></small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h6 class="text-uppercase fw-bold mb-3">System Status</h6>
+                <h2 class="display-5 fw-bold mb-0">Online</h2>
+                <small>Connected securely</small>
+            </div>
+        </div>
+    </div>
 </div>
 } @else {
-<div class="row g-4 mb-4">
-
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0 bg-primary text-white h-100">
-            <div class="card-body">
-                <h6 class="text-white-50 text-uppercase fw-bold">Total
-                    Employees</h6>
-                <h2 class="display-5 fw-bold mb-0">{{ totalEmployees }}</h2>
-                <div class="mt-2 small">
-                    <span>{{ activeEmployees }} Active</span>
-                </div>
+<div class="row g-4">
+    <div class="col-md-8">
+        <div
+            class="card shadow-sm border-0 h-100 border-start border-primary border-4">
+            <div class="card-body p-4">
+                <h4 class="card-title text-primary mb-3">My Employee Portal</h4>
+                <p class="text-muted fs-5 lh-lg">
+                    Welcome to your HRMS portal. You can use the navigation bar
+                    above to:
+                </p>
+                <ul class="text-muted fs-5 lh-lg">
+                    <li>Check your daily <strong>Attendance</strong> and working
+                        hours.</li>
+                    <li>Apply for and track your <strong>Leave</strong>
+                        requests.</li>
+                    <li>View your monthly <strong>Salary</strong>
+                        statements.</li>
+                </ul>
             </div>
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0 bg-success text-white h-100">
-            <div class="card-body">
-                <h6
-                    class="text-white-50 text-uppercase fw-bold">Departments</h6>
-                <h2 class="display-5 fw-bold mb-0">{{ totalDepartments }}</h2>
-                <div class="mt-2 small">
-                    <a routerLink="/departments"
-                        class="text-white text-decoration-none border-bottom border-white">Manage
-                        &rarr;</a>
+    <div class="col-md-4">
+        @if (employeeProfile?.adminNote) {
+        <div class="card border-0 shadow-sm h-100 bg-warning bg-opacity-10">
+            <div class="card-body p-4">
+                <h5 class="text-warning text-darken-3 fw-bold mb-3">
+                    ⚠️ Note from Admin:
+                </h5>
+                <div class="p-3 bg-white rounded border border-warning">
+                    <p class="mb-0 text-dark fs-6">{{ employeeProfile.adminNote
+                        }}</p>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0 bg-warning text-dark h-100">
-            <div class="card-body">
-                <h6 class="text-dark-50 text-uppercase fw-bold">Pending
-                    Leaves</h6>
-                <h2 class="display-5 fw-bold mb-0">{{ pendingLeaves }}</h2>
-                <div class="mt-2 small">
-                    <a routerLink="/leave"
-                        class="text-dark text-decoration-none border-bottom border-dark">Review
-                        Requests &rarr;</a>
-                </div>
+        } @else {
+        <div
+            class="card border-0 shadow-sm h-100 bg-light d-flex align-items-center justify-content-center">
+            <div
+                class="card-body text-center d-flex flex-column justify-content-center">
+                <span class="text-muted fs-5">No new notifications</span>
+                <small class="text-muted mt-2">You are all caught up!</small>
             </div>
         </div>
+        }
     </div>
-
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0 bg-info text-white h-100">
-            <div class="card-body">
-                <h6 class="text-white-50 text-uppercase fw-bold">System
-                    Status</h6>
-                <h2 class="display-6 fw-bold mb-0">Online</h2>
-                <div class="mt-2 small">
-                    <span>Connected to Supabase</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </div>
 }
