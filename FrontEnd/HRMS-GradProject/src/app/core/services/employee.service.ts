@@ -25,6 +25,12 @@ export class EmployeeService {
   addEmployee(employee: any): Observable<any> {
     return this.http.post(this.apiUrl, employee);
   }
+  getEmployeeFullProfile(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
+  }
+  updateEmployeeNote(id: number, note: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}/note`, { note });
+  }
 
   deleteEmployee(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);

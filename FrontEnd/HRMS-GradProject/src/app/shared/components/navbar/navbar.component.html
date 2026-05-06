@@ -1,6 +1,8 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
     <div class="container-fluid">
-        <a class="navbar-brand fw-bold" routerLink="/dashboard">HRMS Pro</a>
+        <a class="navbar-brand fw-bold" routerLink="/dashboard">
+            <i class="bi bi-layers-half text-primary me-2"></i>HRMS Pro
+        </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarNav">
@@ -12,40 +14,54 @@
 
                 <li class="nav-item">
                     <a class="nav-link" routerLink="/dashboard"
-                        routerLinkActive="active">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="/employees"
-                        routerLinkActive="active">Employees</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="/departments"
-                        routerLinkActive="active">Departments</a>
+                        routerLinkActive="active">
+                        <i class="bi bi-speedometer2 me-1"></i> Dashboard
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" routerLink="/leave"
-                        routerLinkActive="active">Leave</a>
+                        routerLinkActive="active">
+                        <i class="bi bi-calendar-event me-1"></i> Leave
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" routerLink="/attendance"
-                        routerLinkActive="active">Attendance</a>
+                        routerLinkActive="active">
+                        <i class="bi bi-clock-history me-1"></i> Attendance
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" routerLink="/salary"
-                        routerLinkActive="active">Salary</a>
+                        routerLinkActive="active">
+                        <i class="bi bi-cash-stack me-1"></i> Salary
+                    </a>
                 </li>
 
                 @if (isAdmin) {
+                <li class="nav-item ms-lg-3 border-start ps-lg-3">
+                    <a class="nav-link" routerLink="/employees"
+                        routerLinkActive="active">
+                        <i class="bi bi-people me-1"></i> Employees
+                    </a>
+                </li>
                 <li class="nav-item">
-                    <a class="nav-link fw-bold" routerLink="/employee-form"
-                        routerLinkActive="active">Admin</a>
+                    <a class="nav-link" routerLink="/departments"
+                        routerLinkActive="active">
+                        <i class="bi bi-diagram-3 me-1"></i> Departments
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-success fw-bold"
+                        routerLink="/employee-form" routerLinkActive="active">
+                        <i class="bi bi-person-plus-fill me-1"></i> Add
+                    </a>
                 </li>
                 }
 
-                <li class="nav-item">
-                    <button class="btn btn-sm btn-outline-danger fw-bold px-3"
+                <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+                    <button class="btn btn-outline-danger btn-sm fw-bold px-3"
                         (click)="onLogout()">
-                        Logout
+                        <i class="bi bi-power me-1"></i> Logout
                     </button>
                 </li>
             </ul>

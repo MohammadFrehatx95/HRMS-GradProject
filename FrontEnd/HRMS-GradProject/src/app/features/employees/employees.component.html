@@ -1,9 +1,12 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold text-secondary">Employee Management</h2>
+    <h2 class="fw-bold text-secondary">
+        <i class="bi bi-people-fill me-2"></i>Employee Management
+    </h2>
 
     @if (isAdmin) {
-    <a routerLink="/employee-form" class="btn btn-primary shadow-sm">+ Add New
-        Employee</a>
+    <a routerLink="/employee-form" class="btn btn-primary shadow-sm">
+        <i class="bi bi-plus-lg me-1"></i> Add New Employee
+    </a>
     }
 </div>
 
@@ -30,14 +33,11 @@
                 @for (emp of employeesList; track emp.id) {
                 <tr>
                     <td>#{{ emp.id }}</td>
-                    <!-- دمج الاسم الأول والأخير -->
                     <td class="fw-bold">{{ emp.firstName }} {{ emp.lastName
                         }}</td>
                     <td>{{ emp.email }}</td>
-                    <!-- عرض معرف القسم (مؤقتاً حتى نربطه باسم القسم لاحقاً) -->
                     <td>{{ emp.departmentId }}</td>
                     <td>
-                        <!-- الباك إند يستخدم isActive كقيمة منطقية (Boolean) -->
                         <span class="badge rounded-pill"
                             [class.bg-success]="emp.isActive"
                             [class.bg-danger]="!emp.isActive">
@@ -45,14 +45,23 @@
                         </span>
                     </td>
                     <td>
-                        <button
-                            class="btn btn-sm btn-outline-info me-1">View</button>
-
                         @if (isAdmin) {
+                        <button class="btn btn-outline-info btn-sm me-2"
+                            (click)="viewFullDetails(emp.id)">
+                            <i class="bi bi-file-earmark-person me-1"></i>
+                            Details
+                        </button>
                         <button class="btn btn-sm btn-outline-danger"
-                            (click)="onDelete(emp.id)">Delete</button>
+                            (click)="onDelete(emp.id)">
+                            <i class="bi bi-trash3 me-1"></i> Delete
+                        </button>
                         }
                     </td>
+                </tr>
+                } @empty {
+                <tr>
+                    <td colspan="6" class="text-center py-4 text-muted">No
+                        employees found.</td>
                 </tr>
                 }
             </tbody>
@@ -60,3 +69,77 @@
     </div>
 </div>
 }
+
+<div class="modal fade" id="employeeDetailsModal" tabindex="-1"
+    aria-labelledby="employeeDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+
+            <div class="modal-header border-bottom border-info border-4">
+                <h5 class="modal-title text-info fw-bold"
+                    id="employeeDetailsModalLabel">
+                    <i class="bi bi-person-badge me-2"></i>Full Profile
+                </h5>
+                <button type="button" class="btn-close shadow-none"
+                    data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body p-4">
+                @if (selectedEmployeeProfile) {
+                <h4 class="mb-4">{{ selectedEmployeeProfile.firstName }} {{
+                    selectedEmployeeProfile.lastName }}</h4>
+
+                <div class="row g-4">
+                    <div class="col-md-5">
+                        <div class="card bg-light border-0 shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <h6
+                                    class="text-secondary fw-bold text-uppercase mb-3">Attendance
+                                    Summary</h6>
+                                <i
+                                    class="bi bi-calendar-x display-4 text-danger mb-2 d-block"></i>
+                                <p class="mb-0 fs-5">Absent Days:
+                                    <span class="text-danger fw-bold fs-4">{{
+                                        selectedEmployeeProfile.absentDays || 0
+                                        }}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="mt-4 p-4 bg-light rounded border border-secondary border-opacity-25">
+                    <label class="fw-bold fs-5 mb-2 text-primary">
+                        <i class="bi bi-journal-text me-2"></i>Admin Note for
+                        Employee:
+                    </label>
+                    <p class="text-muted small mb-3">This note will be visible
+                        to the employee on their dashboard.</p>
+
+                    <textarea [(ngModel)]="adminNote"
+                        class="form-control shadow-sm"
+                        rows="4"
+                        placeholder="Write a message or warning for the employee here..."></textarea>
+                </div>
+                } @else {
+                <div class="text-center py-4">
+                    <div class="spinner-border text-info" role="status"></div>
+                    <p class="mt-2">Loading details...</p>
+                </div>
+                }
+            </div>
+
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary"
+                    data-bs-dismiss="modal">Close</button>
+                <button type="button"
+                    class="btn btn-primary px-4 fw-bold shadow-sm"
+                    (click)="saveAdminNote()">
+                    <i class="bi bi-save me-2"></i>Save Note
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
