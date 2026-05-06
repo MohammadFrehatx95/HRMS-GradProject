@@ -18,7 +18,9 @@ public class AppDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Leave> Leaves => Set<Leave>();
     public DbSet<Attendance> Attendances { get; set; } 
-    public DbSet<Salary> Salaries { get; set; } 
+    public DbSet<Salary> Salaries { get; set; }
+    
+    public DbSet<Notification> Notifications => Set<Notification>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -61,6 +63,12 @@ public class AppDbContext : DbContext
             .HasOne(s => s.Employee)
             .WithMany(e => e.Salaries)
             .HasForeignKey(s => s.EmployeeId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Notification>()
+            .HasOne(n => n.User)
+            .WithMany(u => u.Notifications)
+            .HasForeignKey(n => n.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Department>().HasData(

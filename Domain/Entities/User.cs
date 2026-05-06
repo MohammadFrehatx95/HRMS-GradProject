@@ -11,4 +11,10 @@ public class User
     public Employee? Employee { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public bool IsActive { get; set; } = true;
+
+    // Navigation properties
+
+        public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+
+
 }

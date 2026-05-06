@@ -2,6 +2,7 @@
 using Application.DTOs.Leave;
 using Application.Services.Interfaces;
 using AutoMapper;
+using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -9,8 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Implementations
 {
-    // Application/Services/Implementations/LeaveService.cs
-    public class LeaveService(IUnitOfWork uow, IMapper mapper) : ILeaveService
+
+    public class LeaveService(IUnitOfWork uow,IMapper mapper,INotificationService notificationService) : ILeaveService
+    
     {
         public async Task<PagedResult<LeaveDto>> GetAllAsync(int pageNumber, int pageSize)
         {
@@ -88,6 +90,22 @@ namespace Application.Services.Implementations
             await uow.Repository<Leave>().AddAsync(leave);
             await uow.SaveChangesAsync();
 
+            var hrAdmins = await uow.Repository<User>()
+                                           .GetAllQueryable()
+                                           .Where(u => u.Role == "HR" || u.Role == "Admin")
+                                           .ToListAsync();
+
+            foreach (var user in hrAdmins)
+            {
+                await notificationService.CreateAsync(
+                    userId: user.Id,
+                    title: "New Leave Request",
+                    message: $"Employee submitted a {dto.LeaveType} leave request " +
+                             $"from {dto.StartDate:yyyy-MM-dd} to {dto.EndDate:yyyy-MM-dd}",
+                    type: NotificationType.LeaveRequested
+                );
+            }
+
             return (await GetByIdAsync(leave.Id))!;
         }
 
@@ -113,6 +131,28 @@ namespace Application.Services.Implementations
             uow.Repository<Leave>().Update(leave);
             await uow.SaveChangesAsync();
 
+            var employeeUser = await uow.Repository<User>()
+                                   .GetAllQueryable()
+                                   .FirstOrDefaultAsync(u =>
+                                       u.EmployeeId == leave.EmployeeId);
+
+            if (employeeUser is not null)
+            {
+                var isApproved = dto.Status == LeaveStatus.Approved;
+
+                await notificationService.CreateAsync(
+                    userId: employeeUser.Id,
+                    title: isApproved ? "Leave Approved " : "Leave Rejected ",
+                    message: isApproved
+                        ? $"Your {leave.LeaveType} leave request has been approved"
+                        : $"Your {leave.LeaveType} leave request was rejected. " +
+                          $"Reason: {dto.RejectionReason}",
+                    type: isApproved
+                        ? NotificationType.LeaveApproved
+                        : NotificationType.LeaveRejected
+                );
+            }
+
             return mapper.Map<LeaveDto>(leave);
         }
 
@@ -131,6 +171,22 @@ namespace Application.Services.Implementations
 
             uow.Repository<Leave>().Delete(leave);
             await uow.SaveChangesAsync();
+
+            var hrAdmins = await uow.Repository<User>()
+                               .GetAllQueryable()
+                             .Where(u => u.Role == "HR" ||
+                                         u.Role == "Admin")
+                               .ToListAsync();
+
+            foreach (var user in hrAdmins)
+            {
+                await notificationService.CreateAsync(
+                    userId: user.Id,
+                    title: "Leave Request Cancelled",
+                    message: "An employee cancelled their leave request",
+                    type: NotificationType.LeaveCancelled
+                );
+            }
         }
     }
 }

@@ -45,6 +45,8 @@ public static class DependencyInjection
         services.AddScoped<IAttendanceService, AttendanceService>();
         
         services.AddScoped<ISalaryService, SalaryService>();
+        
+        services.AddScoped<INotificationService, NotificationService>();
 
         return services;
     }
