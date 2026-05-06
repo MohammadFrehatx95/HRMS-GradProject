@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -7,14 +7,15 @@ import { AuthService } from '../../../core/services/auth.service';
   standalone: true,
   imports: [RouterLink, RouterLinkActive],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
   private authService = inject(AuthService);
-  private router = inject(Router);
+
+  get isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
 
   onLogout() {
     this.authService.logout();
-    this.router.navigate(['/login']);
   }
 }
