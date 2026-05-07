@@ -6,16 +6,17 @@ using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Application.Services.Implementations
 {
-    
-    public class SalaryService(IUnitOfWork uow, IMapper mapper, INotificationService notificationService) : ISalaryService
+
+    // Application/Services/Implementations/SalaryService.cs
+    public class SalaryService(
+        IUnitOfWork uow,
+        IMapper mapper,
+        INotificationService notificationService,
+        IEmailService emailService) : ISalaryService
     {
         public async Task<PagedResult<SalaryDto>> GetAllAsync(int pageNumber, int pageSize)
         {
@@ -67,16 +68,13 @@ namespace Application.Services.Implementations
 
         public async Task<SalaryDto> CreateAsync(CreateSalaryDto dto)
         {
-            
             var employeeExists = await uow.Repository<Employee>()
                                           .GetAllQueryable()
                                           .AnyAsync(e => e.Id == dto.EmployeeId);
 
             if (!employeeExists)
-                throw new KeyNotFoundException(
-                    $"Employee {dto.EmployeeId} not found");
+                throw new KeyNotFoundException($"Employee {dto.EmployeeId} not found");
 
-            
             var duplicate = await uow.Repository<Salary>()
                                      .GetAllQueryable()
                                      .AnyAsync(s =>
@@ -88,7 +86,6 @@ namespace Application.Services.Implementations
                 throw new InvalidOperationException(
                     $"Salary for this employee in {dto.Month}/{dto.Year} already exists");
 
-            
             var gross = dto.BaseAmount + dto.Allowances;
             var net = gross - dto.Deductions;
 
@@ -106,6 +103,7 @@ namespace Application.Services.Implementations
                 NetAmount = net,
                 Month = dto.Month,
                 Year = dto.Year,
+                // ✅ Fix DateTime Kind
                 EffectiveDate = DateTime.SpecifyKind(
                                     dto.EffectiveDate, DateTimeKind.Utc)
             };
@@ -113,19 +111,35 @@ namespace Application.Services.Implementations
             await uow.Repository<Salary>().AddAsync(salary);
             await uow.SaveChangesAsync();
 
+            // جيب الـ User المرتبط بالموظف
             var user = await uow.Repository<User>()
-                           .GetAllQueryable()
-                           .FirstOrDefaultAsync(u => u.EmployeeId == dto.EmployeeId);
+                                .GetAllQueryable()
+                                .Include(u => u.Employee)
+                                .FirstOrDefaultAsync(u =>
+                                    u.EmployeeId == dto.EmployeeId);
 
             if (user is not null)
             {
+                var employeeName = user.Employee is not null
+                    ? $"{user.Employee.FirstName} {user.Employee.LastName}"
+                    : user.Username;
+
+                // Notification
                 await notificationService.CreateAsync(
                     userId: user.Id,
-                    title: "Salary Statement Available ",
+                    title: "Salary Statement Available",
                     message: $"Your salary for {dto.Month}/{dto.Year} has been added. " +
-                             $"Net Amount: {salary.NetAmount:C}",
-                    type: NotificationType.SalaryCreated
-                );
+                             $"Net Amount: {net:N2} JD",
+                    type: NotificationType.SalaryCreated);
+
+                // ✅ Email
+                try
+                {
+                    await emailService.SendSalaryCreatedAsync(
+                        user.Email, employeeName,
+                        dto.Month, dto.Year, net);
+                }
+                catch { /* Log if needed */ }
             }
 
             return (await GetByIdAsync(salary.Id))!;
@@ -139,14 +153,13 @@ namespace Application.Services.Implementations
                                   .FirstOrDefaultAsync(s => s.Id == id)
                         ?? throw new KeyNotFoundException($"Salary {id} not found");
 
-            
             if (dto.BaseAmount.HasValue) salary.BaseAmount = dto.BaseAmount.Value;
             if (dto.Allowances.HasValue) salary.Allowances = dto.Allowances.Value;
             if (dto.Deductions.HasValue) salary.Deductions = dto.Deductions.Value;
             if (dto.EffectiveDate.HasValue) salary.EffectiveDate =
+                // ✅ Fix DateTime Kind
                 DateTime.SpecifyKind(dto.EffectiveDate.Value, DateTimeKind.Utc);
 
-           
             salary.GrossAmount = salary.BaseAmount + salary.Allowances;
             salary.NetAmount = salary.GrossAmount - salary.Deductions;
 
@@ -157,20 +170,35 @@ namespace Application.Services.Implementations
             uow.Repository<Salary>().Update(salary);
             await uow.SaveChangesAsync();
 
+            // جيب الـ User المرتبط بالموظف
             var user = await uow.Repository<User>()
-                            .GetAllQueryable()
-                            .FirstOrDefaultAsync(u =>
-                                u.EmployeeId == salary.EmployeeId);
+                                .GetAllQueryable()
+                                .Include(u => u.Employee)
+                                .FirstOrDefaultAsync(u =>
+                                    u.EmployeeId == salary.EmployeeId);
 
             if (user is not null)
             {
+                var employeeName = user.Employee is not null
+                    ? $"{user.Employee.FirstName} {user.Employee.LastName}"
+                    : user.Username;
+
+                // Notification
                 await notificationService.CreateAsync(
                     userId: user.Id,
-                    title: "Salary Updated ",
+                    title: "Salary Updated",
                     message: $"Your salary for {salary.Month}/{salary.Year} " +
-                             $"has been updated. Net Amount: {salary.NetAmount:C}",
-                    type: NotificationType.SalaryUpdated
-                );
+                             $"has been updated. Net Amount: {salary.NetAmount:N2} JD",
+                    type: NotificationType.SalaryUpdated);
+
+                // ✅ Email
+                try
+                {
+                    await emailService.SendSalaryUpdatedAsync(
+                        user.Email, employeeName,
+                        salary.Month, salary.Year, salary.NetAmount);
+                }
+                catch { /* Log if needed */ }
             }
 
             return mapper.Map<SalaryDto>(salary);

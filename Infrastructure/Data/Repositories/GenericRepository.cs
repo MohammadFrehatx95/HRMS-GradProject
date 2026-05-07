@@ -40,6 +40,10 @@ namespace Infrastructure.Data.Repositories
         }
 
         public IQueryable<T> GetAllQueryable() => context.Set<T>().AsQueryable();
+        public async Task<T?> GetByIdAsync(params object[] keyValues)
+        {
+            return await dbSet.FindAsync(keyValues);
+        }
 
         public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
         {

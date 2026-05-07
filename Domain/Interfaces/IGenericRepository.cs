@@ -22,6 +22,8 @@ namespace Domain.Interfaces
 
         IQueryable<T> GetAllQueryable();
 
+        Task<T?> GetByIdAsync(params object[] keyValues);
+
         Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate);
 
         Task AddAsync(T entity);

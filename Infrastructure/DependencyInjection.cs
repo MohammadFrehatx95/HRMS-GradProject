@@ -1,6 +1,7 @@
 ﻿using Application.Mappings;
 using Application.Services.Implementations;
 using Application.Services.Interfaces;
+using Application.Settings;
 using Domain.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
@@ -8,6 +9,7 @@ using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 
 
 namespace Infrastructure;
@@ -23,7 +25,7 @@ public static class DependencyInjection
             options.UseNpgsql(
                 configuration.GetConnectionString("DefaultConnection")));
 
-      
+
 
         // UnitOfWork
         services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -47,6 +49,12 @@ public static class DependencyInjection
         services.AddScoped<ISalaryService, SalaryService>();
         
         services.AddScoped<INotificationService, NotificationService>();
+        // أضف هاد
+        // obtain IConfiguration from the service collection to avoid missing 'configuration' variable
+        var serviceProvider = services.BuildServiceProvider();
+        var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+        services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+        services.AddScoped<IEmailService, EmailService>();
 
         return services;
     }
