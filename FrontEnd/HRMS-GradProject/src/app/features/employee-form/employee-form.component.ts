@@ -9,7 +9,8 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { EmployeeService } from '../../core/services/employee.service';
 import { DepartmentService } from '../../core/services/department.service';
-import { PositionService } from '../../core/services/position.service'; // 1. استيراد الخدمة
+import { PositionService } from '../../core/services/position.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-employee-form',
@@ -20,12 +21,12 @@ import { PositionService } from '../../core/services/position.service'; // 1. ا
 export class EmployeeFormComponent implements OnInit {
   private employeeService = inject(EmployeeService);
   private departmentService = inject(DepartmentService);
-  private positionService = inject(PositionService); // 2. حقن الخدمة
+  private positionService = inject(PositionService);
   private router = inject(Router);
 
   isLoading = false;
   departments: any[] = [];
-  positions: any[] = []; // 3. مصفوفة لتخزين المسميات الوظيفية
+  positions: any[] = [];
 
   employeeForm = new FormGroup({
     firstName: new FormControl('', Validators.required),
@@ -38,58 +39,86 @@ export class EmployeeFormComponent implements OnInit {
       { value: '', disabled: true },
       Validators.required,
     ),
-    userId: new FormControl(1),
+    userId: new FormControl(null as any, Validators.required),
   });
 
   ngOnInit() {
-    this.departmentService.getDepartments().subscribe({
-      next: (data) => (this.departments = data),
-      error: (err) => console.error('Error loading departments', err),
-    });
+    const navigation = this.router.getCurrentNavigation();
+    const state = window.history.state as { userId: number };
+
+    if (state && state.userId) {
+      this.employeeForm.patchValue({ userId: state.userId });
+    }
+
+    this.loadDepartments();
 
     this.employeeForm.get('departmentId')?.valueChanges.subscribe((deptId) => {
       if (deptId) {
         this.employeeForm.get('positionId')?.enable();
-
-        this.positionService
-          .getPositionsByDepartment(Number(deptId))
-          .subscribe({
-            next: (data) => {
-              this.positions = data;
-              this.employeeForm.get('positionId')?.setValue('');
-            },
-            error: (err) => console.error('Error loading positions', err),
-          });
-      } else {
-        this.employeeForm.get('positionId')?.disable();
-        this.positions = [];
+        this.loadPositions(Number(deptId));
       }
     });
   }
 
+  loadDepartments() {
+    this.departmentService.getDepartments().subscribe({
+      next: (res: any) => {
+        this.departments = Array.isArray(res)
+          ? res
+          : res?.data?.items || res?.data || [];
+      },
+    });
+  }
+
+  loadPositions(deptId: number) {
+    this.positionService.getPositionsByDepartment(deptId).subscribe({
+      next: (res: any) => {
+        this.positions = Array.isArray(res)
+          ? res
+          : res?.data?.items || res?.data || [];
+        this.employeeForm.get('positionId')?.setValue('');
+      },
+    });
+  }
+
   onSubmit() {
-    if (this.employeeForm.valid) {
-      this.isLoading = true;
-      const formValue = this.employeeForm.value;
-
-      const newEmployee = {
-        firstName: formValue.firstName,
-        lastName: formValue.lastName,
-        email: formValue.email,
-        phoneNumber: formValue.phoneNumber,
-        hireDate: new Date(formValue.hireDate!).toISOString(),
-        departmentId: Number(formValue.departmentId),
-        positionId: Number(formValue.positionId),
-        userId: Number(formValue.userId),
-      };
-
-      this.employeeService.addEmployee(newEmployee).subscribe({
-        next: () => this.router.navigate(['/employees']),
-        error: (err) => {
-          this.isLoading = false;
-          console.error(err);
-        },
-      });
+    if (this.employeeForm.invalid) {
+      Swal.fire(
+        'Incomplete Data',
+        'Ensure all fields including UserId are filled.',
+        'warning',
+      );
+      return;
     }
+
+    this.isLoading = true;
+    const formValue = this.employeeForm.getRawValue();
+
+    const payload = {
+      ...formValue,
+      hireDate: new Date(formValue.hireDate!).toISOString(),
+      departmentId: Number(formValue.departmentId),
+      positionId: Number(formValue.positionId),
+      userId: Number(formValue.userId),
+    };
+
+    this.employeeService.addEmployee(payload).subscribe({
+      next: () => {
+        Swal.fire(
+          'Success',
+          'Employee profile linked successfully!',
+          'success',
+        );
+        this.router.navigate(['/employees']);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        Swal.fire(
+          'Error',
+          err.error?.message || 'Failed to link profile',
+          'error',
+        );
+      },
+    });
   }
 }

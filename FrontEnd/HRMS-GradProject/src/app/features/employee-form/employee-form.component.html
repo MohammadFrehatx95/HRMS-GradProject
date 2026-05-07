@@ -50,32 +50,40 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label
-                            class="form-label fw-bold text-muted small">Department</label>
-                        <select class="form-select bg-light"
+                        <label class="form-label fw-bold">Department <span
+                                class="text-danger">*</span></label>
+                        <select class="form-select shadow-sm"
                             formControlName="departmentId">
-                            <option value disabled selected>Select
-                                Department</option>
+                            <option value disabled selected>Select target
+                                department...</option>
+
                             @for (dept of departments; track dept.id) {
                             <option [value]="dept.id">{{ dept.name }}</option>
                             }
                         </select>
                     </div>
-                </div>
 
-                <div class="col-md-6 mb-4">
-                    <label
-                        class="form-label fw-bold text-muted small">Position</label>
-                    <select class="form-select bg-light"
-                        formControlName="positionId">
-                        <option value disabled selected>Select Position</option>
-                        @for (pos of positions; track pos.id) {
-                        <option [value]="pos.id">{{ pos.title }}</option>
-                        }
-                    </select>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Job Position <span
+                                class="text-danger">*</span></label>
+                        <select class="form-select shadow-sm"
+                            formControlName="positionId">
+                            <option value disabled selected>
+                                {{ positions.length === 0 ?
+                                'Select a Department first...' :
+                                'Select Job Position...' }}
+                            </option>
+
+                            @for (pos of positions; track pos.id) {
+                            <option [value]="pos.id">{{ pos.title }} ({{
+                                pos.salaryMin | currency }} - {{ pos.salaryMax |
+                                currency }})</option>
+                            }
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary shadow-sm"
+                        [disabled]="employeeForm.invalid">Save Employee</button>
+
                 </div>
-                <button type="submit" class="btn btn-primary shadow-sm"
-                    [disabled]="employeeForm.invalid">Save Employee</button>
             </form>
         </div>
-    </div>
