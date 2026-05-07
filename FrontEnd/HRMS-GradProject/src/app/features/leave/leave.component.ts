@@ -21,7 +21,6 @@ export class LeaveComponent implements OnInit {
   isLoading: boolean = true;
   isProcessing: boolean = false;
 
-  // إعادة الصلاحية لتكون متغيرة بناءً على المستخدم الفعلي
   isAdmin: boolean = false;
 
   leaveModal: any;
@@ -41,7 +40,6 @@ export class LeaveComponent implements OnInit {
   ];
 
   ngOnInit() {
-    // قراءة الصلاحية الحقيقية من التوكن (Token) أو حالة تسجيل الدخول
     this.isAdmin = this.authService.isAdmin();
     this.loadLeaves();
   }
@@ -49,7 +47,6 @@ export class LeaveComponent implements OnInit {
   loadLeaves() {
     this.isLoading = true;
 
-    // توجيه الطلب ديناميكياً: المدير يرى الكل، الموظف يرى طلباته فقط
     const request = this.isAdmin
       ? this.leaveService.getAllLeaves()
       : this.leaveService.getMyLeaves();
@@ -58,21 +55,18 @@ export class LeaveComponent implements OnInit {
       next: (res: any) => {
         let extracted: any[] = [];
 
-        // آلية استخراج ذكية تبحث عن المصفوفة داخل الاستجابة أياً كان هيكلها
         if (Array.isArray(res)) {
           extracted = res;
-        } else if (res && typeof res === 'object') {
-          const foundArray = Object.values(res).find((val) =>
-            Array.isArray(val),
-          );
-          if (foundArray) {
-            extracted = foundArray as any[];
-          }
+        } else if (res?.data?.items && Array.isArray(res.data.items)) {
+          extracted = res.data.items;
+        } else if (res?.data && Array.isArray(res.data)) {
+          extracted = res.data;
         }
 
         this.leavesList = extracted;
 
-        // ترتيب الطلبات المعلقة لتظهر في الأعلى للمدير
+        this.leavesList = extracted;
+
         if (this.isAdmin && this.leavesList.length > 0) {
           this.leavesList.sort((a, b) => {
             const statusA = this.getStatusText(a.status);
