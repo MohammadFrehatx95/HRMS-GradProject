@@ -9,7 +9,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { EmployeeService } from '../../core/services/employee.service';
 import { DepartmentService } from '../../core/services/department.service';
-import { PositionService } from '../../core/services/position.service'; // 1. استيراد الخدمة
+import { PositionService } from '../../core/services/position.service';
 
 @Component({
   selector: 'app-employee-form',
@@ -20,12 +20,12 @@ import { PositionService } from '../../core/services/position.service'; // 1. ا
 export class EmployeeFormComponent implements OnInit {
   private employeeService = inject(EmployeeService);
   private departmentService = inject(DepartmentService);
-  private positionService = inject(PositionService); // 2. حقن الخدمة
+  private positionService = inject(PositionService);
   private router = inject(Router);
 
   isLoading = false;
   departments: any[] = [];
-  positions: any[] = []; // 3. مصفوفة لتخزين المسميات الوظيفية
+  positions: any[] = [];
 
   employeeForm = new FormGroup({
     firstName: new FormControl('', Validators.required),
@@ -43,7 +43,9 @@ export class EmployeeFormComponent implements OnInit {
 
   ngOnInit() {
     this.departmentService.getDepartments().subscribe({
-      next: (data) => (this.departments = data),
+      next: (res: any) => {
+        this.departments = Array.isArray(res) ? res : res?.data || [];
+      },
       error: (err) => console.error('Error loading departments', err),
     });
 
@@ -54,8 +56,8 @@ export class EmployeeFormComponent implements OnInit {
         this.positionService
           .getPositionsByDepartment(Number(deptId))
           .subscribe({
-            next: (data) => {
-              this.positions = data;
+            next: (res: any) => {
+              this.positions = Array.isArray(res) ? res : res?.data || [];
               this.employeeForm.get('positionId')?.setValue('');
             },
             error: (err) => console.error('Error loading positions', err),

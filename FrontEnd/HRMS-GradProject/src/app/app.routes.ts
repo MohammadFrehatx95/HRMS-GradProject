@@ -9,6 +9,7 @@ import { EmployeeFormComponent } from './features/employee-form/employee-form.co
 import { LoginComponent } from './features/auth/login/login.component';
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
+import { PositionsComponent } from './features/positions/positions.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -49,6 +50,10 @@ export const routes: Routes = [
     path: 'employee-form',
     component: EmployeeFormComponent,
     canActivate: [authGuard, adminGuard],
+  },
+  {
+    path: 'positions',
+    component: PositionsComponent,
   },
 
   { path: '**', redirectTo: 'login' },

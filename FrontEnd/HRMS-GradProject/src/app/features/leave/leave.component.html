@@ -1,58 +1,186 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold text-secondary">Leave Management</h2>
-    <a routerLink="/leave-form" class="btn btn-primary shadow-sm">+ Apply
-        Leave</a></div>
+    <h2 class="fw-bold text-secondary">
+        <i class="bi bi-calendar2-week-fill me-2"></i> {{ isAdmin ?
+        'Leave Management' : 'My Leave Requests' }}
+    </h2>
+
+    @if (!isAdmin) {
+    <button class="btn btn-primary shadow-sm fw-bold px-4"
+        (click)="openModal()">
+        <i class="bi bi-send-plus me-1"></i> Request Leave
+    </button>
+    }
+</div>
 
 @if (isLoading) {
 <div class="text-center my-5">
     <div class="spinner-border text-primary" role="status"></div>
-    <p class="mt-2 text-muted">Fetching leaves data...</p>
+    <p class="mt-2 text-muted">Loading records...</p>
 </div>
 } @else {
 <div class="card shadow-sm border-0">
     <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-            <thead class="table-light">
+        <table class="table table-hover align-middle mb-0 text-center">
+            <thead class="table-light text-uppercase small fw-bold">
                 <tr>
-                    <th>ID</th>
+                    @if (isAdmin) { <th>Emp ID</th> }
                     <th>Leave Type</th>
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Reason</th>
                     <th>Status</th>
-                    <th>Actions</th>
+                    @if (isAdmin) { <th>Actions</th> }
                 </tr>
             </thead>
             <tbody>
                 @for (leave of leavesList; track leave.id) {
                 <tr>
-                    <td>#{{ leave.id }}</td>
-                    <td class="fw-bold">{{ leave.leaveType }}</td>
-                    <td>{{ leave.startDate | date:'shortDate' }}</td>
-                    <td>{{ leave.endDate | date:'shortDate' }}</td>
-                    <td>{{ leave.reason }}</td>
+                    @if (isAdmin) { <td class="fw-bold text-secondary">#{{
+                        leave.employeeId }}</td> }
+
+                    <td class="fw-bold text-dark">
+                        <i class="bi bi-brightness-high me-1 text-warning"
+                            *ngIf="leave.leaveType === 'Annual'"></i>
+                        <i class="bi bi-thermometer-half me-1 text-danger"
+                            *ngIf="leave.leaveType === 'Sick'"></i>
+                        {{ leave.leaveType }}
+                    </td>
+
+                    <td class="text-secondary">{{ leave.startDate |
+                        date:'mediumDate' }}</td>
+                    <td class="text-secondary">{{ leave.endDate |
+                        date:'mediumDate' }}</td>
+
+                    <td class="text-muted text-start"
+                        style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                        [title]="leave.reason">
+                        {{ leave.reason || 'No reason provided' }}
+                    </td>
+
                     <td>
-                        <span class="badge rounded-pill"
-                            [class.bg-success]="leave.status === 'Approved'"
+                        <span class="badge rounded-pill px-3 py-2 fw-bold"
                             [class.bg-warning]="leave.status === 'Pending'"
+                            [class.text-dark]="leave.status === 'Pending'"
+                            [class.bg-success]="leave.status === 'Approved'"
                             [class.bg-danger]="leave.status === 'Rejected'">
+                            <i class="bi"
+                                [class.bi-hourglass-split]="leave.status === 'Pending'"
+                                [class.bi-check-circle]="leave.status === 'Approved'"
+                                [class.bi-x-circle]="leave.status === 'Rejected'"></i>
                             {{ leave.status }}
                         </span>
                     </td>
+
+                    @if (isAdmin) {
                     <td>
-                        @if (isAdmin && leave.status === 'Pending') {
-                        <button class="btn btn-sm btn-outline-success me-1"
-                            (click)="changeStatus(leave.id, 'Approved')">Approve</button>
-                        <button class="btn btn-sm btn-outline-danger"
-                            (click)="changeStatus(leave.id, 'Rejected')">Reject</button>
+                        @if (leave.status === 'Pending') {
+                        <button
+                            class="btn btn-sm btn-outline-success me-2 fw-bold"
+                            (click)="changeStatus(leave.id, 'Approved')">
+                            <i class="bi bi-check-lg"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger fw-bold"
+                            (click)="changeStatus(leave.id, 'Rejected')">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
                         } @else {
-                        <span class="text-muted small">No actions</span>
+                        <span class="text-muted small"><i
+                                class="bi bi-lock"></i> Locked</span>
                         }
+                    </td>
+                    }
+                </tr>
+                } @empty {
+                <tr>
+                    <td [colSpan]="isAdmin ? 7 : 5"
+                        class="text-center py-5 text-muted">
+                        <i
+                            class="bi bi-envelope-paper fs-1 d-block mb-2 opacity-25"></i>
+                        No leave requests found.
                     </td>
                 </tr>
                 }
             </tbody>
         </table>
+    </div>
+</div>
+}
+
+@if (!isAdmin) {
+<div class="modal fade" id="leaveModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div
+                class="modal-header border-bottom border-primary border-4 bg-light">
+                <h5 class="modal-title text-primary fw-bold">
+                    <i class="bi bi-calendar-plus me-2"></i>New Leave Request
+                </h5>
+                <button type="button" class="btn-close shadow-none"
+                    data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body p-4">
+                <form #leaveForm="ngForm">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label
+                                class="fw-bold mb-1 text-muted small text-uppercase">Leave
+                                Type <span class="text-danger">*</span></label>
+                            <select class="form-select bg-light" name="type"
+                                [(ngModel)]="leaveData.leaveType" required>
+                                <option value disabled selected>Select
+                                    type...</option>
+                                @for (type of leaveTypes; track type) {
+                                <option [value]="type">{{ type }}</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-6">
+                            <label
+                                class="fw-bold mb-1 text-muted small text-uppercase">Start
+                                Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control bg-light"
+                                name="start" [(ngModel)]="leaveData.startDate"
+                                required>
+                        </div>
+
+                        <div class="col-6">
+                            <label
+                                class="fw-bold mb-1 text-muted small text-uppercase">End
+                                Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control bg-light"
+                                name="end" [(ngModel)]="leaveData.endDate"
+                                required>
+                        </div>
+
+                        <div class="col-12">
+                            <label
+                                class="fw-bold mb-1 text-muted small text-uppercase">Reason
+                                / Notes</label>
+                            <textarea class="form-control bg-light"
+                                name="reason" [(ngModel)]="leaveData.reason"
+                                rows="3"
+                                placeholder="Briefly explain the reason for your leave..."></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer bg-light border-top-0">
+                <button type="button"
+                    class="btn btn-secondary px-4 fw-bold shadow-sm"
+                    data-bs-dismiss="modal">Cancel</button>
+                <button type="button"
+                    class="btn btn-primary px-4 fw-bold shadow-sm"
+                    (click)="submitLeaveRequest()"
+                    [disabled]="leaveForm.invalid || isProcessing">
+                    @if(isProcessing) { <span
+                        class="spinner-border spinner-border-sm me-2"></span> }
+                    <i class="bi bi-send me-1"></i> Submit Request
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 }

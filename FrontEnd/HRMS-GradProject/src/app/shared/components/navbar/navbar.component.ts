@@ -46,10 +46,23 @@ export class NavbarComponent implements OnInit, OnDestroy {
     });
   }
 
-  readNotification(id: number) {
-    this.notificationService
-      .markAsRead(id)
-      .subscribe(() => this.loadNotifications());
+  readNotification(notification: any) {
+    this.notificationService.markAsRead(notification.id).subscribe({
+      next: () => {
+        this.loadNotifications();
+
+        const message = notification.message.toLowerCase();
+        if (
+          message.includes('leave') ||
+          message.includes('مغادرة') ||
+          message.includes('إجازة')
+        ) {
+          this.router.navigate(['/leave']);
+        } else if (message.includes('salary') || message.includes('راتب')) {
+          this.router.navigate(['/salary']);
+        }
+      },
+    });
   }
 
   readAll() {
