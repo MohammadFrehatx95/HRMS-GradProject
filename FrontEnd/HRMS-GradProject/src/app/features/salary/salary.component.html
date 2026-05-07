@@ -1,40 +1,73 @@
-<h2 class="fw-bold text-secondary mb-4">My Salary Statements</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-secondary">
+        <i class="bi bi-cash-stack me-2"></i> {{ isAdmin ?
+        'All Employees Salaries' : 'My Salary Statements' }}
+    </h2>
+
+    @if (isAdmin) {
+    <button class="btn btn-primary shadow-sm fw-bold px-4">
+        <i class="bi bi-plus-circle me-1"></i> Add Salary Record
+    </button>
+    }
+</div>
 
 @if (isLoading) {
 <div class="text-center my-5">
     <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2 text-muted">Loading salary data...</p>
 </div>
 } @else {
 <div class="card shadow-sm border-0">
-    <table class="table table-hover align-middle mb-0">
-        <thead class="table-light">
-            <tr>
-                <th>Month/Year</th>
-                <th>Base Salary</th>
-                <th>Allowances</th>
-                <th>Deductions</th>
-                <th>Net Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (item of salaryRecords; track item.id) {
-            <tr>
-                <td>{{ item.month }} / {{ item.year }}</td>
-                <td>{{ item.basicSalary | currency:'JOD':'symbol' }}</td>
-                <td class="text-success">+{{ item.allowances | currency:'JOD'
-                    }}</td>
-                <td class="text-danger">-{{ item.deductions | currency:'JOD'
-                    }}</td>
-                <td class="fw-bold text-primary">{{ item.netSalary |
-                    currency:'JOD' }}</td>
-            </tr>
-            } @empty {
-            <tr>
-                <td colspan="5" class="text-center py-5">No salary data
-                    available.</td>
-            </tr>
-            }
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 text-center">
+            <thead class="table-light">
+                <tr>
+                    @if (isAdmin) { <th>Emp ID</th> }
+                    <th>Month/Year</th>
+                    <th>Base Salary</th>
+                    <th>Allowances</th>
+                    <th>Deductions</th>
+                    <th>Net Total</th>
+                    <th>Effective Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (salary of salariesList; track salary.id) {
+                <tr>
+                    @if (isAdmin) { <td class="fw-bold text-secondary">#{{
+                        salary.employeeId }}</td> }
+
+                    <td class="fw-bold">{{ salary.month }} / {{ salary.year
+                        }}</td>
+
+                    <td class="text-secondary">{{ salary.baseAmount |
+                        currency:'USD' }}</td>
+                    <td class="text-success">+ {{ salary.allowances |
+                        currency:'USD' }}</td>
+                    <td class="text-danger">- {{ salary.deductions |
+                        currency:'USD' }}</td>
+
+                    <td class="fw-bold text-primary fs-5">
+                        {{ (salary.baseAmount + salary.allowances -
+                        salary.deductions) | currency:'USD' }}
+                    </td>
+
+                    <td class="text-muted small">
+                        {{ salary.effectiveDate | date:'mediumDate' }}
+                    </td>
+                </tr>
+                } @empty {
+                <tr>
+                    <td [colSpan]="isAdmin ? 7 : 6"
+                        class="text-center py-5 text-muted">
+                        <i
+                            class="bi bi-wallet2 fs-1 d-block mb-2 text-secondary opacity-50"></i>
+                        No salary data.
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 }

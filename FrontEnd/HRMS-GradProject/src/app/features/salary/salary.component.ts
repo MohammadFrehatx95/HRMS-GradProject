@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SalaryService } from '../../core/services/salary.service';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-salary',
@@ -10,24 +11,32 @@ import { SalaryService } from '../../core/services/salary.service';
 })
 export class SalaryComponent implements OnInit {
   private salaryService = inject(SalaryService);
+  private authService = inject(AuthService);
 
-  salaryRecords: any[] = [];
-  isLoading = true;
+  salariesList: any[] = [];
+  isLoading: boolean = true;
+  isAdmin: boolean = false;
 
   ngOnInit() {
-    this.loadSalaryData();
+    this.isAdmin = this.authService.isAdmin();
+    this.loadSalaries();
   }
 
-  loadSalaryData() {
+  loadSalaries() {
     this.isLoading = true;
 
-    this.salaryService.getMyPayrolls().subscribe({
-      next: (data) => {
-        this.salaryRecords = data;
+    const request = this.isAdmin
+      ? this.salaryService.getAllSalaries()
+      : this.salaryService.getMySalaries();
+
+    request.subscribe({
+      next: (res: any) => {
+        const extractedData = Array.isArray(res) ? res : res?.data || [];
+        this.salariesList = Array.isArray(extractedData) ? extractedData : [];
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching salary:', err);
+        console.error('Error fetching salaries:', err);
         this.isLoading = false;
       },
     });
