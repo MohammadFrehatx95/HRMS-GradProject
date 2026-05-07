@@ -69,7 +69,10 @@ public class MappingProfile : Profile
                     ? $"{s.Employee.FirstName} {s.Employee.LastName}"
                     : string.Empty))
             .ForMember(d => d.LeaveType, o => o.MapFrom(s => s.LeaveType.ToString()))
-            .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()));
+            .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()))
+            .ForMember(d => d.Reason, o => o.MapFrom(s => s.Reason.ToString()));
+
+        
 
 
 
