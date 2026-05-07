@@ -1,98 +1,131 @@
-<div
-    class="d-flex justify-content-between align-items-center mb-5 border-bottom pb-3">
-    <h2 class="fw-bold text-secondary m-0">Dashboard Overview</h2>
-    <span class="fs-5 text-primary fw-bold">Welcome, {{ userName }}!</span>
-</div>
-
-@if (isAdmin) {
-<div class="row g-4">
-    <div class="col-md-3">
-        <div class="card bg-primary text-white border-0 shadow-sm h-100">
-            <div class="card-body">
-                <h6 class="text-uppercase fw-bold mb-3">Total Employees</h6>
-                <h2 class="display-5 fw-bold mb-0">{{ totalEmployees }}</h2>
-                <small>Active</small>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card bg-success text-white border-0 shadow-sm h-100">
-            <div class="card-body">
-                <h6 class="text-uppercase fw-bold mb-3">Departments</h6>
-                <h2 class="display-5 fw-bold mb-0">{{ departmentsCount }}</h2>
-                <small><a routerLink="/departments"
-                        class="text-white text-decoration-none">Manage
-                        →</a></small>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card bg-warning text-dark border-0 shadow-sm h-100">
-            <div class="card-body">
-                <h6 class="text-uppercase fw-bold mb-3">Pending Leaves</h6>
-                <h2 class="display-5 fw-bold mb-0">{{ pendingLeaves }}</h2>
-                <small><a routerLink="/leave"
-                        class="text-dark text-decoration-none">Review Requests
-                        →</a></small>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card bg-info text-white border-0 shadow-sm h-100">
-            <div class="card-body">
-                <h6 class="text-uppercase fw-bold mb-3">System Status</h6>
-                <h2 class="display-5 fw-bold mb-0">Online</h2>
-                <small>Connected securely</small>
-            </div>
-        </div>
-    </div>
-</div>
-} @else {
-<div class="row g-4">
-    <div class="col-md-8">
-        <div
-            class="card shadow-sm border-0 h-100 border-start border-primary border-4">
-            <div class="card-body p-4">
-                <h4 class="card-title text-primary mb-3">My Employee Portal</h4>
-                <p class="text-muted fs-5 lh-lg">
-                    Welcome to your HRMS portal. You can use the navigation bar
-                    above to:
-                </p>
-                <ul class="text-muted fs-5 lh-lg">
-                    <li>Check your daily <strong>Attendance</strong> and working
-                        hours.</li>
-                    <li>Apply for and track your <strong>Leave</strong>
-                        requests.</li>
-                    <li>View your monthly <strong>Salary</strong>
-                        statements.</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        @if (employeeProfile?.adminNote) {
-        <div class="card border-0 shadow-sm h-100 bg-warning bg-opacity-10">
-            <div class="card-body p-4">
-                <h5 class="text-warning text-darken-3 fw-bold mb-3">
-                    ⚠️ Note from Admin:
-                </h5>
-                <div class="p-3 bg-white rounded border border-warning">
-                    <p class="mb-0 text-dark fs-6">{{ employeeProfile.adminNote
-                        }}</p>
+<div class="dashboard-container">
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="stat-card pink">
+                <div class="card-body">
+                    <h3>{{ totalEmployees }}</h3>
+                    <p>Total Employees</p>
+                    <i class="bi bi-people-fill icon"></i>
                 </div>
             </div>
         </div>
-        } @else {
-        <div
-            class="card border-0 shadow-sm h-100 bg-light d-flex align-items-center justify-content-center">
-            <div
-                class="card-body text-center d-flex flex-column justify-content-center">
-                <span class="text-muted fs-5">No new notifications</span>
-                <small class="text-muted mt-2">You are all caught up!</small>
+        <div class="col-md-3">
+            <div class="stat-card orange">
+                <div class="card-body">
+                    <h3>{{ pendingLeaves }}</h3>
+                    <p>Pending Leaves</p>
+                    <i class="bi bi-calendar-x icon"></i>
+                </div>
             </div>
         </div>
-        }
+        <div class="col-md-3">
+            <div class="stat-card blue">
+                <div class="card-body">
+                    <h3>{{ departmentsCount }}</h3>
+                    <p>Departments</p>
+                    <i class="bi bi-building icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card purple">
+                <div class="card-body">
+                    <h3>${{ totalSalaries | number }}</h3>
+                    <p>Monthly Payroll</p>
+                    <i class="bi bi-currency-dollar icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="chart-card card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-white p-3 border-0">
+                    <h5 class="fw-bold m-0 text-dark">Attendance Overview</h5>
+                </div>
+                <div class="card-body">
+                    <div class="attendance-placeholder-chart">
+                        <p class="text-muted">Attendance trends will appear here
+                            based on Clock-in data</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="chart-card card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-white p-3 border-0">
+                    <h5 class="fw-bold m-0 text-dark">Leave Type
+                        Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="distribution-list">
+                        <li class="mb-3">
+                            <small class="text-muted">Annual Leave</small>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-primary"
+                                    style="width: 70%"></div>
+                            </div>
+                        </li>
+                        <li class="mb-3">
+                            <small class="text-muted">Sick Leave</small>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-danger"
+                                    style="width: 20%"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-1">
+        <div class="col-md-4">
+            <div
+                class="info-card sales-stats bg-white p-4 rounded-4 shadow-sm h-100">
+                <h6
+                    class="fw-bold text-uppercase small text-muted mb-3">Attendance
+                    Stats</h6>
+                <div class="d-flex align-items-end gap-2 mb-2">
+                    <h2 class="m-0 fw-bold">92%</h2>
+                    <span class="text-success small"><i
+                            class="bi bi-arrow-up"></i> 5%</span>
+                </div>
+                <p class="text-muted small">Higher than last month's
+                    performance</p>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="activity-card bg-white rounded-4 shadow-sm p-4 h-100">
+                <h6 class="fw-bold mb-4 text-dark">Recent Leave Requests</h6>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="small text-muted text-uppercase">
+                            <tr>
+                                <th>Employee</th>
+                                <th>Type</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="small">
+                            @for (leave of recentLeaves; track leave.id) {
+                            <tr>
+                                <td class="fw-bold">Emp #{{ leave.employeeId
+                                    }}</td>
+                                <td>{{ leave.leaveType === 0 ? 'Annual' : 'Sick'
+                                    }}</td>
+                                <td>{{ leave.totalDays }} Days</td>
+                                <td><span
+                                        class="badge bg-warning text-dark">Pending</span></td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-}

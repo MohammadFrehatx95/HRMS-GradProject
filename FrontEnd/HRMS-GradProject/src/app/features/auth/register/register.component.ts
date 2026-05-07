@@ -38,10 +38,7 @@ export class RegisterComponent {
   roles = ['Employee', 'Admin', 'HR'];
 
   onSubmit() {
-    if (this.registerForm.invalid) {
-      Swal.fire('Warning', 'Please fill all fields correctly.', 'warning');
-      return;
-    }
+    if (this.registerForm.invalid) return;
 
     this.isLoading = true;
     const payload = this.registerForm.getRawValue();
@@ -49,24 +46,33 @@ export class RegisterComponent {
     this.authService.register(payload).subscribe({
       next: (res: any) => {
         this.isLoading = false;
+
+        const newUserId = res?.data?.id || res?.id;
+
         Swal.fire({
           icon: 'success',
-          title: 'User Registered!',
-          text: 'Account created successfully. You can now add their employee details.',
-          showConfirmButton: true,
-          confirmButtonText: 'Go to Add Employee',
+          title: 'Account Created!',
+          text: 'Would you like to complete their employee profile now?',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, Add Profile',
+          cancelButtonText: 'Later',
         }).then((result) => {
           if (result.isConfirmed) {
-            this.router.navigate(['/employee-form']);
+            this.router.navigate(['/employee-form'], {
+              state: { userId: newUserId },
+            });
+          } else {
+            this.router.navigate(['/dashboard']);
           }
         });
       },
       error: (err) => {
         this.isLoading = false;
-        console.error('Registration Error:', err);
-        const errorMsg =
-          err.error?.message || err.error?.title || 'Registration failed.';
-        Swal.fire('Error', errorMsg, 'error');
+        Swal.fire(
+          'Error',
+          err.error?.message || 'Registration failed',
+          'error',
+        );
       },
     });
   }

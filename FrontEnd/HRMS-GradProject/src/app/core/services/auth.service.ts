@@ -35,7 +35,40 @@ export class AuthService {
   }
 
   isAdmin(): boolean {
-    return this.getUserRole() === 'Admin';
+    const token =
+      typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    if (!token) {
+      console.log('🔥 No token found in localStorage!');
+      return false;
+    }
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+
+      // 1. هذا السطر سيطبع محتوى التوكن بالكامل لكي نراه
+      console.log('🔥 Decoded Token Payload:', payload);
+
+      const userRole =
+        payload[
+          'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+        ] ||
+        payload['role'] ||
+        payload['Role'];
+
+      // 2. هذا السطر سيطبع الصلاحية التي استخرجناها
+      console.log('🔥 Extracted Role:', userRole);
+
+      if (!userRole) return false;
+
+      if (Array.isArray(userRole)) {
+        return userRole.some((r) => r.toLowerCase() === 'admin');
+      }
+
+      return userRole.toLowerCase() === 'admin';
+    } catch (error) {
+      console.error('🔥 Error decoding token:', error);
+      return false;
+    }
   }
 
   logout() {
