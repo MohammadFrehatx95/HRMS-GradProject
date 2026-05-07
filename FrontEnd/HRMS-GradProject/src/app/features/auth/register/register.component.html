@@ -1,0 +1,100 @@
+<div class="container-fluid py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div
+                    class="card-header bg-dark text-white p-4 text-center border-0">
+                    <i
+                        class="bi bi-person-badge fs-1 text-primary mb-2 d-block"></i>
+                    <h3 class="fw-bold mb-0">Register System User</h3>
+                    <p class="text-white-50 small mb-0 mt-1">Create login
+                        credentials for a new member</p>
+                </div>
+
+                <div class="card-body p-4 p-md-5 bg-light">
+                    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+                        <div class="mb-4">
+                            <label
+                                class="form-label fw-bold text-secondary small text-uppercase">Username
+                                <span class="text-danger">*</span></label>
+                            <div class="input-group shadow-sm">
+                                <span
+                                    class="input-group-text bg-white border-end-0 text-muted"><i
+                                        class="bi bi-person"></i></span>
+                                <input type="text"
+                                    class="form-control border-start-0 ps-0"
+                                    formControlName="username"
+                                    placeholder="e.g. johndoe">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label
+                                class="form-label fw-bold text-secondary small text-uppercase">Email
+                                Address <span
+                                    class="text-danger">*</span></label>
+                            <div class="input-group shadow-sm">
+                                <span
+                                    class="input-group-text bg-white border-end-0 text-muted"><i
+                                        class="bi bi-envelope"></i></span>
+                                <input type="email"
+                                    class="form-control border-start-0 ps-0"
+                                    formControlName="email"
+                                    placeholder="john@company.com">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label
+                                class="form-label fw-bold text-secondary small text-uppercase">Password
+                                <span class="text-danger">*</span></label>
+                            <div class="input-group shadow-sm">
+                                <span
+                                    class="input-group-text bg-white border-end-0 text-muted"><i
+                                        class="bi bi-key"></i></span>
+                                <input type="password"
+                                    class="form-control border-start-0 ps-0"
+                                    formControlName="password"
+                                    placeholder="Min. 6 characters">
+                            </div>
+                        </div>
+
+                        <div class="mb-5">
+                            <label
+                                class="form-label fw-bold text-secondary small text-uppercase">System
+                                Role <span class="text-danger">*</span></label>
+                            <div class="input-group shadow-sm">
+                                <span
+                                    class="input-group-text bg-white border-end-0 text-muted"><i
+                                        class="bi bi-shield-lock"></i></span>
+                                <select class="form-select border-start-0 ps-0"
+                                    formControlName="role">
+                                    <option value disabled selected>Select
+                                        Role...</option>
+                                    @for (role of roles; track role) {
+                                    <option [value]="role">{{ role }}</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit"
+                            class="btn btn-primary w-100 py-3 fw-bold rounded-pill shadow"
+                            [disabled]="registerForm.invalid || isLoading">
+                            @if (isLoading) {
+                            <span
+                                class="spinner-border spinner-border-sm me-2"></span>
+                            Creating Account...
+                            } @else {
+                            <i class="bi bi-check-circle me-1"></i> Register
+                            User
+                            }
+                        </button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

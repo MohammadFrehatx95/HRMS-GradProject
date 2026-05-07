@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +21,11 @@ export class AuthService {
       }),
     );
   }
+
+  register(payload: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/register`, payload);
+  }
+
   isLoggedIn(): boolean {
     return !!localStorage.getItem('jwt_token');
   }
