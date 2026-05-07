@@ -58,6 +58,70 @@
                 </li>
                 }
 
+                <li class="nav-item dropdown ms-lg-3">
+                    <a class="nav-link position-relative shadow-none" href="#"
+                        id="notifDrop" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <i class="bi bi-bell-fill fs-5"></i>
+                        @if (unreadCount > 0) {
+                        <span
+                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                            style="font-size: 0.6rem;">
+                            {{ unreadCount }}
+                        </span>
+                        }
+                    </a>
+                    <ul
+                        class="dropdown-menu dropdown-menu-end shadow border-0 py-0"
+                        aria-labelledby="notifDrop"
+                        style="width: 300px; max-height: 400px; overflow-y: auto;">
+                        <li
+                            class="p-3 border-bottom d-flex justify-content-between align-items-center bg-light rounded-top">
+                            <span class="fw-bold">Notifications</span>
+                            @if (unreadCount > 0) {
+                            <button
+                                class="btn btn-sm btn-link p-0 text-decoration-none shadow-none"
+                                (click)="readAll()">Mark all read</button>
+                            }
+                        </li>
+
+                        @for (notif of notifications; track notif.id) {
+                        <li class="border-bottom">
+                            <div
+                                class="dropdown-item p-3 d-flex align-items-start"
+                                [class.bg-white]="notif.isRead"
+                                [class.bg-light]="!notif.isRead">
+                                <div class="me-3 mt-1">
+                                    <i
+                                        class="bi bi-info-circle-fill text-primary"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <p class="mb-1 small text-dark"
+                                        [class.fw-bold]="!notif.isRead">{{
+                                        notif.message }}</p>
+                                    <small class="text-muted"
+                                        style="font-size: 0.7rem;">{{
+                                        notif.createdAt | date:'short'
+                                        }}</small>
+                                </div>
+                                @if (!notif.isRead) {
+                                <button
+                                    class="btn btn-sm text-info p-0 shadow-none ms-2"
+                                    (click)="readNotification(notif.id)">
+                                    <i class="bi bi-check2-all"></i>
+                                </button>
+                                }
+                            </div>
+                        </li>
+                        } @empty {
+                        <li class="p-4 text-center text-muted">
+                            <i class="bi bi-bell-slash d-block fs-3 mb-2"></i>
+                            No new notifications
+                        </li>
+                        }
+                    </ul>
+                </li>
+
                 <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
                     <button class="btn btn-outline-danger btn-sm fw-bold px-3"
                         (click)="onLogout()">

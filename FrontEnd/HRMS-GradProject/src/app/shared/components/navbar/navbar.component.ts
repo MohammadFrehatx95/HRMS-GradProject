@@ -1,20 +1,64 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject, OnDestroy } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/services/auth.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, CommonModule],
   templateUrl: './navbar.component.html',
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private notificationService = inject(NotificationService);
+
+  notifications: any[] = [];
+  unreadCount: number = 0;
+  private refreshInterval: any;
 
   get isAdmin(): boolean {
     return this.authService.isAdmin();
+  }
+
+  ngOnInit() {
+    this.loadNotifications();
+    this.refreshInterval = setInterval(() => this.loadNotifications(), 60000);
+  }
+
+  loadNotifications() {
+    this.notificationService.getUnreadCount().subscribe({
+      next: (count) => (this.unreadCount = count),
+      error: (err) => console.error('Error fetching unread count:', err),
+    });
+
+    this.notificationService.getNotifications().subscribe({
+      next: (data) => (this.notifications = data),
+      error: (err) => console.error('Error fetching notifications:', err),
+    });
+  }
+
+  readNotification(id: number) {
+    this.notificationService
+      .markAsRead(id)
+      .subscribe(() => this.loadNotifications());
+  }
+
+  readAll() {
+    this.notificationService.markAllAsRead().subscribe(() => {
+      this.loadNotifications();
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'All marked as read',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    });
   }
 
   onLogout() {
@@ -33,5 +77,9 @@ export class NavbarComponent {
         this.router.navigate(['/login']);
       }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.refreshInterval) clearInterval(this.refreshInterval);
   }
 }
