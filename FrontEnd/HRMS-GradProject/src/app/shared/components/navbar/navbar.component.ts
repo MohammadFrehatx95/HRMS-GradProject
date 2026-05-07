@@ -31,12 +31,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   loadNotifications() {
     this.notificationService.getUnreadCount().subscribe({
-      next: (count) => (this.unreadCount = count),
+      next: (res: any) => {
+        this.unreadCount = res && res.data !== undefined ? res.data : res || 0;
+      },
       error: (err) => console.error('Error fetching unread count:', err),
     });
 
     this.notificationService.getNotifications().subscribe({
-      next: (data) => (this.notifications = data),
+      next: (res: any) => {
+        const extractedData = Array.isArray(res) ? res : res?.data || [];
+        this.notifications = Array.isArray(extractedData) ? extractedData : [];
+      },
       error: (err) => console.error('Error fetching notifications:', err),
     });
   }
