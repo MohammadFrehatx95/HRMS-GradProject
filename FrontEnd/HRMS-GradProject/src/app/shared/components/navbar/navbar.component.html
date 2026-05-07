@@ -87,31 +87,35 @@
 
                         @for (notif of notifications; track notif.id) {
                         <li class="border-bottom">
-                            <div
-                                class="dropdown-item p-3 d-flex align-items-start"
+                            <button
+                                class="dropdown-item p-3 d-flex align-items-start w-100 text-start border-0"
                                 [class.bg-white]="notif.isRead"
-                                [class.bg-light]="!notif.isRead">
+                                [class.bg-light]="!notif.isRead"
+                                (click)="readNotification(notif)">
                                 <div class="me-3 mt-1">
                                     <i
                                         class="bi bi-info-circle-fill text-primary"></i>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <p class="mb-1 small text-dark"
-                                        [class.fw-bold]="!notif.isRead">{{
-                                        notif.message }}</p>
+                                    <p class="mb-1 small text-dark text-wrap"
+                                        [class.fw-bold]="!notif.isRead"
+                                        style="line-height: 1.4;">
+                                        {{ notif.message }}
+                                    </p>
                                     <small class="text-muted"
                                         style="font-size: 0.7rem;">{{
                                         notif.createdAt | date:'short'
                                         }}</small>
                                 </div>
                                 @if (!notif.isRead) {
-                                <button
-                                    class="btn btn-sm text-info p-0 shadow-none ms-2"
-                                    (click)="readNotification(notif.id)">
-                                    <i class="bi bi-check2-all"></i>
-                                </button>
+                                <div class="ms-2 mt-1">
+                                    <span
+                                        class="spinner-grow spinner-grow-sm text-primary"
+                                        role="status"
+                                        style="width: 0.8rem; height: 0.8rem;"></span>
+                                </div>
                                 }
-                            </div>
+                            </button>
                         </li>
                         } @empty {
                         <li class="p-4 text-center text-muted">

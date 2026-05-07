@@ -1,22 +1,37 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { LeaveService } from '../../core/services/leave.service';
 import { AuthService } from '../../core/services/auth.service';
-import { RouterLink } from '@angular/router';
+import Swal from 'sweetalert2';
+
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-leave',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './leave.component.html',
 })
 export class LeaveComponent implements OnInit {
-  leavesList: any[] = [];
-  isLoading: boolean = true;
-  isAdmin: boolean = false;
-
   private leaveService = inject(LeaveService);
   private authService = inject(AuthService);
+
+  leavesList: any[] = [];
+  isLoading: boolean = true;
+  isProcessing: boolean = false;
+  isAdmin: boolean = false;
+
+  leaveModal: any;
+
+  leaveData = {
+    leaveType: '',
+    startDate: '',
+    endDate: '',
+    reason: '',
+  };
+
+  leaveTypes = ['Annual', 'Sick', 'Maternity', 'Unpaid', 'Emergency'];
 
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
@@ -24,42 +39,100 @@ export class LeaveComponent implements OnInit {
   }
 
   loadLeaves() {
-    this.leaveService.getLeaves().subscribe({
-      next: (data) => {
-        this.leavesList = data;
+    this.isLoading = true;
+    const request = this.isAdmin
+      ? this.leaveService.getAllLeaves()
+      : this.leaveService.getMyLeaves();
+
+    request.subscribe({
+      next: (res: any) => {
+        const extracted = Array.isArray(res) ? res : res?.data || [];
+
+        this.leavesList = Array.isArray(extracted) ? extracted : [];
+
+        if (this.isAdmin && this.leavesList.length > 0) {
+          this.leavesList.sort((a, b) => (a.status === 'Pending' ? -1 : 1));
+        }
+
         this.isLoading = false;
       },
       error: (err) => {
         console.error('Error fetching leaves:', err);
         this.isLoading = false;
+        this.leavesList = [];
       },
     });
   }
 
-  changeStatus(id: number, status: 'Approved' | 'Rejected') {
-    let reason = '';
+  openModal() {
+    this.leaveData = { leaveType: '', startDate: '', endDate: '', reason: '' };
+    const modalEl = document.getElementById('leaveModal');
+    if (modalEl) {
+      this.leaveModal = new bootstrap.Modal(modalEl);
+      this.leaveModal.show();
+    }
+  }
 
-    if (status === 'Rejected') {
-      const inputReason = prompt('Please enter the rejection reason:');
-      if (inputReason === null) {
-        return;
+  submitLeaveRequest() {
+    this.isProcessing = true;
+
+    const payload = {
+      ...this.leaveData,
+      startDate: new Date(this.leaveData.startDate).toISOString(),
+      endDate: new Date(this.leaveData.endDate).toISOString(),
+      status: 'Pending',
+    };
+
+    this.leaveService.applyLeave(payload).subscribe({
+      next: () => {
+        this.isProcessing = false;
+        this.leaveModal.hide();
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: 'Leave request submitted',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        this.loadLeaves();
+      },
+      error: (err) => {
+        this.isProcessing = false;
+        console.error('Submit error:', err);
+        Swal.fire('Error', 'Failed to submit request.', 'error');
+      },
+    });
+  }
+
+  changeStatus(id: number, newStatus: string) {
+    const actionText = newStatus === 'Approved' ? 'approve' : 'reject';
+    const confirmColor = newStatus === 'Approved' ? '#198754' : '#dc3545';
+
+    Swal.fire({
+      title: `Are you sure?`,
+      text: `You are about to ${actionText} this leave request.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: confirmColor,
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: `Yes, ${actionText} it!`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.leaveService.updateLeaveStatus(id, newStatus).subscribe({
+          next: () => {
+            Swal.fire(
+              'Updated!',
+              `Request has been ${newStatus.toLowerCase()}.`,
+              'success',
+            );
+            this.loadLeaves();
+          },
+          error: (err) => {
+            console.error('Status update error:', err);
+            Swal.fire('Error!', 'Failed to update status.', 'error');
+          },
+        });
       }
-      reason = inputReason;
-    }
-
-    if (confirm(`Are you sure you want to mark this leave as ${status}?`)) {
-      this.leaveService.updateLeaveStatus(id, status, reason).subscribe({
-        next: () => {
-          const targetLeave = this.leavesList.find((l) => l.id === id);
-          if (targetLeave) {
-            targetLeave.status = status;
-          }
-        },
-        error: (err) => {
-          console.error('Error updating leave status:', err);
-          alert('Failed to update status. Please try again.');
-        },
-      });
-    }
+    });
   }
 }
