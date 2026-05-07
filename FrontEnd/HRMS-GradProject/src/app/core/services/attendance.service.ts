@@ -21,11 +21,11 @@ export class AttendanceService {
     );
   }
 
-  checkIn(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/clockin`, {});
+  clockIn(payload: { date: string; clockIn: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/clockin`, payload);
   }
 
-  checkOut(): Observable<any> {
-    return this.http.put(`${this.apiUrl}/clockout`, {});
+  clockOut(payload: { clockOut: string }): Observable<any> {
+    return this.http.put(`${this.apiUrl}/clockout`, payload);
   }
 }
