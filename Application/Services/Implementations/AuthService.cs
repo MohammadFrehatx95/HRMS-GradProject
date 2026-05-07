@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.Auth;
 using Application.Interfaces;
+using Application.Services.Interfaces;
 using BCrypt.Net;
 using Domain.Entities;
 using Domain.Interfaces;
@@ -7,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Implementations
 {
-    public class AuthService(IUnitOfWork uow, IJwtService jwtService) : IAuthService
+    public class AuthService(IUnitOfWork uow, IJwtService jwtService, IEmailService emailService) : IAuthService
     {
 
         public async Task<AuthResponseDto?> LoginAsync(LoginDto dto)
@@ -51,6 +52,9 @@ namespace Application.Services.Implementations
 
             await uow.Repository<User>().AddAsync(user);
             await uow.SaveChangesAsync();
+
+            await emailService.SendWelcomeAsync(user.Email, user.Username);
+
             return true;
         }
 

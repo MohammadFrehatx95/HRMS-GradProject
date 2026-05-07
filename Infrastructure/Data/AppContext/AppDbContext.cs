@@ -69,7 +69,9 @@ public class AppDbContext : DbContext
             .HasOne(n => n.User)
             .WithMany(u => u.Notifications)
             .HasForeignKey(n => n.UserId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.NoAction); 
+
+
 
         modelBuilder.Entity<Department>().HasData(
            new Department { Id = 1, Name = "Human Resources" },
