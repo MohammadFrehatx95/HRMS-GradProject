@@ -40,10 +40,10 @@
 
                     <td class="fw-bold text-dark">
                         <i class="bi bi-brightness-high me-1 text-warning"
-                            *ngIf="leave.leaveType === 'Annual'"></i>
+                            *ngIf="getLeaveTypeText(leave.leaveType) === 'Annual'"></i>
                         <i class="bi bi-thermometer-half me-1 text-danger"
-                            *ngIf="leave.leaveType === 'Sick'"></i>
-                        {{ leave.leaveType }}
+                            *ngIf="getLeaveTypeText(leave.leaveType) === 'Sick'"></i>
+                        {{ getLeaveTypeText(leave.leaveType) }}
                     </td>
 
                     <td class="text-secondary">{{ leave.startDate |
@@ -59,28 +59,28 @@
 
                     <td>
                         <span class="badge rounded-pill px-3 py-2 fw-bold"
-                            [class.bg-warning]="leave.status === 'Pending'"
-                            [class.text-dark]="leave.status === 'Pending'"
-                            [class.bg-success]="leave.status === 'Approved'"
-                            [class.bg-danger]="leave.status === 'Rejected'">
+                            [class.bg-warning]="getStatusText(leave.status) === 'Pending'"
+                            [class.text-dark]="getStatusText(leave.status) === 'Pending'"
+                            [class.bg-success]="getStatusText(leave.status) === 'Approved'"
+                            [class.bg-danger]="getStatusText(leave.status) === 'Rejected'">
                             <i class="bi"
-                                [class.bi-hourglass-split]="leave.status === 'Pending'"
-                                [class.bi-check-circle]="leave.status === 'Approved'"
-                                [class.bi-x-circle]="leave.status === 'Rejected'"></i>
-                            {{ leave.status }}
+                                [class.bi-hourglass-split]="getStatusText(leave.status) === 'Pending'"
+                                [class.bi-check-circle]="getStatusText(leave.status) === 'Approved'"
+                                [class.bi-x-circle]="getStatusText(leave.status) === 'Rejected'"></i>
+                            {{ getStatusText(leave.status) }}
                         </span>
                     </td>
 
                     @if (isAdmin) {
                     <td>
-                        @if (leave.status === 'Pending') {
+                        @if (getStatusText(leave.status) === 'Pending') {
                         <button
                             class="btn btn-sm btn-outline-success me-2 fw-bold"
-                            (click)="changeStatus(leave.id, 'Approved')">
+                            (click)="changeStatus(leave.id, 1)">
                             <i class="bi bi-check-lg"></i>
                         </button>
                         <button class="btn btn-sm btn-outline-danger fw-bold"
-                            (click)="changeStatus(leave.id, 'Rejected')">
+                            (click)="changeStatus(leave.id, 2)">
                             <i class="bi bi-x-lg"></i>
                         </button>
                         } @else {
@@ -128,10 +128,11 @@
                                 Type <span class="text-danger">*</span></label>
                             <select class="form-select bg-light" name="type"
                                 [(ngModel)]="leaveData.leaveType" required>
-                                <option value disabled selected>Select
-                                    type...</option>
-                                @for (type of leaveTypes; track type) {
-                                <option [value]="type">{{ type }}</option>
+                                <option [ngValue]="null" disabled
+                                    selected>Select type...</option>
+                                @for (type of leaveTypes; track type.id) {
+                                <option [value]="type.id">{{ type.name
+                                    }}</option>
                                 }
                             </select>
                         </div>
