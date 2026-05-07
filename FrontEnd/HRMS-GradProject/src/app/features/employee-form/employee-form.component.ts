@@ -39,19 +39,23 @@ export class EmployeeFormComponent implements OnInit {
       { value: '', disabled: true },
       Validators.required,
     ),
-    userId: new FormControl(1),
+    userId: new FormControl(null as any, Validators.required),
   });
 
   ngOnInit() {
+    const navigation = this.router.getCurrentNavigation();
+    const state = window.history.state as { userId: number };
+
+    if (state && state.userId) {
+      this.employeeForm.patchValue({ userId: state.userId });
+    }
+
     this.loadDepartments();
 
     this.employeeForm.get('departmentId')?.valueChanges.subscribe((deptId) => {
       if (deptId) {
         this.employeeForm.get('positionId')?.enable();
         this.loadPositions(Number(deptId));
-      } else {
-        this.employeeForm.get('positionId')?.disable();
-        this.positions = [];
       }
     });
   }
@@ -59,33 +63,21 @@ export class EmployeeFormComponent implements OnInit {
   loadDepartments() {
     this.departmentService.getDepartments().subscribe({
       next: (res: any) => {
-        let extracted: any[] = [];
-        if (Array.isArray(res)) extracted = res;
-        else if (res?.data?.items && Array.isArray(res.data.items))
-          extracted = res.data.items;
-        else if (res?.data && Array.isArray(res.data)) extracted = res.data;
-        else if (res?.$values) extracted = res.$values;
-
-        this.departments = extracted;
+        this.departments = Array.isArray(res)
+          ? res
+          : res?.data?.items || res?.data || [];
       },
-      error: (err) => console.error('Error loading departments', err),
     });
   }
 
   loadPositions(deptId: number) {
     this.positionService.getPositionsByDepartment(deptId).subscribe({
       next: (res: any) => {
-        let extracted: any[] = [];
-        if (Array.isArray(res)) extracted = res;
-        else if (res?.data?.items && Array.isArray(res.data.items))
-          extracted = res.data.items;
-        else if (res?.data && Array.isArray(res.data)) extracted = res.data;
-        else if (res?.$values) extracted = res.$values;
-
-        this.positions = extracted;
+        this.positions = Array.isArray(res)
+          ? res
+          : res?.data?.items || res?.data || [];
         this.employeeForm.get('positionId')?.setValue('');
       },
-      error: (err) => console.error('Error loading positions', err),
     });
   }
 
@@ -93,52 +85,39 @@ export class EmployeeFormComponent implements OnInit {
     if (this.employeeForm.invalid) {
       Swal.fire(
         'Incomplete Data',
-        'Please fill all required fields correctly, and ensure a Position is selected.',
+        'Ensure all fields including UserId are filled.',
         'warning',
       );
       return;
     }
 
     this.isLoading = true;
-
     const formValue = this.employeeForm.getRawValue();
 
-    const newEmployee = {
-      firstName: formValue.firstName,
-      lastName: formValue.lastName,
-      email: formValue.email,
-      phoneNumber: formValue.phoneNumber,
+    const payload = {
+      ...formValue,
       hireDate: new Date(formValue.hireDate!).toISOString(),
       departmentId: Number(formValue.departmentId),
       positionId: Number(formValue.positionId),
-      userId: Number(formValue.userId) || 1,
+      userId: Number(formValue.userId),
     };
 
-    console.log('🔥 Payload being sent to Backend:', newEmployee);
-
-    this.employeeService.addEmployee(newEmployee).subscribe({
+    this.employeeService.addEmployee(payload).subscribe({
       next: () => {
-        this.isLoading = false;
-        Swal.fire({
-          icon: 'success',
-          title: 'Success!',
-          text: 'Employee has been added successfully.',
-          timer: 2000,
-          showConfirmButton: false,
-        }).then(() => {
-          this.router.navigate(['/employees']);
-        });
+        Swal.fire(
+          'Success',
+          'Employee profile linked successfully!',
+          'success',
+        );
+        this.router.navigate(['/employees']);
       },
       error: (err) => {
         this.isLoading = false;
-        console.error('API Error:', err);
-
-        const errorMsg =
-          err.error?.message ||
-          err.error?.title ||
-          JSON.stringify(err.error?.errors) ||
-          'Failed to submit data.';
-        Swal.fire('Submission Failed', errorMsg, 'error');
+        Swal.fire(
+          'Error',
+          err.error?.message || 'Failed to link profile',
+          'error',
+        );
       },
     });
   }

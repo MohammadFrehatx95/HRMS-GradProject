@@ -1,56 +1,70 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
-import { HttpClient } from '@angular/common/http';
+import { EmployeeService } from '../../core/services/employee.service';
+import { LeaveService } from '../../core/services/leave.service';
+import { DepartmentService } from '../../core/services/department.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
-  private authService = inject(AuthService);
-  private http = inject(HttpClient);
+  private empService = inject(EmployeeService);
+  private leaveService = inject(LeaveService);
+  private deptService = inject(DepartmentService);
 
-  isAdmin: boolean = false;
-  userName: string = '';
-
-  totalEmployees: number = 0;
-  departmentsCount: number = 0;
-  pendingLeaves: number = 0;
-
-  employeeProfile: any = null;
+  totalEmployees = 0;
+  pendingLeaves = 0;
+  departmentsCount = 0;
+  totalSalaries = 0;
+  recentLeaves: any[] = [];
 
   ngOnInit() {
-    this.isAdmin = this.authService.isAdmin();
-
-    this.userName = localStorage.getItem('user_name') || 'User';
-
-    if (this.isAdmin) {
-      this.loadAdminDashboard();
-    } else {
-      this.loadEmployeeDashboard();
-    }
+    this.loadStats();
   }
 
-  loadAdminDashboard() {
-    this.totalEmployees = 12;
-    this.departmentsCount = 4;
-    this.pendingLeaves = 2;
-  }
+  loadStats() {
+    this.empService.getEmployees().subscribe({
+      next: (res: any) => {
+        let extracted: any[] = [];
+        if (Array.isArray(res)) extracted = res;
+        else if (res?.data?.items && Array.isArray(res.data.items))
+          extracted = res.data.items;
+        else if (res?.data && Array.isArray(res.data)) extracted = res.data;
+        this.totalEmployees = extracted.length;
+      },
+      error: (err) => console.error('Error fetching employees:', err),
+    });
 
-  loadEmployeeDashboard() {
-    this.http
-      .get<any>('https://localhost:7204/api/employees/my-profile')
-      .subscribe({
-        next: (profile) => {
-          this.employeeProfile = profile;
-        },
-        error: (err) => {
-          console.error('Error fetching my profile:', err);
-        },
-      });
+    this.leaveService.getAllLeaves().subscribe({
+      next: (res: any) => {
+        let extracted: any[] = [];
+        if (Array.isArray(res)) extracted = res;
+        else if (res?.data?.items && Array.isArray(res.data.items))
+          extracted = res.data.items;
+        else if (res?.data && Array.isArray(res.data)) extracted = res.data;
+
+        this.pendingLeaves = extracted.filter(
+          (l: any) => l.status === 0 || l.status === '0',
+        ).length;
+        this.recentLeaves = extracted.slice(0, 5);
+      },
+      error: (err) => console.error('Error fetching leaves:', err),
+    });
+
+    this.deptService.getDepartments().subscribe({
+      next: (res: any) => {
+        let extracted: any[] = [];
+        if (Array.isArray(res)) extracted = res;
+        else if (res?.data?.items && Array.isArray(res.data.items))
+          extracted = res.data.items;
+        else if (res?.data && Array.isArray(res.data)) extracted = res.data;
+        this.departmentsCount = extracted.length;
+      },
+      error: (err) => console.error('Error fetching departments:', err),
+    });
   }
 }
