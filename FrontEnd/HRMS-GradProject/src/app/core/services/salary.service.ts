@@ -20,4 +20,8 @@ export class SalaryService {
   createSalary(payload: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, payload);
   }
+
+  updateSalary(id: number, payload: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, payload);
+  }
 }

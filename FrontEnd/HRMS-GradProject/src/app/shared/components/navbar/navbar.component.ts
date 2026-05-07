@@ -1,90 +1,95 @@
-import { Component, OnInit, inject, OnDestroy } from '@angular/core';
-import { RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './navbar.component.html',
 })
-export class NavbarComponent implements OnInit, OnDestroy {
+export class NavbarComponent implements OnInit {
   private authService = inject(AuthService);
-  private router = inject(Router);
   private notificationService = inject(NotificationService);
+  private router = inject(Router);
 
+  isAdmin: boolean = false;
   notifications: any[] = [];
   unreadCount: number = 0;
-  private refreshInterval: any;
-
-  get isAdmin(): boolean {
-    return this.authService.isAdmin();
-  }
 
   ngOnInit() {
+    this.isAdmin = this.authService.isAdmin();
     this.loadNotifications();
-    this.refreshInterval = setInterval(() => this.loadNotifications(), 60000);
   }
 
   loadNotifications() {
-    this.notificationService.getUnreadCount().subscribe({
-      next: (res: any) => {
-        this.unreadCount = res && res.data !== undefined ? res.data : res || 0;
-      },
-      error: (err) => console.error('Error fetching unread count:', err),
-    });
-
     this.notificationService.getNotifications().subscribe({
       next: (res: any) => {
-        const extractedData = Array.isArray(res) ? res : res?.data || [];
-        this.notifications = Array.isArray(extractedData) ? extractedData : [];
+        let extracted: any[] = [];
+
+        if (Array.isArray(res)) extracted = res;
+        else if (res?.data?.items && Array.isArray(res.data.items))
+          extracted = res.data.items;
+        else if (res?.data && Array.isArray(res.data)) extracted = res.data;
+        else if (res?.$values) extracted = res.$values;
+
+        this.notifications = extracted.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
+
+        this.unreadCount = this.notifications.filter((n) => !n.isRead).length;
       },
-      error: (err) => console.error('Error fetching notifications:', err),
+      error: (err) => console.error('Error loading notifications:', err),
     });
   }
 
-  readNotification(id: number) {
-    this.notificationService
-      .markAsRead(id)
-      .subscribe(() => this.loadNotifications());
+  readNotification(notif: any) {
+    if (notif.isRead) {
+      this.navigateBasedOnNotification(notif);
+      return;
+    }
+
+    this.notificationService.markAsRead(notif.id).subscribe({
+      next: () => {
+        notif.isRead = true;
+        this.unreadCount = Math.max(0, this.unreadCount - 1);
+        this.navigateBasedOnNotification(notif);
+      },
+      error: (err) => console.error('Error marking as read:', err),
+    });
   }
 
   readAll() {
-    this.notificationService.markAllAsRead().subscribe(() => {
-      this.loadNotifications();
-      Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: 'success',
-        title: 'All marked as read',
-        showConfirmButton: false,
-        timer: 1500,
-      });
+    this.notificationService.markAllAsRead().subscribe({
+      next: () => {
+        this.notifications.forEach((n) => (n.isRead = true));
+        this.unreadCount = 0;
+      },
+      error: (err) => console.error('Error marking all as read:', err),
     });
+  }
+
+  private navigateBasedOnNotification(notif: any) {
+    const msg = (notif.message || '').toLowerCase();
+
+    if (
+      msg.includes('leave') ||
+      msg.includes('مغادرة') ||
+      msg.includes('إجازة')
+    ) {
+      this.router.navigate(['/leave']);
+    } else if (msg.includes('salary') || msg.includes('راتب')) {
+      this.router.navigate(['/salary']);
+    } else if (msg.includes('attendance') || msg.includes('حضور')) {
+      this.router.navigate(['/attendance']);
+    }
   }
 
   onLogout() {
-    Swal.fire({
-      title: 'Ready to leave?',
-      text: 'You will be logged out of your current session.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#dc3545',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, logout',
-      cancelButtonText: 'Cancel',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.authService.logout();
-        this.router.navigate(['/login']);
-      }
-    });
-  }
-
-  ngOnDestroy() {
-    if (this.refreshInterval) clearInterval(this.refreshInterval);
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

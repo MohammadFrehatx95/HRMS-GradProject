@@ -1,0 +1,43 @@
+<div class="sidebar">
+    <div class="sidebar-header">
+        <div class="user-profile">
+            <img
+                src="https://img.pikbest.com/origin/10/02/35/687pIkbEsTthg.png!sw800"
+                alt="User" class="avatar">
+            <div class="user-info">
+                <p class="name">HR Admin</p>
+                <p class="status"><span class="dot"></span> Online</p>
+            </div>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+        <ul>
+            <li><a routerLink="/dashboard" routerLinkActive="active"><i
+                        class="bi bi-speedometer2"></i> Dashboard</a></li>
+            <li><a routerLink="/employees" routerLinkActive="active"><i
+                        class="bi bi-people"></i> Employees</a></li>
+            <li><a routerLink="/leave" routerLinkActive="active"><i
+                        class="bi bi-calendar2-check"></i> Leave
+                    Requests</a></li>
+            <li><a routerLink="/attendance" routerLinkActive="active"><i
+                        class="bi bi-clock-history"></i> Attendance</a></li>
+            <li><a routerLink="/salary" routerLinkActive="active"><i
+                        class="bi bi-cash-stack"></i> Salaries</a></li>
+
+            @if (isAdmin) {
+            <li class="section-title">System Control</li>
+            <li><a routerLink="/departments" routerLinkActive="active"><i
+                        class="bi bi-diagram-3"></i> Departments</a></li>
+            <li><a routerLink="/register" routerLinkActive="active"><i
+                        class="bi bi-person-plus"></i> Add User</a></li>
+            }
+        </ul>
+    </nav>
+
+    <div class="sidebar-footer mt-auto p-3">
+        <button class="btn btn-outline-danger w-100" (click)="onLogout()">
+            <i class="bi bi-power"></i> Logout
+        </button>
+    </div>
+</div>

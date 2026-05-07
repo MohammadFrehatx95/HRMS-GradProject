@@ -9,11 +9,15 @@ import { EmployeeFormComponent } from './features/employee-form/employee-form.co
 import { LoginComponent } from './features/auth/login/login.component';
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
+import { PositionsComponent } from './features/positions/positions.component';
+import { RegisterComponent } from './features/auth/register/register.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
 
   { path: '', redirectTo: 'login', pathMatch: 'full' },
+
+  { path: 'register', component: RegisterComponent },
 
   {
     path: 'dashboard',
@@ -49,6 +53,10 @@ export const routes: Routes = [
     path: 'employee-form',
     component: EmployeeFormComponent,
     canActivate: [authGuard, adminGuard],
+  },
+  {
+    path: 'positions',
+    component: PositionsComponent,
   },
 
   { path: '**', redirectTo: 'login' },

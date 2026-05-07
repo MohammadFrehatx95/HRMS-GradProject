@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,17 +10,25 @@ export class AuthService {
   private http = inject(HttpClient);
   private apiUrl = 'https://localhost:7204/api/auth';
 
-  login(credentials: any) {
-    return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
-      tap((response: any) => {
-        if (response && response.data && response.data.token) {
+  login(credentials: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
+      tap((response) => {
+        if (response?.data?.token) {
           localStorage.setItem('jwt_token', response.data.token);
-          localStorage.setItem('user_role', response.data.role);
-          localStorage.setItem('user_name', response.data.username);
+
+          if (response.data.role)
+            localStorage.setItem('user_role', response.data.role);
+          if (response.data.username)
+            localStorage.setItem('user_name', response.data.username);
         }
       }),
     );
   }
+
+  register(payload: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/register`, payload);
+  }
+
   isLoggedIn(): boolean {
     return !!localStorage.getItem('jwt_token');
   }
@@ -29,7 +38,29 @@ export class AuthService {
   }
 
   isAdmin(): boolean {
-    return this.getUserRole() === 'Admin';
+    const token =
+      typeof window !== 'undefined' ? localStorage.getItem('jwt_token') : null;
+    if (!token) return false;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const userRole =
+        payload[
+          'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+        ] ||
+        payload['role'] ||
+        payload['Role'];
+
+      if (!userRole) return false;
+
+      if (Array.isArray(userRole)) {
+        return userRole.some((r) => r.toLowerCase() === 'admin');
+      }
+
+      return userRole.toLowerCase() === 'admin';
+    } catch (error) {
+      return false;
+    }
   }
 
   logout() {
