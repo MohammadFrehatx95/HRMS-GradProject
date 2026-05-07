@@ -10,13 +10,16 @@ export class AuthService {
   private http = inject(HttpClient);
   private apiUrl = 'https://localhost:7204/api/auth';
 
-  login(credentials: any) {
-    return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
-      tap((response: any) => {
-        if (response && response.data && response.data.token) {
+  login(credentials: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
+      tap((response) => {
+        if (response?.data?.token) {
           localStorage.setItem('jwt_token', response.data.token);
-          localStorage.setItem('user_role', response.data.role);
-          localStorage.setItem('user_name', response.data.username);
+
+          if (response.data.role)
+            localStorage.setItem('user_role', response.data.role);
+          if (response.data.username)
+            localStorage.setItem('user_name', response.data.username);
         }
       }),
     );
@@ -36,27 +39,17 @@ export class AuthService {
 
   isAdmin(): boolean {
     const token =
-      typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-    if (!token) {
-      console.log('🔥 No token found in localStorage!');
-      return false;
-    }
+      typeof window !== 'undefined' ? localStorage.getItem('jwt_token') : null;
+    if (!token) return false;
 
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
-
-      // 1. هذا السطر سيطبع محتوى التوكن بالكامل لكي نراه
-      console.log('🔥 Decoded Token Payload:', payload);
-
       const userRole =
         payload[
           'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
         ] ||
         payload['role'] ||
         payload['Role'];
-
-      // 2. هذا السطر سيطبع الصلاحية التي استخرجناها
-      console.log('🔥 Extracted Role:', userRole);
 
       if (!userRole) return false;
 
@@ -66,7 +59,6 @@ export class AuthService {
 
       return userRole.toLowerCase() === 'admin';
     } catch (error) {
-      console.error('🔥 Error decoding token:', error);
       return false;
     }
   }

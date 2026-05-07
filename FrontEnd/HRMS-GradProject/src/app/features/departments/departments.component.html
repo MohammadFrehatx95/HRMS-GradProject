@@ -2,7 +2,7 @@
     <h2 class="fw-bold text-secondary">
         <i class="bi bi-diagram-3-fill me-2"></i>Departments Management
     </h2>
-    <button class="btn btn-primary shadow-sm">
+    <button class="btn btn-primary shadow-sm" (click)="openAddModal()">
         <i class="bi bi-plus-lg me-1"></i> Add Department
     </button>
 </div>
@@ -37,26 +37,21 @@
 </div>
 }
 
-<div class="modal fade" id="deptDetailsModal" tabindex="-1"
-    aria-labelledby="deptDetailsModalLabel" aria-hidden="true">
+<div class="modal fade" id="deptDetailsModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg">
-
             <div
                 class="modal-header border-bottom border-primary border-4 bg-light">
-                <h5 class="modal-title text-primary fw-bold"
-                    id="deptDetailsModalLabel">
+                <h5 class="modal-title text-primary fw-bold">
                     <i class="bi bi-building me-2"></i>Department Details
                 </h5>
                 <button type="button" class="btn-close shadow-none"
                     data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <div class="modal-body p-4">
                 @if (selectedDepartment) {
                 <h4 class="mb-3 text-dark fw-bold">{{ selectedDepartment.name
                     }}</h4>
-
                 <ul class="list-group list-group-flush mb-3">
                     <li
                         class="list-group-item px-0 d-flex justify-content-between">
@@ -68,11 +63,61 @@
                 </ul>
                 }
             </div>
-
             <div class="modal-footer bg-light border-top-0">
                 <button type="button" class="btn btn-secondary px-4"
                     data-bs-dismiss="modal">Close</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addDeptModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+
+            <div
+                class="modal-header border-bottom border-success border-4 bg-light">
+                <h5 class="modal-title text-success fw-bold">
+                    <i class="bi bi-plus-circle me-2"></i>Add New Department
+                </h5>
+                <button type="button" class="btn-close shadow-none"
+                    data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form [formGroup]="addForm" (ngSubmit)="saveDepartment()">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label
+                            class="form-label fw-bold text-secondary">Department
+                            Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control"
+                            formControlName="name"
+                            placeholder="e.g., Marketing, Sales..."
+                            [class.is-invalid]="addForm.get('name')?.invalid && addForm.get('name')?.touched">
+                        @if (addForm.get('name')?.invalid &&
+                        addForm.get('name')?.touched) {
+                        <div class="invalid-feedback">
+                            Department name is required.
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="modal-footer bg-light border-top-0">
+                    <button type="button" class="btn btn-light px-4 border"
+                        data-bs-dismiss="modal"
+                        [disabled]="isSubmitting">Cancel</button>
+                    <button type="submit" class="btn btn-success px-4"
+                        [disabled]="addForm.invalid || isSubmitting">
+                        @if (isSubmitting) {
+                        <span class="spinner-border spinner-border-sm me-2"
+                            role="status" aria-hidden="true"></span>Saving...
+                        } @else {
+                        <i class="bi bi-save me-1"></i> Save
+                        }
+                    </button>
+                </div>
+            </form>
 
         </div>
     </div>
