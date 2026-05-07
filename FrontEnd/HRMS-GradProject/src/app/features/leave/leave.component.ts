@@ -20,38 +20,64 @@ export class LeaveComponent implements OnInit {
   leavesList: any[] = [];
   isLoading: boolean = true;
   isProcessing: boolean = false;
+
+  // إعادة الصلاحية لتكون متغيرة بناءً على المستخدم الفعلي
   isAdmin: boolean = false;
 
   leaveModal: any;
 
   leaveData = {
-    leaveType: '',
+    leaveType: 0,
     startDate: '',
     endDate: '',
     reason: '',
   };
 
-  leaveTypes = ['Annual', 'Sick', 'Maternity', 'Unpaid', 'Emergency'];
+  leaveTypes = [
+    { id: 0, name: 'Annual' },
+    { id: 1, name: 'Sick' },
+    { id: 2, name: 'Unpaid' },
+    { id: 3, name: 'Maternity' },
+  ];
 
   ngOnInit() {
+    // قراءة الصلاحية الحقيقية من التوكن (Token) أو حالة تسجيل الدخول
     this.isAdmin = this.authService.isAdmin();
     this.loadLeaves();
   }
 
   loadLeaves() {
     this.isLoading = true;
+
+    // توجيه الطلب ديناميكياً: المدير يرى الكل، الموظف يرى طلباته فقط
     const request = this.isAdmin
       ? this.leaveService.getAllLeaves()
       : this.leaveService.getMyLeaves();
 
     request.subscribe({
       next: (res: any) => {
-        const extracted = Array.isArray(res) ? res : res?.data || [];
+        let extracted: any[] = [];
 
-        this.leavesList = Array.isArray(extracted) ? extracted : [];
+        // آلية استخراج ذكية تبحث عن المصفوفة داخل الاستجابة أياً كان هيكلها
+        if (Array.isArray(res)) {
+          extracted = res;
+        } else if (res && typeof res === 'object') {
+          const foundArray = Object.values(res).find((val) =>
+            Array.isArray(val),
+          );
+          if (foundArray) {
+            extracted = foundArray as any[];
+          }
+        }
 
+        this.leavesList = extracted;
+
+        // ترتيب الطلبات المعلقة لتظهر في الأعلى للمدير
         if (this.isAdmin && this.leavesList.length > 0) {
-          this.leavesList.sort((a, b) => (a.status === 'Pending' ? -1 : 1));
+          this.leavesList.sort((a, b) => {
+            const statusA = this.getStatusText(a.status);
+            return statusA === 'Pending' ? -1 : 1;
+          });
         }
 
         this.isLoading = false;
@@ -64,8 +90,20 @@ export class LeaveComponent implements OnInit {
     });
   }
 
+  getStatusText(statusCode: any): string {
+    if (statusCode === 0 || statusCode === '0') return 'Pending';
+    if (statusCode === 1 || statusCode === '1') return 'Approved';
+    if (statusCode === 2 || statusCode === '2') return 'Rejected';
+    return statusCode?.toString() || 'Unknown';
+  }
+
+  getLeaveTypeText(typeCode: any): string {
+    const type = this.leaveTypes.find((t) => t.id == typeCode);
+    return type ? type.name : 'Emergency';
+  }
+
   openModal() {
-    this.leaveData = { leaveType: '', startDate: '', endDate: '', reason: '' };
+    this.leaveData = { leaveType: 0, startDate: '', endDate: '', reason: '' };
     const modalEl = document.getElementById('leaveModal');
     if (modalEl) {
       this.leaveModal = new bootstrap.Modal(modalEl);
@@ -75,12 +113,12 @@ export class LeaveComponent implements OnInit {
 
   submitLeaveRequest() {
     this.isProcessing = true;
-
     const payload = {
-      ...this.leaveData,
+      leaveType: Number(this.leaveData.leaveType),
       startDate: new Date(this.leaveData.startDate).toISOString(),
       endDate: new Date(this.leaveData.endDate).toISOString(),
-      status: 'Pending',
+      reason: this.leaveData.reason,
+      status: 0,
     };
 
     this.leaveService.applyLeave(payload).subscribe({
@@ -90,7 +128,7 @@ export class LeaveComponent implements OnInit {
         Swal.fire({
           position: 'top-end',
           icon: 'success',
-          title: 'Leave request submitted',
+          title: 'Success',
           showConfirmButton: false,
           timer: 1500,
         });
@@ -98,41 +136,25 @@ export class LeaveComponent implements OnInit {
       },
       error: (err) => {
         this.isProcessing = false;
-        console.error('Submit error:', err);
-        Swal.fire('Error', 'Failed to submit request.', 'error');
+        const msg =
+          err.error?.message || err.error?.title || 'Failed to submit request';
+        Swal.fire('Error', msg, 'warning');
       },
     });
   }
 
-  changeStatus(id: number, newStatus: string) {
-    const actionText = newStatus === 'Approved' ? 'approve' : 'reject';
-    const confirmColor = newStatus === 'Approved' ? '#198754' : '#dc3545';
-
-    Swal.fire({
-      title: `Are you sure?`,
-      text: `You are about to ${actionText} this leave request.`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: confirmColor,
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: `Yes, ${actionText} it!`,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.leaveService.updateLeaveStatus(id, newStatus).subscribe({
-          next: () => {
-            Swal.fire(
-              'Updated!',
-              `Request has been ${newStatus.toLowerCase()}.`,
-              'success',
-            );
-            this.loadLeaves();
-          },
-          error: (err) => {
-            console.error('Status update error:', err);
-            Swal.fire('Error!', 'Failed to update status.', 'error');
-          },
-        });
-      }
-    });
+  changeStatus(id: number, newStatusCode: number) {
+    this.leaveService
+      .updateLeaveStatus(id, newStatusCode.toString())
+      .subscribe({
+        next: () => {
+          Swal.fire('Updated!', 'Status changed.', 'success');
+          this.loadLeaves();
+        },
+        error: (err) => {
+          console.error('Status update error:', err);
+          Swal.fire('Error!', 'Failed to update status.', 'error');
+        },
+      });
   }
 }
