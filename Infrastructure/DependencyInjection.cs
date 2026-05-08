@@ -34,7 +34,7 @@ public static class DependencyInjection
     }
 
     public static IServiceCollection AddApplication(
-        this IServiceCollection services)
+     this IServiceCollection services, IConfiguration configuration)
     {
         // AutoMapper
         services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
@@ -51,8 +51,7 @@ public static class DependencyInjection
         services.AddScoped<INotificationService, NotificationService>();
         // أضف هاد
         // obtain IConfiguration from the service collection to avoid missing 'configuration' variable
-        var serviceProvider = services.BuildServiceProvider();
-        var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+        
         services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
         services.AddScoped<IEmailService, EmailService>();
 
