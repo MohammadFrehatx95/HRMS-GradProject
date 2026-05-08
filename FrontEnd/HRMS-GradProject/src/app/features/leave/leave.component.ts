@@ -70,7 +70,12 @@ export class LeaveComponent implements OnInit {
         if (this.isAdmin && this.leavesList.length > 0) {
           this.leavesList.sort((a, b) => {
             const statusA = this.getStatusText(a.status);
-            return statusA === 'Pending' ? -1 : 1;
+            const statusB = this.getStatusText(b.status);
+            
+            if (statusA === 'Pending' && statusB !== 'Pending') return -1;
+            if (statusA !== 'Pending' && statusB === 'Pending') return 1;
+            
+            return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
           });
         }
 
@@ -138,8 +143,35 @@ export class LeaveComponent implements OnInit {
   }
 
   changeStatus(id: number, newStatusCode: number) {
+    if (newStatusCode === 2) {
+      Swal.fire({
+        title: 'Reject Leave Request',
+        text: 'Please provide a reason for rejection:',
+        input: 'textarea',
+        inputPlaceholder: 'Type your reason here...',
+        showCancelButton: true,
+        confirmButtonText: 'Reject',
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: '#dc3545',
+        inputValidator: (value) => {
+          if (!value || value.trim() === '') {
+            return 'You need to write a rejection reason!';
+          }
+          return null;
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.executeStatusChange(id, newStatusCode, result.value);
+        }
+      });
+    } else {
+      this.executeStatusChange(id, newStatusCode);
+    }
+  }
+
+  private executeStatusChange(id: number, newStatusCode: number, rejectionReason?: string) {
     this.leaveService
-      .updateLeaveStatus(id, newStatusCode.toString())
+      .updateLeaveStatus(id, newStatusCode, rejectionReason)
       .subscribe({
         next: () => {
           Swal.fire('Updated!', 'Status changed.', 'success');
@@ -147,7 +179,8 @@ export class LeaveComponent implements OnInit {
         },
         error: (err) => {
           console.error('Status update error:', err);
-          Swal.fire('Error!', 'Failed to update status.', 'error');
+          const msg = err.error?.message || err.error?.title || 'Failed to update status.';
+          Swal.fire('Error!', msg, 'error');
         },
       });
   }

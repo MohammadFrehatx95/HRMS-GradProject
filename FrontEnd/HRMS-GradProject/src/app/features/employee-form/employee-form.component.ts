@@ -25,6 +25,8 @@ export class EmployeeFormComponent implements OnInit {
   private router = inject(Router);
 
   isLoading = false;
+  isEditMode = false;
+  currentEmployeeId: number | null = null;
   departments: any[] = [];
   positions: any[] = [];
 
@@ -45,7 +47,12 @@ export class EmployeeFormComponent implements OnInit {
 
   ngOnInit() {
     const state = window.history.state;
-    if (state && (state.userId || state.email)) {
+    if (state && state.editMode && state.employeeId) {
+      this.isEditMode = true;
+      this.currentEmployeeId = state.employeeId;
+      this.loadEmployeeDetails(this.currentEmployeeId!);
+      this.employeeForm.get('userId')?.disable(); // typically don't change userId
+    } else if (state && (state.userId || state.email)) {
       this.employeeForm.patchValue({
         userId: state.userId,
         email: state.email,
@@ -58,6 +65,34 @@ export class EmployeeFormComponent implements OnInit {
       if (deptId) {
         this.employeeForm.get('positionId')?.enable();
         this.loadPositions(Number(deptId));
+      }
+    });
+  }
+
+  loadEmployeeDetails(id: number) {
+    this.isLoading = true;
+    this.employeeService.getEmployeeFullProfile(id).subscribe({
+      next: (profile: any) => {
+        this.isLoading = false;
+        if (profile.departmentId) {
+          this.loadPositions(profile.departmentId);
+          this.employeeForm.get('positionId')?.enable();
+        }
+        this.employeeForm.patchValue({
+          firstName: profile.firstName,
+          lastName: profile.lastName,
+          email: profile.email,
+          phoneNumber: profile.phoneNumber,
+          hireDate: profile.hireDate ? new Date(profile.hireDate).toISOString().split('T')[0] : '',
+          departmentId: profile.departmentId,
+          positionId: profile.positionId,
+          userId: profile.userId
+        });
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Error fetching employee', err);
+        Swal.fire('Error', 'Failed to load employee details', 'error');
       }
     });
   }
@@ -100,25 +135,36 @@ export class EmployeeFormComponent implements OnInit {
       hireDate: rawValues.hireDate
         ? new Date(rawValues.hireDate).toISOString()
         : new Date().toISOString(),
-      userId: rawValues.userId,
+      userId: this.isEditMode ? this.employeeForm.get('userId')?.value : rawValues.userId,
     };
 
-    this.employeeService.addEmployee(payload).subscribe({
-      next: () => {
-        this.isLoading = false;
-        Swal.fire('نجاح', 'تم ربط ملف الموظف بنجاح', 'success');
-        this.router.navigate(['/employees']);
-      },
-      error: (err) => {
-        this.isLoading = false;
-        const errorMsg =
-          err.error?.message ||
-          (err.error && typeof err.error === 'object'
-            ? JSON.stringify(err.error)
-            : 'فشل الربط');
-        Swal.fire('خطأ في البيانات', errorMsg, 'error');
-        console.error('Full Error:', err);
-      },
-    });
+    if (this.isEditMode && this.currentEmployeeId) {
+      this.employeeService.updateEmployee(this.currentEmployeeId, payload).subscribe({
+        next: () => {
+          this.isLoading = false;
+          Swal.fire('نجاح', 'تم تعديل بيانات الموظف بنجاح', 'success');
+          this.router.navigate(['/employees']);
+        },
+        error: (err) => {
+          this.isLoading = false;
+          const errorMsg = err.error?.message || 'فشل التعديل';
+          Swal.fire('خطأ', errorMsg, 'error');
+        }
+      });
+    } else {
+      this.employeeService.addEmployee(payload).subscribe({
+        next: () => {
+          this.isLoading = false;
+          Swal.fire('نجاح', 'تم ربط ملف الموظف بنجاح', 'success');
+          this.router.navigate(['/employees']);
+        },
+        error: (err) => {
+          this.isLoading = false;
+          const errorMsg = err.error?.message || (err.error && typeof err.error === 'object' ? JSON.stringify(err.error) : 'فشل الربط');
+          Swal.fire('خطأ في البيانات', errorMsg, 'error');
+          console.error('Full Error:', err);
+        },
+      });
+    }
   }
 }

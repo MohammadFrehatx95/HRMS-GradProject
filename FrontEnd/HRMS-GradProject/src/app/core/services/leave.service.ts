@@ -44,8 +44,12 @@ export class LeaveService {
     );
   }
 
-  updateLeaveStatus(id: number, status: string): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}/status`, { status });
+  updateLeaveStatus(id: number, status: string | number, rejectionReason?: string): Observable<any> {
+    const payload: any = { status: Number(status) };
+    if (rejectionReason) {
+      payload.rejectionReason = rejectionReason;
+    }
+    return this.http.put<any>(`${this.apiUrl}/${id}/status`, payload);
   }
 
   deleteLeave(id: number): Observable<any> {

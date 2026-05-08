@@ -2,12 +2,11 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1">My Attendance Tracking</h3>
-            <p class="text-muted small mb-0">Monitor your daily clock-in and
-                clock-out records</p>
+            <h3 class="fw-bold text-dark mb-1">{{ isAdmin ? 'Employee Attendance Tracking' : 'My Attendance Tracking' }}</h3>
+            <p class="text-muted small mb-0">{{ isAdmin ? 'Monitor all employees daily clock-in and clock-out records' : 'Monitor your daily clock-in and clock-out records' }}</p>
         </div>
 
-        <div>
+        <div *ngIf="!isAdmin">
             <button *ngIf="!isCheckedInToday"
                 class="btn btn-success px-4 py-2 rounded-3 fw-semibold shadow-sm"
                 (click)="onClockIn()"
@@ -43,6 +42,7 @@
                 <thead class="bg-light text-muted small text-uppercase"
                     style="letter-spacing: 0.5px;">
                     <tr>
+                        <th *ngIf="isAdmin" class="py-3 px-4 border-bottom-0 fw-semibold">Employee</th>
                         <th
                             class="py-3 px-4 border-bottom-0 fw-semibold">Date</th>
                         <th
@@ -85,6 +85,9 @@
                     </tr>
 
                     <tr *ngFor="let record of attendanceRecords">
+                        <td *ngIf="isAdmin" class="py-3 px-4 fw-bold text-dark">
+                            {{ record.employeeName || 'Emp #' + record.employeeId }}
+                        </td>
                         <td class="py-3 px-4 fw-bold text-dark">
                             {{ record.date | date:'dd MMM yyyy' }}
                         </td>

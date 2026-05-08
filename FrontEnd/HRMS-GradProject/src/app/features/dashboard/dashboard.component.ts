@@ -25,6 +25,8 @@ export class DashboardComponent implements OnInit {
   departmentsCount = 0;
   totalSalaries = 0;
   recentLeaves: any[] = [];
+  recentAttendances: any[] = [];
+  myRecentAttendances: any[] = [];
   isAdmin: boolean = false;
 
   employeeAnnualLeaveBalance: number | string = 14;
@@ -81,6 +83,20 @@ export class DashboardComponent implements OnInit {
         this.departmentsCount = extracted.length;
       },
       error: (err) => console.error('Error fetching departments:', err),
+    });
+
+    this.attendanceService.getAllAttendance().subscribe({
+      next: (res: any) => {
+        let extracted: any[] = [];
+        if (Array.isArray(res)) extracted = res;
+        else if (res?.data?.items && Array.isArray(res.data.items))
+          extracted = res.data.items;
+        else if (res?.data && Array.isArray(res.data)) extracted = res.data;
+        
+        extracted.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        this.recentAttendances = extracted.slice(0, 5);
+      },
+      error: (err) => console.error('Error fetching attendance overview:', err),
     });
   }
 
@@ -160,6 +176,9 @@ export class DashboardComponent implements OnInit {
             }
           }
         });
+
+        extracted.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        this.myRecentAttendances = extracted.slice(0, 5);
 
         this.employeeHoursWorked = Math.round(totalHours);
       },

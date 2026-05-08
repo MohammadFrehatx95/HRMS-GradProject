@@ -23,6 +23,8 @@ export class DepartmentsComponent implements OnInit {
   departmentsList: any[] = [];
   isLoading: boolean = true;
   isSubmitting: boolean = false;
+  isEditMode: boolean = false;
+  currentDepartmentId: number | null = null;
 
   selectedDepartment: any = null;
   private detailsModal: any;
@@ -69,7 +71,21 @@ export class DepartmentsComponent implements OnInit {
   }
 
   openAddModal() {
+    this.isEditMode = false;
+    this.currentDepartmentId = null;
     this.addForm.reset();
+    const modalElement = document.getElementById('addDeptModal');
+    if (modalElement) {
+      this.addModalInstance = new bootstrap.Modal(modalElement);
+      this.addModalInstance.show();
+    }
+  }
+
+  openEditModal(dept: any) {
+    this.isEditMode = true;
+    this.currentDepartmentId = dept.id;
+    this.addForm.patchValue({ name: dept.name });
+    
     const modalElement = document.getElementById('addDeptModal');
     if (modalElement) {
       this.addModalInstance = new bootstrap.Modal(modalElement);
@@ -86,18 +102,60 @@ export class DepartmentsComponent implements OnInit {
     this.isSubmitting = true;
     const payload = this.addForm.getRawValue();
 
-    this.departmentService.addDepartment(payload).subscribe({
-      next: () => {
-        this.isSubmitting = false;
-        this.addModalInstance.hide();
-        Swal.fire('Success', 'Department added successfully!', 'success');
-        this.loadDepartments();
-      },
-      error: (err) => {
-        this.isSubmitting = false;
-        const msg = err.error?.message || 'Failed to add department';
-        Swal.fire('Error', msg, 'error');
-      },
+    if (this.isEditMode && this.currentDepartmentId) {
+      this.departmentService.updateDepartment(this.currentDepartmentId, payload).subscribe({
+        next: () => {
+          this.isSubmitting = false;
+          this.addModalInstance.hide();
+          Swal.fire('Success', 'Department updated successfully!', 'success');
+          this.loadDepartments();
+        },
+        error: (err) => {
+          this.isSubmitting = false;
+          const msg = err.error?.message || 'Failed to update department';
+          Swal.fire('Error', msg, 'error');
+        },
+      });
+    } else {
+      this.departmentService.addDepartment(payload).subscribe({
+        next: () => {
+          this.isSubmitting = false;
+          this.addModalInstance.hide();
+          Swal.fire('Success', 'Department added successfully!', 'success');
+          this.loadDepartments();
+        },
+        error: (err) => {
+          this.isSubmitting = false;
+          const msg = err.error?.message || 'Failed to add department';
+          Swal.fire('Error', msg, 'error');
+        },
+      });
+    }
+  }
+
+  deleteDepartment(id: number) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "This department and all associated data might be affected. You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.departmentService.deleteDepartment(id).subscribe({
+          next: () => {
+            Swal.fire('Deleted!', 'Department has been deleted.', 'success');
+            this.loadDepartments();
+          },
+          error: (err) => {
+            console.error('Delete error:', err);
+            const msg = err.error?.message || 'Failed to delete department.';
+            Swal.fire('Error!', msg, 'error');
+          }
+        });
+      }
     });
   }
 }

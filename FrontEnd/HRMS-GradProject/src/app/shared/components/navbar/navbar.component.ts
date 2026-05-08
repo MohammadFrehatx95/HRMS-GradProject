@@ -1,8 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -10,10 +11,12 @@ import { NotificationService } from '../../../core/services/notification.service
   imports: [CommonModule, RouterModule],
   templateUrl: './navbar.component.html',
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private notificationService = inject(NotificationService);
   private router = inject(Router);
+
+  private pollingSub?: Subscription;
 
   isAdmin: boolean = false;
   notifications: any[] = [];
@@ -22,6 +25,15 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
     this.loadNotifications();
+    this.pollingSub = interval(5000).subscribe(() => {
+      this.loadNotifications();
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.pollingSub) {
+      this.pollingSub.unsubscribe();
+    }
   }
 
   loadNotifications() {
@@ -73,17 +85,27 @@ export class NavbarComponent implements OnInit {
   }
 
   private navigateBasedOnNotification(notif: any) {
+    const type = notif.type || '';
     const msg = (notif.message || '').toLowerCase();
 
     if (
+      type.includes('Leave') ||
       msg.includes('leave') ||
       msg.includes('مغادرة') ||
       msg.includes('إجازة')
     ) {
       this.router.navigate(['/leave']);
-    } else if (msg.includes('salary') || msg.includes('راتب')) {
+    } else if (
+      type.includes('Salary') || 
+      msg.includes('salary') || 
+      msg.includes('راتب')
+    ) {
       this.router.navigate(['/salary']);
-    } else if (msg.includes('attendance') || msg.includes('حضور')) {
+    } else if (
+      type.includes('Clock') || 
+      msg.includes('attendance') || 
+      msg.includes('حضور')
+    ) {
       this.router.navigate(['/attendance']);
     }
   }

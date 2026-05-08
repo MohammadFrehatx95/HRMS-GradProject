@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AttendanceService } from '../../core/services/attendance.service';
+import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -11,17 +12,39 @@ import Swal from 'sweetalert2';
 })
 export class AttendanceComponent implements OnInit {
   private attendanceService = inject(AttendanceService);
+  private authService = inject(AuthService);
 
   attendanceRecords: any[] = [];
   isLoading: boolean = true;
   isProcessing: boolean = false;
+  isAdmin: boolean = false;
 
   isCheckedInToday: boolean = false;
   isCheckedOutToday: boolean = false;
   todayWorkedHours: number = 0;
 
   ngOnInit() {
-    this.loadMyAttendance();
+    this.isAdmin = this.authService.isAdmin();
+    if (this.isAdmin) {
+      this.loadAllAttendance();
+    } else {
+      this.loadMyAttendance();
+    }
+  }
+
+  loadAllAttendance() {
+    this.isLoading = true;
+    this.attendanceService.getAllAttendance().subscribe({
+      next: (res: any) => {
+        this.attendanceRecords = res || [];
+        this.attendanceRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching all attendance:', err);
+        this.isLoading = false;
+      }
+    });
   }
   loadMyAttendance() {
     this.isLoading = true;

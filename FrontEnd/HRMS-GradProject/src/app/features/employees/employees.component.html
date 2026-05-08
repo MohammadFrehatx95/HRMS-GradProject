@@ -51,9 +51,13 @@
                             <i class="bi bi-file-earmark-person me-1"></i>
                             Details
                         </button>
+                        <button class="btn btn-outline-primary btn-sm me-2"
+                            (click)="editEmployee(emp.id)">
+                            <i class="bi bi-pencil-square"></i> Edit
+                        </button>
                         <button class="btn btn-sm btn-outline-danger"
                             (click)="onDelete(emp.id)">
-                            <i class="bi bi-trash3 me-1"></i> Delete
+                            <i class="bi bi-trash3"></i> Delete
                         </button>
                         }
                     </td>
@@ -86,22 +90,18 @@
 
             <div class="modal-body p-4">
                 @if (selectedEmployeeProfile) {
-                <h4 class="mb-4">{{ selectedEmployeeProfile.firstName }} {{
-                    selectedEmployeeProfile.lastName }}</h4>
+                <h4 class="mb-4">{{ selectedEmployeeProfile.fullName }}</h4>
 
                 <div class="row g-4">
                     <div class="col-md-5">
                         <div class="card bg-light border-0 shadow-sm h-100">
                             <div class="card-body text-center">
                                 <h6
-                                    class="text-secondary fw-bold text-uppercase mb-3">Attendance
-                                    Summary</h6>
+                                    class="text-secondary fw-bold text-uppercase mb-3">Status Summary</h6>
                                 <i
-                                    class="bi bi-calendar-x display-4 text-danger mb-2 d-block"></i>
-                                <p class="mb-0 fs-5">Absent Days:
-                                    <span class="text-danger fw-bold fs-4">{{
-                                        selectedEmployeeProfile.absentDays || 0
-                                        }}</span>
+                                    class="bi bi-person-check-fill display-4 text-success mb-2 d-block"></i>
+                                <p class="mb-0 fs-5">Account Status:
+                                    <span class="text-success fw-bold fs-4">Active</span>
                                 </p>
                             </div>
                         </div>
