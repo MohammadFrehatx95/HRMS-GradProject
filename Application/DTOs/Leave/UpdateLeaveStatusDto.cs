@@ -11,6 +11,6 @@ namespace Application.DTOs.Leave
         [Required]
         public LeaveStatus Status { get; set; }
 
-        public string? RejectionReason { get; set; }
+        public string RejectionReason { get; set; } = string.Empty;
     }
 }

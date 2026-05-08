@@ -6,6 +6,7 @@ using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 
 namespace Application.Services.Implementations
@@ -16,7 +17,8 @@ namespace Application.Services.Implementations
         IUnitOfWork uow,
         IMapper mapper,
         INotificationService notificationService,
-        IEmailService emailService) : ILeaveService
+        IEmailService emailService,
+        ILogger<LeaveService> logger) : ILeaveService
     {
         public async Task<PagedResult<LeaveDto>> GetAllAsync(int pageNumber, int pageSize)
         {
@@ -66,17 +68,19 @@ namespace Application.Services.Implementations
 
         public async Task<LeaveDto> CreateAsync(int employeeId, CreateLeaveDto dto)
         {
-            // ✅ Fix DateTime Kind — PostgreSQL requires UTC
+            // ✅ معالجة التواريخ بشكل صحيح مع UTC
             var startDate = DateTime.SpecifyKind(dto.StartDate.Date, DateTimeKind.Utc);
             var endDate = DateTime.SpecifyKind(dto.EndDate.Date, DateTimeKind.Utc);
             var today = DateTime.SpecifyKind(DateTime.UtcNow.Date, DateTimeKind.Utc);
 
+            // ✅ التحقق من الصحة
             if (startDate < today)
                 throw new ArgumentException("Start date cannot be in the past");
 
             if (endDate < startDate)
                 throw new ArgumentException("End date cannot be before start date");
 
+            // ✅ التحقق من التداخل
             var hasOverlap = await uow.Repository<Leave>()
                               .GetAllQueryable()
                               .AnyAsync(l =>
@@ -89,6 +93,7 @@ namespace Application.Services.Implementations
                 throw new InvalidOperationException(
                     "You already have a leave request overlapping these dates");
 
+            // ✅ إنشاء طلب الإجازة
             var leave = new Leave
             {
                 EmployeeId = employeeId,
@@ -104,7 +109,7 @@ namespace Application.Services.Implementations
             await uow.Repository<Leave>().AddAsync(leave);
             await uow.SaveChangesAsync();
 
-            // جيب بيانات الموظف
+            // ✅ جلب بيانات الموظف
             var employee = await uow.Repository<Employee>()
                             .GetByIdAsync(employeeId);
 
@@ -112,31 +117,37 @@ namespace Application.Services.Implementations
                 ? $"{employee.FirstName} {employee.LastName}"
                 : "Unknown";
 
-            // ✅ Fix UserRole — قارن enum بـ enum مش string
+            // ✅ جلب HR و Admin - بدون مشاكل Role
             var hrAdmins = await uow.Repository<User>()
                             .GetAllQueryable()
-                            .Where(u => u.Role == "HR" || u.Role == "Admin")
+                            .Where(u => u.Role == UserRole.HR.ToString() || 
+                                        u.Role == UserRole.Admin.ToString())
                             .ToListAsync();
 
+            // ✅ إرسال الإشعارات والبريد بشكل آمن
             foreach (var user in hrAdmins)
             {
-                // Notification
-                await notificationService.CreateAsync(
-                    userId: user.Id,
-                    title: "New Leave Request",
-                    message: $"{employeeName} submitted a {dto.LeaveType} leave request " +
-                     $"from {startDate:yyyy-MM-dd} to {endDate:yyyy-MM-dd}",
-                    type: NotificationType.LeaveRequested);
-
-                // ✅ Email — try/catch عشان ما يوقف الـ Request
                 try
                 {
+                    // Notification
+                    await notificationService.CreateAsync(
+                        userId: user.Id,
+                        title: "New Leave Request",
+                        message: $"{employeeName} submitted a {dto.LeaveType} leave request " +
+                                 $"from {startDate:yyyy-MM-dd} to {endDate:yyyy-MM-dd}",
+                        type: NotificationType.LeaveRequested);
+
+                    // Email
                     await emailService.SendLeaveRequestedAsync(
                         user.Email, employeeName,
                         dto.LeaveType.ToString(),
                         startDate, endDate);
                 }
-                catch { /* Log if needed */ }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, 
+                        "Error sending leave notification to user {UserId}", user.Id);
+                }
             }
 
             return (await GetByIdAsync(leave.Id))!;
@@ -149,7 +160,7 @@ namespace Application.Services.Implementations
                                  .GetAllQueryable()
                                  .Include(l => l.Employee)
                                  .FirstOrDefaultAsync(l => l.Id == leaveId)
-                        ?? throw new KeyNotFoundException($"Leave {leaveId} not found");
+                    ?? throw new KeyNotFoundException($"Leave {leaveId} not found");
 
             if (leave.Status != LeaveStatus.Pending)
                 throw new InvalidOperationException(
@@ -160,44 +171,44 @@ namespace Application.Services.Implementations
                 throw new ArgumentException(
                     "Rejection reason is required when rejecting a leave");
 
+            // ✅ تحديث الحالة
             leave.Status = dto.Status;
             leave.ReviewedByUserId = reviewerUserId;
             leave.RejectionReason = dto.Status == LeaveStatus.Rejected
                 ? dto.RejectionReason
-                : null;
+                : string.Empty;  // بدل null
+            leave.ReviewedAt = DateTime.UtcNow;
 
             uow.Repository<Leave>().Update(leave);
             await uow.SaveChangesAsync();
 
-            // جيب الـ User المرتبط بالموظف
-            var employeeUser = await uow.Repository<User>()
-                                        .GetAllQueryable()
-                                        .Include(u => u.Employee)
-                                        .FirstOrDefaultAsync(u =>
-                                            u.EmployeeId == leave.EmployeeId);
+            // ✅ جلب الموظف مع بياناته
+            var employee = await uow.Repository<Employee>()
+                            .GetAllQueryable()
+                            .Include(e => e.User)
+                            .FirstOrDefaultAsync(e => e.Id == leave.EmployeeId);
 
-            if (employeeUser is not null)
+            if (employee?.User is not null)
             {
+                var employeeUser = employee.User;
                 var isApproved = dto.Status == LeaveStatus.Approved;
-                var employeeName = employeeUser.Employee is not null
-                    ? $"{employeeUser.Employee.FirstName} {employeeUser.Employee.LastName}"
-                    : employeeUser.Username;
+                var employeeName = $"{employee.FirstName} {employee.LastName}";
 
-                // Notification
-                await notificationService.CreateAsync(
-                    userId: employeeUser.Id,
-                    title: isApproved ? "Leave Approved" : "Leave Rejected",
-                    message: isApproved
-                        ? $"Your {leave.LeaveType} leave request has been approved"
-                        : $"Your {leave.LeaveType} leave request was rejected. " +
-                          $"Reason: {dto.RejectionReason}",
-                    type: isApproved
-                        ? NotificationType.LeaveApproved
-                        : NotificationType.LeaveRejected);
-
-                // ✅ Email
                 try
                 {
+                    // Notification
+                    await notificationService.CreateAsync(
+                        userId: employeeUser.Id,
+                        title: isApproved ? "Leave Approved" : "Leave Rejected",
+                        message: isApproved
+                            ? $"Your {leave.LeaveType} leave request has been approved"
+                            : $"Your {leave.LeaveType} leave request was rejected. " +
+                              $"Reason: {dto.RejectionReason}",
+                        type: isApproved
+                            ? NotificationType.LeaveApproved
+                            : NotificationType.LeaveRejected);
+
+                    // Email
                     await emailService.SendLeaveStatusAsync(
                         employeeUser.Email,
                         employeeName,
@@ -205,7 +216,12 @@ namespace Application.Services.Implementations
                         isApproved,
                         dto.RejectionReason);
                 }
-                catch { /* Log if needed */ }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, 
+                        "Error sending leave status notification to employee {EmployeeId}", 
+                        leave.EmployeeId);
+                }
             }
 
             return mapper.Map<LeaveDto>(leave);
@@ -229,7 +245,7 @@ namespace Application.Services.Implementations
             uow.Repository<Leave>().Delete(leave);
             await uow.SaveChangesAsync();
 
-            // جيب بيانات الموظف
+            // ✅ جلب بيانات الموظف
             var employee = await uow.Repository<Employee>()
                                     .GetByIdAsync(employeeId);
 
@@ -237,28 +253,35 @@ namespace Application.Services.Implementations
                 ? $"{employee.FirstName} {employee.LastName}"
                 : "Unknown";
 
-            // ✅ Fix UserRole
+            // ✅ جلب HR و Admin
             var hrAdmins = await uow.Repository<User>()
                                     .GetAllQueryable()
-                                   .Where(u => u.Role == "HR" || u.Role == "Admin")
+                                    .Where(u => u.Role == UserRole.HR.ToString() || 
+                                                u.Role == UserRole.Admin.ToString())
                                     .ToListAsync();
 
+            // ✅ إرسال الإشعارات والبريد بشكل آمن
             foreach (var user in hrAdmins)
             {
-                // Notification
-                await notificationService.CreateAsync(
-                    userId: user.Id,
-                    title: "Leave Request Cancelled",
-                    message: $"{employeeName} cancelled their {leave.LeaveType} leave request",
-                    type: NotificationType.LeaveCancelled);
-
-                // ✅ Email
                 try
                 {
+                    // Notification
+                    await notificationService.CreateAsync(
+                        userId: user.Id,
+                        title: "Leave Request Cancelled",
+                        message: $"{employeeName} cancelled their {leave.LeaveType} leave request",
+                        type: NotificationType.LeaveCancelled);
+
+                    // Email
                     await emailService.SendLeaveCancelledAsync(
                         user.Email, employeeName, leave.LeaveType.ToString());
                 }
-                catch { /* Log if needed */ }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, 
+                        "Error sending leave cancellation notification to user {UserId}", 
+                        user.Id);
+                }
             }
         }
     }
