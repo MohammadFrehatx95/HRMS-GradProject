@@ -89,4 +89,8 @@ export class EmployeesComponent implements OnInit {
       },
     });
   }
+
+  editEmployee(id: number) {
+    this.router.navigate(['/employee-form'], { state: { editMode: true, employeeId: id } });
+  }
 }

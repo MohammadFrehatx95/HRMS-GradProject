@@ -57,6 +57,12 @@ export const routes: Routes = [
   {
     path: 'positions',
     component: PositionsComponent,
+    canActivate: [authGuard, adminGuard],
+  },
+  {
+    path: 'my-profile',
+    loadComponent: () => import('./features/my-profile/my-profile.component').then(m => m.MyProfileComponent),
+    canActivate: [authGuard],
   },
 
   { path: '**', redirectTo: 'login' },

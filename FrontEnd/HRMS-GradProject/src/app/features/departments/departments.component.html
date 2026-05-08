@@ -20,10 +20,18 @@
             <div class="card-body">
                 <h5 class="card-title fw-bold text-dark">{{ dept.name }}</h5>
                 <hr>
-                <div class="d-flex justify-content-end mt-3">
+                <div class="d-flex justify-content-end mt-3 gap-2">
                     <button class="btn btn-outline-info btn-sm"
                         (click)="viewDetails(dept)">
-                        <i class="bi bi-info-circle me-1"></i> View Details
+                        <i class="bi bi-info-circle"></i>
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm"
+                        (click)="openEditModal(dept)">
+                        <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm"
+                        (click)="deleteDepartment(dept.id)">
+                        <i class="bi bi-trash3"></i>
                     </button>
                 </div>
             </div>
@@ -78,7 +86,8 @@
             <div
                 class="modal-header border-bottom border-success border-4 bg-light">
                 <h5 class="modal-title text-success fw-bold">
-                    <i class="bi bi-plus-circle me-2"></i>Add New Department
+                    <i class="bi" [class.bi-plus-circle]="!isEditMode" [class.bi-pencil-square]="isEditMode"></i> 
+                    {{ isEditMode ? 'Edit Department' : 'Add New Department' }}
                 </h5>
                 <button type="button" class="btn-close shadow-none"
                     data-bs-dismiss="modal" aria-label="Close"></button>
