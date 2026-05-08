@@ -115,13 +115,18 @@
                         <tbody class="small">
                             @for (leave of recentLeaves; track leave.id) {
                             <tr>
-                                <td class="fw-bold">Emp #{{ leave.employeeId
-                                    }}</td>
-                                <td>{{ leave.leaveType === 0 ? 'Annual' : 'Sick'
-                                    }}</td>
+                                <td class="fw-bold">{{ leave.employeeName || 'Emp #' + leave.employeeId }}</td>
+                                <td>{{ leave.leaveType }}</td>
                                 <td>{{ leave.totalDays }} Days</td>
-                                <td><span
-                                        class="badge bg-warning text-dark">Pending</span></td>
+                                <td>
+                                    <span class="badge"
+                                        [class.bg-warning]="leave.status === 'Pending'"
+                                        [class.text-dark]="leave.status === 'Pending'"
+                                        [class.bg-success]="leave.status === 'Approved'"
+                                        [class.bg-danger]="leave.status === 'Rejected'">
+                                        {{ leave.status }}
+                                    </span>
+                                </td>
                             </tr>
                             }
                         </tbody>

@@ -23,7 +23,6 @@ export class EmployeesComponent implements OnInit {
   isLoading: boolean = true;
   isAdmin: boolean = false;
   selectedEmployeeProfile: any = null;
-  adminNote: string = '';
 
   private detailsModal: any;
 
@@ -77,7 +76,6 @@ export class EmployeesComponent implements OnInit {
     this.employeeService.getEmployeeFullProfile(id).subscribe({
       next: (profile) => {
         this.selectedEmployeeProfile = profile;
-        this.adminNote = profile.adminNote || '';
 
         const modalElement = document.getElementById('employeeDetailsModal');
         if (modalElement) {
@@ -90,38 +88,5 @@ export class EmployeesComponent implements OnInit {
         Swal.fire('Error!', 'Could not load employee details.', 'error');
       },
     });
-  }
-
-  saveAdminNote() {
-    if (!this.adminNote.trim()) {
-      Swal.fire('Notice', 'Please write a note before saving.', 'info');
-      return;
-    }
-
-    this.employeeService
-      .updateEmployeeNote(this.selectedEmployeeProfile.id, this.adminNote)
-      .subscribe({
-        next: () => {
-          Swal.fire({
-            position: 'top-end',
-            icon: 'success',
-            title: 'Note saved successfully',
-            showConfirmButton: false,
-            timer: 1500,
-          });
-
-          if (this.selectedEmployeeProfile) {
-            this.selectedEmployeeProfile.adminNote = this.adminNote;
-          }
-
-          if (this.detailsModal) {
-            this.detailsModal.hide();
-          }
-        },
-        error: (err) => {
-          console.error('Error saving note:', err);
-          Swal.fire('Error!', 'Failed to save the note.', 'error');
-        },
-      });
   }
 }
