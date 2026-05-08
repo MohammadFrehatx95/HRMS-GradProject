@@ -11,6 +11,7 @@ using Application.DTOs.Leave;
 using Application.DTOs.Notification;
 using Application.DTOs.Position;
 using Application.DTOs.Salary;
+using Application.DTOs.User;
 using AutoMapper;
 using Domain.Entities;
 
@@ -102,6 +103,12 @@ public class MappingProfile : Profile
         CreateMap<Notification, NotificationDto>()
             .ForMember(d => d.Type,
                 o => o.MapFrom(s => s.Type.ToString()));
+
+        CreateMap<User, UserDto>()
+    .ForMember(d => d.EmployeeName,
+        o => o.MapFrom(s => s.Employee != null
+            ? $"{s.Employee.FirstName} {s.Employee.LastName}"
+            : null));
     }
 
 // Helper method في نفس الـ MappingProfile
