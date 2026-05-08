@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { EmployeeService } from '../../core/services/employee.service';
 import { LeaveService } from '../../core/services/leave.service';
 import { DepartmentService } from '../../core/services/department.service';
+import { AuthService } from '../../core/services/auth.service'; // تم إضافة الاستيراد هنا
 
 @Component({
   selector: 'app-dashboard',
@@ -12,21 +13,31 @@ import { DepartmentService } from '../../core/services/department.service';
   styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
+  // 1. حقن الخدمات
   private empService = inject(EmployeeService);
   private leaveService = inject(LeaveService);
   private deptService = inject(DepartmentService);
+  private authService = inject(AuthService);
 
+  // 2. تعريف المتغيرات
   totalEmployees = 0;
   pendingLeaves = 0;
   departmentsCount = 0;
   totalSalaries = 0;
   recentLeaves: any[] = [];
+  isAdmin: boolean = false;
 
   ngOnInit() {
-    this.loadStats();
+    this.isAdmin = this.authService.isAdmin();
+
+    if (this.isAdmin) {
+      this.loadAdminStats();
+    } else {
+      this.loadEmployeeStats();
+    }
   }
 
-  loadStats() {
+  loadAdminStats() {
     this.empService.getEmployees().subscribe({
       next: (res: any) => {
         let extracted: any[] = [];
@@ -66,5 +77,9 @@ export class DashboardComponent implements OnInit {
       },
       error: (err) => console.error('Error fetching departments:', err),
     });
+  }
+
+  loadEmployeeStats() {
+    console.log('Loading Employee Dashboard...');
   }
 }

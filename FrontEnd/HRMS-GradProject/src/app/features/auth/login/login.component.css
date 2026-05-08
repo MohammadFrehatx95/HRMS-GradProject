@@ -1,5 +1,35 @@
-:host {
-  display: block;
-  background-color: #f8f9fa; /* لون رمادي فاتح للخلفية */
-  min-height: 100vh;
+.login-wrapper {
+  background: radial-gradient(circle at top right, #0a3a70, #041a37 70%);
+  background-size: cover;
+  background-position: center;
+}
+
+.tracking-wide {
+  letter-spacing: 1px;
+}
+
+.input-group .form-control:focus {
+  box-shadow: none;
+  border-color: #dee2e6;
+}
+
+.input-group:focus-within .input-group-text,
+.input-group:focus-within .form-control,
+.input-group:focus-within .btn {
+  border-color: #0d6efd !important;
+}
+
+.input-group .btn:focus {
+  box-shadow: none;
+}
+
+.btn-primary {
+  background-color: #1a56db;
+  border: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+  background-color: #1e40af;
+  transform: translateY(-1px);
 }
