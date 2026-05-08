@@ -78,12 +78,12 @@ namespace Application.Services.Implementations
                 throw new ArgumentException("End date cannot be before start date");
 
             var hasOverlap = await uow.Repository<Leave>()
-                                      .GetAllQueryable()
-                                      .AnyAsync(l =>
-                                          l.EmployeeId == employeeId &&
-                                          l.Status != LeaveStatus.Rejected &&
-                                          l.StartDate <= endDate &&
-                                          l.EndDate >= startDate);
+                              .GetAllQueryable()
+                              .AnyAsync(l =>
+                                  l.EmployeeId == employeeId &&
+                                  l.Status != LeaveStatus.Rejected &&
+                                  l.StartDate <= endDate &&
+                                  l.EndDate >= startDate);
 
             if (hasOverlap)
                 throw new InvalidOperationException(
@@ -95,7 +95,10 @@ namespace Application.Services.Implementations
                 LeaveType = dto.LeaveType,
                 StartDate = startDate,
                 EndDate = endDate,
-                Status = LeaveStatus.Pending
+                TotalDays = (int)(endDate - startDate).TotalDays + 1,
+                Reason = dto.Reason,
+                Status = LeaveStatus.Pending,
+                RequestedAt = DateTime.UtcNow
             };
 
             await uow.Repository<Leave>().AddAsync(leave);
@@ -103,7 +106,7 @@ namespace Application.Services.Implementations
 
             // جيب بيانات الموظف
             var employee = await uow.Repository<Employee>()
-                                    .GetByIdAsync(employeeId);
+                            .GetByIdAsync(employeeId);
 
             var employeeName = employee is not null
                 ? $"{employee.FirstName} {employee.LastName}"
@@ -111,9 +114,9 @@ namespace Application.Services.Implementations
 
             // ✅ Fix UserRole — قارن enum بـ enum مش string
             var hrAdmins = await uow.Repository<User>()
-                                    .GetAllQueryable()
-                                    .Where(u => u.Role == "HR" || u.Role == "Admin")
-                                    .ToListAsync();
+                            .GetAllQueryable()
+                            .Where(u => u.Role == "HR" || u.Role == "Admin")
+                            .ToListAsync();
 
             foreach (var user in hrAdmins)
             {
@@ -122,7 +125,7 @@ namespace Application.Services.Implementations
                     userId: user.Id,
                     title: "New Leave Request",
                     message: $"{employeeName} submitted a {dto.LeaveType} leave request " +
-                             $"from {startDate:yyyy-MM-dd} to {endDate:yyyy-MM-dd}",
+                     $"from {startDate:yyyy-MM-dd} to {endDate:yyyy-MM-dd}",
                     type: NotificationType.LeaveRequested);
 
                 // ✅ Email — try/catch عشان ما يوقف الـ Request
