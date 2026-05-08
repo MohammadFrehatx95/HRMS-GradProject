@@ -43,23 +43,30 @@ export class RegisterComponent {
     this.isLoading = true;
     const payload = this.registerForm.getRawValue();
 
+    // داخل دالة onSubmit أو Register
     this.authService.register(payload).subscribe({
       next: (res: any) => {
         this.isLoading = false;
 
-        const newUserId = res?.data?.id || res?.id;
+        // هندسياً: نحاول استخراج الـ ID بأكثر من طريقة حسب هيكلية الباك إند
+        const userIdFromRes = res?.data?.id || res?.id || res?.userId;
+        const userEmail = this.registerForm.get('email')?.value;
 
         Swal.fire({
           icon: 'success',
-          title: 'Account Created!',
-          text: 'Would you like to complete their employee profile now?',
+          title: 'تم إنشاء الحساب بنجاح',
+          text: 'هل تريد إكمال ملف الموظف الآن؟',
           showCancelButton: true,
-          confirmButtonText: 'Yes, Add Profile',
-          cancelButtonText: 'Later',
+          confirmButtonText: 'نعم، أكمل البيانات',
+          cancelButtonText: 'لاحقاً',
         }).then((result) => {
           if (result.isConfirmed) {
+            // تمرير البيانات عبر الـ Router State
             this.router.navigate(['/employee-form'], {
-              state: { userId: newUserId },
+              state: {
+                userId: userIdFromRes,
+                email: userEmail,
+              },
             });
           } else {
             this.router.navigate(['/dashboard']);
@@ -68,11 +75,7 @@ export class RegisterComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        Swal.fire(
-          'Error',
-          err.error?.message || 'Registration failed',
-          'error',
-        );
+        Swal.fire('خطأ', err.error?.message || 'فشل التسجيل', 'error');
       },
     });
   }

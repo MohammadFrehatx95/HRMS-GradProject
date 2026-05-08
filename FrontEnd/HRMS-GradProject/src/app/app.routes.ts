@@ -35,7 +35,7 @@ export const routes: Routes = [
   {
     path: 'employees',
     component: EmployeesComponent,
-    canActivate: [authGuard, adminGuard],
+    canActivate: [authGuard],
   },
   {
     path: 'departments',
