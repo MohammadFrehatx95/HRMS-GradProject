@@ -6,7 +6,7 @@ import {
   FormControl,
   Validators,
 } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { EmployeeService } from '../../core/services/employee.service';
 import { DepartmentService } from '../../core/services/department.service';
 import { PositionService } from '../../core/services/position.service';
@@ -15,7 +15,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-employee-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './employee-form.component.html',
 })
 export class EmployeeFormComponent implements OnInit {
@@ -31,23 +31,25 @@ export class EmployeeFormComponent implements OnInit {
   employeeForm = new FormGroup({
     firstName: new FormControl('', Validators.required),
     lastName: new FormControl('', Validators.required),
+
     email: new FormControl('', [Validators.required, Validators.email]),
-    phoneNumber: new FormControl('', Validators.required),
+    phoneNumber: new FormControl('', [Validators.required]),
     hireDate: new FormControl('', Validators.required),
     departmentId: new FormControl('', Validators.required),
     positionId: new FormControl(
       { value: '', disabled: true },
       Validators.required,
     ),
-    userId: new FormControl(null as any, Validators.required),
+    userId: new FormControl('', Validators.required),
   });
 
   ngOnInit() {
-    const navigation = this.router.getCurrentNavigation();
-    const state = window.history.state as { userId: number };
-
-    if (state && state.userId) {
-      this.employeeForm.patchValue({ userId: state.userId });
+    const state = window.history.state;
+    if (state && (state.userId || state.email)) {
+      this.employeeForm.patchValue({
+        userId: state.userId,
+        email: state.email,
+      });
     }
 
     this.loadDepartments();
@@ -63,9 +65,7 @@ export class EmployeeFormComponent implements OnInit {
   loadDepartments() {
     this.departmentService.getDepartments().subscribe({
       next: (res: any) => {
-        this.departments = Array.isArray(res)
-          ? res
-          : res?.data?.items || res?.data || [];
+        this.departments = Array.isArray(res) ? res : res?.data || [];
       },
     });
   }
@@ -73,9 +73,7 @@ export class EmployeeFormComponent implements OnInit {
   loadPositions(deptId: number) {
     this.positionService.getPositionsByDepartment(deptId).subscribe({
       next: (res: any) => {
-        this.positions = Array.isArray(res)
-          ? res
-          : res?.data?.items || res?.data || [];
+        this.positions = Array.isArray(res) ? res : res?.data || [];
         this.employeeForm.get('positionId')?.setValue('');
       },
     });
@@ -84,40 +82,42 @@ export class EmployeeFormComponent implements OnInit {
   onSubmit() {
     if (this.employeeForm.invalid) {
       Swal.fire(
-        'Incomplete Data',
-        'Ensure all fields including UserId are filled.',
+        'بيانات ناقصة',
+        'يرجى التأكد من تعبئة جميع الحقول المطلوبة',
         'warning',
       );
       return;
     }
 
     this.isLoading = true;
-    const formValue = this.employeeForm.getRawValue();
+
+    const rawValues = this.employeeForm.getRawValue();
 
     const payload = {
-      ...formValue,
-      hireDate: new Date(formValue.hireDate!).toISOString(),
-      departmentId: Number(formValue.departmentId),
-      positionId: Number(formValue.positionId),
-      userId: Number(formValue.userId),
+      ...rawValues,
+      departmentId: Number(rawValues.departmentId),
+      positionId: Number(rawValues.positionId),
+      hireDate: rawValues.hireDate
+        ? new Date(rawValues.hireDate).toISOString()
+        : new Date().toISOString(),
+      userId: rawValues.userId,
     };
 
     this.employeeService.addEmployee(payload).subscribe({
       next: () => {
-        Swal.fire(
-          'Success',
-          'Employee profile linked successfully!',
-          'success',
-        );
+        this.isLoading = false;
+        Swal.fire('نجاح', 'تم ربط ملف الموظف بنجاح', 'success');
         this.router.navigate(['/employees']);
       },
       error: (err) => {
         this.isLoading = false;
-        Swal.fire(
-          'Error',
-          err.error?.message || 'Failed to link profile',
-          'error',
-        );
+        const errorMsg =
+          err.error?.message ||
+          (err.error && typeof err.error === 'object'
+            ? JSON.stringify(err.error)
+            : 'فشل الربط');
+        Swal.fire('خطأ في البيانات', errorMsg, 'error');
+        console.error('Full Error:', err);
       },
     });
   }
