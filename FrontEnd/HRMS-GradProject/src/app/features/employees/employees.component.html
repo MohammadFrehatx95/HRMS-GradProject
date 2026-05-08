@@ -108,20 +108,7 @@
                     </div>
                 </div>
 
-                <div
-                    class="mt-4 p-4 bg-light rounded border border-secondary border-opacity-25">
-                    <label class="fw-bold fs-5 mb-2 text-primary">
-                        <i class="bi bi-journal-text me-2"></i>Admin Note for
-                        Employee:
-                    </label>
-                    <p class="text-muted small mb-3">This note will be visible
-                        to the employee on their dashboard.</p>
 
-                    <textarea [(ngModel)]="adminNote"
-                        class="form-control shadow-sm"
-                        rows="4"
-                        placeholder="Write a message or warning for the employee here..."></textarea>
-                </div>
                 } @else {
                 <div class="text-center py-4">
                     <div class="spinner-border text-info" role="status"></div>
@@ -133,11 +120,6 @@
             <div class="modal-footer bg-light">
                 <button type="button" class="btn btn-secondary"
                     data-bs-dismiss="modal">Close</button>
-                <button type="button"
-                    class="btn btn-primary px-4 fw-bold shadow-sm"
-                    (click)="saveAdminNote()">
-                    <i class="bi bi-save me-2"></i>Save Note
-                </button>
             </div>
 
         </div>

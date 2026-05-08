@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,12 +9,35 @@ export class SalaryService {
   private http = inject(HttpClient);
   private apiUrl = 'https://localhost:7204/api/salaries';
 
-  getAllSalaries(): Observable<any> {
-    return this.http.get<any>(this.apiUrl);
+  getAllSalaries(): Observable<any[]> {
+    return this.http.get<any>(this.apiUrl).pipe(
+      map((response) => {
+        if (response && response.data && response.data.items) return response.data.items;
+        if (Array.isArray(response)) return response;
+        if (response && Array.isArray(response.data)) return response.data;
+        return [];
+      }),
+    );
   }
 
-  getMySalaries(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/my`);
+  getMySalaries(): Observable<any[]> {
+    return this.http.get<any>(`${this.apiUrl}/my`).pipe(
+      map((response) => {
+        if (response && response.data && response.data.items) return response.data.items;
+        if (Array.isArray(response)) return response;
+        if (response && Array.isArray(response.data)) return response.data;
+        return [];
+      }),
+    );
+  }
+
+  getSalaryById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
+      map((response) => {
+        if (response && response.data) return response.data;
+        return response;
+      }),
+    );
   }
 
   createSalary(payload: any): Observable<any> {
@@ -23,5 +46,9 @@ export class SalaryService {
 
   updateSalary(id: number, payload: any): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/${id}`, payload);
+  }
+
+  deleteSalary(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }
