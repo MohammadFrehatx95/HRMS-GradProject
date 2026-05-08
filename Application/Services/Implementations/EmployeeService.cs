@@ -50,6 +50,9 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
         var employee = mapper.Map<Employee>(dto);
         employee.IsActive = true;
 
+        
+        
+
         await uow.Repository<Employee>().AddAsync(employee);
         await uow.SaveChangesAsync();
 

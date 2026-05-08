@@ -47,7 +47,8 @@ public static class DependencyInjection
         services.AddScoped<IAttendanceService, AttendanceService>();
         
         services.AddScoped<ISalaryService, SalaryService>();
-        
+        services.AddScoped<IUserService, UserService>();
+
         services.AddScoped<INotificationService, NotificationService>();
         // أضف هاد
         // obtain IConfiguration from the service collection to avoid missing 'configuration' variable
