@@ -76,7 +76,12 @@ public class AppDbContext : DbContext
             .HasOne(n => n.User)
             .WithMany(u => u.Notifications)
             .HasForeignKey(n => n.UserId)
-            .OnDelete(DeleteBehavior.NoAction); 
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<Leave>()
+            .Property(l => l.RejectionReason)
+            .IsRequired(false)  // يقبل null
+            .HasMaxLength(500);
 
 
 
