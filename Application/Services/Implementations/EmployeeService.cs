@@ -17,14 +17,13 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
                        .Include(e => e.Department);
 
         var total = await query.CountAsync();
-
         var items = await query
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
 
-        var dtos = mapper.Map<List<EmployeeDto>>(items);
-        return PagedResult<EmployeeDto>.Create(dtos, total, pageNumber, pageSize);
+        return PagedResult<EmployeeDto>.Create(
+            mapper.Map<List<EmployeeDto>>(items), total, pageNumber, pageSize);
     }
 
     public async Task<EmployeeDto?> GetByIdAsync(int id)
@@ -39,13 +38,15 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
 
     public async Task<EmployeeDto> CreateAsync(CreateEmployeeDto dto)
     {
-        var isUnique = await uow.Repository<Employee>()
-                                .GetAllQueryable()
-                                .AnyAsync(e => e.Email == dto.Email);
+       
+        var emailExists = await uow.Repository<Employee>()
+                                   .GetAllQueryable()
+                                   .AnyAsync(e => e.Email == dto.Email);
 
-        if (isUnique)
-            throw new Exception("Previously used email");
-
+        if (emailExists)
+        {
+            throw new InvalidOperationException("Email is already in use");
+        }
         var employee = mapper.Map<Employee>(dto);
         employee.IsActive = true;
 
@@ -61,8 +62,10 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
                                 .GetAllQueryable()
                                 .FirstOrDefaultAsync(e => e.Id == id);
 
-        if (employee is null) return null;
-
+        if (employee is null)
+        {
+            return null;
+        }
         mapper.Map(dto, employee);
         uow.Repository<Employee>().Update(employee);
         await uow.SaveChangesAsync();
@@ -76,8 +79,10 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
                                 .GetAllQueryable()
                                 .FirstOrDefaultAsync(e => e.Id == id);
 
-        if (employee is null) return false;
-
+        if (employee is null)
+        {
+            return false;
+        }
         uow.Repository<Employee>().Delete(employee);
         await uow.SaveChangesAsync();
         return true;
@@ -100,7 +105,6 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
                                 .GetAllQueryable()
                                 .Include(e => e.Department)
                                 .Include(e => e.Position)
-                                
                                 .FirstOrDefaultAsync(e => e.Id == id);
 
         return employee is null ? null : mapper.Map<EmployeeProfileDto>(employee);

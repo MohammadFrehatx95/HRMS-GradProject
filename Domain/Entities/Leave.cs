@@ -1,6 +1,8 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
 
+namespace Domain.Entities;
+
 public class Leave
 {
     public int Id { get; set; }
