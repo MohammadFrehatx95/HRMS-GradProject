@@ -23,5 +23,5 @@ public class Leave
     public User? ReviewedBy { get; set; }
 
     public DateTime? ReviewedAt { get; set; }
-    public string? RejectionReason { get; set; }
+    public string RejectionReason { get; set; } = string.Empty;
 }
