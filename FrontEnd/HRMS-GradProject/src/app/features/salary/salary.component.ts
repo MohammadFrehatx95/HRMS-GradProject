@@ -101,11 +101,20 @@ export class SalaryComponent implements OnInit {
 
     const isoDate = new Date(this.salaryData.effectiveDate).toISOString();
 
+    const base = Number(this.salaryData.baseAmount) || 0;
+    const allow = Number(this.salaryData.allowances) || 0;
+    const deduct = Number(this.salaryData.deductions) || 0;
+
+    const calculatedGross = base + allow;
+    const calculatedNet = calculatedGross - deduct;
+
     if (this.isEditMode && this.currentSalaryId) {
       const updatePayload = {
-        baseAmount: this.salaryData.baseAmount,
-        allowances: this.salaryData.allowances,
-        deductions: this.salaryData.deductions,
+        baseAmount: base,
+        allowances: allow,
+        deductions: deduct,
+        grossAmount: calculatedGross,
+        netAmount: calculatedNet,
         effectiveDate: isoDate,
       };
 
@@ -118,6 +127,8 @@ export class SalaryComponent implements OnInit {
     } else {
       const createPayload = {
         ...this.salaryData,
+        grossAmount: calculatedGross,
+        netAmount: calculatedNet,
         effectiveDate: isoDate,
       };
 

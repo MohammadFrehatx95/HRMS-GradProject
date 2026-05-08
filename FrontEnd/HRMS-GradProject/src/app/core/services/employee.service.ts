@@ -26,10 +26,25 @@ export class EmployeeService {
     return this.http.post(this.apiUrl, employee);
   }
   getEmployeeFullProfile(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`);
+    return this.http.get<any>(`${this.apiUrl}/${id}/profile`).pipe(
+      map((response) => {
+        if (response && response.data) return response.data;
+        return response;
+      }),
+    );
   }
-  updateEmployeeNote(id: number, note: string): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}/note`, { note });
+
+  updateEmployee(id: number, employee: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, employee);
+  }
+
+  getMyProfile(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/me`).pipe(
+      map((response) => {
+        if (response && response.data) return response.data;
+        return response;
+      }),
+    );
   }
 
   deleteEmployee(id: number): Observable<any> {

@@ -1,79 +1,142 @@
-<div class="container mt-4" style="max-width: 800px;">
-    <div class="card shadow-sm border-0 rounded-3">
-        <div class="card-header bg-white border-0 pt-4 pb-0 px-4">
-            <div class="d-flex justify-content-between align-items-center">
-                <h3 class="fw-bold text-secondary mb-0">Add New Employee</h3>
-                <a routerLink="/employees"
-                    class="btn btn-sm btn-outline-secondary">Back to List</a>
-            </div>
+<div class="container mt-5 mb-5 form-container">
+    <div class="card glass-card shadow-sm border-0 rounded-4">
+        <div
+            class="card-header bg-white pt-4 pb-3 px-4 d-flex justify-content-between align-items-center border-bottom-0">
+            <h3 class="fw-bold text-dark mb-0">
+                <i class="bi bi-person-plus-fill text-primary me-2"></i>Add New
+                Employee
+            </h3>
+            <a routerLink="/employees"
+                class="btn btn-sm btn-light text-secondary rounded-pill px-3 fw-bold shadow-sm">
+                <i class="bi bi-arrow-left me-1"></i>Back
+            </a>
         </div>
 
-        <div class="card-body p-4">
+        <div class="card-body p-4 p-md-5 pt-2">
             <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold text-muted small">First
-                            Name</label>
-                        <input type="text" class="form-control bg-light"
-                            formControlName="firstName">
+                @if (employeeForm.get('userId')?.value) {
+                <div
+                    class="alert alert-success d-flex align-items-center rounded-3 mb-4 shadow-sm border-0"
+                    role="alert">
+                    <i class="bi bi-check-circle-fill fs-4 me-3"></i>
+                    <div>
+                        <h6 class="alert-heading mb-1 fw-bold">User Linked
+                            Successfully</h6>
+                        <small><strong>User ID:</strong> {{
+                            employeeForm.get('userId')?.value }}</small>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold text-muted small">Last
-                            Name</label>
-                        <input type="text" class="form-control bg-light"
-                            formControlName="lastName">
+                </div>
+                }
+
+                <h5
+                    class="section-title fw-bold text-dark mb-3 mt-2 border-bottom pb-2">Personal
+                    Information</h5>
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold text-secondary">
+                            <i class="bi bi-person me-1 text-primary"></i> First
+                            Name <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control py-2"
+                            formControlName="firstName" placeholder="e.g. John"
+                            [class.is-invalid]="employeeForm.get('firstName')?.invalid && employeeForm.get('firstName')?.touched">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold text-secondary">
+                            <i class="bi bi-person me-1 text-primary"></i> Last
+                            Name <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control py-2"
+                            formControlName="lastName" placeholder="e.g. Doe"
+                            [class.is-invalid]="employeeForm.get('lastName')?.invalid && employeeForm.get('lastName')?.touched">
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label
-                            class="form-label fw-bold text-muted small">Email</label>
-                        <input type="email" class="form-control bg-light"
-                            formControlName="email">
+                <h5
+                    class="section-title fw-bold text-dark mb-3 border-bottom pb-2">Contact
+                    Details</h5>
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold text-secondary">
+                            <i class="bi bi-envelope me-1 text-primary"></i>
+                            Email Address
+                        </label>
+                        <input type="email" class="form-control py-2 bg-light"
+                            formControlName="email"
+                            placeholder="john.doe@example.com" readonly>
+                        <small class="text-muted mt-1 d-block"><i
+                                class="bi bi-info-circle me-1"></i>Auto-filled
+                            from registration</small>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold text-muted small">Phone
-                            Number</label>
-                        <input type="text" class="form-control bg-light"
-                            formControlName="phoneNumber">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold text-secondary">
+                            <i class="bi bi-telephone me-1 text-primary"></i>
+                            Phone Number <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control py-2"
+                            formControlName="phoneNumber"
+                            placeholder="+1 234 567 8900"
+                            [class.is-invalid]="employeeForm.get('phoneNumber')?.invalid && employeeForm.get('phoneNumber')?.touched">
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold text-muted small">Hire
-                            Date</label>
-                        <input type="date" class="form-control bg-light"
-                            formControlName="hireDate">
+                <h5
+                    class="section-title fw-bold text-dark mb-3 border-bottom pb-2">Employment
+                    Information</h5>
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold text-secondary">
+                            <i
+                                class="bi bi-calendar-date me-1 text-primary"></i>
+                            Hire Date <span class="text-danger">*</span>
+                        </label>
+                        <input type="date" class="form-control py-2"
+                            formControlName="hireDate"
+                            [class.is-invalid]="employeeForm.get('hireDate')?.invalid && employeeForm.get('hireDate')?.touched">
                     </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold text-secondary">
+                            <i class="bi bi-hash me-1 text-primary"></i> User ID
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control py-2"
+                            formControlName="userId" placeholder="Enter User ID"
+                            [class.is-invalid]="employeeForm.get('userId')?.invalid && employeeForm.get('userId')?.touched">
+                        <div class="invalid-feedback">User ID is required to
+                            link the profile.</div>
+                    </div>
+                </div>
 
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Department <span
-                                class="text-danger">*</span></label>
-                        <select class="form-select shadow-sm"
-                            formControlName="departmentId">
+                <div class="row g-4 mb-5">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold text-secondary">
+                            <i class="bi bi-building me-1 text-primary"></i>
+                            Department <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select py-2"
+                            formControlName="departmentId"
+                            [class.is-invalid]="employeeForm.get('departmentId')?.invalid && employeeForm.get('departmentId')?.touched">
                             <option value disabled selected>Select target
                                 department...</option>
-
                             @for (dept of departments; track dept.id) {
                             <option [value]="dept.id">{{ dept.name }}</option>
                             }
                         </select>
                     </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Job Position <span
-                                class="text-danger">*</span></label>
-                        <select class="form-select shadow-sm"
-                            formControlName="positionId">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold text-secondary">
+                            <i class="bi bi-person-badge me-1 text-primary"></i>
+                            Job Position <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select py-2"
+                            formControlName="positionId"
+                            [class.is-invalid]="employeeForm.get('positionId')?.invalid && employeeForm.get('positionId')?.touched">
                             <option value disabled selected>
                                 {{ positions.length === 0 ?
                                 'Select a Department first...' :
                                 'Select Job Position...' }}
                             </option>
-
                             @for (pos of positions; track pos.id) {
                             <option [value]="pos.id">{{ pos.title }} ({{
                                 pos.salaryMin | currency }} - {{ pos.salaryMax |
@@ -81,9 +144,25 @@
                             }
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary shadow-sm"
-                        [disabled]="employeeForm.invalid">Save Employee</button>
-
                 </div>
+
+                <div class="d-grid mt-2">
+                    <button type="submit"
+                        class="btn btn-primary btn-lg w-100 fw-bold shadow text-white rounded-3 py-3"
+                        [disabled]="isLoading">
+                        @if (isLoading) {
+                        <span
+                            class="spinner-border spinner-border-sm me-2"></span>
+                        Saving Employee...
+                        } @else {
+                        <i
+                            class="bi bi-check2-circle me-2 fs-5 align-middle"></i>
+                        Save Employee Profile
+                        }
+                    </button>
+                </div>
+
             </form>
         </div>
+    </div>
+</div>
