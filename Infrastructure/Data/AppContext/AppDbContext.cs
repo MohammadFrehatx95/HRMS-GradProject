@@ -30,13 +30,13 @@ public class AppDbContext : DbContext
             .HasOne(e => e.Department)
             .WithMany(d => d.Employees)
             .HasForeignKey(e => e.DepartmentId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Employee>()
             .HasOne(e => e.User)
             .WithOne(u => u.Employee)
             .HasForeignKey<Employee>(e => e.UserId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         //modelBuilder.Entity<Employee>()
         //   .HasOne(e => e.User)
@@ -49,13 +49,13 @@ public class AppDbContext : DbContext
             .HasOne(p => p.Department)
             .WithMany(d => d.Positions)
             .HasForeignKey(p => p.DepartmentId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Leave>()
             .HasOne(l => l.Employee)
             .WithMany(e => e.LeaveRequests)
             .HasForeignKey(l => l.EmployeeId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
     
 
@@ -64,13 +64,13 @@ public class AppDbContext : DbContext
             .HasOne(a => a.Employee)
             .WithMany(e => e.Attendances)
             .HasForeignKey(a => a.EmployeeId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Salary>()
             .HasOne(s => s.Employee)
             .WithMany(e => e.Salaries)
             .HasForeignKey(s => s.EmployeeId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Notification>()
             .HasOne(n => n.User)
