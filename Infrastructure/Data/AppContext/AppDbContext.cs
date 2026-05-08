@@ -38,6 +38,13 @@ public class AppDbContext : DbContext
             .HasForeignKey<Employee>(e => e.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        //modelBuilder.Entity<Employee>()
+        //   .HasOne(e => e.User)
+        //   .WithOne(u => u.Employee)
+        //   .HasForeignKey<Employee>(e => e.Email)
+        //   .OnDelete(DeleteBehavior.Restrict);
+
+
         modelBuilder.Entity<Position>()
             .HasOne(p => p.Department)
             .WithMany(d => d.Positions)

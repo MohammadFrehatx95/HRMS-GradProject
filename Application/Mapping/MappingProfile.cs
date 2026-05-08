@@ -70,9 +70,11 @@ public class MappingProfile : Profile
                     : string.Empty))
             .ForMember(d => d.LeaveType, o => o.MapFrom(s => s.LeaveType.ToString()))
             .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()))
-            .ForMember(d => d.Reason, o => o.MapFrom(s => s.Reason.ToString()));
+            .ForMember(d => d.Reason, o => o.MapFrom(s => s.Reason))
+            .ForMember(d => d.RejectionReason, o => o.MapFrom(s => s.RejectionReason));
 
-        
+
+
 
 
 
