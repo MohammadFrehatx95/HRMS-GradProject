@@ -6,31 +6,40 @@
             <p class="text-muted small mb-0">{{ isAdmin ? 'Monitor all employees daily clock-in and clock-out records' : 'Monitor your daily clock-in and clock-out records' }}</p>
         </div>
 
-        <div *ngIf="!isAdmin">
+        <div *ngIf="!isAdmin" class="d-flex flex-column align-items-end gap-2">
+
+            <!-- ⚠️ تحذير: session مفتوحة من يوم سابق -->
+            <div *ngIf="activeSession && (activeSession.date | date:'yyyy-MM-dd') < (today)"
+                 class="alert alert-warning py-2 px-3 mb-0 rounded-3 small d-flex align-items-center gap-2">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span>
+                    Open session from <strong>{{ activeSession.date | date:'dd MMM yyyy' }}</strong>.
+                    Click Clock Out to close it.
+                </span>
+            </div>
+
+            <!-- زر Clock In -->
             <button *ngIf="!isCheckedInToday"
                 class="btn btn-success px-4 py-2 rounded-3 fw-semibold shadow-sm"
                 (click)="onClockIn()"
                 [disabled]="isProcessing || isLoading">
-                <span *ngIf="isProcessing"
-                    class="spinner-border spinner-border-sm me-2"></span>
-                <i *ngIf="!isProcessing"
-                    class="bi bi-box-arrow-in-right me-2"></i> Clock In
+                <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2"></span>
+                <i *ngIf="!isProcessing" class="bi bi-box-arrow-in-right me-2"></i> Clock In
             </button>
 
+            <!-- زر Clock Out (لأي session مفتوحة) -->
             <button *ngIf="isCheckedInToday && !isCheckedOutToday"
                 class="btn btn-warning px-4 py-2 rounded-3 fw-semibold shadow-sm text-dark"
                 (click)="onClockOut()"
                 [disabled]="isProcessing || isLoading">
-                <span *ngIf="isProcessing"
-                    class="spinner-border spinner-border-sm me-2"></span>
-                <i *ngIf="!isProcessing" class="bi bi-box-arrow-right me-2"></i>
-                Clock Out
+                <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2"></span>
+                <i *ngIf="!isProcessing" class="bi bi-box-arrow-right me-2"></i> Clock Out
             </button>
 
+            <!-- اليوم مكتمل -->
             <span *ngIf="isCheckedInToday && isCheckedOutToday"
                 class="badge bg-success bg-opacity-10 text-success px-4 py-2 rounded-3 fw-semibold border border-success border-opacity-25">
-                <i class="bi bi-check-circle-fill me-2"></i> Shift Completed ({{
-                todayWorkedHours | number:'1.1-2' }} hrs)
+                <i class="bi bi-check-circle-fill me-2"></i> Shift Completed ({{ todayWorkedHours | number:'1.1-2' }} hrs)
             </span>
         </div>
     </div>
