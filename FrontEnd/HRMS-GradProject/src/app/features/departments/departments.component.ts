@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { DepartmentService } from '../../core/services/department.service';
 import { EmployeeService } from '../../core/services/employee.service';
+import { PositionService } from '../../core/services/position.service';
 import Swal from 'sweetalert2';
 
 declare var bootstrap: any;
@@ -22,6 +23,9 @@ declare var bootstrap: any;
 export class DepartmentsComponent implements OnInit {
   private departmentService = inject(DepartmentService);
   private employeeService = inject(EmployeeService);
+  private positionService = inject(PositionService);
+
+  allPositions: any[] = []; // lookup: positionId -> title
 
   departmentsList: any[] = [];
   isLoading: boolean = true;
@@ -47,15 +51,33 @@ export class DepartmentsComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.loadEmployees();
+    this.loadPositionsThenEmployees();
     this.loadDepartments();
+  }
+
+  loadPositionsThenEmployees() {
+    // جلب الـ positions أولاً ثم الموظفين لعمل join صحيح
+    this.positionService.getPositions().subscribe({
+      next: (res: any) => {
+        this.allPositions = Array.isArray(res) ? res : (res?.data || []);
+        this.loadEmployees();
+      },
+      error: () => this.loadEmployees() // تحميل الموظفين حتى لو فشل جلب الـ positions
+    });
   }
 
   loadEmployees() {
     this.employeeService.getEmployees().subscribe({
       next: (res: any) => {
-        const extracted = Array.isArray(res) ? res : (res?.data?.items || res?.data || []);
-        this.allEmployees = extracted;
+        const extracted: any[] = Array.isArray(res) ? res : (res?.data?.items || res?.data || []);
+        // ربط اسم الـ position بكل موظف
+        this.allEmployees = extracted.map(emp => {
+          if (!emp.positionName && emp.positionId) {
+            const pos = this.allPositions.find(p => p.id === emp.positionId);
+            return { ...emp, positionName: pos?.title || null };
+          }
+          return emp;
+        });
         this.calculateStats();
       }
     });
@@ -72,7 +94,8 @@ export class DepartmentsComponent implements OnInit {
       }
       
       this.departmentStats[deptId].totalEmployees++;
-      const posName = emp.positionName || 'Unknown';
+      const posName = emp.positionName; // نتجاهل الموظفين الذين ليس لديهم position
+      if (!posName) continue; // لا نُدرجهم في الـ Positions Breakdown
       if (!this.departmentStats[deptId].positions[posName]) {
         this.departmentStats[deptId].positions[posName] = 0;
       }
@@ -81,10 +104,14 @@ export class DepartmentsComponent implements OnInit {
   }
 
   getDeptStat(deptId: number, type: 'employees' | 'positions'): number {
-    const stat = this.departmentStats[deptId];
-    if (!stat) return 0;
-    if (type === 'employees') return stat.totalEmployees;
-    if (type === 'positions') return Object.keys(stat.positions).length;
+    if (type === 'employees') {
+      const stat = this.departmentStats[deptId];
+      return stat ? stat.totalEmployees : 0;
+    }
+    if (type === 'positions') {
+      // العدّ الحقيقي من قائمة الـ positions المرتبطة بالقسم
+      return this.allPositions.filter(p => p.departmentId === deptId).length;
+    }
     return 0;
   }
 
@@ -111,16 +138,25 @@ export class DepartmentsComponent implements OnInit {
 
   viewDetails(dept: any) {
     this.selectedDepartment = dept;
-    const stats = this.departmentStats[dept.id] || { totalEmployees: 0, positions: {} };
+    const stats = this.departmentStats[dept.id] || { totalEmployees: 0 };
     this.selectedDepartment.stats = stats;
-    this.selectedDepartment.positionsList = Object.keys(stats.positions).map(k => ({
-      name: k, count: stats.positions[k]
-    })).sort((a, b) => b.count - a.count);
+    // الـ positions الحقيقية المرتبطة بهذا القسم من الـ API
+    const deptPositions = this.allPositions.filter(p => p.departmentId === dept.id);
+    this.selectedDepartment.totalPositions = deptPositions.length;
 
-    // Setup employees table for this department
-    this.deptEmployees = this.allEmployees.filter(e => e.departmentId === dept.id);
+    // جدول الموظفين داخل الـ modal — مع ربط الـ position
+    this.deptEmployees = this.allEmployees
+      .filter(e => e.departmentId === dept.id)
+      .map(emp => {
+        if (!emp.positionName && emp.positionId) {
+          const pos = this.allPositions.find(p => p.id === emp.positionId);
+          return { ...emp, positionName: pos?.title || null };
+        }
+        return emp;
+      });
     this.filteredDeptEmployees = [...this.deptEmployees];
-    this.uniquePositions = [...new Set(this.deptEmployees.map(e => e.positionName).filter(Boolean))];
+    // بناء قائمة الـ positions من الـ API مباشرةً وليس من الموظفين
+    this.uniquePositions = deptPositions.map(p => p.title).filter(Boolean);
     this.searchEmpQuery = '';
     this.selectedPositionFilter = '';
 
@@ -145,7 +181,13 @@ export class DepartmentsComponent implements OnInit {
 
       let matchesPos = true;
       if (this.selectedPositionFilter) {
-        matchesPos = emp.positionName === this.selectedPositionFilter;
+        // مقارنة بـ positionName أو عن طريق positionId
+        const pos = this.allPositions.find(p => p.title === this.selectedPositionFilter);
+        if (pos) {
+          matchesPos = emp.positionId === pos.id;
+        } else {
+          matchesPos = emp.positionName === this.selectedPositionFilter;
+        }
       }
 
       return matchesSearch && matchesPos;

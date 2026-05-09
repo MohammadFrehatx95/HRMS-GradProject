@@ -1,97 +1,75 @@
-<div class="container-fluid py-5">
+<div class="page-container p-4">
+    <!-- Page Header -->
+    <div class="mb-5 text-center">
+        <h2 class="fw-bold text-dark mb-2">Register New User</h2>
+        <p class="text-muted mb-0 mx-auto" style="max-width: 500px;">Create secure system credentials and assign appropriate roles for new employees.</p>
+    </div>
+
     <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
-            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
-                <div
-                    class="card-header bg-dark text-white p-4 text-center border-0">
-                    <i
-                        class="bi bi-person-badge fs-1 text-primary mb-2 d-block"></i>
-                    <h3 class="fw-bold mb-0">Register System User</h3>
-                    <p class="text-white-50 small mb-0 mt-1">Create login
-                        credentials for a new member</p>
-                </div>
-
-                <div class="card-body p-4 p-md-5 bg-light">
+        <!-- Form Column -->
+        <div class="col-12 col-lg-10 col-xl-9 col-xxl-8">
+            <div class="card shadow border-0 rounded-4 overflow-hidden">
+                <div class="card-body p-4 p-md-5">
+                    <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
+                        <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3 text-primary">
+                            <i class="bi bi-person-plus fs-3"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold text-dark mb-1">Account Details</h5>
+                            <p class="text-muted small mb-0">Please fill in the required login information</p>
+                        </div>
+                    </div>
+                    
                     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-
-                        <div class="mb-4">
-                            <label
-                                class="form-label fw-bold text-secondary small text-uppercase">Username
-                                <span class="text-danger">*</span></label>
-                            <div class="input-group shadow-sm">
-                                <span
-                                    class="input-group-text bg-white border-end-0 text-muted"><i
-                                        class="bi bi-person"></i></span>
-                                <input type="text"
-                                    class="form-control border-start-0 ps-0"
-                                    formControlName="username"
-                                    placeholder="e.g. johndoe">
+                        
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-secondary small">Username <span class="text-danger">*</span></label>
+                                <div class="input-group input-group-lg shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-muted px-4"><i class="bi bi-person"></i></span>
+                                    <input type="text" class="form-control bg-light border-start-0 fs-6" formControlName="username" placeholder="e.g. johndoe">
+                                </div>
+                            </div>
+    
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-secondary small">Email Address <span class="text-danger">*</span></label>
+                                <div class="input-group input-group-lg shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-muted px-4"><i class="bi bi-envelope"></i></span>
+                                    <input type="email" class="form-control bg-light border-start-0 fs-6" formControlName="email" placeholder="john@company.com">
+                                </div>
+                            </div>
+    
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-secondary small">Password <span class="text-danger">*</span></label>
+                                <div class="input-group input-group-lg shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-muted px-4"><i class="bi bi-key"></i></span>
+                                    <input type="password" class="form-control bg-light border-start-0 fs-6" formControlName="password" placeholder="Min. 6 characters">
+                                </div>
+                            </div>
+    
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-secondary small">System Role <span class="text-danger">*</span></label>
+                                <div class="input-group input-group-lg shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-muted px-4"><i class="bi bi-shield-lock"></i></span>
+                                    <select class="form-select bg-light border-start-0 fs-6" formControlName="role">
+                                        <option value="" disabled selected>Select Role...</option>
+                                        @for (role of roles; track role) {
+                                            <option [value]="role">{{ role }}</option>
+                                        }
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="mb-4">
-                            <label
-                                class="form-label fw-bold text-secondary small text-uppercase">Email
-                                Address <span
-                                    class="text-danger">*</span></label>
-                            <div class="input-group shadow-sm">
-                                <span
-                                    class="input-group-text bg-white border-end-0 text-muted"><i
-                                        class="bi bi-envelope"></i></span>
-                                <input type="email"
-                                    class="form-control border-start-0 ps-0"
-                                    formControlName="email"
-                                    placeholder="john@company.com">
-                            </div>
+                        <div class="mt-5 pt-4 border-top d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary btn-lg px-5 fw-semibold rounded-pill shadow" [disabled]="registerForm.invalid || isLoading">
+                                @if (isLoading) {
+                                    <span class="spinner-border spinner-border-sm me-2"></span> Creating Account...
+                                } @else {
+                                    <i class="bi bi-check2-circle me-2"></i> Register User
+                                }
+                            </button>
                         </div>
-
-                        <div class="mb-4">
-                            <label
-                                class="form-label fw-bold text-secondary small text-uppercase">Password
-                                <span class="text-danger">*</span></label>
-                            <div class="input-group shadow-sm">
-                                <span
-                                    class="input-group-text bg-white border-end-0 text-muted"><i
-                                        class="bi bi-key"></i></span>
-                                <input type="password"
-                                    class="form-control border-start-0 ps-0"
-                                    formControlName="password"
-                                    placeholder="Min. 6 characters">
-                            </div>
-                        </div>
-
-                        <div class="mb-5">
-                            <label
-                                class="form-label fw-bold text-secondary small text-uppercase">System
-                                Role <span class="text-danger">*</span></label>
-                            <div class="input-group shadow-sm">
-                                <span
-                                    class="input-group-text bg-white border-end-0 text-muted"><i
-                                        class="bi bi-shield-lock"></i></span>
-                                <select class="form-select border-start-0 ps-0"
-                                    formControlName="role">
-                                    <option value disabled selected>Select
-                                        Role...</option>
-                                    @for (role of roles; track role) {
-                                    <option [value]="role">{{ role }}</option>
-                                    }
-                                </select>
-                            </div>
-                        </div>
-
-                        <button type="submit"
-                            class="btn btn-primary w-100 py-3 fw-bold rounded-pill shadow"
-                            [disabled]="registerForm.invalid || isLoading">
-                            @if (isLoading) {
-                            <span
-                                class="spinner-border spinner-border-sm me-2"></span>
-                            Creating Account...
-                            } @else {
-                            <i class="bi bi-check-circle me-1"></i> Register
-                            User
-                            }
-                        </button>
-
                     </form>
                 </div>
             </div>

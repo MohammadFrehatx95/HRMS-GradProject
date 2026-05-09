@@ -31,6 +31,8 @@ export class SalaryComponent implements OnInit {
   currentSalaryId: number | null = null;
   
   employeesList: any[] = [];
+  filteredEmployeesList: any[] = [];
+  showEmployeeDropdown: boolean = false;
   employeeSearchText: string = '';
 
   salarySearchQuery: string = '';
@@ -62,6 +64,7 @@ export class SalaryComponent implements OnInit {
       next: (res: any) => {
         const extractedData = Array.isArray(res) ? res : res?.data || [];
         this.employeesList = Array.isArray(extractedData) ? extractedData : [];
+        this.filteredEmployeesList = [...this.employeesList];
       },
       error: (err: any) => {
         console.error('Error fetching employees:', err);
@@ -70,32 +73,34 @@ export class SalaryComponent implements OnInit {
   }
 
   onEmployeeSearchChange(val: string) {
+    this.showEmployeeDropdown = true;
     if (!val) {
+      this.filteredEmployeesList = [...this.employeesList];
       this.salaryData.employeeId = null;
       return;
     }
 
-    if (/^\d+$/.test(val)) {
-      const id = parseInt(val, 10);
-      const emp = this.employeesList.find(e => e.id === id);
-      if (emp) {
-        setTimeout(() => {
-          this.employeeSearchText = `${emp.firstName} ${emp.lastName}`;
-          this.salaryData.employeeId = emp.id;
-        });
-        return;
-      }
-    }
+    const query = val.toLowerCase();
+    this.filteredEmployeesList = this.employeesList.filter(emp => {
+      const fullName = `${emp.firstName} ${emp.lastName}`.toLowerCase();
+      const idStr = String(emp.id);
+      return fullName.includes(query) || idStr.includes(query);
+    });
 
-    const empByName = this.employeesList.find(e => 
-      `${e.firstName} ${e.lastName}`.toLowerCase() === val.trim().toLowerCase()
-    );
-    
-    if (empByName) {
-      this.salaryData.employeeId = empByName.id;
-    } else {
-      this.salaryData.employeeId = null;
-    }
+    // Reset selected ID if typing changes
+    this.salaryData.employeeId = null;
+  }
+
+  selectEmployee(emp: any) {
+    this.salaryData.employeeId = emp.id;
+    this.employeeSearchText = `${emp.firstName} ${emp.lastName}`;
+    this.showEmployeeDropdown = false;
+  }
+
+  hideDropdownWithDelay() {
+    setTimeout(() => {
+      this.showEmployeeDropdown = false;
+    }, 200);
   }
 
   loadSalaries() {
@@ -178,6 +183,9 @@ export class SalaryComponent implements OnInit {
         effectiveDate: new Date().toISOString().split('T')[0],
       };
     }
+    
+    this.filteredEmployeesList = [...this.employeesList];
+    this.showEmployeeDropdown = false;
 
     const modalEl = document.getElementById('salaryModal');
     if (modalEl) {
