@@ -1,23 +1,27 @@
 <div class="sidebar">
-    <!-- ── Brand Logo ── -->
+
+    <!-- ── Brand ── -->
     <div class="sidebar-brand">
-        <img src="kawadir-logo.png" alt="Kawadir" class="sidebar-logo">
-        <span class="sidebar-brand-name">Kawadir</span>
+        <div class="sidebar-logo-wrap">
+            <img src="kawadir-logo.png" alt="Kawadir" class="sidebar-logo">
+        </div>
+        <div class="sidebar-brand-text">
+            <span class="sidebar-brand-name">Kawadir</span>
+            <span class="sidebar-brand-sub">HR Management</span>
+        </div>
     </div>
 
+    <!-- ── User Profile ── -->
     <div class="sidebar-header">
         <div class="user-profile">
-            <!-- Avatar بالأحرف الأولى بدل صورة خارجية -->
             <div class="avatar-initials">{{ initials }}</div>
             <div class="user-info">
                 <p class="name">{{ userName }}</p>
-                <p class="status">
-                    <span class="dot"></span>
-                    {{ userRole }}
-                </p>
+                <p class="status"><span class="dot"></span>{{ userRole }}</p>
             </div>
         </div>
     </div>
+
 
     <nav class="sidebar-nav">
         <ul>
