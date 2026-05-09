@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../core/services/notification.service';
 import { Router } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
+import { SidebarService } from '../../core/services/sidebar.service';
 
 @Component({
   selector: 'app-header',
@@ -14,11 +15,16 @@ import { interval, Subscription } from 'rxjs';
 export class HeaderComponent implements OnInit, OnDestroy {
   private notificationService = inject(NotificationService);
   private router = inject(Router);
+  private sidebarService = inject(SidebarService);
 
   currentLanguage: string = 'en';
   notifications: any[] = [];
   unreadCount: number = 0;
   private pollingSub?: Subscription;
+
+  toggleSidebar() {
+    this.sidebarService.toggleSidebar();
+  }
 
   ngOnInit() {
     this.loadNotifications();

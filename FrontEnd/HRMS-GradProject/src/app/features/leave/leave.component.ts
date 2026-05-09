@@ -97,7 +97,10 @@ export class LeaveComponent implements OnInit {
   }
 
   getLeaveTypeText(typeCode: any): string {
-    const type = this.leaveTypes.find((t) => t.id == typeCode);
+    if (typeof typeCode === 'string' && isNaN(Number(typeCode))) {
+      return typeCode.charAt(0).toUpperCase() + typeCode.slice(1);
+    }
+    const type = this.leaveTypes.find((t) => t.id == Number(typeCode));
     return type ? type.name : 'Emergency';
   }
 

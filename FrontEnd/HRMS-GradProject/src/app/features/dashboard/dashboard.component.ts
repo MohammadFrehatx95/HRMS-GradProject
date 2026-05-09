@@ -29,7 +29,13 @@ export class DashboardComponent implements OnInit {
   recentLeaves: any[] = [];
   recentAttendances: any[] = [];
   myRecentAttendances: any[] = [];
+  allAttendances: any[] = [];
   isAdmin: boolean = false;
+
+  annualLeavePercent: number = 0;
+  sickLeavePercent: number = 0;
+  emergencyLeavePercent: number = 0;
+  attendanceRate: number = 0;
 
   employeeAnnualLeaveBalance: number | string = 14;
   employeePendingLeaves: number = 0;
@@ -59,6 +65,7 @@ export class DashboardComponent implements OnInit {
           extracted = res.data.items;
         else if (res?.data && Array.isArray(res.data)) extracted = res.data;
         this.totalEmployees = extracted.length;
+        this.calculateAttendanceRate();
       },
       error: (err) => console.error('Error fetching employees:', err),
     });
@@ -75,6 +82,17 @@ export class DashboardComponent implements OnInit {
           (l: any) => l.status === 'Pending',
         ).length;
         this.recentLeaves = extracted.slice(0, 5);
+
+        const totalLeaves = extracted.length;
+        if (totalLeaves > 0) {
+          const annual = extracted.filter(l => String(l.leaveType).toLowerCase().includes('annual') || l.leaveType === 0 || l.leaveType === '0').length;
+          const sick = extracted.filter(l => String(l.leaveType).toLowerCase().includes('sick') || l.leaveType === 1 || l.leaveType === '1').length;
+          const emergency = extracted.filter(l => String(l.leaveType).toLowerCase().includes('emergency') || l.leaveType === 2 || l.leaveType === '2').length;
+          
+          this.annualLeavePercent = Math.round((annual / totalLeaves) * 100);
+          this.sickLeavePercent = Math.round((sick / totalLeaves) * 100);
+          this.emergencyLeavePercent = Math.round((emergency / totalLeaves) * 100);
+        }
       },
       error: (err) => console.error('Error fetching leaves:', err),
     });
@@ -103,9 +121,22 @@ export class DashboardComponent implements OnInit {
           (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
         );
         this.recentAttendances = extracted.slice(0, 5);
+        this.allAttendances = extracted;
+        this.calculateAttendanceRate();
       },
       error: (err) => console.error('Error fetching attendance overview:', err),
     });
+  }
+
+  calculateAttendanceRate() {
+    if (this.totalEmployees === 0 || this.allAttendances.length === 0) return;
+    const validAtt = this.allAttendances.filter(a => a.date && a.clockIn);
+    const uniqueDays = new Set(validAtt.map(a => a.date.split('T')[0])).size;
+    if (uniqueDays > 0) {
+      const totalExpected = uniqueDays * this.totalEmployees;
+      this.attendanceRate = Math.round((validAtt.length / totalExpected) * 100);
+      if (this.attendanceRate > 100) this.attendanceRate = 100;
+    }
   }
 
   loadNextPayday() {

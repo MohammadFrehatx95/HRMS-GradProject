@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; // لازم للـ forms
 import { SalaryService } from '../../core/services/salary.service';
+import { EmployeeService } from '../../core/services/employee.service';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
 
@@ -15,6 +16,7 @@ declare var bootstrap: any;
 })
 export class SalaryComponent implements OnInit {
   private salaryService = inject(SalaryService);
+  private employeeService = inject(EmployeeService);
   private authService = inject(AuthService);
 
   salariesList: any[] = [];
@@ -26,6 +28,9 @@ export class SalaryComponent implements OnInit {
   salaryModal: any;
   isEditMode: boolean = false;
   currentSalaryId: number | null = null;
+  
+  employeesList: any[] = [];
+  employeeSearchText: string = '';
 
   salaryData = {
     employeeId: null as number | null,
@@ -41,6 +46,31 @@ export class SalaryComponent implements OnInit {
     this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
     this.loadSalaries();
+    if (this.isAdmin) {
+      this.loadEmployees();
+    }
+  }
+
+  loadEmployees() {
+    this.employeeService.getEmployees().subscribe({
+      next: (res: any) => {
+        const extractedData = Array.isArray(res) ? res : res?.data || [];
+        this.employeesList = Array.isArray(extractedData) ? extractedData : [];
+      },
+      error: (err: any) => {
+        console.error('Error fetching employees:', err);
+      },
+    });
+  }
+
+  onEmployeeSelect(event: any) {
+    const val = event.target.value || '';
+    const idMatch = val.match(/^(\d+)/);
+    if (idMatch) {
+      this.salaryData.employeeId = parseInt(idMatch[1], 10);
+    } else {
+      this.salaryData.employeeId = null;
+    }
   }
 
   loadSalaries() {
@@ -77,9 +107,12 @@ export class SalaryComponent implements OnInit {
           ? salary.effectiveDate.split('T')[0]
           : '',
       };
+      const emp = this.employeesList.find(e => e.id === salary.employeeId);
+      this.employeeSearchText = emp ? `${emp.id} - ${emp.firstName} ${emp.lastName}` : (salary.employeeId ? String(salary.employeeId) : '');
     } else {
       this.isEditMode = false;
       this.currentSalaryId = null;
+      this.employeeSearchText = '';
       this.salaryData = {
         employeeId: null,
         month: new Date().getMonth() + 1,
