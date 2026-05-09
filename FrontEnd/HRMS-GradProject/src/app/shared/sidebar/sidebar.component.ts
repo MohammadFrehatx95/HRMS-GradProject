@@ -15,9 +15,24 @@ export class SidebarComponent implements OnInit {
   private router = inject(Router);
 
   isAdmin: boolean = false;
+  userName: string = 'User';
+  userRole: string = 'Employee';
 
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
+    // جلب الاسم والـ role من localStorage (يُحفظان عند الـ login)
+    this.userName = localStorage.getItem('user_name') || 'User';
+    this.userRole = localStorage.getItem('user_role') || 'Employee';
+  }
+
+  /** أول حرفان من الاسم للـ avatar */
+  get initials(): string {
+    return this.userName
+      .split(' ')
+      .map((w) => w[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
   }
 
   onLogout() {

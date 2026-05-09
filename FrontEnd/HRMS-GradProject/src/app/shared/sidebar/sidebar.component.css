@@ -18,11 +18,20 @@
   gap: 15px;
 }
 
-.avatar {
+.avatar-initials {
   width: 45px;
   height: 45px;
   border-radius: 50%;
+  background: linear-gradient(135deg, #3498db, #1a5276);
   border: 2px solid #3498db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 15px;
+  color: #fff;
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
 }
 
 .user-info .name {

@@ -81,4 +81,25 @@ export class AuthService {
     localStorage.removeItem('user_role');
     localStorage.removeItem('user_name');
   }
+
+  // ✅ GET /api/auth/users — جلب كل المستخدمين المرتبطين بموظفين
+  getUsers(pageNumber = 1, pageSize = 100): Observable<any> {
+    return this.http
+      .get<any>(`${this.apiUrl}/users?pageNumber=${pageNumber}&pageSize=${pageSize}`)
+      .pipe(map((response) => response?.data ?? response));
+  }
+
+  // ✅ GET /api/auth/unassigned-employees — جلب users بدون ملف موظف مرتبط
+  getUnassignedEmployeeUsers(pageNumber = 1, pageSize = 100): Observable<any> {
+    return this.http
+      .get<any>(`${this.apiUrl}/unassigned-employees?pageNumber=${pageNumber}&pageSize=${pageSize}`)
+      .pipe(map((response) => response?.data ?? response));
+  }
+
+  // ✅ GET /api/auth/get-user-id-by-email/{email} — جلب userId بالإيميل
+  getUserIdByEmail(email: string): Observable<any> {
+    return this.http
+      .get<any>(`${this.apiUrl}/get-user-id-by-email/${encodeURIComponent(email)}`)
+      .pipe(map((response) => response?.data ?? response));
+  }
 }

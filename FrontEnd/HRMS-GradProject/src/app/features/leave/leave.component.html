@@ -103,6 +103,13 @@
        }"></i>
                                 {{ getStatusText(leave.status) }}
                             </span>
+                            <div *ngIf="getStatusText(leave.status) === 'Rejected' && leave.rejectionReason"
+                                class="mt-1">
+                                <small class="text-danger d-block" [title]="leave.rejectionReason">
+                                    <i class="bi bi-chat-left-text-fill me-1"></i>
+                                    <span class="d-inline-block text-truncate" style="max-width: 150px;">{{ leave.rejectionReason }}</span>
+                                </small>
+                            </div>
                         </td>
 
                         <td *ngIf="isAdmin" class="py-3 px-4 text-end">

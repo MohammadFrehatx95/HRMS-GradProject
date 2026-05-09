@@ -7,17 +7,18 @@ import { AttendanceComponent } from './features/attendance/attendance.component'
 import { SalaryComponent } from './features/salary/salary.component';
 import { EmployeeFormComponent } from './features/employee-form/employee-form.component';
 import { LoginComponent } from './features/auth/login/login.component';
-import { authGuard } from './core/guards/auth.guard';
+import { authGuard, noAuthGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
 import { PositionsComponent } from './features/positions/positions.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
+  // ✅ صفحات اللوجين والتسجيل محمية بـ noAuthGuard (المستخدم المسجل يُحوَّل للـ dashboard)
+  { path: 'login', component: LoginComponent, canActivate: [noAuthGuard] },
+  { path: 'register', component: RegisterComponent, canActivate: [noAuthGuard] },
 
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 
-  { path: 'register', component: RegisterComponent },
 
   {
     path: 'dashboard',

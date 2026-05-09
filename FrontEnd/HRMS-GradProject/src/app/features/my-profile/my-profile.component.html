@@ -4,26 +4,75 @@
     </h2>
 </div>
 
+<!-- ─── Loading ─── -->
 @if (isLoading) {
-<div class="text-center my-5">
-    <div class="spinner-border text-primary" role="status"></div>
-    <p class="mt-2 text-muted">Loading your profile...</p>
-</div>
-} @else if (errorMsg) {
-<div class="alert alert-danger d-flex align-items-center" role="alert">
-    <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
-    <div>
-        <h5 class="alert-heading fw-bold mb-1">Access Denied</h5>
-        {{ errorMsg }}
+  <div class="text-center my-5">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="mt-2 text-muted">Loading your profile...</p>
+  </div>
+}
+
+<!-- ─── ADMIN CARD (لا يوجد employee profile للـ Admin) ─── -->
+@else if (isAdmin) {
+  <div class="admin-profile-card">
+    <div class="admin-profile-glow"></div>
+
+    <div class="admin-card-inner">
+      <!-- Avatar -->
+      <div class="admin-avatar">
+        <span class="admin-initials">{{ initials }}</span>
+        <div class="admin-badge-icon">
+          <i class="bi bi-shield-fill-check"></i>
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div class="admin-info">
+        <h3 class="admin-name">{{ userName }}</h3>
+        <div class="admin-role-tag">
+          <i class="bi bi-star-fill me-1"></i>{{ userRole }}
+        </div>
+        @if (userEmail) {
+          <p class="admin-email">
+            <i class="bi bi-envelope-fill me-2"></i>{{ userEmail }}
+          </p>
+        }
+      </div>
+
+      <!-- Stats row -->
+      <div class="admin-stats-row">
+        <div class="admin-stat">
+          <i class="bi bi-people-fill"></i>
+          <span>Full Access</span>
+        </div>
+        <div class="admin-stat">
+          <i class="bi bi-gear-fill"></i>
+          <span>System Control</span>
+        </div>
+        <div class="admin-stat">
+          <i class="bi bi-check-circle-fill"></i>
+          <span>Active</span>
+        </div>
+      </div>
+
+      <!-- Info note -->
+      <div class="admin-note">
+        <i class="bi bi-info-circle me-2"></i>
+        Administrator accounts manage the system and do not have an employee profile.
+      </div>
     </div>
-</div>
-} @else if (profile) {
-<div class="row g-4">
+  </div>
+}
+
+<!-- ─── EMPLOYEE PROFILE ─── -->
+@else if (profile) {
+  <div class="row g-4">
     <div class="col-md-4">
         <div class="card shadow-sm border-0 h-100 text-center p-4">
             <div class="mb-3">
-                <img src="https://img.pikbest.com/origin/10/02/35/687pIkbEsTthg.png!sw800"
-                    alt="Avatar" class="rounded-circle shadow-sm" width="120" height="120" style="object-fit: cover;">
+                <div class="emp-avatar mx-auto">
+                  {{ getProfileInitials() }}
+                </div>
             </div>
             <h4 class="fw-bold text-dark mb-1">{{ profile.fullName }}</h4>
             <p class="text-muted mb-3">{{ profile.positionTitle || 'Employee' }}</p>
@@ -32,7 +81,7 @@
             </span>
         </div>
     </div>
-    
+
     <div class="col-md-8">
         <div class="card shadow-sm border-0 h-100">
             <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
@@ -60,7 +109,7 @@
 
                 <hr class="my-4 text-muted opacity-25">
 
-                <h5 class="fw-bold text-secondary mb-3"><i class="bi bi-clock-history me-2 text-info"></i>Attendance Summary</h5>
+                <h5 class="fw-bold text-secondary mb-3"><i class="bi bi-clock-history me-2 text-info"></i>Status</h5>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="bg-light rounded-3 p-3 d-flex align-items-center">
@@ -75,5 +124,184 @@
             </div>
         </div>
     </div>
-</div>
+  </div>
 }
+
+<!-- ─── Error for employee only ─── -->
+@else if (!isLoading && !profile && !isAdmin) {
+  <div class="alert alert-warning d-flex align-items-center rounded-3" role="alert">
+    <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+    <div>
+      <h5 class="alert-heading fw-bold mb-1">Profile Not Linked</h5>
+      Your account is not yet linked to an employee profile. Please contact your administrator.
+    </div>
+  </div>
+}
+
+<style>
+/* ── Admin Profile Card ─────────────────────────── */
+.admin-profile-card {
+  position: relative;
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  border-radius: 24px;
+  padding: 3px;
+  max-width: 700px;
+  margin: 0 auto;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+}
+
+.admin-profile-glow {
+  position: absolute;
+  inset: 0;
+  background: conic-gradient(from 0deg, #4361ee, #7209b7, #f72585, #4361ee);
+  filter: blur(30px);
+  opacity: 0.3;
+  animation: glowSpin 6s linear infinite;
+}
+
+.admin-card-inner {
+  position: relative;
+  background: linear-gradient(135deg, #1a1d3a 0%, #0d1117 100%);
+  border-radius: 22px;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.admin-avatar {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+.admin-initials {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4361ee, #7209b7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+  display: block;
+  text-align: center;
+  line-height: 100px;
+  box-shadow: 0 0 30px rgba(67,97,238,0.5);
+}
+
+.admin-badge-icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #f72585;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #0d1117;
+  font-size: 0.8rem;
+  color: #fff;
+}
+
+.admin-info {
+  text-align: center;
+}
+
+.admin-name {
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.6rem;
+  margin: 0 0 0.5rem;
+}
+
+.admin-role-tag {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(67,97,238,0.2);
+  border: 1px solid rgba(67,97,238,0.4);
+  color: #a5b4fc;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.35rem 1rem;
+  border-radius: 30px;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.admin-email {
+  color: #94a3b8;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.admin-stats-row {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.admin-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 0.85rem 1.5rem;
+  min-width: 120px;
+}
+
+.admin-stat i {
+  font-size: 1.4rem;
+  color: #4361ee;
+}
+
+.admin-stat span {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-note {
+  background: rgba(67,97,238,0.1);
+  border: 1px solid rgba(67,97,238,0.2);
+  border-radius: 12px;
+  padding: 0.85rem 1.25rem;
+  color: #a5b4fc;
+  font-size: 0.85rem;
+  text-align: center;
+  width: 100%;
+}
+
+/* Employee avatar */
+.emp-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4361ee, #3a0ca3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+@keyframes glowSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+</style>
