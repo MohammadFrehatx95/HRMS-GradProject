@@ -20,12 +20,10 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
-    // جلب الاسم والـ role من localStorage (يُحفظان عند الـ login)
     this.userName = localStorage.getItem('user_name') || 'User';
     this.userRole = localStorage.getItem('user_role') || 'Employee';
   }
 
-  /** أول حرفان من الاسم للـ avatar */
   get initials(): string {
     return this.userName
       .split(' ')

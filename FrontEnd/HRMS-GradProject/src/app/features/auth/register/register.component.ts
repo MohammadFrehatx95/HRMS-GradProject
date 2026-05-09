@@ -43,12 +43,10 @@ export class RegisterComponent {
     this.isLoading = true;
     const payload = this.registerForm.getRawValue();
 
-    // داخل دالة onSubmit أو Register
     this.authService.register(payload).subscribe({
       next: (res: any) => {
         this.isLoading = false;
 
-        // هندسياً: نحاول استخراج الـ ID بأكثر من طريقة حسب هيكلية الباك إند
         const userIdFromRes = res?.data?.id || res?.id || res?.userId;
         const userEmail = this.registerForm.get('email')?.value;
 
@@ -61,7 +59,6 @@ export class RegisterComponent {
           cancelButtonText: 'لاحقاً',
         }).then((result) => {
           if (result.isConfirmed) {
-            // تمرير البيانات عبر الـ Router State
             this.router.navigate(['/employee-form'], {
               state: {
                 userId: userIdFromRes,
