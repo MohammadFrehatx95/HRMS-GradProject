@@ -104,6 +104,7 @@
   background-color: #2ecc71;
   border-radius: 50%;
   display: inline-block;
+  margin-right: 5px;
 }
 
 .sidebar-nav ul {

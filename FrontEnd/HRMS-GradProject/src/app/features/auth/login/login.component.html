@@ -1,4 +1,16 @@
 <div class="login-page d-flex align-items-center justify-content-center vh-100">
+
+    <!-- خلفية متحركة -->
+    <div class="bg-blobs" aria-hidden="true">
+        <span class="blob blob-1"></span>
+        <span class="blob blob-2"></span>
+        <span class="blob blob-3"></span>
+        <span class="blob blob-4"></span>
+        <span class="blob blob-5"></span>
+    </div>
+    <!-- شبكة نقاط -->
+    <div class="dot-grid" aria-hidden="true"></div>
+
     <div class="login-card shadow-lg d-flex position-relative">
         
         <!-- Left Side: Form -->
@@ -17,21 +29,37 @@
 
                 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                     
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label class="form-label text-secondary small fw-medium ms-3 mb-2">Email</label>
                         <input type="email" class="form-control rounded-pill custom-input px-4 py-3 border-0"
                             formControlName="email" placeholder="example@company.com"
                             [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+                        <div class="invalid-feedback ms-3 mt-1">
+                            <span *ngIf="loginForm.get('email')?.errors?.['required']">
+                                <i class="bi bi-exclamation-circle me-1"></i>Email is required
+                            </span>
+                            <span *ngIf="loginForm.get('email')?.errors?.['email']">
+                                <i class="bi bi-exclamation-circle me-1"></i>Please enter a valid email address
+                            </span>
+                        </div>
                     </div>
 
-                    <div class="mb-5 position-relative">
+                    <div class="mb-4 position-relative">
                         <label class="form-label text-secondary small fw-medium ms-3 mb-2">Password</label>
                         <input [type]="isPasswordVisible ? 'text' : 'password'"
                             class="form-control rounded-pill custom-input px-4 py-3 border-0"
                             formControlName="password" placeholder="******************"
                             [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-                        
-                        <button class="btn btn-link text-muted position-absolute end-0 bottom-0 mb-2 me-3 text-decoration-none shadow-none"
+                        <div class="invalid-feedback ms-3 mt-1">
+                            <span *ngIf="loginForm.get('password')?.errors?.['required']">
+                                <i class="bi bi-exclamation-circle me-1"></i>Password is required
+                            </span>
+                            <span *ngIf="loginForm.get('password')?.errors?.['minlength']">
+                                <i class="bi bi-exclamation-circle me-1"></i>Password must be at least 6 characters
+                            </span>
+                        </div>
+
+                        <button class="btn btn-link text-muted position-absolute end-0 top-50 translate-middle-y me-3 text-decoration-none shadow-none"
                             type="button" (click)="togglePasswordVisibility()" tabindex="-1">
                             <i class="bi" [ngClass]="isPasswordVisible ? 'bi-eye-slash' : 'bi-eye'"></i>
                         </button>

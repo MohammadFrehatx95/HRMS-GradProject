@@ -1,13 +1,92 @@
 .login-page {
-    background-color: #a8aebc;
+    background: linear-gradient(135deg, #0f1b2d 0%, #1a2e45 40%, #0d2137 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ── شبكة نقاط ── */
+.dot-grid {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ── الدوائر العائمة ── */
+.bg-blobs {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35;
+    animation: floatBlob 12s ease-in-out infinite;
+}
+
+.blob-1 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, #c9a84c, #8B6914);
+    top: -150px; left: -150px;
+    animation-duration: 14s;
+}
+
+.blob-2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, #1a6ea8, #0d3d6e);
+    bottom: -100px; right: -100px;
+    animation-duration: 11s;
+    animation-delay: -4s;
+}
+
+.blob-3 {
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, #8B6914, #c9a84c55);
+    top: 40%; right: 15%;
+    animation-duration: 16s;
+    animation-delay: -7s;
+}
+
+.blob-4 {
+    width: 250px; height: 250px;
+    background: radial-gradient(circle, #1e5a8a, #0a2d4d);
+    top: 20%; left: 30%;
+    animation-duration: 13s;
+    animation-delay: -2s;
+}
+
+.blob-5 {
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, #c9a84c44, transparent);
+    bottom: 20%; left: 20%;
+    animation-duration: 18s;
+    animation-delay: -9s;
+}
+
+@keyframes floatBlob {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33%       { transform: translate(30px, -40px) scale(1.05); }
+    66%       { transform: translate(-20px, 25px) scale(0.97); }
+}
+
+/* البطاقة تطفو فوق الخلفية */
+.login-card {
+    position: relative;
+    z-index: 1;
 }
 
 .login-card {
     background: radial-gradient(circle at bottom left, #fff8e1 0%, #ffffff 60%);
     border-radius: 2rem;
-    width: 1000px;
+    width: 1200px; /* زيادة العرض */
     max-width: 95vw;
-    height: 600px;
+    min-height: 700px; /* زيادة الطول ليأخذ مساحة أطول */
     overflow: hidden;
 }
 
@@ -36,6 +115,29 @@
     background-color: #ffffff;
     box-shadow: 0 0 0 4px rgba(255, 214, 107, 0.3) !important;
     outline: none;
+}
+
+/* الايرورز */
+.custom-input.is-invalid {
+    border: 1.5px solid #dc3545 !important;
+    background-color: #fff5f5;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.12) !important;
+}
+
+.invalid-feedback {
+    display: none;
+    color: #dc3545;
+    font-size: 0.8rem;
+}
+
+.custom-input.is-invalid ~ .invalid-feedback,
+.is-invalid + .invalid-feedback {
+    display: block;
+}
+
+/* مشان الـ invalid-feedback يشتغل صح */
+div:has(.custom-input.is-invalid) .invalid-feedback {
+    display: block;
 }
 
 .submit-btn {

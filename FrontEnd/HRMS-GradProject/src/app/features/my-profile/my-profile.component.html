@@ -12,7 +12,7 @@
   </div>
 }
 
-<!-- ─── ADMIN PROFILE (نفس ديزاين الموظف) ─── -->
+<!-- بروفايل الأدمن -->
 @else if (isAdmin) {
   <div class="row g-4">
     <!-- Left card: Avatar -->
@@ -120,7 +120,7 @@
               <label class="text-muted small text-uppercase fw-bold">
                 <i class="bi bi-telephone me-1"></i> Phone
               </label>
-              <!-- الـ API يرجع phone أو phoneNumber حسب الـ endpoint -->
+              <!-- رقم التلفون -->
               <p class="fw-semibold text-dark fs-5 mb-0">
                 {{ profile.phone || profile.phoneNumber || 'N/A' }}
               </p>
