@@ -25,23 +25,23 @@
 
     <nav class="sidebar-nav">
         <ul>
-            <li><a routerLink="/dashboard" routerLinkActive="active"><i class="bi bi-speedometer2"></i> Dashboard</a>
+            <li><a routerLink="/dashboard" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-speedometer2"></i> Dashboard</a>
             </li>
-            <li><a routerLink="/my-profile" routerLinkActive="active"><i class="bi bi-person-badge"></i> My Profile</a>
+            <li><a routerLink="/my-profile" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-person-badge"></i> My Profile</a>
             </li>
-            <li><a routerLink="/employees" routerLinkActive="active"><i class="bi bi-people"></i> Employees</a></li>
-            <li><a routerLink="/leave" routerLinkActive="active"><i class="bi bi-calendar2-check"></i> Leave
+            <li><a routerLink="/employees" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-people"></i> Employees</a></li>
+            <li><a routerLink="/leave" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-calendar2-check"></i> Leave
                     Requests</a></li>
-            <li><a routerLink="/attendance" routerLinkActive="active"><i class="bi bi-clock-history"></i> Attendance</a>
+            <li><a routerLink="/attendance" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-clock-history"></i> Attendance</a>
             </li>
-            <li><a routerLink="/salary" routerLinkActive="active"><i class="bi bi-cash-stack"></i> Salaries</a></li>
+            <li><a routerLink="/salary" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-cash-stack"></i> Salaries</a></li>
 
             @if (isAdmin) {
             <li class="section-title">System Control</li>
-            <li><a routerLink="/departments" routerLinkActive="active"><i class="bi bi-diagram-3"></i> Departments</a>
+            <li><a routerLink="/departments" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-diagram-3"></i> Departments</a>
             </li>
-            <li><a routerLink="/positions" routerLinkActive="active"><i class="bi bi-briefcase"></i> Positions</a></li>
-            <li><a routerLink="/register" routerLinkActive="active"><i class="bi bi-person-plus"></i> Register User </a>
+            <li><a routerLink="/positions" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-briefcase"></i> Positions</a></li>
+            <li><a routerLink="/register" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-person-plus"></i> Register User </a>
             </li>
             }
         </ul>

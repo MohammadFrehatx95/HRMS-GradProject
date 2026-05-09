@@ -1,7 +1,12 @@
 <nav class="navbar navbar-expand bg-white border-bottom shadow-sm px-4 py-2">
     <div class="container-fluid">
-        <div class="d-none d-md-block">
-            <span class="text-secondary fw-bold">HRMS Pro</span>
+        <div class="d-flex align-items-center gap-3">
+            <button class="btn btn-light border-0 shadow-none d-flex align-items-center justify-content-center p-2" (click)="toggleSidebar()">
+                <i class="bi bi-list fs-4 text-secondary"></i>
+            </button>
+            <div class="d-none d-md-block">
+                <span class="text-secondary fw-bold">HRMS Pro</span>
+            </div>
         </div>
 
         <ul class="navbar-nav ms-auto align-items-center flex-row">

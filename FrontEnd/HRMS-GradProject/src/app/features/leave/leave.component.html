@@ -8,7 +8,7 @@
                 effectively</p>
         </div>
 
-        <button
+        <button *ngIf="!isAdminOrHR"
             class="btn btn-primary px-4 py-2 rounded-3 fw-semibold shadow-sm"
             (click)='openModal()'>
             <i class="bi bi-send-plus me-2"></i> Request Leave
@@ -22,14 +22,11 @@
                 <thead class="bg-light text-muted small text-uppercase"
                     style="letter-spacing: 0.5px;">
                     <tr>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">Leave
-                            Type</th>
-                        <th
-                            class="py-3 px-3 border-bottom-0 fw-semibold">Duration</th>
-                        <th
-                            class="py-3 px-3 border-bottom-0 fw-semibold">Reason</th>
-                        <th
-                            class="py-3 px-3 border-bottom-0 fw-semibold">Status</th>
+                        <th *ngIf="isAdminOrHR" class="py-3 px-4 border-bottom-0 fw-semibold">Employee</th>
+                        <th class="py-3 px-4 border-bottom-0 fw-semibold">Leave Type</th>
+                        <th class="py-3 px-4 border-bottom-0 fw-semibold">Duration</th>
+                        <th class="py-3 px-4 border-bottom-0 fw-semibold">Reason</th>
+                        <th class="py-3 px-4 border-bottom-0 fw-semibold text-center">Status</th>
                         <th *ngIf="isAdminOrHR"
                             class="py-3 px-4 border-bottom-0 fw-semibold text-end">Actions</th>
                     </tr>
@@ -38,7 +35,7 @@
                 <tbody class="border-top-0">
 
                     <tr *ngIf="isLoading">
-                        <td colspan="5" class="text-center py-5 text-muted">
+                        <td [colSpan]="isAdminOrHR ? 6 : 5" class="text-center py-5 text-muted">
                             <span
                                 class="spinner-border spinner-border-sm me-2"></span>
                             Loading requests...
@@ -46,7 +43,7 @@
                     </tr>
 
                     <tr *ngIf="!isLoading && leavesList.length === 0">
-                        <td colspan="5" class="text-center py-5">
+                        <td [colSpan]="isAdminOrHR ? 6 : 5" class="text-center py-5">
                             <div class="d-flex flex-column align-items-center">
                                 <div class="bg-light rounded-circle p-4 mb-3">
                                     <i
@@ -61,10 +58,22 @@
                     </tr>
 
                     <tr *ngFor="let leave of leavesList">
+                        <td *ngIf="isAdminOrHR" class="py-3 px-4 fw-bold text-dark">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; font-size: 14px;">
+                                    {{ leave.employeeName ? leave.employeeName.charAt(0).toUpperCase() : 'U' }}
+                                </div>
+                                <div>
+                                    <div class="mb-0">{{ leave.employeeName || 'Unknown Employee' }}</div>
+                                    <small class="text-muted" style="font-size: 11px;">ID: {{ leave.employeeId || 'N/A' }}</small>
+                                </div>
+                            </div>
+                        </td>
+
                         <td class="py-3 px-4 fw-bold text-dark">
                             <div class="d-flex align-items-center">
                                 <div
-                                    class="rounded-circle p-2 me-3 bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center"
+                                    class="rounded-circle p-2 me-3 bg-secondary bg-opacity-10 text-secondary d-flex align-items-center justify-content-center"
                                     style="width: 35px; height: 35px;">
                                     <i class="bi bi-journal-text"></i>
                                 </div>
@@ -72,14 +81,14 @@
                             </div>
                         </td>
 
-                        <td class="py-3 px-3">
+                        <td class="py-3 px-4">
                             <div class="fw-medium text-dark">{{ leave.startDate
                                 | date:'MMM dd' }} <i
                                     class="bi bi-arrow-right text-muted mx-1"></i>
                                 {{ leave.endDate | date:'MMM dd, yyyy' }}</div>
                         </td>
 
-                        <td class="py-3 px-3 text-secondary">
+                        <td class="py-3 px-4 text-secondary">
                             <span class="d-inline-block text-truncate"
                                 style="max-width: 180px;"
                                 [title]="leave.reason">
@@ -87,7 +96,7 @@
                             </span>
                         </td>
 
-                        <td class="py-3 px-4 text-end">
+                        <td class="py-3 px-4 text-center">
                             <span class="badge px-3 py-2 rounded-pill fw-bold"
                                 [ngStyle]="{
           'background-color': getStatusText(leave.status) === 'Approved' ? '#e6f4ea' : 

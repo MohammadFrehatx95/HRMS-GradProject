@@ -1,8 +1,12 @@
 @if (authService.isLoggedIn()) {
 <div class="wrapper">
-    <app-sidebar></app-sidebar>
+    @if (isMobileSidebarOpen) {
+        <div class="sidebar-overlay" (click)="closeMobileSidebar()"></div>
+    }
 
-    <div class="main-panel">
+    <app-sidebar class="app-sidebar" [class.hidden]="isSidebarHidden" [class.mobile-open]="isMobileSidebarOpen"></app-sidebar>
+
+    <div class="main-panel" [class.expanded]="isSidebarHidden">
         <app-header></app-header>
 
         <main class="content">

@@ -61,7 +61,7 @@
                         <td *ngIf="isAdminOrHR" class="py-3 px-4 fw-bold text-dark">
                             {{ salary.employeeName || '#' + salary.employeeId }}
                         </td>
-                        <td class="py-3 px-3">
+                        <td class="py-3 px-4">
                             <span class="badge bg-light text-dark border">{{
                                 salary.month | number:'2.0' }} / {{ salary.year
                                 }}</span>
@@ -108,14 +108,19 @@
                 <form #salaryForm="ngForm">
 
                     <div class="mb-4">
-                        <label
-                            class="form-label fw-semibold text-secondary small">Employee
-                            ID <span class="text-danger">*</span></label>
-                        <input type="number"
+                        <label class="form-label fw-semibold text-secondary small">Employee <span class="text-danger">*</span></label>
+                        <input type="text"
                             class="form-control form-control-lg bg-light border-0"
-                            name="employeeId"
-                            [(ngModel)]="salaryData.employeeId" required
-                            placeholder="Enter ID">
+                            list="employeeDatalist"
+                            name="employeeSearchText"
+                            [(ngModel)]="employeeSearchText"
+                            (change)="onEmployeeSelect($event)"
+                            autocomplete="off"
+                            required
+                            placeholder="Type to search by name or ID...">
+                        <datalist id="employeeDatalist">
+                            <option *ngFor="let emp of employeesList" [value]="emp.id + ' - ' + emp.firstName + ' ' + emp.lastName"></option>
+                        </datalist>
                     </div>
 
                     <div class="row mb-4">
@@ -193,7 +198,7 @@
                 <button type="button"
                     class="btn btn-primary px-4 rounded-3 fw-semibold"
                     (click)="saveSalary()"
-                    [disabled]="salaryForm.invalid || isProcessing">
+                    [disabled]="salaryForm.invalid || isProcessing || !salaryData.employeeId">
                     <span *ngIf="isProcessing"
                         class="spinner-border spinner-border-sm me-2"></span>
                     {{ isProcessing ? 'Saving...' : 'Save Record' }}
