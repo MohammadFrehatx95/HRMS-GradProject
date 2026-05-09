@@ -21,7 +21,7 @@ export class LeaveComponent implements OnInit {
   isLoading: boolean = true;
   isProcessing: boolean = false;
 
-  isAdmin: boolean = false;
+  isAdminOrHR: boolean = false;
 
   leaveModal: any;
 
@@ -40,14 +40,14 @@ export class LeaveComponent implements OnInit {
   ];
 
   ngOnInit() {
-    this.isAdmin = this.authService.isAdmin();
+    this.isAdminOrHR = this.authService.isAdminOrHR();
     this.loadLeaves();
   }
 
   loadLeaves() {
     this.isLoading = true;
 
-    const request = this.isAdmin
+    const request = this.isAdminOrHR
       ? this.leaveService.getAllLeaves()
       : this.leaveService.getMyLeaves();
 

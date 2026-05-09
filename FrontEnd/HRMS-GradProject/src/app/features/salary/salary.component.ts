@@ -19,7 +19,8 @@ export class SalaryComponent implements OnInit {
 
   salariesList: any[] = [];
   isLoading: boolean = true;
-  isAdmin: boolean = false;
+  isAdmin: boolean = false;       // Admin فقط: إضافة/تعديل/حذف
+  isAdminOrHR: boolean = false;   // Admin أو HR: يرى كل الرواتب
   isProcessing: boolean = false;
 
   salaryModal: any;
@@ -38,12 +39,13 @@ export class SalaryComponent implements OnInit {
 
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
+    this.isAdminOrHR = this.authService.isAdminOrHR();
     this.loadSalaries();
   }
 
   loadSalaries() {
     this.isLoading = true;
-    const request = this.isAdmin
+    const request = this.isAdminOrHR
       ? this.salaryService.getAllSalaries()
       : this.salaryService.getMySalaries();
 

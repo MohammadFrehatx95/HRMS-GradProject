@@ -20,21 +20,13 @@
                 <thead class="bg-light text-muted small text-uppercase"
                     style="letter-spacing: 0.5px;">
                     <tr>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">Emp
-                            ID</th>
-                        <th
-                            class="py-3 px-3 border-bottom-0 fw-semibold">Period</th>
-                        <th class="py-3 px-3 border-bottom-0 fw-semibold">Base
-                            Salary</th>
-                        <th
-                            class="py-3 px-3 border-bottom-0 fw-semibold text-success">Allowances</th>
-                        <th
-                            class="py-3 px-3 border-bottom-0 fw-semibold text-danger">Deductions</th>
-                        <th
-                            class="py-3 px-3 border-bottom-0 fw-semibold text-primary">Net
-                            Pay</th>
-                        <th *ngIf="isAdmin"
-                            class="py-3 px-4 border-bottom-0 fw-semibold text-end">Actions</th>
+                        <th *ngIf="isAdminOrHR" class="py-3 px-4 border-bottom-0 fw-semibold">Employee</th>
+                        <th class="py-3 px-4 border-bottom-0 fw-semibold">Period</th>
+                        <th class="py-3 px-3 border-bottom-0 fw-semibold">Base Salary</th>
+                        <th class="py-3 px-3 border-bottom-0 fw-semibold text-success">Allowances</th>
+                        <th class="py-3 px-3 border-bottom-0 fw-semibold text-danger">Deductions</th>
+                        <th class="py-3 px-3 border-bottom-0 fw-semibold text-primary">Net Pay</th>
+                        <th *ngIf="isAdmin" class="py-3 px-4 border-bottom-0 fw-semibold text-end">Actions</th>
                     </tr>
                 </thead>
 
@@ -65,8 +57,9 @@
                     </tr>
 
                     <tr *ngFor="let salary of salariesList">
-                        <td class="py-3 px-4 fw-bold text-dark">
-                            #{{ salary.employeeId }}
+                        <!-- عمود الموظف: Admin أو HR يشوف الاسم -->
+                        <td *ngIf="isAdminOrHR" class="py-3 px-4 fw-bold text-dark">
+                            {{ salary.employeeName || '#' + salary.employeeId }}
                         </td>
                         <td class="py-3 px-3">
                             <span class="badge bg-light text-dark border">{{
@@ -77,20 +70,14 @@
                                 salary.effectiveDate | date:'dd MMM yyyy'
                                 }}</div>
                         </td>
-                        <td class="py-3 px-3 text-secondary">${{
-                            salary.baseAmount }}</td>
-                        <td class="py-3 px-3 text-success fw-medium">+${{
-                            salary.allowances }}</td>
-                        <td class="py-3 px-3 text-danger fw-medium">-${{
-                            salary.deductions }}</td>
+                        <td class="py-3 px-3 text-secondary">${{ salary.baseAmount }}</td>
+                        <td class="py-3 px-3 text-success fw-medium">+${{ salary.allowances }}</td>
+                        <td class="py-3 px-3 text-danger fw-medium">-${{ salary.deductions }}</td>
                         <td class="py-3 px-3">
-                            <span class="fw-bold text-primary fs-6">${{
-                                salary.netAmount }}</span>
-                            <div class="text-muted"
-                                style="font-size: 0.7rem;">Before Deductions:
-                                ${{
-                                salary.grossAmount }}</div>
+                            <span class="fw-bold text-primary fs-6">${{ salary.netAmount }}</span>
+                            <div class="text-muted" style="font-size: 0.7rem;">Before Deductions: ${{ salary.grossAmount }}</div>
                         </td>
+                        <!-- أزرار: Admin فقط -->
                         <td *ngIf="isAdmin" class="py-3 px-4 text-end">
                             <button
                                 class="btn btn-sm btn-light text-primary rounded-circle shadow-sm"

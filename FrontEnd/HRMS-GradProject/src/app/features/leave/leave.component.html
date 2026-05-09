@@ -2,7 +2,7 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1">{{ isAdmin ? 'All Leave Requests'
+            <h3 class="fw-bold text-dark mb-1">{{ isAdminOrHR ? 'All Leave Requests'
                 : 'My Leave Requests' }}</h3>
             <p class="text-muted small mb-0">Manage and track time-off requests
                 effectively</p>
@@ -30,7 +30,7 @@
                             class="py-3 px-3 border-bottom-0 fw-semibold">Reason</th>
                         <th
                             class="py-3 px-3 border-bottom-0 fw-semibold">Status</th>
-                        <th *ngIf="isAdmin"
+                        <th *ngIf="isAdminOrHR"
                             class="py-3 px-4 border-bottom-0 fw-semibold text-end">Actions</th>
                     </tr>
                 </thead>
@@ -112,7 +112,7 @@
                             </div>
                         </td>
 
-                        <td *ngIf="isAdmin" class="py-3 px-4 text-end">
+                        <td *ngIf="isAdminOrHR" class="py-3 px-4 text-end">
                             <div
                                 *ngIf="getStatusText(leave.status) === 'Pending'"
                                 class="d-flex justify-content-end gap-2">
