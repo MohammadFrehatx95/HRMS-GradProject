@@ -9,11 +9,11 @@
         <div *ngIf="!isAdmin" class="d-flex flex-column align-items-end gap-2">
 
             <!-- ⚠️ تحذير: session مفتوحة من يوم سابق -->
-            <div *ngIf="activeSession && (activeSession.date | date:'yyyy-MM-dd') < (today)"
+            <div *ngIf="isStaleSession"
                  class="alert alert-warning py-2 px-3 mb-0 rounded-3 small d-flex align-items-center gap-2">
                 <i class="bi bi-exclamation-triangle-fill"></i>
                 <span>
-                    Open session from <strong>{{ activeSession.date | date:'dd MMM yyyy' }}</strong>.
+                    Open session from <strong>{{ activeSession?.date | date:'dd MMM yyyy' }}</strong>.
                     Click Clock Out to close it.
                 </span>
             </div>
