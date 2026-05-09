@@ -34,6 +34,16 @@ export class EmployeeService {
     );
   }
 
+  // جلب بيانات الموظف الكاملة (EmployeeDto) تشمل departmentId, positionId
+  getEmployeeById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
+      map((response) => {
+        if (response && response.data) return response.data;
+        return response;
+      }),
+    );
+  }
+
   updateEmployee(id: number, employee: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}`, employee);
   }
