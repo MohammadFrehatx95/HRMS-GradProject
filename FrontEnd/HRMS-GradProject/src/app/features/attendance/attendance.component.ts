@@ -26,6 +26,13 @@ export class AttendanceComponent implements OnInit {
   activeSession: any = null;  // أي session مفتوحة (Working) من أي يوم
   readonly today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD للمقارنة في الـ template
 
+  /** true إذا كان هناك session مفتوحة من يوم سابق (مش اليوم) */
+  get isStaleSession(): boolean {
+    if (!this.activeSession?.date) return false;
+    const sessionDate = new Date(this.activeSession.date).toISOString().split('T')[0];
+    return sessionDate < this.today;
+  }
+
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
     if (this.isAdmin) {
