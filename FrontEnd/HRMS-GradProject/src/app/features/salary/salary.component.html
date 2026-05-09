@@ -71,7 +71,7 @@
                         <th class="py-3 px-3 border-bottom-0 fw-semibold text-success">Allowances</th>
                         <th class="py-3 px-3 border-bottom-0 fw-semibold text-danger">Deductions</th>
                         <th class="py-3 px-3 border-bottom-0 fw-semibold text-primary">Net Pay</th>
-                        <th *ngIf="isAdmin" class="py-3 px-4 border-bottom-0 fw-semibold text-end">Actions</th>
+                        <th *ngIf="isAdmin" class="py-3 px-4 border-bottom-0 fw-semibold text-end text-nowrap">Actions</th>
                     </tr>
                 </thead>
 
@@ -123,7 +123,7 @@
                             <div class="text-muted" style="font-size: 0.7rem;">Before Deductions: ${{ salary.grossAmount }}</div>
                         </td>
                         <!-- صلاحيات أدمن بس -->
-                        <td *ngIf="isAdmin" class="py-3 px-4 text-end">
+                        <td *ngIf="isAdmin" class="py-3 px-4 text-end text-nowrap">
                             <button
                                 class="btn btn-sm btn-light text-primary rounded-circle shadow-sm"
                                 (click)="openModal(salary)" title="Edit Record">
@@ -152,20 +152,51 @@
             <div class="modal-body p-4">
                 <form #salaryForm="ngForm">
 
-                    <div class="mb-4">
+                    <div class="mb-4 position-relative">
                         <label class="form-label fw-semibold text-secondary small">Employee <span class="text-danger">*</span></label>
-                        <input type="text"
-                            class="form-control"
-                            list="employeeDatalist"
-                            name="employeeSearchText"
-                            [(ngModel)]="employeeSearchText"
-                            (ngModelChange)="onEmployeeSearchChange($event)"
-                            autocomplete="off"
-                            required
-                            placeholder="Choose an employee...">
-                        <datalist id="employeeDatalist">
-                            <option *ngFor="let emp of employeesList" [value]="emp.firstName + ' ' + emp.lastName"></option>
-                        </datalist>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-person"></i></span>
+                            <input type="text"
+                                class="form-control bg-light border-start-0"
+                                name="employeeSearchText"
+                                [(ngModel)]="employeeSearchText"
+                                (ngModelChange)="onEmployeeSearchChange($event)"
+                                (focus)="showEmployeeDropdown = true"
+                                (blur)="hideDropdownWithDelay()"
+                                autocomplete="off"
+                                required
+                                placeholder="Search by name or ID...">
+                        </div>
+                        
+                        <!-- Custom Dropdown -->
+                        <div class="dropdown-menu w-100 shadow-lg border-0 rounded-4 mt-2 py-2"
+                             [class.show]="showEmployeeDropdown"
+                             style="position: absolute; top: 100%; left: 0; max-height: 250px; overflow-y: auto; z-index: 1050;">
+                            
+                            <ng-container *ngIf="filteredEmployeesList.length > 0; else noEmployees">
+                                <button type="button" class="dropdown-item d-flex justify-content-between align-items-center py-2 px-3 border-bottom border-light"
+                                        *ngFor="let emp of filteredEmployeesList"
+                                        (mousedown)="selectEmployee(emp)"
+                                        style="transition: background-color 0.2s;">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 36px; height: 36px; font-size: 13px;">
+                                            {{ emp.firstName[0] }}{{ emp.lastName[0] }}
+                                        </div>
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-semibold text-dark" style="font-size: 14px;">{{ emp.firstName }} {{ emp.lastName }}</span>
+                                        </div>
+                                    </div>
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3 py-2" style="font-size: 11px;">ID: {{ emp.id }}</span>
+                                </button>
+                            </ng-container>
+                            
+                            <ng-template #noEmployees>
+                                <div class="text-center py-4 text-muted">
+                                    <i class="bi bi-search mb-2 fs-4 text-black-50"></i>
+                                    <p class="mb-0 small fw-semibold">No employees found.</p>
+                                </div>
+                            </ng-template>
+                        </div>
                     </div>
 
                     <div class="row mb-4">

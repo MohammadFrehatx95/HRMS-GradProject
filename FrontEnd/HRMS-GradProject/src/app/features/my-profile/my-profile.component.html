@@ -2,6 +2,9 @@
     <h2 class="fw-bold text-secondary">
         <i class="bi bi-person-badge-fill me-2"></i>My Profile
     </h2>
+    <button class="btn btn-primary shadow-sm rounded-pill px-4 fw-semibold" (click)="openEditModal()" *ngIf="!isLoading">
+        <i class="bi bi-pencil-square me-2"></i>Edit Profile
+    </button>
 </div>
 
 <!-- ─── Loading ─── -->
@@ -171,6 +174,50 @@
     </div>
   </div>
 }
+
+<!-- ─── Edit Profile Modal ─── -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg rounded-4">
+      <div class="modal-header border-bottom-0 pt-4 pb-0 px-4">
+        <h5 class="fw-bold text-dark"><i class="bi bi-person-lines-fill text-primary me-2"></i>Edit Profile</h5>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <!-- Contact Info -->
+        <h6 class="fw-bold text-secondary mb-3 small text-uppercase">Contact Information</h6>
+        <div class="mb-3">
+          <label class="form-label text-muted small fw-semibold">Email Address</label>
+          <input type="email" class="form-control bg-light border-0 py-2" [(ngModel)]="editData.email" placeholder="name@example.com">
+        </div>
+        <div class="mb-4">
+          <label class="form-label text-muted small fw-semibold">Phone Number</label>
+          <input type="text" class="form-control bg-light border-0 py-2" [(ngModel)]="editData.phone" placeholder="e.g. +123456789" [disabled]="!profile">
+          <div *ngIf="!profile" class="form-text text-warning small mt-1"><i class="bi bi-info-circle me-1"></i>Phone number requires an active employee profile.</div>
+        </div>
+
+        <hr class="my-4 text-muted opacity-25">
+
+        <!-- Security -->
+        <h6 class="fw-bold text-secondary mb-3 small text-uppercase">Change Password <span class="text-muted fw-normal text-lowercase">(Optional)</span></h6>
+        <div class="mb-3">
+          <label class="form-label text-muted small fw-semibold">Current Password</label>
+          <input type="password" class="form-control bg-light border-0 py-2" [(ngModel)]="pwdData.oldPassword" placeholder="••••••••">
+        </div>
+        <div class="mb-3">
+          <label class="form-label text-muted small fw-semibold">New Password</label>
+          <input type="password" class="form-control bg-light border-0 py-2" [(ngModel)]="pwdData.newPassword" placeholder="Min. 6 characters">
+        </div>
+      </div>
+      <div class="modal-footer border-top-0 pb-4 px-4">
+        <button type="button" class="btn btn-light px-4 rounded-pill" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary px-4 rounded-pill fw-semibold shadow-sm" (click)="saveProfile()" [disabled]="isUpdatingProfile || isChangingPwd">
+          <span *ngIf="isUpdatingProfile || isChangingPwd" class="spinner-border spinner-border-sm me-2"></span> Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <style>
 .profile-avatar {

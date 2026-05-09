@@ -63,7 +63,7 @@
                     <th class="py-3 px-4 border-bottom-0 fw-semibold">Email</th>
                     <th class="py-3 px-4 border-bottom-0 fw-semibold">Department</th>
                     <th class="py-3 px-4 border-bottom-0 fw-semibold">Status</th>
-                    @if (isAdminOrHR) { <th class="py-3 px-4 border-bottom-0 fw-semibold text-end">Actions</th> }
+                    @if (isAdminOrHR) { <th class="py-3 px-4 border-bottom-0 fw-semibold text-end text-nowrap">Actions</th> }
                 </tr>
             </thead>
             <tbody>
@@ -91,7 +91,7 @@
                         </span>
                     </td>
                     @if (isAdminOrHR) {
-                    <td class="py-3 px-4 text-end">
+                    <td class="py-3 px-4 text-end text-nowrap">
                         <button class="btn btn-outline-info btn-sm me-2" title="Details"
                             (click)="viewFullDetails(emp)">
                             <i class="bi bi-file-earmark-person"></i>
