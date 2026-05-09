@@ -53,7 +53,7 @@
 
 .sidebar-brand-sub {
   font-size: 0.68rem;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255, 255, 255, 0.45);
   letter-spacing: 0.8px;
   text-transform: uppercase;
 }
@@ -61,7 +61,7 @@
 .sidebar-header {
   padding: 16px 20px;
   background-color: #141d26;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .user-profile {
