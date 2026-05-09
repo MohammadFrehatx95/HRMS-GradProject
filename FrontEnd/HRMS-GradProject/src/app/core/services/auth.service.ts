@@ -51,6 +51,19 @@ export class AuthService {
   }
 
   isAdmin(): boolean {
+    return this.hasRole('admin');
+  }
+
+  isHR(): boolean {
+    return this.hasRole('hr');
+  }
+
+  /** Admin أو HR — لهم نفس الصلاحيات على Leave, Attendance, Salary (GET) */
+  isAdminOrHR(): boolean {
+    return this.hasRole('admin') || this.hasRole('hr');
+  }
+
+  private hasRole(role: string): boolean {
     const token =
       typeof window !== 'undefined' ? localStorage.getItem('jwt_token') : null;
     if (!token) return false;
@@ -58,20 +71,18 @@ export class AuthService {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       const userRole =
-        payload[
-          'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
-        ] ||
+        payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ||
         payload['role'] ||
         payload['Role'];
 
       if (!userRole) return false;
 
       if (Array.isArray(userRole)) {
-        return userRole.some((r) => r.toLowerCase() === 'admin');
+        return userRole.some((r) => r.toLowerCase() === role);
       }
 
-      return userRole.toLowerCase() === 'admin';
-    } catch (error) {
+      return userRole.toLowerCase() === role;
+    } catch {
       return false;
     }
   }

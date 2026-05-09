@@ -5,6 +5,7 @@ import { LeaveService } from '../../core/services/leave.service';
 import { DepartmentService } from '../../core/services/department.service';
 import { AuthService } from '../../core/services/auth.service';
 import { AttendanceService } from '../../core/services/attendance.service';
+import { SalaryService } from '../../core/services/salary.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,6 +20,7 @@ export class DashboardComponent implements OnInit {
   private deptService = inject(DepartmentService);
   private authService = inject(AuthService);
   private attendanceService = inject(AttendanceService);
+  private salaryService = inject(SalaryService);
 
   totalEmployees = 0;
   pendingLeaves = 0;
@@ -33,6 +35,10 @@ export class DashboardComponent implements OnInit {
   employeePendingLeaves: number = 0;
   employeeHoursWorked: number = 0;
   employeeNextPayday: string = '';
+
+  /** يوم صرف الرواتب — غيّره هنا إذا تغيرت سياسة الشركة */
+  readonly PAYDAY = 25;
+
 
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
@@ -92,11 +98,52 @@ export class DashboardComponent implements OnInit {
         else if (res?.data?.items && Array.isArray(res.data.items))
           extracted = res.data.items;
         else if (res?.data && Array.isArray(res.data)) extracted = res.data;
-        
-        extracted.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+        extracted.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+        );
         this.recentAttendances = extracted.slice(0, 5);
       },
       error: (err) => console.error('Error fetching attendance overview:', err),
+    });
+  }
+
+  loadNextPayday() {
+    this.salaryService.getMySalaries().subscribe({
+      next: (salaries: any[]) => {
+        if (!salaries || salaries.length === 0) return;
+
+        const sorted = [...salaries].sort((a, b) => {
+          if (b.year !== a.year) return b.year - a.year;
+          return b.month - a.month;
+        });
+
+        const latest = sorted[0];
+
+        const nextPayMonth = latest.month === 12 ? 1 : latest.month + 1;
+        const nextPayYear = latest.month === 12 ? latest.year + 1 : latest.year;
+
+        if (latest.effectiveDate) {
+          const effDate = new Date(latest.effectiveDate);
+          const nextEff = new Date(
+            nextPayYear,
+            nextPayMonth - 1,
+            effDate.getDate(),
+          );
+          const dayLabel = nextEff.getDate();
+          const monthLabel = nextEff.toLocaleString('en-US', {
+            month: 'short',
+          });
+          this.employeeNextPayday = `${monthLabel} ${dayLabel}`;
+        } else {
+          const monthNames = [
+            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+          ];
+          this.employeeNextPayday = `${monthNames[nextPayMonth - 1]} ${this.PAYDAY}`;
+        }
+      },
+      error: () => {},
     });
   }
 
@@ -111,11 +158,13 @@ export class DashboardComponent implements OnInit {
       1,
     ).toLocaleString('en-US', { month: 'short' });
 
-    if (today.getDate() > 25) {
-      this.employeeNextPayday = `${nextMonth} 25`;
+    if (today.getDate() > this.PAYDAY) {
+      this.employeeNextPayday = `${nextMonth} ${this.PAYDAY}`;
     } else {
-      this.employeeNextPayday = `${currentMonth} 25`;
+      this.employeeNextPayday = `${currentMonth} ${this.PAYDAY}`;
     }
+
+    this.loadNextPayday();
 
     this.leaveService.getMyLeaves().subscribe({
       next: (res: any) => {
@@ -177,7 +226,9 @@ export class DashboardComponent implements OnInit {
           }
         });
 
-        extracted.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        extracted.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+        );
         this.myRecentAttendances = extracted.slice(0, 5);
 
         this.employeeHoursWorked = Math.round(totalHours);
