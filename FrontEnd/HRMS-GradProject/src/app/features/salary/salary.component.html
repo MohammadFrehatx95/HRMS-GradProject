@@ -1,16 +1,61 @@
 <div class="page-container p-4">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div>
             <h3 class="fw-bold text-dark mb-1">Salaries Management</h3>
-            <p class="text-muted small mb-0">View and manage employee payroll
-                records</p>
+            <p class="text-muted small mb-0">View and manage employee payroll records</p>
         </div>
-        <button *ngIf="isAdmin"
-            class="btn btn-primary px-4 py-2 rounded-3 fw-semibold shadow-sm"
-            (click)="openModal()">
-            <i class="bi bi-plus-lg me-2"></i> Add Salary
-        </button>
+        <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end">
+            <div class="input-group shadow-sm" style="max-width: 350px;">
+                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control border-start-0 ps-0" 
+                    placeholder="Search by name, ID, or amount..." 
+                    [(ngModel)]="salarySearchQuery" 
+                    (input)="filterSalaries()">
+            </div>
+
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Filter Salaries">
+                    <i class="bi bi-funnel-fill"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4" style="width: 250px;">
+                    <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">Filter Options</h6>
+                    
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold text-muted mb-1">Year</label>
+                        <select class="form-select form-select-sm" [(ngModel)]="selectedYear" (change)="filterSalaries()">
+                            <option value="">All Years</option>
+                            <option *ngFor="let yr of uniqueYears" [value]="yr">{{ yr }}</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <label class="form-label small fw-semibold text-muted mb-1">Month</label>
+                        <select class="form-select form-select-sm" [(ngModel)]="selectedMonth" (change)="filterSalaries()">
+                            <option value="">All Months</option>
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button *ngIf="isAdmin"
+                class="btn btn-primary px-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
+                (click)="openModal()">
+                <i class="bi bi-plus-lg me-2"></i> Add Salary
+            </button>
+        </div>
     </div>
 
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
@@ -110,16 +155,16 @@
                     <div class="mb-4">
                         <label class="form-label fw-semibold text-secondary small">Employee <span class="text-danger">*</span></label>
                         <input type="text"
-                            class="form-control form-control-lg bg-light border-0"
+                            class="form-control"
                             list="employeeDatalist"
                             name="employeeSearchText"
                             [(ngModel)]="employeeSearchText"
-                            (change)="onEmployeeSelect($event)"
+                            (ngModelChange)="onEmployeeSearchChange($event)"
                             autocomplete="off"
                             required
-                            placeholder="Type to search by name or ID...">
+                            placeholder="Choose an employee...">
                         <datalist id="employeeDatalist">
-                            <option *ngFor="let emp of employeesList" [value]="emp.id + ' - ' + emp.firstName + ' ' + emp.lastName"></option>
+                            <option *ngFor="let emp of employeesList" [value]="emp.firstName + ' ' + emp.lastName"></option>
                         </datalist>
                     </div>
 

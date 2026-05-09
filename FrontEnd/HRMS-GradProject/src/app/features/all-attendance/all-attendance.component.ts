@@ -1,29 +1,57 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { AttendanceService } from '../../core/services/attendance.service';
 
 @Component({
   selector: 'app-all-attendance',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './all-attendance.component.html',
 })
 export class AllAttendanceComponent implements OnInit {
   private attendanceService = inject(AttendanceService);
 
+  allRecords: any[] = [];
   records: any[] = [];
+  
+  searchQuery: string = '';
+  selectedStatus: string = '';
+  
   isLoading = true;
 
   ngOnInit() {
     this.attendanceService.getAllAttendance().subscribe({
       next: (res: any) => {
         const items = Array.isArray(res) ? res : res?.items ?? res?.data?.items ?? res?.data ?? [];
-        this.records = Array.isArray(items) ? items : [];
-        this.records.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        this.allRecords = Array.isArray(items) ? items : [];
+        this.allRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        this.records = [...this.allRecords];
         this.isLoading = false;
       },
       error: () => { this.isLoading = false; },
+    });
+  }
+
+  filterRecords() {
+    this.records = this.allRecords.filter(rec => {
+      let matchesSearch = true;
+      if (this.searchQuery) {
+        const query = this.searchQuery.toLowerCase();
+        const empName = (rec.employeeName || '').toLowerCase();
+        const empId = String(rec.employeeId || '');
+        const dateStr = String(rec.date || '').toLowerCase();
+        matchesSearch = empName.includes(query) || empId.includes(query) || dateStr.includes(query);
+      }
+      
+      let matchesStatus = true;
+      if (this.selectedStatus) {
+        const currentStatus = this.getStatusLabel(rec);
+        matchesStatus = currentStatus === this.selectedStatus;
+      }
+      
+      return matchesSearch && matchesStatus;
     });
   }
 

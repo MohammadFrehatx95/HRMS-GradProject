@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { AttendanceService } from '../../core/services/attendance.service';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
@@ -7,14 +8,19 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-attendance',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './attendance.component.html',
 })
 export class AttendanceComponent implements OnInit {
   private attendanceService = inject(AttendanceService);
   private authService = inject(AuthService);
 
+  allAttendanceRecords: any[] = [];
   attendanceRecords: any[] = [];
+  
+  searchQuery: string = '';
+  selectedStatus: string = '';
+  
   isLoading = true;
   isProcessing = false;
   isAdmin = false;
@@ -52,8 +58,9 @@ export class AttendanceComponent implements OnInit {
     this.attendanceService.getAllAttendance().subscribe({
       next: (res: any) => {
         const items = Array.isArray(res) ? res : res?.items ?? res?.data?.items ?? res?.data ?? [];
-        this.attendanceRecords = Array.isArray(items) ? items : [];
-        this.attendanceRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        this.allAttendanceRecords = Array.isArray(items) ? items : [];
+        this.allAttendanceRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        this.attendanceRecords = [...this.allAttendanceRecords];
         this.isLoading = false;
       },
       error: () => { this.isLoading = false; },
@@ -68,7 +75,8 @@ export class AttendanceComponent implements OnInit {
         const items = Array.isArray(res)
           ? res
           : (res?.items ?? res?.data?.items ?? res?.data ?? []);
-        this.attendanceRecords = Array.isArray(items) ? items : [];
+        this.allAttendanceRecords = Array.isArray(items) ? items : [];
+        this.attendanceRecords = [...this.allAttendanceRecords];
         this.analyzeSessionStatus(this.attendanceRecords);
         this.isLoading = false;
       },
@@ -76,6 +84,28 @@ export class AttendanceComponent implements OnInit {
         console.error('Error fetching my attendance:', err);
         this.isLoading = false;
       },
+    });
+  }
+
+  filterRecords() {
+    this.attendanceRecords = this.allAttendanceRecords.filter(rec => {
+      let matchesSearch = true;
+      if (this.searchQuery) {
+        const query = this.searchQuery.toLowerCase();
+        const empName = (rec.employeeName || '').toLowerCase();
+        const empId = String(rec.employeeId || '');
+        const dateStr = String(rec.date || '').toLowerCase();
+        matchesSearch = empName.includes(query) || empId.includes(query) || dateStr.includes(query);
+      }
+      
+      let matchesStatus = true;
+      if (this.selectedStatus) {
+        const isCompleted = rec.clockOut && rec.clockOut !== '00:00:00';
+        const currentStatus = isCompleted ? 'Completed' : 'Working';
+        matchesStatus = currentStatus === this.selectedStatus;
+      }
+      
+      return matchesSearch && matchesStatus;
     });
   }
 
