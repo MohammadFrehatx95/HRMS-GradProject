@@ -24,11 +24,16 @@ export class EmployeesComponent implements OnInit {
   isAdmin: boolean = false;
   selectedEmployeeProfile: any = null;
 
-  private detailsModal: any;
+  detailsModal: any;
 
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
     this.loadEmployees();
+  }
+
+  getEmpInitials(emp: any): string {
+    const name = emp?.fullName || `${emp?.firstName || ''} ${emp?.lastName || ''}`.trim() || 'E';
+    return name.split(' ').map((w: string) => w[0] || '').join('').toUpperCase().slice(0, 2);
   }
 
   loadEmployees() {
@@ -72,20 +77,27 @@ export class EmployeesComponent implements OnInit {
     });
   }
 
-  viewFullDetails(id: number) {
-    this.employeeService.getEmployeeFullProfile(id).subscribe({
-      next: (profile) => {
-        this.selectedEmployeeProfile = profile;
+  viewFullDetails(emp: any) {
+    // نبدأ بعرض البيانات الموجودة في القائمة مباشرة
+    this.selectedEmployeeProfile = { ...emp, isLoadingDetails: true };
 
-        const modalElement = document.getElementById('employeeDetailsModal');
-        if (modalElement) {
-          this.detailsModal = new bootstrap.Modal(modalElement);
-          this.detailsModal.show();
-        }
+    const modalElement = document.getElementById('employeeDetailsModal');
+    if (modalElement) {
+      this.detailsModal = new bootstrap.Modal(modalElement);
+      this.detailsModal.show();
+    }
+
+    // نجلب البيانات الكاملة (EmployeeProfileDto: positionTitle, departmentName, phone, hireDate)
+    this.employeeService.getEmployeeFullProfile(emp.id).subscribe({
+      next: (profile) => {
+        this.selectedEmployeeProfile = {
+          ...emp,
+          ...profile,
+          isLoadingDetails: false,
+        };
       },
-      error: (err) => {
-        console.error('Error fetching full profile:', err);
-        Swal.fire('Error!', 'Could not load employee details.', 'error');
+      error: () => {
+        this.selectedEmployeeProfile = { ...emp, isLoadingDetails: false };
       },
     });
   }

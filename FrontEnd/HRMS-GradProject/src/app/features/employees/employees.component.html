@@ -2,7 +2,6 @@
     <h2 class="fw-bold text-secondary">
         <i class="bi bi-people-fill me-2"></i>Employee Management
     </h2>
-
     @if (isAdmin) {
     <a routerLink="/employee-form" class="btn btn-primary shadow-sm">
         <i class="bi bi-plus-lg me-1"></i> Add New Employee
@@ -24,19 +23,18 @@
                     <th>ID</th>
                     <th>Full Name</th>
                     <th>Email</th>
-                    <th>Dept ID</th>
+                    <th>Department</th>
                     <th>Status</th>
-                    <th>Actions</th>
+                    @if (isAdmin) { <th>Actions</th> }
                 </tr>
             </thead>
             <tbody>
                 @for (emp of employeesList; track emp.id) {
                 <tr>
                     <td>#{{ emp.id }}</td>
-                    <td class="fw-bold">{{ emp.firstName }} {{ emp.lastName
-                        }}</td>
+                    <td class="fw-bold">{{ emp.firstName }} {{ emp.lastName }}</td>
                     <td>{{ emp.email }}</td>
-                    <td>{{ emp.departmentId }}</td>
+                    <td>{{ emp.departmentName || emp.departmentId || '—' }}</td>
                     <td>
                         <span class="badge rounded-pill"
                             [class.bg-success]="emp.isActive"
@@ -44,12 +42,11 @@
                             {{ emp.isActive ? 'Active' : 'Inactive' }}
                         </span>
                     </td>
+                    @if (isAdmin) {
                     <td>
-                        @if (isAdmin) {
                         <button class="btn btn-outline-info btn-sm me-2"
-                            (click)="viewFullDetails(emp.id)">
-                            <i class="bi bi-file-earmark-person me-1"></i>
-                            Details
+                            (click)="viewFullDetails(emp)">
+                            <i class="bi bi-file-earmark-person me-1"></i>Details
                         </button>
                         <button class="btn btn-outline-primary btn-sm me-2"
                             (click)="editEmployee(emp.id)">
@@ -59,13 +56,12 @@
                             (click)="onDelete(emp.id)">
                             <i class="bi bi-trash3"></i> Delete
                         </button>
-                        }
                     </td>
+                    }
                 </tr>
                 } @empty {
                 <tr>
-                    <td colspan="6" class="text-center py-4 text-muted">No
-                        employees found.</td>
+                    <td colspan="6" class="text-center py-4 text-muted">No employees found.</td>
                 </tr>
                 }
             </tbody>
@@ -74,54 +70,204 @@
 </div>
 }
 
+<!-- ═══ EMPLOYEE DETAILS MODAL ═══ -->
 <div class="modal fade" id="employeeDetailsModal" tabindex="-1"
     aria-labelledby="employeeDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content border-0 shadow">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
 
-            <div class="modal-header border-bottom border-info border-4">
-                <h5 class="modal-title text-info fw-bold"
-                    id="employeeDetailsModalLabel">
-                    <i class="bi bi-person-badge me-2"></i>Full Profile
-                </h5>
-                <button type="button" class="btn-close shadow-none"
-                    data-bs-dismiss="modal" aria-label="Close"></button>
+            <!-- Header with avatar -->
+            <div class="modal-header border-0 p-0">
+                <div class="emp-modal-header w-100 p-4 d-flex align-items-center gap-3">
+                    <div class="emp-modal-avatar">
+                        {{ getEmpInitials(selectedEmployeeProfile) }}
+                    </div>
+                    <div>
+                        <h4 class="fw-bold text-white mb-0">
+                            {{ selectedEmployeeProfile?.fullName || (selectedEmployeeProfile?.firstName + ' ' + selectedEmployeeProfile?.lastName) }}
+                        </h4>
+                        <span class="badge bg-white bg-opacity-20 text-white mt-1 px-2 py-1 rounded-pill">
+                            {{ selectedEmployeeProfile?.positionTitle || 'Employee' }}
+                        </span>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white ms-auto shadow-none"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
             </div>
 
             <div class="modal-body p-4">
-                @if (selectedEmployeeProfile) {
-                <h4 class="mb-4">{{ selectedEmployeeProfile.fullName }}</h4>
+                @if (selectedEmployeeProfile?.isLoadingDetails) {
+                  <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2 text-muted">Loading full details...</p>
+                  </div>
+                }
+                @if (selectedEmployeeProfile && !selectedEmployeeProfile?.isLoadingDetails) {
 
-                <div class="row g-4">
-                    <div class="col-md-5">
-                        <div class="card bg-light border-0 shadow-sm h-100">
-                            <div class="card-body text-center">
-                                <h6
-                                    class="text-secondary fw-bold text-uppercase mb-3">Status Summary</h6>
-                                <i
-                                    class="bi bi-person-check-fill display-4 text-success mb-2 d-block"></i>
-                                <p class="mb-0 fs-5">Account Status:
-                                    <span class="text-success fw-bold fs-4">Active</span>
-                                </p>
-                            </div>
+                <!-- ─── Contact Info ─── -->
+                <h6 class="detail-section-title">
+                    <i class="bi bi-person-lines-fill text-primary me-2"></i>Personal Information
+                </h6>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="bi bi-envelope me-1"></i>Email</span>
+                            <span class="detail-value">{{ selectedEmployeeProfile?.email || '—' }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="bi bi-telephone me-1"></i>Phone</span>
+                            <span class="detail-value">
+                                {{ selectedEmployeeProfile?.phone || selectedEmployeeProfile?.phoneNumber || 'N/A' }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="bi bi-hash me-1"></i>Employee ID</span>
+                            <span class="detail-value fw-bold text-primary">#{{ selectedEmployeeProfile?.id }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="bi bi-calendar-check me-1"></i>Hire Date</span>
+                            <span class="detail-value">{{ selectedEmployeeProfile?.hireDate | date:'mediumDate' }}</span>
                         </div>
                     </div>
                 </div>
 
-
-                } @else {
-                <div class="text-center py-4">
-                    <div class="spinner-border text-info" role="status"></div>
-                    <p class="mt-2">Loading details...</p>
+                <!-- ─── Employment Info ─── -->
+                <h6 class="detail-section-title">
+                    <i class="bi bi-briefcase-fill text-success me-2"></i>Employment Details
+                </h6>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="bi bi-building me-1"></i>Department</span>
+                            <span class="detail-value">{{ selectedEmployeeProfile?.departmentName || '—' }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="bi bi-person-badge me-1"></i>Position</span>
+                            <span class="detail-value">{{ selectedEmployeeProfile?.positionTitle || '—' }}</span>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- ─── Status ─── -->
+                <h6 class="detail-section-title">
+                    <i class="bi bi-activity text-warning me-2"></i>Account Status
+                </h6>
+                <div class="d-flex gap-3 flex-wrap">
+                    <span class="status-chip"
+                        [class.chip-active]="selectedEmployeeProfile?.isActive !== false"
+                        [class.chip-inactive]="selectedEmployeeProfile?.isActive === false">
+                        <i class="bi me-1"
+                           [class.bi-check-circle-fill]="selectedEmployeeProfile?.isActive !== false"
+                           [class.bi-x-circle-fill]="selectedEmployeeProfile?.isActive === false"></i>
+                        {{ selectedEmployeeProfile?.isActive !== false ? 'Active' : 'Inactive' }}
+                    </span>
+                </div>
+
                 }
             </div>
 
-            <div class="modal-footer bg-light">
-                <button type="button" class="btn btn-secondary"
-                    data-bs-dismiss="modal">Close</button>
+            <div class="modal-footer border-0 bg-light">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
+                    data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg me-1"></i> Close
+                </button>
+                @if (isAdmin) {
+                <button type="button" class="btn btn-primary rounded-pill px-4"
+                    (click)="editEmployee(selectedEmployeeProfile?.id); detailsModal?.hide()">
+                    <i class="bi bi-pencil-square me-1"></i> Edit Employee
+                </button>
+                }
             </div>
-
         </div>
     </div>
 </div>
+
+<style>
+/* ── Modal Header ── */
+.emp-modal-header {
+  background: linear-gradient(135deg, #4361ee, #3a0ca3);
+}
+
+.emp-modal-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  border: 2px solid rgba(255,255,255,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+/* ── Section Titles ── */
+.detail-section-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #6c757d;
+  border-bottom: 1px solid #f0f2f5;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* ── Detail Items ── */
+.detail-item {
+  background: #f8fafc;
+  border: 1px solid #e8ecf0;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.detail-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #8592a3;
+  font-weight: 600;
+}
+
+.detail-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1a202c;
+}
+
+/* ── Status Chips ── */
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 1rem;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.chip-active {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+}
+
+.chip-inactive {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+</style>

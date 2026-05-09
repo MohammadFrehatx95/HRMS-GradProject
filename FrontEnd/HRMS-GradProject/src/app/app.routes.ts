@@ -13,9 +13,11 @@ import { PositionsComponent } from './features/positions/positions.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 
 export const routes: Routes = [
-  // ✅ صفحات اللوجين والتسجيل محمية بـ noAuthGuard (المستخدم المسجل يُحوَّل للـ dashboard)
+  // ✅ Login فقط محمي بـ noAuthGuard (المستخدم المسجل يُحوَّل للـ dashboard)
   { path: 'login', component: LoginComponent, canActivate: [noAuthGuard] },
-  { path: 'register', component: RegisterComponent, canActivate: [noAuthGuard] },
+
+  // ✅ Register User هو صفحة admin داخلية (مش تسجيل عام)
+  { path: 'register', component: RegisterComponent, canActivate: [authGuard, adminGuard] },
 
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 
