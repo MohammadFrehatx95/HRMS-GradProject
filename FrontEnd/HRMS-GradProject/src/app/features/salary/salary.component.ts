@@ -19,6 +19,7 @@ export class SalaryComponent implements OnInit {
   private employeeService = inject(EmployeeService);
   private authService = inject(AuthService);
 
+  allSalariesList: any[] = [];
   salariesList: any[] = [];
   isLoading: boolean = true;
   isAdmin: boolean = false;       // أدمن (يضيف ويعدل)
@@ -31,6 +32,11 @@ export class SalaryComponent implements OnInit {
   
   employeesList: any[] = [];
   employeeSearchText: string = '';
+
+  salarySearchQuery: string = '';
+  selectedYear: string = '';
+  selectedMonth: string = '';
+  uniqueYears: number[] = [];
 
   salaryData = {
     employeeId: null as number | null,
@@ -63,11 +69,30 @@ export class SalaryComponent implements OnInit {
     });
   }
 
-  onEmployeeSelect(event: any) {
-    const val = event.target.value || '';
-    const idMatch = val.match(/^(\d+)/);
-    if (idMatch) {
-      this.salaryData.employeeId = parseInt(idMatch[1], 10);
+  onEmployeeSearchChange(val: string) {
+    if (!val) {
+      this.salaryData.employeeId = null;
+      return;
+    }
+
+    if (/^\d+$/.test(val)) {
+      const id = parseInt(val, 10);
+      const emp = this.employeesList.find(e => e.id === id);
+      if (emp) {
+        setTimeout(() => {
+          this.employeeSearchText = `${emp.firstName} ${emp.lastName}`;
+          this.salaryData.employeeId = emp.id;
+        });
+        return;
+      }
+    }
+
+    const empByName = this.employeesList.find(e => 
+      `${e.firstName} ${e.lastName}`.toLowerCase() === val.trim().toLowerCase()
+    );
+    
+    if (empByName) {
+      this.salaryData.employeeId = empByName.id;
     } else {
       this.salaryData.employeeId = null;
     }
@@ -82,13 +107,43 @@ export class SalaryComponent implements OnInit {
     request.subscribe({
       next: (res: any) => {
         const extractedData = Array.isArray(res) ? res : res?.data || [];
-        this.salariesList = Array.isArray(extractedData) ? extractedData : [];
+        this.allSalariesList = Array.isArray(extractedData) ? extractedData : [];
+        this.salariesList = [...this.allSalariesList];
+        
+        const years = this.allSalariesList.map(s => s.year).filter(y => y != null);
+        this.uniqueYears = Array.from(new Set(years)).sort().reverse() as number[];
+        
         this.isLoading = false;
       },
       error: (err) => {
         console.error('Error fetching salaries:', err);
         this.isLoading = false;
       },
+    });
+  }
+
+  filterSalaries() {
+    this.salariesList = this.allSalariesList.filter(s => {
+      let matchesSearch = true;
+      if (this.salarySearchQuery) {
+        const query = this.salarySearchQuery.toLowerCase();
+        const empName = (s.employeeName || '').toLowerCase();
+        const empId = String(s.employeeId || '');
+        const baseAmt = String(s.baseAmount || '');
+        matchesSearch = empName.includes(query) || empId.includes(query) || baseAmt.includes(query);
+      }
+      
+      let matchesYear = true;
+      if (this.selectedYear) {
+        matchesYear = String(s.year) === this.selectedYear;
+      }
+      
+      let matchesMonth = true;
+      if (this.selectedMonth) {
+        matchesMonth = String(s.month) === this.selectedMonth;
+      }
+      
+      return matchesSearch && matchesYear && matchesMonth;
     });
   }
 
@@ -108,7 +163,7 @@ export class SalaryComponent implements OnInit {
           : '',
       };
       const emp = this.employeesList.find(e => e.id === salary.employeeId);
-      this.employeeSearchText = emp ? `${emp.id} - ${emp.firstName} ${emp.lastName}` : (salary.employeeId ? String(salary.employeeId) : '');
+      this.employeeSearchText = emp ? `${emp.firstName} ${emp.lastName}` : (salary.employeeId ? String(salary.employeeId) : '');
     } else {
       this.isEditMode = false;
       this.currentSalaryId = null;

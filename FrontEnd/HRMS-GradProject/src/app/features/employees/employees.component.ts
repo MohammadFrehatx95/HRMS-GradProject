@@ -19,11 +19,17 @@ export class EmployeesComponent implements OnInit {
   private employeeService = inject(EmployeeService);
   private authService = inject(AuthService);
 
+  allEmployeesList: any[] = [];
   employeesList: any[] = [];
   isLoading: boolean = true;
   isAdmin: boolean = false;
   isAdminOrHR: boolean = false;
   selectedEmployeeProfile: any = null;
+
+  searchQuery: string = '';
+  selectedDepartment: string = '';
+  selectedStatus: string = '';
+  uniqueDepartments: string[] = [];
 
   detailsModal: any;
 
@@ -50,13 +56,44 @@ export class EmployeesComponent implements OnInit {
     this.isLoading = true;
     this.employeeService.getEmployees().subscribe({
       next: (data) => {
-        this.employeesList = data;
+        this.allEmployeesList = data;
+        this.employeesList = [...this.allEmployeesList];
+        
+        const depts = data.map((e: any) => e.departmentName || e.departmentId).filter(Boolean);
+        this.uniqueDepartments = Array.from(new Set(depts)) as string[];
+        
         this.isLoading = false;
       },
       error: (err) => {
         console.error('Error fetching employees:', err);
         this.isLoading = false;
       },
+    });
+  }
+
+  filterEmployees() {
+    this.employeesList = this.allEmployeesList.filter(emp => {
+      let matchesSearch = true;
+      if (this.searchQuery) {
+        const query = this.searchQuery.toLowerCase();
+        const fullName = `${emp.firstName || ''} ${emp.lastName || ''}`.toLowerCase();
+        const idStr = String(emp.id);
+        const deptStr = String(emp.departmentName || emp.departmentId || '').toLowerCase();
+        
+        matchesSearch = fullName.includes(query) || idStr.includes(query) || deptStr.includes(query);
+      }
+      
+      let matchesDept = true;
+      if (this.selectedDepartment) {
+        matchesDept = (emp.departmentName || String(emp.departmentId)) === this.selectedDepartment;
+      }
+      
+      let matchesStatus = true;
+      if (this.selectedStatus) {
+        matchesStatus = (this.selectedStatus === 'Active') ? emp.isActive : !emp.isActive;
+      }
+      
+      return matchesSearch && matchesDept && matchesStatus;
     });
   }
 

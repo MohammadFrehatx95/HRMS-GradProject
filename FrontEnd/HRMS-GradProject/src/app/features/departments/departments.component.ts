@@ -5,8 +5,10 @@ import {
   FormGroup,
   FormControl,
   Validators,
+  FormsModule
 } from '@angular/forms';
 import { DepartmentService } from '../../core/services/department.service';
+import { EmployeeService } from '../../core/services/employee.service';
 import Swal from 'sweetalert2';
 
 declare var bootstrap: any;
@@ -14,11 +16,12 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-departments',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './departments.component.html',
 })
 export class DepartmentsComponent implements OnInit {
   private departmentService = inject(DepartmentService);
+  private employeeService = inject(EmployeeService);
 
   departmentsList: any[] = [];
   isLoading: boolean = true;
@@ -29,13 +32,60 @@ export class DepartmentsComponent implements OnInit {
   selectedDepartment: any = null;
   private detailsModal: any;
   private addModalInstance: any;
+  
+  allEmployees: any[] = [];
+  departmentStats: any = {}; // id -> { totalEmployees: 0, positions: { posName: count } }
+  
+  deptEmployees: any[] = [];
+  filteredDeptEmployees: any[] = [];
+  searchEmpQuery: string = '';
+  selectedPositionFilter: string = '';
+  uniquePositions: string[] = [];
 
   addForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(2)]),
   });
 
   ngOnInit() {
+    this.loadEmployees();
     this.loadDepartments();
+  }
+
+  loadEmployees() {
+    this.employeeService.getEmployees().subscribe({
+      next: (res: any) => {
+        const extracted = Array.isArray(res) ? res : (res?.data?.items || res?.data || []);
+        this.allEmployees = extracted;
+        this.calculateStats();
+      }
+    });
+  }
+
+  calculateStats() {
+    this.departmentStats = {};
+    for (const emp of this.allEmployees) {
+      const deptId = emp.departmentId;
+      if (!deptId) continue;
+      
+      if (!this.departmentStats[deptId]) {
+        this.departmentStats[deptId] = { totalEmployees: 0, positions: {} };
+      }
+      
+      this.departmentStats[deptId].totalEmployees++;
+      const posName = emp.positionName || 'Unknown';
+      if (!this.departmentStats[deptId].positions[posName]) {
+        this.departmentStats[deptId].positions[posName] = 0;
+      }
+      this.departmentStats[deptId].positions[posName]++;
+    }
+  }
+
+  getDeptStat(deptId: number, type: 'employees' | 'positions'): number {
+    const stat = this.departmentStats[deptId];
+    if (!stat) return 0;
+    if (type === 'employees') return stat.totalEmployees;
+    if (type === 'positions') return Object.keys(stat.positions).length;
+    return 0;
   }
 
   loadDepartments() {
@@ -61,6 +111,19 @@ export class DepartmentsComponent implements OnInit {
 
   viewDetails(dept: any) {
     this.selectedDepartment = dept;
+    const stats = this.departmentStats[dept.id] || { totalEmployees: 0, positions: {} };
+    this.selectedDepartment.stats = stats;
+    this.selectedDepartment.positionsList = Object.keys(stats.positions).map(k => ({
+      name: k, count: stats.positions[k]
+    })).sort((a, b) => b.count - a.count);
+
+    // Setup employees table for this department
+    this.deptEmployees = this.allEmployees.filter(e => e.departmentId === dept.id);
+    this.filteredDeptEmployees = [...this.deptEmployees];
+    this.uniquePositions = [...new Set(this.deptEmployees.map(e => e.positionName).filter(Boolean))];
+    this.searchEmpQuery = '';
+    this.selectedPositionFilter = '';
+
     setTimeout(() => {
       const modalElement = document.getElementById('deptDetailsModal');
       if (modalElement) {
@@ -68,6 +131,25 @@ export class DepartmentsComponent implements OnInit {
         this.detailsModal.show();
       }
     }, 0);
+  }
+
+  filterDeptEmployees() {
+    this.filteredDeptEmployees = this.deptEmployees.filter(emp => {
+      let matchesSearch = true;
+      if (this.searchEmpQuery) {
+        const query = this.searchEmpQuery.toLowerCase();
+        const fullName = `${emp.firstName || ''} ${emp.lastName || ''}`.toLowerCase();
+        const idStr = String(emp.id);
+        matchesSearch = fullName.includes(query) || idStr.includes(query);
+      }
+
+      let matchesPos = true;
+      if (this.selectedPositionFilter) {
+        matchesPos = emp.positionName === this.selectedPositionFilter;
+      }
+
+      return matchesSearch && matchesPos;
+    });
   }
 
   openAddModal() {

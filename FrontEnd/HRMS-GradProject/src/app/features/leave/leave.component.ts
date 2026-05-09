@@ -17,7 +17,13 @@ export class LeaveComponent implements OnInit {
   private leaveService = inject(LeaveService);
   private authService = inject(AuthService);
 
+  allLeavesList: any[] = [];
   leavesList: any[] = [];
+  
+  leaveSearchQuery: string = '';
+  selectedLeaveStatus: string = '';
+  selectedLeaveType: string = '';
+  
   isLoading: boolean = true;
   isProcessing: boolean = false;
 
@@ -63,9 +69,8 @@ export class LeaveComponent implements OnInit {
           extracted = res.data;
         }
 
-        this.leavesList = extracted;
-
-        this.leavesList = extracted;
+        this.allLeavesList = extracted;
+        this.leavesList = [...this.allLeavesList];
 
         if (this.isAdminOrHR && this.leavesList.length > 0) {
           this.leavesList.sort((a, b) => {
@@ -89,6 +94,41 @@ export class LeaveComponent implements OnInit {
     });
   }
 
+  filterLeaves() {
+    this.leavesList = this.allLeavesList.filter(l => {
+      let matchesSearch = true;
+      if (this.leaveSearchQuery) {
+        const query = this.leaveSearchQuery.toLowerCase();
+        const empName = (l.employeeName || '').toLowerCase();
+        const empId = String(l.employeeId || '');
+        const reason = (l.reason || '').toLowerCase();
+        matchesSearch = empName.includes(query) || empId.includes(query) || reason.includes(query);
+      }
+      
+      let matchesStatus = true;
+      if (this.selectedLeaveStatus) {
+        matchesStatus = this.getStatusText(l.status) === this.selectedLeaveStatus;
+      }
+      
+      let matchesType = true;
+      if (this.selectedLeaveType) {
+        matchesType = String(l.leaveType) === this.selectedLeaveType;
+      }
+      
+      return matchesSearch && matchesStatus && matchesType;
+    });
+
+    if (this.isAdminOrHR && this.leavesList.length > 0) {
+      this.leavesList.sort((a, b) => {
+        const statusA = this.getStatusText(a.status);
+        const statusB = this.getStatusText(b.status);
+        if (statusA === 'Pending' && statusB !== 'Pending') return -1;
+        if (statusA !== 'Pending' && statusB === 'Pending') return 1;
+        return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+      });
+    }
+  }
+
   getStatusText(statusCode: any): string {
     if (statusCode === 0 || statusCode === '0') return 'Pending';
     if (statusCode === 1 || statusCode === '1') return 'Approved';
@@ -101,7 +141,7 @@ export class LeaveComponent implements OnInit {
       return typeCode.charAt(0).toUpperCase() + typeCode.slice(1);
     }
     const type = this.leaveTypes.find((t) => t.id == Number(typeCode));
-    return type ? type.name : 'Emergency';
+    return type ? type.name : (typeCode != null ? String(typeCode) : 'Unknown');
   }
 
   openModal() {
