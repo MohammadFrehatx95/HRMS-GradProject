@@ -67,7 +67,7 @@ export class LeaveComponent implements OnInit {
 
         this.leavesList = extracted;
 
-        if (this.isAdmin && this.leavesList.length > 0) {
+        if (this.isAdminOrHR && this.leavesList.length > 0) {
           this.leavesList.sort((a, b) => {
             const statusA = this.getStatusText(a.status);
             const statusB = this.getStatusText(b.status);
