@@ -58,7 +58,7 @@ export class AuthService {
     return this.hasRole('hr');
   }
 
-  /** Admin أو HR — لهم نفس الصلاحيات على Leave, Attendance, Salary (GET) */
+  // أدمن أو hr عندهم نفس الصلاحيات لبعض الاشياء
   isAdminOrHR(): boolean {
     return this.hasRole('admin') || this.hasRole('hr');
   }
@@ -93,21 +93,21 @@ export class AuthService {
     localStorage.removeItem('user_name');
   }
 
-  // ✅ GET /api/auth/users — جلب كل المستخدمين المرتبطين بموظفين
+  // نجيب كل اليوزرات اللي عندهم ملف موظف
   getUsers(pageNumber = 1, pageSize = 100): Observable<any> {
     return this.http
       .get<any>(`${this.apiUrl}/users?pageNumber=${pageNumber}&pageSize=${pageSize}`)
       .pipe(map((response) => response?.data ?? response));
   }
 
-  // ✅ GET /api/auth/unassigned-employees — جلب users بدون ملف موظف مرتبط
+  // اليوزرات اللي لسا ما انربطوا بموظف
   getUnassignedEmployeeUsers(pageNumber = 1, pageSize = 100): Observable<any> {
     return this.http
       .get<any>(`${this.apiUrl}/unassigned-employees?pageNumber=${pageNumber}&pageSize=${pageSize}`)
       .pipe(map((response) => response?.data ?? response));
   }
 
-  // ✅ GET /api/auth/get-user-id-by-email/{email} — جلب userId بالإيميل
+  // نجيب ايدي اليوزر من ايميله
   getUserIdByEmail(email: string): Observable<any> {
     return this.http
       .get<any>(`${this.apiUrl}/get-user-id-by-email/${encodeURIComponent(email)}`)

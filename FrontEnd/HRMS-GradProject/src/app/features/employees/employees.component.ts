@@ -22,12 +22,14 @@ export class EmployeesComponent implements OnInit {
   employeesList: any[] = [];
   isLoading: boolean = true;
   isAdmin: boolean = false;
+  isAdminOrHR: boolean = false;
   selectedEmployeeProfile: any = null;
 
   detailsModal: any;
 
   ngOnInit() {
-    this.isAdmin = this.authService.isAdmin();
+    this.isAdmin     = this.authService.isAdmin();
+    this.isAdminOrHR = this.authService.isAdminOrHR();
     this.loadEmployees();
   }
 

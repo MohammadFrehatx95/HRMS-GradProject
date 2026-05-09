@@ -10,6 +10,7 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { authGuard, noAuthGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
 import { hrGuard } from './core/guards/hr.guard';
+import { AllAttendanceComponent } from './features/all-attendance/all-attendance.component';
 import { PositionsComponent } from './features/positions/positions.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 
@@ -47,14 +48,19 @@ export const routes: Routes = [
     component: DepartmentsComponent,
     canActivate: [authGuard, adminGuard],
   },
-  // ✅ Leave — الكل يراها، لكن Approve/Reject فقط Admin أو HR (الـ component يتحكم)
+  // الكل بشوف الاجازات، بس القبول والرفض للأدمن والـ hr
   { path: 'leave', component: LeaveComponent, canActivate: [authGuard] },
   {
     path: 'attendance',
     component: AttendanceComponent,
     canActivate: [authGuard],
   },
-  // ✅ Salary — الكل يرى راتبه، لكن الإضافة/التعديل للـ Admin فقط (الـ component يتحكم)
+  {
+    path: 'all-attendance',
+    component: AllAttendanceComponent,
+    canActivate: [authGuard, hrGuard],
+  },
+  // الكل بشوف راتبه، بس الاضافة والتعديل للأدمن
   { path: 'salary', component: SalaryComponent, canActivate: [authGuard] },
   {
     path: 'employee-form',

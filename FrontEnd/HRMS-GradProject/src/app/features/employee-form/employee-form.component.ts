@@ -34,7 +34,7 @@ export class EmployeeFormComponent implements OnInit {
   positions: any[] = [];
   unassignedUsers: any[] = [];
 
-  // بيانات الـ user المرتبط (يستخدم في Edit mode لعرض المعلومات)
+  // معلومات اليوزر لو بنعدل
   linkedUserInfo: { username: string; email: string; role: string } | null = null;
 
   employeeForm = new FormGroup({
@@ -59,24 +59,24 @@ export class EmployeeFormComponent implements OnInit {
       this.isEditMode = true;
       this.currentEmployeeId = state.employeeId;
       this.loadEmployeeDetails(this.currentEmployeeId!);
-      // userId لا يُعدَّل في Edit mode
+      // ما بنقدر نعدل الـ userId في التعديل
       this.employeeForm.get('userId')?.disable();
       this.employeeForm.get('email')?.disable();
     } else {
       // ─── ADD MODE ───
-      // إذا جاء userId / email من navigation state (طريقة قديمة)
+      // لو فيه داتا جاية من الراوت
       if (state && (state.userId || state.email)) {
         this.employeeForm.patchValue({
           userId: state.userId,
           email: state.email,
         });
       }
-      // تعطيل الإيميل لأنه يتعبى أوتوماتيك من الـ dropdown
+      // بنعطل الإيميل عشان بيتعبى لحاله
       this.employeeForm.get('email')?.disable();
 
       this.loadUnassignedUsers();
 
-      // عند تغيير userId (اختيار user من الـ dropdown)، نعبي الإيميل أوتوماتيك
+      // لما نختار يوزر بنعبي ايميله
       this.employeeForm.get('userId')?.valueChanges.subscribe((selectedId) => {
         const user = this.unassignedUsers.find(
           (u) => String(u.id) === String(selectedId),
@@ -97,10 +97,10 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  // ─── جلب بيانات الموظف (Edit mode) ───
+  // جلب بيانات الموظف
   loadEmployeeDetails(id: number) {
     this.isLoading = true;
-    // نستخدم getEmployeeById لأنه يرجع EmployeeDto (فيه departmentId, phoneNumber, firstName...)
+    // بنجيب كامل التفاصيل
     this.employeeService.getEmployeeById(id).subscribe({
       next: (profile: any) => {
         this.isLoading = false;
@@ -110,9 +110,7 @@ export class EmployeeFormComponent implements OnInit {
           this.employeeForm.get('positionId')?.enable();
         }
 
-        // EmployeeProfileDto يحتوي: id, fullName, email, phone, departmentName, positionTitle, hireDate
-        // EmployeeDto يحتوي: firstName, lastName, email, phoneNumber, hireDate, departmentId, positionId, userId
-        // نجلب ما يتوفر:
+        // بنعبي الفورم بالداتا اللي رجعت
         this.employeeForm.patchValue({
           firstName: profile.firstName || profile.fullName?.split(' ')[0] || '',
           lastName:  profile.lastName  || profile.fullName?.split(' ').slice(1).join(' ') || '',
@@ -126,7 +124,7 @@ export class EmployeeFormComponent implements OnInit {
           userId: profile.userId || '',
         });
 
-        // بناء linked user info للعرض في الـ template
+        // بنجهز معلومات اليوزر المربوط
         this.linkedUserInfo = {
           username: profile.fullName || `${profile.firstName || ''} ${profile.lastName || ''}`.trim() || 'Employee',
           email:    profile.email || '',
@@ -141,7 +139,7 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  // ─── جلب الأقسام ───
+  // الاقسام
   loadDepartments() {
     this.departmentService.getDepartments().subscribe({
       next: (res: any) => {
@@ -150,7 +148,7 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  // ─── جلب الـ users غير المرتبطين بموظف ───
+  // اليوزرات الفاضية
   loadUnassignedUsers() {
     this.authService.getUnassignedEmployeeUsers().subscribe({
       next: (res: any) => {
@@ -162,7 +160,7 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  // ─── جلب المناصب حسب القسم ───
+  // المسميات الوظيفية
   loadPositions(deptId: number) {
     this.positionService.getPositionsByDepartment(deptId).subscribe({
       next: (res: any) => {
@@ -172,12 +170,12 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  // ─── الإيميل المعروض في الـ template ───
+  // الايميل بالشاشة
   get displayEmail(): string {
     return this.employeeForm.getRawValue().email || '';
   }
 
-  // ─── إرسال الفورم ───
+  // الحفظ
   onSubmit() {
     if (this.employeeForm.invalid) {
       this.employeeForm.markAllAsTouched();

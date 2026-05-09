@@ -34,7 +34,7 @@ export class EmployeeService {
     );
   }
 
-  // جلب بيانات الموظف الكاملة (EmployeeDto) تشمل departmentId, positionId
+  // تفاصيل الموظف
   getEmployeeById(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
       map((response) => {

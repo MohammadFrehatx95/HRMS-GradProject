@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // 👈 استيراد ضروري للنماذج
+import { FormsModule } from '@angular/forms'; // لازم للـ forms
 import { SalaryService } from '../../core/services/salary.service';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
@@ -19,8 +19,8 @@ export class SalaryComponent implements OnInit {
 
   salariesList: any[] = [];
   isLoading: boolean = true;
-  isAdmin: boolean = false;       // Admin فقط: إضافة/تعديل/حذف
-  isAdminOrHR: boolean = false;   // Admin أو HR: يرى كل الرواتب
+  isAdmin: boolean = false;       // أدمن (يضيف ويعدل)
+  isAdminOrHR: boolean = false;   // أدمن أو hr (يشوف بس)
   isProcessing: boolean = false;
 
   salaryModal: any;

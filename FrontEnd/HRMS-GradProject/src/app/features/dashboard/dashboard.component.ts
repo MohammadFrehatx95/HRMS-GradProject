@@ -36,7 +36,7 @@ export class DashboardComponent implements OnInit {
   employeeHoursWorked: number = 0;
   employeeNextPayday: string = '';
 
-  /** يوم صرف الرواتب — غيّره هنا إذا تغيرت سياسة الشركة */
+  // يوم الراتب
   readonly PAYDAY = 25;
 
 

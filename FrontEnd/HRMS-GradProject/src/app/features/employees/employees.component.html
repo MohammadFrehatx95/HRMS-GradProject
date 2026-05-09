@@ -2,11 +2,19 @@
     <h2 class="fw-bold text-secondary">
         <i class="bi bi-people-fill me-2"></i>Employee Management
     </h2>
-    @if (isAdmin) {
-    <a routerLink="/employee-form" class="btn btn-primary shadow-sm">
-        <i class="bi bi-plus-lg me-1"></i> Add New Employee
-    </a>
-    }
+    <div class="d-flex gap-2">
+        @if (isAdminOrHR) {
+        <a routerLink="/all-attendance"
+           class="btn btn-outline-primary shadow-sm">
+            <i class="bi bi-clock-history me-1"></i> View All Attendance
+        </a>
+        }
+        @if (isAdmin) {
+        <a routerLink="/employee-form" class="btn btn-primary shadow-sm">
+            <i class="bi bi-plus-lg me-1"></i> Add New Employee
+        </a>
+        }
+    </div>
 </div>
 
 @if (isLoading) {
@@ -25,7 +33,7 @@
                     <th>Email</th>
                     <th>Department</th>
                     <th>Status</th>
-                    @if (isAdmin) { <th>Actions</th> }
+                    @if (isAdminOrHR) { <th>Actions</th> }
                 </tr>
             </thead>
             <tbody>
@@ -43,21 +51,22 @@
                             {{ emp.isActive ? 'Active' : 'Inactive' }}
                         </span>
                     </td>
-                    @if (isAdmin) {
+                    @if (isAdminOrHR) {
                     <td>
-                        <button class="btn btn-outline-info btn-sm me-2"
+                        <button class="btn btn-outline-info btn-sm me-2" title="Details"
                             (click)="viewFullDetails(emp)">
-                            <i
-                                class="bi bi-file-earmark-person me-1"></i>Details
+                            <i class="bi bi-file-earmark-person"></i>
                         </button>
-                        <button class="btn btn-outline-primary btn-sm me-2"
+                        @if (isAdmin) {
+                        <button class="btn btn-outline-primary btn-sm me-2" title="Edit"
                             (click)="editEmployee(emp.id)">
-                            <i class="bi bi-pencil-square"></i> Edit
+                            <i class="bi bi-pencil-square"></i>
                         </button>
-                        <button class="btn btn-sm btn-outline-danger"
+                        <button class="btn btn-sm btn-outline-danger" title="Delete"
                             (click)="onDelete(emp.id)">
-                            <i class="bi bi-trash3"></i> Delete
+                            <i class="bi bi-trash3"></i>
                         </button>
+                        }
                     </td>
                     }
                 </tr>
