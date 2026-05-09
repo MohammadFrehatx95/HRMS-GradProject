@@ -25,16 +25,16 @@ export class MyProfileComponent implements OnInit {
     this.userName = localStorage.getItem('user_name') || 'User';
     this.userRole = localStorage.getItem('user_role') || 'Employee';
 
-    // الـ Admin ليس لديه employee profile — نعرض بطاقته مباشرة
     if (this.isAdmin) {
-      // جلب الإيميل من JWT token
       const token = localStorage.getItem('jwt_token');
       if (token) {
         try {
           const payload = JSON.parse(atob(token.split('.')[1]));
           this.userEmail =
             payload['email'] ||
-            payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'] ||
+            payload[
+              'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
+            ] ||
             '';
         } catch {}
       }
@@ -53,7 +53,6 @@ export class MyProfileComponent implements OnInit {
       .slice(0, 2);
   }
 
-  /** أحرف أولى من اسم الموظف في الـ template */
   getProfileInitials(): string {
     const name = this.profile?.fullName || this.userName || 'U';
     return name

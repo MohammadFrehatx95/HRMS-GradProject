@@ -13,14 +13,15 @@ import { PositionsComponent } from './features/positions/positions.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 
 export const routes: Routes = [
-  // ✅ Login فقط محمي بـ noAuthGuard (المستخدم المسجل يُحوَّل للـ dashboard)
   { path: 'login', component: LoginComponent, canActivate: [noAuthGuard] },
 
-  // ✅ Register User هو صفحة admin داخلية (مش تسجيل عام)
-  { path: 'register', component: RegisterComponent, canActivate: [authGuard, adminGuard] },
+  {
+    path: 'register',
+    component: RegisterComponent,
+    canActivate: [authGuard, adminGuard],
+  },
 
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-
 
   {
     path: 'dashboard',
@@ -64,7 +65,10 @@ export const routes: Routes = [
   },
   {
     path: 'my-profile',
-    loadComponent: () => import('./features/my-profile/my-profile.component').then(m => m.MyProfileComponent),
+    loadComponent: () =>
+      import('./features/my-profile/my-profile.component').then(
+        (m) => m.MyProfileComponent,
+      ),
     canActivate: [authGuard],
   },
 

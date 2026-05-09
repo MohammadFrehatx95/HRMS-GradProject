@@ -32,8 +32,16 @@ export class EmployeesComponent implements OnInit {
   }
 
   getEmpInitials(emp: any): string {
-    const name = emp?.fullName || `${emp?.firstName || ''} ${emp?.lastName || ''}`.trim() || 'E';
-    return name.split(' ').map((w: string) => w[0] || '').join('').toUpperCase().slice(0, 2);
+    const name =
+      emp?.fullName ||
+      `${emp?.firstName || ''} ${emp?.lastName || ''}`.trim() ||
+      'E';
+    return name
+      .split(' ')
+      .map((w: string) => w[0] || '')
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
   }
 
   loadEmployees() {
@@ -78,7 +86,6 @@ export class EmployeesComponent implements OnInit {
   }
 
   viewFullDetails(emp: any) {
-    // نبدأ بعرض البيانات الموجودة في القائمة مباشرة
     this.selectedEmployeeProfile = { ...emp, isLoadingDetails: true };
 
     const modalElement = document.getElementById('employeeDetailsModal');
@@ -87,7 +94,6 @@ export class EmployeesComponent implements OnInit {
       this.detailsModal.show();
     }
 
-    // نجلب البيانات الكاملة (EmployeeProfileDto: positionTitle, departmentName, phone, hireDate)
     this.employeeService.getEmployeeFullProfile(emp.id).subscribe({
       next: (profile) => {
         this.selectedEmployeeProfile = {
@@ -103,6 +109,8 @@ export class EmployeesComponent implements OnInit {
   }
 
   editEmployee(id: number) {
-    this.router.navigate(['/employee-form'], { state: { editMode: true, employeeId: id } });
+    this.router.navigate(['/employee-form'], {
+      state: { editMode: true, employeeId: id },
+    });
   }
 }
