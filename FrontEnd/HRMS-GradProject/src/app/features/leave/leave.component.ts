@@ -1,7 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { LeaveService } from '../../core/services/leave.service';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
@@ -12,7 +11,7 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-leave',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, TranslatePipe],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './leave.component.html',
 })
 export class LeaveComponent implements OnInit {
