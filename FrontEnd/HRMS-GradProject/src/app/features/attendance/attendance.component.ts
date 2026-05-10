@@ -240,4 +240,49 @@ export class AttendanceComponent implements OnInit {
       },
     });
   }
+  // ─── Export to Excel (CSV) ───
+  exportToExcel() {
+    if (this.attendanceRecords.length === 0) {
+      Swal.fire('No Data', 'There are no attendance records to export.', 'info');
+      return;
+    }
+
+    const headers = ['Date', 'Employee Name', 'Employee ID', 'Clock In', 'Clock Out', 'Status', 'Total Hours'];
+    
+    const csvData = this.attendanceRecords.map(rec => {
+      const isCompleted = rec.clockOut && rec.clockOut !== '00:00:00';
+      const status = isCompleted ? 'Completed' : 'Working';
+      const empName = rec.employeeName || ('Emp #' + rec.employeeId);
+      
+      return [
+        rec.date ? new Date(rec.date).toLocaleDateString() : '',
+        empName,
+        rec.employeeId || 'N/A',
+        rec.clockIn || '--:--',
+        (rec.clockOut && rec.clockOut !== '00:00:00') ? rec.clockOut : '--:--',
+        status,
+        rec.totalHours || '0'
+      ].map(value => `"${String(value).replace(/"/g, '""')}"`).join(','); 
+    });
+    
+    // UTF-8 BOM for Excel + sep=, delimiter hint
+    const csvContent = '\uFEFFsep=,\r\n' + [headers.join(','), ...csvData].join('\r\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `Attendance_Kawadir_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    Swal.fire({
+      icon: 'success',
+      title: 'Exported Successfully',
+      text: 'Attendance data has been exported to Excel (CSV).',
+      timer: 2000,
+      showConfirmButton: false
+    });
+  }
 }
