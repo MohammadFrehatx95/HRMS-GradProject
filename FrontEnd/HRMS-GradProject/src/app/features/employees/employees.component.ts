@@ -70,18 +70,13 @@ export class EmployeesComponent implements OnInit {
   }
 
   showToast(message: string, icon: 'success' | 'error' | 'warning' | 'info') {
-    const Toast = Swal.mixin({
-      toast: true,
-      position: 'bottom-end',
+    Swal.fire({
+      icon: icon,
+      title: message,
       showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-      }
+      timer: 2000,
+      timerProgressBar: true
     });
-    Toast.fire({ icon, title: message });
   }
 
   ngOnInit() {

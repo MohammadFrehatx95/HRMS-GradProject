@@ -145,7 +145,6 @@ export class PositionsComponent implements OnInit {
     this.isProcessing = false;
     this.positionModal.hide();
     Swal.fire({
-      position: 'top-end',
       icon: 'success',
       title: message,
       showConfirmButton: false,

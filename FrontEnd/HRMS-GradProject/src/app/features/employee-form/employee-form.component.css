@@ -432,3 +432,130 @@
   .form-actions { flex-direction: column-reverse; }
   .btn-cancel, .btn-submit { width: 100%; justify-content: center; }
 }
+
+/* ═══════════════════════════════════════════
+   DARK MODE OVERRIDES
+═══════════════════════════════════════════ */
+:host-context(body.dark-mode) .form-page-wrapper {
+  background: var(--color-bg);
+}
+
+:host-context(body.dark-mode) .form-header-card,
+:host-context(body.dark-mode) .form-section,
+:host-context(body.dark-mode) .form-body-card {
+  background: var(--color-surface) !important;
+  border-color: var(--color-border) !important;
+  color: var(--color-text) !important;
+}
+
+:host-context(body.dark-mode) .form-title {
+  color: var(--color-text) !important;
+}
+
+:host-context(body.dark-mode) .form-subtitle {
+  color: var(--color-text-muted) !important;
+}
+
+:host-context(body.dark-mode) .section-header {
+  border-bottom-color: var(--color-border) !important;
+}
+
+:host-context(body.dark-mode) .section-header span:not(.required-badge) {
+  color: var(--color-text) !important;
+}
+
+:host-context(body.dark-mode) .section-header i {
+  background: rgba(67, 97, 238, 0.15) !important;
+  color: #7b8ef7 !important;
+}
+
+:host-context(body.dark-mode) .field-label {
+  color: var(--color-text-sub) !important;
+}
+
+:host-context(body.dark-mode) .field-label i {
+  color: var(--color-text-muted) !important;
+}
+
+:host-context(body.dark-mode) .field-input {
+  background: var(--color-input-bg) !important;
+  border-color: #444 !important;
+  color: var(--color-text) !important;
+}
+
+:host-context(body.dark-mode) .field-input::placeholder {
+  color: var(--color-text-muted) !important;
+}
+
+:host-context(body.dark-mode) .field-input:focus {
+  background: var(--color-surface-3) !important;
+  border-color: #667eea !important;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2) !important;
+}
+
+:host-context(body.dark-mode) .readonly-field {
+  background: var(--color-surface-2) !important;
+  color: var(--color-text-muted) !important;
+  border-color: var(--color-border) !important;
+}
+
+:host-context(body.dark-mode) .readonly-icon {
+  color: var(--color-text-muted) !important;
+}
+
+:host-context(body.dark-mode) .field-hint {
+  color: var(--color-text-muted) !important;
+}
+
+:host-context(body.dark-mode) .lac-title {
+  color: #93c5fd !important;
+}
+
+:host-context(body.dark-mode) .lac-detail {
+  color: #bfdbfe !important;
+}
+
+:host-context(body.dark-mode) .linked-account-card {
+  background: linear-gradient(135deg, #1e2a45, #1a2d55) !important;
+  border-color: #2d4a7a !important;
+}
+
+:host-context(body.dark-mode) .linked-label {
+  color: #6ee7b7 !important;
+}
+
+:host-context(body.dark-mode) .linked-email {
+  color: #a7f3d0 !important;
+}
+
+:host-context(body.dark-mode) .linked-user-banner {
+  background: linear-gradient(135deg, #1a3a2a, #1e3d2e) !important;
+  border-color: #2d6a4f !important;
+}
+
+:host-context(body.dark-mode) .btn-back {
+  background: var(--color-surface-2) !important;
+  color: var(--color-text-sub) !important;
+  border-color: var(--color-border) !important;
+}
+
+:host-context(body.dark-mode) .btn-back:hover {
+  background: var(--color-surface-3) !important;
+  color: var(--color-text) !important;
+}
+
+:host-context(body.dark-mode) .btn-cancel {
+  background: var(--color-surface-2) !important;
+  color: var(--color-text-sub) !important;
+  border-color: var(--color-border) !important;
+}
+
+:host-context(body.dark-mode) .btn-cancel:hover {
+  background: var(--color-surface-3) !important;
+  color: var(--color-text) !important;
+}
+
+:host-context(body.dark-mode) .skeleton-line,
+:host-context(body.dark-mode) .skeleton-input {
+  background: var(--color-surface-3) !important;
+}

@@ -145,13 +145,12 @@
                         </td>
 
                         <td data-label="Status" class="py-3 px-4 text-center">
-                            <span class="badge px-3 py-2 rounded-pill fw-bold"
-                                [ngStyle]="{
-          'background-color': getStatusText(leave.status) === 'Approved' ? '#e6f4ea' : 
-                              getStatusText(leave.status) === 'Pending' ? '#fff3cd' : '#fce8e6',
-          'color': getStatusText(leave.status) === 'Approved' ? '#137333' : 
-                   getStatusText(leave.status) === 'Pending' ? '#856404' : '#c5221f'
-        }">
+                            <span class="status-badge"
+                                [ngClass]="{
+                                  'status-approved': getStatusText(leave.status) === 'Approved',
+                                  'status-pending': getStatusText(leave.status) === 'Pending',
+                                  'status-rejected': getStatusText(leave.status) === 'Rejected'
+                                }">
                                 <i class="bi me-1"
                                     [ngClass]="{
          'bi-check-circle-fill': getStatusText(leave.status) === 'Approved',
@@ -191,6 +190,24 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+        <!-- Pagination Footer -->
+        <div *ngIf="leavesList.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <small class="text-muted fw-medium">
+                {{ 'Showing' | t }} {{ (currentPage - 1) * itemsPerPage + 1 }} {{ 'to' | t }} {{ getMathMin(currentPage * itemsPerPage, leavesList.length) }} {{ 'of' | t }} {{ leavesList.length }} {{ 'entries' | t }}
+            </small>
+            <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">{{ 'Previous' | t }}</a>
+                </li>
+                <li class="page-item active">
+                    <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">{{ 'Next' | t }}</a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

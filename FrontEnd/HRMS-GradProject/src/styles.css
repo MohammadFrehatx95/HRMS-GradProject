@@ -299,6 +299,52 @@ body.dark-mode .border        { border-color: var(--color-border) !important; }
 body.dark-mode .badge         { opacity: 0.95; }
 
 /* ══════════════════════════════════════════
+   STATUS BADGES
+   ══════════════════════════════════════════ */
+.status-badge {
+  padding: 0.4rem 1rem;
+  border-radius: 50rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid transparent;
+}
+
+/* Light Mode */
+.status-approved { background-color: #d1fae5; color: #065f46; border-color: #6ee7b7; }
+.status-pending  { background-color: #fef3c7; color: #92400e; border-color: #fcd34d; }
+.status-rejected { background-color: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+.status-active   { background-color: #d1fae5; color: #065f46; border-color: #6ee7b7; }
+.status-inactive { background-color: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+
+/* Dark Mode */
+body.dark-mode .status-approved { background-color: rgba(16, 185, 129, 0.15) !important; color: #34d399 !important; border-color: rgba(16, 185, 129, 0.3) !important; }
+body.dark-mode .status-pending  { background-color: rgba(245, 158, 11, 0.15) !important; color: #fbbf24 !important; border-color: rgba(245, 158, 11, 0.3) !important; }
+body.dark-mode .status-rejected { background-color: rgba(239, 68, 68, 0.15) !important; color: #f87171 !important; border-color: rgba(239, 68, 68, 0.3) !important; }
+body.dark-mode .status-active   { background-color: rgba(16, 185, 129, 0.15) !important; color: #34d399 !important; border-color: rgba(16, 185, 129, 0.3) !important; }
+body.dark-mode .status-inactive { background-color: rgba(239, 68, 68, 0.15) !important; color: #f87171 !important; border-color: rgba(239, 68, 68, 0.3) !important; }
+
+/* ══════════════════════════════════════════
+   PAGINATION
+   ══════════════════════════════════════════ */
+body.dark-mode .page-link {
+  background-color: var(--color-surface-2) !important;
+  border-color: var(--color-border) !important;
+  color: var(--color-text) !important;
+}
+body.dark-mode .page-item.active .page-link {
+  background-color: #0d6efd !important;
+  border-color: #0d6efd !important;
+  color: #ffffff !important;
+}
+body.dark-mode .page-item.disabled .page-link {
+  background-color: var(--color-surface) !important;
+  color: var(--color-text-muted) !important;
+  border-color: var(--color-border) !important;
+}
+
+/* ══════════════════════════════════════════
    RTL FIXES
    ══════════════════════════════════════════ */
 html[dir="rtl"] .bi-box-arrow-right,
@@ -327,3 +373,29 @@ body.dark-mode .swal2-popup {
 }
 body.dark-mode .swal2-title          { color: var(--color-text)       !important; }
 body.dark-mode .swal2-html-container { color: var(--color-text-label) !important; }
+
+/* ══════════════════════════════════════════
+   EMPLOYEE DETAILS MODAL
+   ══════════════════════════════════════════ */
+body.dark-mode .detail-item {
+  background: #2d3139 !important;
+  border-color: #3a3f4b !important;
+}
+
+body.dark-mode .detail-value {
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode .detail-label {
+  color: #94a3b8 !important;
+}
+
+body.dark-mode .detail-section-title {
+  color: #94a3b8 !important;
+  border-bottom-color: #333 !important;
+}
+
+body.dark-mode .modal-footer.bg-light {
+  background-color: var(--color-surface-2) !important;
+}
+

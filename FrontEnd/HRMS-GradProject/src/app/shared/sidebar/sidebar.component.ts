@@ -39,6 +39,9 @@ export class SidebarComponent implements OnInit {
     if (newWidth >= 200 && newWidth <= 400) {
       this.sidebarRef.nativeElement.style.width = `${newWidth}px`;
       
+      // Update global CSS variable so the entire layout resizes smoothly
+      document.documentElement.style.setProperty('--sidebar-width', `${newWidth}px`);
+      
       // Calculate scale relative to default width (260px)
       const scale = newWidth / 260;
       this.sidebarRef.nativeElement.style.setProperty('--sidebar-scale', scale.toString());
