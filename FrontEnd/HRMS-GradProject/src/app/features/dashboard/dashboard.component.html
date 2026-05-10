@@ -6,7 +6,7 @@
             <div class="stat-card pink h-100">
                 <div class="card-body">
                     <h3>{{ totalEmployees }}</h3>
-                    <p>Total Employees</p>
+                    <p>{{ 'Total Employees' | t }}</p>
                     <i class="bi bi-people-fill icon"></i>
                 </div>
             </div>
@@ -15,7 +15,7 @@
             <div class="stat-card orange h-100">
                 <div class="card-body">
                     <h3>{{ pendingLeaves }}</h3>
-                    <p>Pending Leaves</p>
+                    <p>{{ 'Pending Leaves' | t }}</p>
                     <i class="bi bi-calendar-x icon"></i>
                 </div>
             </div>
@@ -24,7 +24,7 @@
             <div class="stat-card blue h-100">
                 <div class="card-body">
                     <h3>{{ departmentsCount }}</h3>
-                    <p>Departments</p>
+                    <p>{{ 'Departments' | t }}</p>
                     <i class="bi bi-building icon"></i>
                 </div>
             </div>
@@ -32,9 +32,9 @@
         <div class="col-md-3">
             <div class="stat-card purple h-100">
                 <div class="card-body">
-                    <h3>${{ totalSalaries | number }}</h3>
-                    <p>Monthly Payroll</p>
-                    <i class="bi bi-currency-dollar icon"></i>
+                    <h3>{{ totalSalaries | number }} JD</h3>
+                    <p>{{ 'Salaries' | t }}</p>
+                    <i class="bi bi-cash-stack icon"></i>
                 </div>
             </div>
         </div>
@@ -44,17 +44,17 @@
         <div class="col-lg-8">
             <div class="chart-card card shadow-sm border-0 rounded-4">
                 <div class="card-header bg-white p-3 border-0">
-                    <h5 class="fw-bold m-0 text-dark">Attendance Overview</h5>
+                    <h5 class="fw-bold m-0 text-dark">{{ 'Attendance' | t }}</h5>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="small text-muted text-uppercase bg-light">
                                 <tr>
-                                    <th class="ps-4">Employee</th>
-                                    <th>Date</th>
-                                    <th>Clock In</th>
-                                    <th>Clock Out</th>
+                                    <th class="ps-4">{{ 'Employee' | t }}</th>
+                                    <th>{{ 'Date' | t }}</th>
+                                    <th>{{ 'Clock In' | t }}</th>
+                                    <th>{{ 'Clock Out' | t }}</th>
                                 </tr>
                             </thead>
                             <tbody class="small">
@@ -69,7 +69,7 @@
                                 <tr>
                                     <td colspan="4" class="text-center py-4 text-muted">
                                         <i class="bi bi-calendar-x fs-3 d-block mb-2 text-light-gray"></i>
-                                        No recent attendance records found.
+                                        {{ 'No Data' | t }}
                                     </td>
                                 </tr>
                                 }
@@ -83,15 +83,14 @@
         <div class="col-lg-4">
             <div class="chart-card card shadow-sm border-0 rounded-4">
                 <div class="card-header bg-white p-3 border-0">
-                    <h5 class="fw-bold m-0 text-dark">Leave Type
-                        Distribution</h5>
+                    <h5 class="fw-bold m-0 text-dark">{{ 'Leave Distribution' | t }}</h5>
                 </div>
                 <div class="card-body">
                     <div style="height: 250px; position: relative;" class="d-flex justify-content-center align-items-center">
                         <canvas id="leaveTypeChart"></canvas>
                         
                         <div *ngIf="annualLeavePercent === 0 && sickLeavePercent === 0 && emergencyLeavePercent === 0" class="position-absolute text-center text-muted small">
-                            No leave data yet.
+                            {{ 'No Data' | t }}
                         </div>
                     </div>
                 </div>
@@ -104,27 +103,25 @@
             <div
                 class="info-card sales-stats bg-white p-4 rounded-4 shadow-sm h-100">
                 <h6
-                    class="fw-bold text-uppercase small text-muted mb-3">Attendance
-                    Stats</h6>
+                    class="fw-bold text-uppercase small text-muted mb-3">{{ 'Attendance Rate' | t }}</h6>
                 <div class="d-flex align-items-end gap-2 mb-2">
                     <h2 class="m-0 fw-bold">{{ attendanceRate }}%</h2>
                     <span class="text-success small"><i
-                            class="bi bi-person-check-fill"></i> avg attendance</span>
+                            class="bi bi-person-check-fill"></i> {{ 'Attendance' | t }}</span>
                 </div>
-                <p class="text-muted small">Based on overall recorded attendances</p>
             </div>
         </div>
         <div class="col-md-8">
             <div class="activity-card bg-white rounded-4 shadow-sm p-4 h-100">
-                <h6 class="fw-bold mb-4 text-dark">Recent Leave Requests</h6>
+                <h6 class="fw-bold mb-4 text-dark">{{ 'Recent Leave Requests' | t }}</h6>
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
                         <thead class="small text-muted text-uppercase">
                             <tr>
-                                <th>Employee</th>
-                                <th>Type</th>
-                                <th>Duration</th>
-                                <th>Status</th>
+                                <th>{{ 'Employee' | t }}</th>
+                                <th>{{ 'Leave Type' | t }}</th>
+                                <th>{{ 'Duration' | t }}</th>
+                                <th>{{ 'Status' | t }}</th>
                             </tr>
                         </thead>
                         <tbody class="small">
@@ -134,20 +131,20 @@
                                 <td>
                                     <span class="d-flex align-items-center">
                                         <i class="bi me-2" 
-                                           [class.bi-airplane-fill]="leave.leaveType == 0 || leave.leaveType == '0'"
-                                           [class.bi-heart-pulse-fill]="leave.leaveType == 1 || leave.leaveType == '1'"
-                                           [class.bi-exclamation-triangle-fill]="leave.leaveType == 2 || leave.leaveType == '2'"></i>
-                                        {{ leave.leaveType == 0 || leave.leaveType == '0' ? 'Annual' : leave.leaveType == 1 || leave.leaveType == '1' ? 'Sick' : 'Emergency' }}
+                                           [class.bi-airplane-fill]="leave.leaveType === 'Annual'"
+                                           [class.bi-heart-pulse-fill]="leave.leaveType === 'Sick'"
+                                           [class.bi-exclamation-triangle-fill]="leave.leaveType === 'Emergency'"></i>
+                                        {{ leave.leaveType | t }}
                                     </span>
                                 </td>
-                                <td>{{ leave.totalDays }} Days</td>
+                                <td>{{ leave.totalDays }} {{ 'Days Remaining' | t }}</td>
                                 <td>
                                     <span class="badge"
-                                        [class.bg-warning]="leave.status === 'Pending' || leave.status == 0"
-                                        [class.text-dark]="leave.status === 'Pending' || leave.status == 0"
-                                        [class.bg-success]="leave.status === 'Approved' || leave.status == 1"
-                                        [class.bg-danger]="leave.status === 'Rejected' || leave.status == 2">
-                                        {{ leave.status == 0 ? 'Pending' : leave.status == 1 ? 'Approved' : leave.status == 2 ? 'Rejected' : leave.status }}
+                                        [class.bg-warning]="leave.status === 'Pending'"
+                                        [class.text-dark]="leave.status === 'Pending'"
+                                        [class.bg-success]="leave.status === 'Approved'"
+                                        [class.bg-danger]="leave.status === 'Rejected'">
+                                        {{ leave.status | t }}
                                     </span>
                                 </td>
                             </tr>
@@ -155,7 +152,7 @@
                             <tr>
                                 <td colspan="4" class="text-center text-muted py-4">
                                     <i class="bi bi-calendar-x fs-3 d-block mb-2 text-light-gray"></i>
-                                    No recent leave requests.
+                                    {{ 'No Data' | t }}
                                 </td>
                             </tr>
                             }
@@ -171,7 +168,7 @@
         <div class="col-md-3">
             <div class="stat-card blue h-100">
                 <div class="card-body">
-                    <h3>{{ employeeAnnualLeaveBalance }}</h3> <p>Annual Leave Balance</p>
+                    <h3>{{ employeeAnnualLeaveBalance }}</h3> <p>{{ 'Annual Leave Balance' | t }}</p>
                     <i class="bi bi-airplane-fill icon"></i>
                 </div>
             </div>
@@ -180,7 +177,7 @@
         <div class="col-md-3">
             <div class="stat-card orange h-100">
                 <div class="card-body">
-                    <h3>{{ employeePendingLeaves }}</h3> <p>My Pending Leaves</p>
+                    <h3>{{ employeePendingLeaves }}</h3> <p>{{ 'My Pending Leaves' | t }}</p>
                     <i class="bi bi-hourglass-split icon"></i>
                 </div>
             </div>
@@ -190,7 +187,7 @@
             <div class="stat-card pink h-100">
                 <div class="card-body">
                     <h3>{{ employeeHoursWorked }} <span class="fs-6 fw-normal">hrs</span></h3>
-                    <p>Hours Worked (This Month)</p>
+                    <p>{{ 'Total Hours' | t }}</p>
                     <i class="bi bi-clock-history icon"></i>
                 </div>
             </div>
@@ -200,7 +197,7 @@
             <div class="stat-card purple h-100">
                 <div class="card-body">
                     <h3>{{ employeeNextPayday }}</h3>
-                    <p>Next Payday</p>
+                    <p>{{ 'Next Payday' | t }}</p>
                     <i class="bi bi-calendar-check icon"></i>
                 </div>
             </div>
@@ -211,16 +208,16 @@
         <div class="col-12">
             <div class="chart-card card shadow-sm border-0 rounded-4 h-100">
                 <div class="card-header bg-white p-3 border-0">
-                    <h5 class="fw-bold m-0 text-dark">My Weekly Attendance</h5>
+                    <h5 class="fw-bold m-0 text-dark">{{ 'My Attendance' | t }}</h5>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="small text-muted text-uppercase bg-light">
                                 <tr>
-                                    <th class="ps-4">Date</th>
-                                    <th>Clock In</th>
-                                    <th>Clock Out</th>
+                                    <th class="ps-4">{{ 'Date' | t }}</th>
+                                    <th>{{ 'Clock In' | t }}</th>
+                                    <th>{{ 'Clock Out' | t }}</th>
                                 </tr>
                             </thead>
                             <tbody class="small">
@@ -234,7 +231,7 @@
                                 <tr>
                                     <td colspan="3" class="text-center py-4 text-muted">
                                         <i class="bi bi-calendar-x fs-3 d-block mb-2 text-light-gray"></i>
-                                        No recent attendance records found.
+                                        {{ 'No Data' | t }}
                                     </td>
                                 </tr>
                                 }

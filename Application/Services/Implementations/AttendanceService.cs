@@ -163,6 +163,11 @@ namespace Application.Services.Implementations
             }
 
             attendance.ClockOut = dto.ClockOut;
+
+            // ✅ Bug #1 Fix: احسب TotalHours واحفظها في الـ Entity حتى تُخزَّن في DB
+            var duration = dto.ClockOut.ToTimeSpan() - attendance.ClockIn.ToTimeSpan();
+            attendance.TotalHours = duration.TotalHours > 0 ? (int)Math.Round(duration.TotalHours) : 0;
+
             uow.Repository<Attendance>().Update(attendance);
             await uow.SaveChangesAsync();
 

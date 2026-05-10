@@ -2,12 +2,12 @@
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div>
             <h3 class="fw-bold text-dark mb-1">
-                <i class="bi bi-diagram-3-fill me-2 text-primary"></i>Departments Management
+                <i class="bi bi-diagram-3-fill me-2 text-primary"></i>{{ 'Departments' | t }}
             </h3>
-            <p class="text-muted small mb-0">Manage organizational departments and view their employee structures</p>
+            <p class="text-muted small mb-0">{{ 'Manage organizational departments and view their employee structures' | t }}</p>
         </div>
         <button class="btn btn-primary shadow-sm text-nowrap px-4 py-2 rounded-3 fw-semibold" (click)="openAddModal()">
-            <i class="bi bi-plus-lg me-1"></i> Add Department
+            <i class="bi bi-plus-lg me-1"></i> {{ 'Add Department' | t }}
         </button>
     </div>
 
@@ -31,25 +31,25 @@
                                 <i class="bi bi-three-dots-vertical"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3">
-                                <li><a class="dropdown-item py-2 fw-medium text-dark" href="javascript:void(0)" (click)="openEditModal(dept)"><i class="bi bi-pencil-square text-primary me-2"></i>Edit Department</a></li>
+                                <li><a class="dropdown-item py-2 fw-medium text-dark" href="javascript:void(0)" (click)="openEditModal(dept)"><i class="bi bi-pencil-square text-primary me-2"></i>{{ 'Edit' | t }}</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item py-2 fw-medium text-danger" href="javascript:void(0)" (click)="deleteDepartment(dept.id)"><i class="bi bi-trash3 me-2"></i>Delete</a></li>
+                                <li><a class="dropdown-item py-2 fw-medium text-danger" href="javascript:void(0)" (click)="deleteDepartment(dept.id)"><i class="bi bi-trash3 me-2"></i>{{ 'Delete' | t }}</a></li>
                             </ul>
                         </div>
                     </div>
                     <h5 class="card-title fw-bold text-dark mb-1 text-truncate" [title]="dept.name">{{ dept.name }}</h5>
-                    <p class="text-muted small mb-0 fw-medium">Department ID: #{{ dept.id }}</p>
+                    <p class="text-muted small mb-0 fw-medium">{{ 'ID' | t }}: #{{ dept.id }}</p>
                 </div>
                 <div class="card-body px-4 pb-4 pt-3 mt-1">
                     <div class="d-flex justify-content-between align-items-center bg-light rounded-3 p-3">
                         <div class="text-center flex-fill">
                             <h5 class="fw-bold text-primary mb-0">{{ getDeptStat(dept.id, 'employees') }}</h5>
-                            <small class="text-muted fw-semibold" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Employees</small>
+                            <small class="text-muted fw-semibold" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">{{ 'Employees' | t }}</small>
                         </div>
                         <div style="width: 1px; height: 35px; background-color: #dee2e6;"></div>
                         <div class="text-center flex-fill">
                             <h5 class="fw-bold text-dark mb-0">{{ getDeptStat(dept.id, 'positions') }}</h5>
-                            <small class="text-muted fw-semibold" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Positions</small>
+                            <small class="text-muted fw-semibold" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">{{ 'Positions' | t }}</small>
                         </div>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
             <div class="bg-light rounded-circle d-inline-flex justify-content-center align-items-center mb-4" style="width: 100px; height: 100px;">
                 <i class="bi bi-diagram-2 text-secondary" style="font-size: 40px;"></i>
             </div>
-            <h4 class="fw-bold text-dark mb-2">No Departments Found</h4>
+            <h4 class="fw-bold text-dark mb-2">{{ 'No Data' | t }}</h4>
             <p class="text-muted">There are no departments created in the system yet.</p>
             <button class="btn btn-primary mt-2 px-4 rounded-3" (click)="openAddModal()"><i class="bi bi-plus-lg me-1"></i> Add Your First Department</button>
         </div>
@@ -196,7 +196,7 @@
                 class="modal-header border-bottom border-success border-4 bg-light">
                 <h5 class="modal-title text-success fw-bold">
                     <i class="bi" [class.bi-plus-circle]="!isEditMode" [class.bi-pencil-square]="isEditMode"></i> 
-                    {{ isEditMode ? 'Edit Department' : 'Add New Department' }}
+                    {{ isEditMode ? ('Edit' | t) : ('Add Department' | t) }}
                 </h5>
                 <button type="button" class="btn-close shadow-none"
                     data-bs-dismiss="modal" aria-label="Close"></button>
@@ -206,8 +206,7 @@
                 <div class="modal-body p-4">
                     <div class="mb-3">
                         <label
-                            class="form-label fw-bold text-secondary">Department
-                            Name <span class="text-danger">*</span></label>
+                            class="form-label fw-bold text-secondary">{{ 'Department Name' | t }} <span class="text-danger">*</span></label>
                         <input type="text" class="form-control"
                             formControlName="name"
                             placeholder="e.g., Marketing, Sales..."
@@ -224,14 +223,14 @@
                 <div class="modal-footer bg-light border-top-0">
                     <button type="button" class="btn btn-light px-4 border"
                         data-bs-dismiss="modal"
-                        [disabled]="isSubmitting">Cancel</button>
+                        [disabled]="isSubmitting">{{ 'Cancel' | t }}</button>
                     <button type="submit" class="btn btn-success px-4"
                         [disabled]="addForm.invalid || isSubmitting">
                         @if (isSubmitting) {
                         <span class="spinner-border spinner-border-sm me-2"
                             role="status" aria-hidden="true"></span>Saving...
                         } @else {
-                        <i class="bi bi-save me-1"></i> Save
+                        <i class="bi bi-save me-1"></i> {{ 'Save Changes' | t }}
                         }
                     </button>
                 </div>

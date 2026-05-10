@@ -1,4 +1,4 @@
-﻿using Application.Common;
+using Application.Common;
 using Application.DTOs.Employee;
 using Application.Services.Interfaces;
 using AutoMapper;
@@ -14,7 +14,8 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
     {
         var query = uow.Repository<Employee>()
                        .GetAllQueryable()
-                       .Include(e => e.Department);
+                       .Include(e => e.Department)
+                       .Include(e => e.Position); // ✅ W1/I4 Fix: أضف Position للـ mapping
 
         var total = await query.CountAsync();
         var items = await query
@@ -31,6 +32,7 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
         var employee = await uow.Repository<Employee>()
                                 .GetAllQueryable()
                                 .Include(e => e.Department)
+                                .Include(e => e.Position) // ✅ W1/I4 Fix
                                 .FirstOrDefaultAsync(e => e.Id == id);
 
         return employee is null ? null : mapper.Map<EmployeeDto>(employee);
@@ -50,13 +52,11 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
         var employee = mapper.Map<Employee>(dto);
         employee.IsActive = true;
 
-        
-        
-
         await uow.Repository<Employee>().AddAsync(employee);
         await uow.SaveChangesAsync();
 
-        return mapper.Map<EmployeeDto>(employee);
+        // ✅ I1 Fix: أعد جلب الموظف مع Include حتى يحتوي الـ Response على DepartmentName و PositionTitle
+        return (await GetByIdAsync(employee.Id))!;
     }
 
     public async Task<EmployeeDto?> UpdateAsync(int id, UpdateEmployeeDto dto)

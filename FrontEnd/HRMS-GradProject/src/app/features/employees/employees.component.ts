@@ -13,12 +13,14 @@ import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
+
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-employees',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslatePipe],
   templateUrl: './employees.component.html',
 })
 export class EmployeesComponent implements OnInit {
@@ -302,8 +304,15 @@ export class EmployeesComponent implements OnInit {
     const pageW = doc.internal.pageSize.getWidth();
     const today = new Date();
     const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-    const leaveTypeMap: any = { 0: 'Annual', 1: 'Sick', 2: 'Emergency', Annual: 'Annual', Sick: 'Sick', Emergency: 'Emergency' };
-    const statusMap: any = { 0: 'Pending', 1: 'Approved', 2: 'Rejected', Pending: 'Pending', Approved: 'Approved', Rejected: 'Rejected' };
+    // ✅ W3 Fix: تأكد من صحة كل أنواع الإجازات بما يطابق Backend enum
+    const leaveTypeMap: any = {
+      0: 'Annual', 1: 'Sick', 2: 'Emergency', 3: 'Unpaid',
+      'Annual': 'Annual', 'Sick': 'Sick', 'Emergency': 'Emergency', 'Unpaid': 'Unpaid'
+    };
+    const statusMap: any = {
+      0: 'Pending', 1: 'Approved', 2: 'Rejected',
+      'Pending': 'Pending', 'Approved': 'Approved', 'Rejected': 'Rejected'
+    };
 
     // ── HEADER BANNER ──────────────────────────────
     doc.setFillColor(67, 97, 238);

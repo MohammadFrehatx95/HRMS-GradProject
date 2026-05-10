@@ -45,11 +45,11 @@ export class LeaveFormComponent {
     const formValue = this.leaveForm.value;
 
     const newLeave = {
-      leaveType: formValue.leaveType,
+      // ✅ حوّل لرقم حتى يطابق Backend enum
+      leaveType: Number(formValue.leaveType),
       startDate: new Date(formValue.startDate!).toISOString(),
       endDate: new Date(formValue.endDate!).toISOString(),
       reason: formValue.reason,
-      employeeId: 1,
     };
 
     console.log('Sending Leave Data:', newLeave);

@@ -7,13 +7,14 @@ import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-salary',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './salary.component.html',
 })
 export class SalaryComponent implements OnInit {
@@ -176,6 +177,15 @@ export class SalaryComponent implements OnInit {
       return matchesSearch && matchesYear && matchesMonth;
     });
     
+    if (this.salariesList.length > 0) {
+      this.salariesList.sort((a, b) => {
+        if (b.year !== a.year) {
+          return b.year - a.year;
+        }
+        return b.month - a.month;
+      });
+    }
+
     this.currentPage = 1; // Reset to first page
   }
 
@@ -322,12 +332,12 @@ export class SalaryComponent implements OnInit {
     // Salary Details Table
     autoTable(doc, {
       startY: 75,
-      head: [['Description', 'Amount (USD)']],
+      head: [['Description', 'Amount (JD)']],
       body: [
-        ['Base Salary', `$${salary.baseAmount}`],
-        ['Allowances', `+$${salary.allowances}`],
-        ['Gross Salary', `$${salary.grossAmount}`],
-        ['Deductions', `-$${salary.deductions}`],
+        ['Base Salary', `${salary.baseAmount} JD`],
+        ['Allowances', `+${salary.allowances} JD`],
+        ['Gross Salary', `${salary.grossAmount} JD`],
+        ['Deductions', `-${salary.deductions} JD`],
       ],
       theme: 'grid',
       headStyles: { fillColor: [240, 242, 245], textColor: [0, 0, 0], fontStyle: 'bold' },
@@ -341,7 +351,7 @@ export class SalaryComponent implements OnInit {
     doc.setFontSize(14);
     doc.setTextColor(25, 135, 84); 
     doc.setFont('helvetica', 'bold');
-    doc.text(`Net Pay: $${salary.netAmount}`, 14, finalY + 15);
+    doc.text(`Net Pay: ${salary.netAmount} JD`, 14, finalY + 15);
     
     // Footer
     doc.setFont('helvetica', 'normal');

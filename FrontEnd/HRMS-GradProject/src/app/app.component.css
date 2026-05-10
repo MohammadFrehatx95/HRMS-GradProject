@@ -8,12 +8,20 @@
 }
 
 .app-sidebar {
+  display: block;
+  width: 260px;
+  flex-shrink: 0;
   transition: all 0.3s ease;
   z-index: 1040;
 }
 
 .app-sidebar.hidden {
-  margin-left: -260px; /* Hide sidebar */
+  margin-left: -260px; /* Hide sidebar LTR */
+}
+
+:host-context(html[dir="rtl"]) .app-sidebar.hidden {
+  margin-left: 0;
+  margin-right: -260px; /* Hide sidebar RTL */
 }
 
 .main-panel {
@@ -51,6 +59,16 @@
   
   .app-sidebar.mobile-open {
     left: 0;
+  }
+  
+  :host-context(html[dir="rtl"]) .app-sidebar {
+    left: auto;
+    right: -260px;
+    margin-right: 0 !important;
+  }
+  
+  :host-context(html[dir="rtl"]) .app-sidebar.mobile-open {
+    right: 0;
   }
   
   .sidebar-overlay {
