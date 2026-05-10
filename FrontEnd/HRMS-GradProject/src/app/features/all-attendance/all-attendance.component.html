@@ -71,35 +71,37 @@
                     <tr *ngIf="!isLoading && records.length === 0">
                         <td colspan="6" class="text-center py-5">
                             <div class="d-flex flex-column align-items-center">
-                                <div class="bg-light rounded-circle p-4 mb-3">
-                                    <i class="bi bi-clock fs-1 text-secondary"></i>
+                                <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                    <i class="bi bi-clock-history fs-1 text-secondary"></i>
                                 </div>
-                                <h6 class="fw-bold text-dark mb-1">No Attendance Records</h6>
-                                <p class="text-muted small">There are no clock-in records available yet.</p>
+                                <h5 class="fw-bold text-dark mb-1">No Attendance Records</h5>
+                                <p class="text-muted small">There are no clock-in records available yet matching your criteria.</p>
                             </div>
                         </td>
                     </tr>
 
                     <!-- Rows -->
-                    <tr *ngFor="let rec of records">
-                        <td class="py-3 px-4">
+                    <tr *ngFor="let rec of paginatedRecords">
+                        <td data-label="Employee" class="py-3 px-4">
                             <div class="fw-semibold text-dark">
                                 {{ rec.employeeName || ('Employee #' + rec.employeeId) }}
                             </div>
                         </td>
-                        <td class="py-3 px-3 text-muted">
+                        <td data-label="Date" class="py-3 px-3 text-muted">
                             {{ rec.date | date:'dd MMM yyyy' }}
                         </td>
-                        <td class="py-3 px-3 text-success fw-medium">
+                        <td data-label="Clock In" class="py-3 px-3 text-success fw-medium">
+                            <i class="bi bi-arrow-down-right-circle me-1"></i>
                             {{ rec.clockIn || '—' }}
                         </td>
-                        <td class="py-3 px-3 text-danger fw-medium">
+                        <td data-label="Clock Out" class="py-3 px-3 text-danger fw-medium">
+                            <i class="bi bi-arrow-up-right-circle me-1"></i>
                             {{ (!rec.clockOut || rec.clockOut === '00:00:00') ? '—' : rec.clockOut }}
                         </td>
-                        <td class="py-3 px-3 fw-semibold text-primary">
+                        <td data-label="Total Hours" class="py-3 px-3 fw-semibold text-primary">
                             {{ calcHours(rec) }}
                         </td>
-                        <td class="py-3 px-4">
+                        <td data-label="Status" class="py-3 px-4">
                             <span class="badge rounded-pill px-3 py-2"
                                 [class.bg-success]="rec.clockOut && rec.clockOut !== '00:00:00'"
                                 [class.bg-opacity-10]="true"
@@ -118,6 +120,90 @@
                 </tbody>
             </table>
         </div>
-    </div>
 
+        <!-- Pagination Footer -->
+        <div *ngIf="records.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <small class="text-muted fw-medium">
+                Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, records.length) }} of {{ records.length }} entries
+            </small>
+            <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
+                </li>
+                <li class="page-item active">
+                    <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
+
+<style>
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Mobile Responsive Cards for Table */
+@media screen and (max-width: 768px) {
+  .table-responsive table, 
+  .table-responsive thead, 
+  .table-responsive tbody, 
+  .table-responsive th, 
+  .table-responsive td, 
+  .table-responsive tr {
+    display: block;
+  }
+  
+  .table-responsive thead tr {
+    display: none; /* Hide header row */
+  }
+  
+  .table-responsive tr {
+    border: 1px solid #e8ecf0;
+    border-radius: 0.75rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+  
+  .table-responsive td {
+    border: none;
+    border-bottom: 1px solid #f0f2f5;
+    position: relative;
+    padding-left: 45% !important;
+    text-align: right !important;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    min-height: 50px;
+  }
+  
+  .table-responsive td:last-child {
+    border-bottom: 0;
+  }
+  
+  .table-responsive td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 1rem;
+    width: 40%;
+    text-align: left;
+    font-weight: 700;
+    color: #8592a3;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .actions-cell {
+    justify-content: flex-end !important;
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+}
+</style>

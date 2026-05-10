@@ -87,29 +87,13 @@
                         Distribution</h5>
                 </div>
                 <div class="card-body">
-                    <ul class="distribution-list">
-                        <li class="mb-3">
-                            <small class="text-muted">Annual Leave</small>
-                            <div class="progress" style="height: 8px;">
-                                <div class="progress-bar bg-primary"
-                                    [style.width.%]="annualLeavePercent"></div>
-                            </div>
-                        </li>
-                        <li class="mb-3">
-                            <small class="text-muted">Sick Leave</small>
-                            <div class="progress" style="height: 8px;">
-                                <div class="progress-bar bg-danger"
-                                    [style.width.%]="sickLeavePercent"></div>
-                            </div>
-                        </li>
-                        <li class="mb-3">
-                            <small class="text-muted">Emergency Leave</small>
-                            <div class="progress" style="height: 8px;">
-                                <div class="progress-bar bg-warning"
-                                    [style.width.%]="emergencyLeavePercent"></div>
-                            </div>
-                        </li>
-                    </ul>
+                    <div style="height: 250px; position: relative;" class="d-flex justify-content-center align-items-center">
+                        <canvas id="leaveTypeChart"></canvas>
+                        
+                        <div *ngIf="annualLeavePercent === 0 && sickLeavePercent === 0 && emergencyLeavePercent === 0" class="position-absolute text-center text-muted small">
+                            No leave data yet.
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -147,16 +131,31 @@
                             @for (leave of recentLeaves; track leave.id) {
                             <tr>
                                 <td class="fw-bold">{{ leave.employeeName || 'Emp #' + leave.employeeId }}</td>
-                                <td>{{ leave.leaveType }}</td>
+                                <td>
+                                    <span class="d-flex align-items-center">
+                                        <i class="bi me-2" 
+                                           [class.bi-airplane-fill]="leave.leaveType == 0 || leave.leaveType == '0'"
+                                           [class.bi-heart-pulse-fill]="leave.leaveType == 1 || leave.leaveType == '1'"
+                                           [class.bi-exclamation-triangle-fill]="leave.leaveType == 2 || leave.leaveType == '2'"></i>
+                                        {{ leave.leaveType == 0 || leave.leaveType == '0' ? 'Annual' : leave.leaveType == 1 || leave.leaveType == '1' ? 'Sick' : 'Emergency' }}
+                                    </span>
+                                </td>
                                 <td>{{ leave.totalDays }} Days</td>
                                 <td>
                                     <span class="badge"
-                                        [class.bg-warning]="leave.status === 'Pending'"
-                                        [class.text-dark]="leave.status === 'Pending'"
-                                        [class.bg-success]="leave.status === 'Approved'"
-                                        [class.bg-danger]="leave.status === 'Rejected'">
-                                        {{ leave.status }}
+                                        [class.bg-warning]="leave.status === 'Pending' || leave.status == 0"
+                                        [class.text-dark]="leave.status === 'Pending' || leave.status == 0"
+                                        [class.bg-success]="leave.status === 'Approved' || leave.status == 1"
+                                        [class.bg-danger]="leave.status === 'Rejected' || leave.status == 2">
+                                        {{ leave.status == 0 ? 'Pending' : leave.status == 1 ? 'Approved' : leave.status == 2 ? 'Rejected' : leave.status }}
                                     </span>
+                                </td>
+                            </tr>
+                            } @empty {
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">
+                                    <i class="bi bi-calendar-x fs-3 d-block mb-2 text-light-gray"></i>
+                                    No recent leave requests.
                                 </td>
                             </tr>
                             }

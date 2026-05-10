@@ -28,8 +28,32 @@ export class LeaveComponent implements OnInit {
   isProcessing: boolean = false;
 
   isAdminOrHR: boolean = false;
+  employeeAnnualLeaveBalance: number | string = 14;
 
   leaveModal: any;
+
+  // Pagination
+  currentPage: number = 1;
+  itemsPerPage: number = 7;
+
+  get paginatedLeaves() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.leavesList.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.leavesList.length / this.itemsPerPage) || 1;
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+  getMathMin(a: number, b: number): number {
+    return Math.min(a, b);
+  }
 
   leaveData = {
     leaveType: 0,
@@ -72,19 +96,28 @@ export class LeaveComponent implements OnInit {
         this.allLeavesList = extracted;
         this.leavesList = [...this.allLeavesList];
 
-        if (this.isAdminOrHR && this.leavesList.length > 0) {
-          this.leavesList.sort((a, b) => {
-            const statusA = this.getStatusText(a.status);
-            const statusB = this.getStatusText(b.status);
-            
-            if (statusA === 'Pending' && statusB !== 'Pending') return -1;
-            if (statusA !== 'Pending' && statusB === 'Pending') return 1;
-            
-            return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
-          });
-        }
+          if (this.isAdminOrHR && this.leavesList.length > 0) {
+            this.leavesList.sort((a, b) => {
+              const statusA = this.getStatusText(a.status);
+              const statusB = this.getStatusText(b.status);
+              
+              if (statusA === 'Pending' && statusB !== 'Pending') return -1;
+              if (statusA !== 'Pending' && statusB === 'Pending') return 1;
+              
+              return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+            });
+          } else if (!this.isAdminOrHR) {
+            const approvedAnnualLeavesDays = this.allLeavesList
+              .filter(
+                (l: any) =>
+                  (l.status === 1 || l.status === '1') &&
+                  (l.leaveType === 0 || l.leaveType === '0'),
+              )
+              .reduce((acc: number, l: any) => acc + (l.totalDays || 0), 0);
+            this.employeeAnnualLeaveBalance = 14 - approvedAnnualLeavesDays;
+          }
 
-        this.isLoading = false;
+          this.isLoading = false;
       },
       error: (err) => {
         console.error('Error fetching leaves:', err);
@@ -118,6 +151,7 @@ export class LeaveComponent implements OnInit {
       return matchesSearch && matchesStatus && matchesType;
     });
 
+    this.currentPage = 1;
     if (this.isAdminOrHR && this.leavesList.length > 0) {
       this.leavesList.sort((a, b) => {
         const statusA = this.getStatusText(a.status);
@@ -153,7 +187,21 @@ export class LeaveComponent implements OnInit {
     }
   }
 
+  getToday(): string {
+    return new Date().toISOString().split('T')[0];
+  }
+
   submitLeaveRequest() {
+    if (this.leaveData.startDate < this.getToday()) {
+      Swal.fire('Invalid Date', 'Start Date cannot be in the past.', 'warning');
+      return;
+    }
+    
+    if (this.leaveData.endDate < this.leaveData.startDate) {
+      Swal.fire('Invalid Date', 'End Date cannot be before the Start Date.', 'warning');
+      return;
+    }
+
     this.isProcessing = true;
     const payload = {
       leaveType: Number(this.leaveData.leaveType),

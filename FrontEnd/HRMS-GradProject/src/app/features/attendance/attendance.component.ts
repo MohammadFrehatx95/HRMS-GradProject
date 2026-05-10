@@ -26,6 +26,29 @@ export class AttendanceComponent implements OnInit {
   isAdmin = false;
   isAdminOrHR = false;
 
+  // Pagination
+  currentPage: number = 1;
+  itemsPerPage: number = 7;
+
+  get paginatedRecords() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.attendanceRecords.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.attendanceRecords.length / this.itemsPerPage) || 1;
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+  getMathMin(a: number, b: number): number {
+    return Math.min(a, b);
+  }
+
   // حالة الموظف الحالية
   isCheckedInToday = false; // تحققنا من Clock In اليوم
   isCheckedOutToday = false; // الـ session مكتملة
@@ -107,6 +130,8 @@ export class AttendanceComponent implements OnInit {
       
       return matchesSearch && matchesStatus;
     });
+    
+    this.currentPage = 1;
   }
 
   private analyzeSessionStatus(records: any[]) {

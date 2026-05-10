@@ -21,6 +21,29 @@ export class AllAttendanceComponent implements OnInit {
   
   isLoading = true;
 
+  // Pagination
+  currentPage: number = 1;
+  itemsPerPage: number = 7;
+
+  get paginatedRecords() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.records.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.records.length / this.itemsPerPage) || 1;
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+  getMathMin(a: number, b: number): number {
+    return Math.min(a, b);
+  }
+
   ngOnInit() {
     this.attendanceService.getAllAttendance().subscribe({
       next: (res: any) => {
@@ -53,6 +76,8 @@ export class AllAttendanceComponent implements OnInit {
       
       return matchesSearch && matchesStatus;
     });
+    
+    this.currentPage = 1;
   }
 
   getStatusClass(rec: any): string {

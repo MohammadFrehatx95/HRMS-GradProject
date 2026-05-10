@@ -2,9 +2,16 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { EmployeeService } from '../../core/services/employee.service';
 import { AuthService } from '../../core/services/auth.service';
+import { AttendanceService } from '../../core/services/attendance.service';
+import { LeaveService } from '../../core/services/leave.service';
+import { SalaryService } from '../../core/services/salary.service';
 import Swal from 'sweetalert2';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 declare var bootstrap: any;
 
@@ -18,10 +25,14 @@ export class EmployeesComponent implements OnInit {
   private router = inject(Router);
   private employeeService = inject(EmployeeService);
   private authService = inject(AuthService);
+  private attendanceService = inject(AttendanceService);
+  private leaveService = inject(LeaveService);
+  private salaryService = inject(SalaryService);
 
   allEmployeesList: any[] = [];
   employeesList: any[] = [];
   isLoading: boolean = true;
+  isGeneratingReport: boolean = false;
   isAdmin: boolean = false;
   isAdminOrHR: boolean = false;
   selectedEmployeeProfile: any = null;
@@ -33,10 +44,103 @@ export class EmployeesComponent implements OnInit {
 
   detailsModal: any;
 
+  // Pagination
+  currentPage: number = 1;
+  itemsPerPage: number = 7;
+
+  get paginatedEmployees() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.employeesList.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.employeesList.length / this.itemsPerPage) || 1;
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+  getMathMin(a: number, b: number): number {
+    return Math.min(a, b);
+  }
+
+  showToast(message: string, icon: 'success' | 'error' | 'warning' | 'info') {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'bottom-end',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });
+    Toast.fire({ icon, title: message });
+  }
+
   ngOnInit() {
     this.isAdmin     = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
     this.loadEmployees();
+  }
+
+  getRoleBadgeClass(roleId: number): string {
+    switch (roleId) {
+      case 1:
+        return 'bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25';
+      case 2:
+        return 'bg-warning bg-opacity-10 text-dark border border-warning border-opacity-25';
+      default:
+        return 'bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25';
+    }
+  }
+
+  // --- Export to Excel (CSV) ---
+  exportToExcel() {
+    if (this.employeesList.length === 0) {
+      Swal.fire('No Data', 'There are no employees to export.', 'info');
+      return;
+    }
+
+    const headers = ['ID', 'First Name', 'Last Name', 'Email', 'Phone', 'Address', 'Status', 'Role ID'];
+    
+    const csvData = this.employeesList.map(emp => {
+      return [
+        emp.id,
+        emp.firstName || '',
+        emp.lastName || '',
+        emp.email || '',
+        emp.phoneNumber || 'N/A',
+        emp.address || 'N/A',
+        emp.isActive ? 'Active' : 'Inactive',
+        emp.roleId || 'N/A'
+      ].map(value => `"${String(value).replace(/"/g, '""')}"`).join(','); 
+    });
+    
+    // Add UTF-8 BOM for Excel to read Arabic/Special characters correctly
+    // Add sep=, to force Excel to recognize comma as delimiter regardless of region
+    const csvContent = '\uFEFFsep=,\r\n' + [headers.join(','), ...csvData].join('\r\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `Employees_Kawadir_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    Swal.fire({
+      icon: 'success',
+      title: 'Exported Successfully',
+      text: 'Employees list has been exported to Excel (CSV).',
+      timer: 2000,
+      showConfirmButton: false
+    });
   }
 
   getEmpInitials(emp: any): string {
@@ -95,6 +199,8 @@ export class EmployeesComponent implements OnInit {
       
       return matchesSearch && matchesDept && matchesStatus;
     });
+    
+    this.currentPage = 1; // Reset to first page on filter
   }
 
   onDelete(id: number) {
@@ -113,11 +219,17 @@ export class EmployeesComponent implements OnInit {
             this.employeesList = this.employeesList.filter(
               (emp) => emp.id !== id,
             );
-            Swal.fire('Deleted!', 'Employee has been deleted.', 'success');
+            
+            // Adjust pagination if needed
+            if (this.currentPage > this.totalPages) {
+              this.currentPage = this.totalPages;
+            }
+
+            this.showToast('Employee deleted successfully', 'success');
           },
           error: (err) => {
             console.error('Error deleting employee:', err);
-            Swal.fire('Error!', 'Failed to delete employee.', 'error');
+            this.showToast('Failed to delete employee', 'error');
           },
         });
       }
@@ -151,5 +263,212 @@ export class EmployeesComponent implements OnInit {
     this.router.navigate(['/employee-form'], {
       state: { editMode: true, employeeId: id },
     });
+  }
+
+  downloadEmployeeReport(emp: any) {
+    if (!emp) return;
+
+    this.isGeneratingReport = true;
+    const empName = `${emp.firstName || ''} ${emp.lastName || ''}`.trim() || `Employee #${emp.id}`;
+
+    // Fetch all data in parallel
+    forkJoin({
+      attendance: this.attendanceService.getAllAttendance().pipe(catchError(() => of([]))),
+      leaves: this.leaveService.getAllLeaves().pipe(catchError(() => of([]))),
+      salaries: this.salaryService.getAllSalaries().pipe(catchError(() => of([])))
+    }).subscribe(({ attendance, leaves, salaries }) => {
+      this.isGeneratingReport = false;
+
+      // Filter data for this specific employee
+      const empAttendance = attendance.filter((a: any) => a.employeeId === emp.id)
+        .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .slice(0, 15);
+
+      const empLeaves = leaves.filter((l: any) => l.employeeId === emp.id)
+        .sort((a: any, b: any) => new Date(b.startDate || 0).getTime() - new Date(a.startDate || 0).getTime());
+
+      const empSalaries = salaries.filter((s: any) => s.employeeId === emp.id)
+        .sort((a: any, b: any) => { 
+          if (b.year !== a.year) return b.year - a.year; 
+          return b.month - a.month; 
+        });
+
+      this.buildEmployeePDF(emp, empName, empAttendance, empLeaves, empSalaries);
+    });
+  }
+
+  private buildEmployeePDF(emp: any, empName: string, attendance: any[], leaves: any[], salaries: any[]) {
+    const doc = new jsPDF();
+    const pageW = doc.internal.pageSize.getWidth();
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    const leaveTypeMap: any = { 0: 'Annual', 1: 'Sick', 2: 'Emergency', Annual: 'Annual', Sick: 'Sick', Emergency: 'Emergency' };
+    const statusMap: any = { 0: 'Pending', 1: 'Approved', 2: 'Rejected', Pending: 'Pending', Approved: 'Approved', Rejected: 'Rejected' };
+
+    // ── HEADER BANNER ──────────────────────────────
+    doc.setFillColor(67, 97, 238);
+    doc.rect(0, 0, pageW, 38, 'F');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(18);
+    doc.setTextColor(255, 255, 255);
+    doc.text('Kawadir HRMS', 14, 14);
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Employee Monthly Report', 14, 22);
+    doc.text(`Generated: ${todayStr}`, 14, 29);
+
+    // ── EMPLOYEE INFO CARD ─────────────────────────
+    doc.setFillColor(248, 249, 252);
+    doc.roundedRect(10, 44, pageW - 20, 38, 3, 3, 'F');
+    doc.setDrawColor(225, 228, 240);
+    doc.roundedRect(10, 44, pageW - 20, 38, 3, 3, 'S');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.setTextColor(30, 30, 50);
+    doc.text(empName, 18, 55);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(100, 100, 120);
+    doc.text(`Employee ID: #${emp.id}`, 18, 62);
+    doc.text(`Department: ${emp.departmentName || '—'}`, 18, 68);
+    doc.text(`Position: ${emp.positionTitle || '—'}`, 18, 74);
+
+    const hireDate = emp.hireDate ? emp.hireDate.split('T')[0] : '—';
+    doc.text(`Hire Date: ${hireDate}`, pageW / 2, 62);
+    doc.text(`Email: ${emp.email || '—'}`, pageW / 2, 68);
+    doc.text(`Status: ${emp.isActive !== false ? 'Active' : 'Inactive'}`, pageW / 2, 74);
+
+    let curY = 90;
+
+    // ── SALARY SECTION ────────────────────────────
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(67, 97, 238);
+    doc.text('SALARY HISTORY', 14, curY);
+    doc.setDrawColor(67, 97, 238);
+    doc.setLineWidth(0.5);
+    doc.line(14, curY + 2, pageW - 14, curY + 2);
+
+    if (salaries.length === 0) {
+      doc.setFont('helvetica', 'italic'); doc.setFontSize(9); doc.setTextColor(150, 150, 150);
+      doc.text('No salary records found.', 18, curY + 10);
+      curY += 18;
+    } else {
+      autoTable(doc, {
+        startY: curY + 6,
+        head: [['Month', 'Year', 'Base ($)', 'Allowances ($)', 'Deductions ($)', 'Net Pay ($)']],
+        body: salaries.slice(0, 6).map((s: any) => [
+          s.month, s.year,
+          `$${s.baseAmount ?? '—'}`,
+          `+$${s.allowances ?? 0}`,
+          `-$${s.deductions ?? 0}`,
+          `$${s.netAmount ?? '—'}`
+        ]),
+        theme: 'grid',
+        headStyles: { fillColor: [240, 243, 255], textColor: [50, 50, 80], fontStyle: 'bold', fontSize: 8 },
+        bodyStyles: { fontSize: 8 },
+        alternateRowStyles: { fillColor: [252, 253, 255] },
+        margin: { left: 14, right: 14 }
+      });
+      curY = (doc as any).lastAutoTable.finalY + 10;
+    }
+
+    // ── ATTENDANCE SECTION ────────────────────────
+    if (curY > 230) { doc.addPage(); curY = 20; }
+
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(10);
+    doc.setTextColor(25, 135, 84);
+    doc.text('RECENT ATTENDANCE (Last 15 Records)', 14, curY);
+    doc.setDrawColor(25, 135, 84);
+    doc.line(14, curY + 2, pageW - 14, curY + 2);
+
+    if (attendance.length === 0) {
+      doc.setFont('helvetica', 'italic'); doc.setFontSize(9); doc.setTextColor(150, 150, 150);
+      doc.text('No attendance records found.', 18, curY + 10);
+      curY += 18;
+    } else {
+      autoTable(doc, {
+        startY: curY + 6,
+        head: [['Date', 'Clock In', 'Clock Out', 'Hours', 'Status']],
+        body: attendance.map((a: any) => [
+          a.date ? a.date.split('T')[0] : '—',
+          a.clockIn || '—',
+          (a.clockOut && a.clockOut !== '00:00:00') ? a.clockOut : '—',
+          a.totalHours || '—',
+          (a.clockOut && a.clockOut !== '00:00:00') ? 'Completed' : 'Working'
+        ]),
+        theme: 'grid',
+        headStyles: { fillColor: [232, 248, 240], textColor: [20, 80, 50], fontStyle: 'bold', fontSize: 8 },
+        bodyStyles: { fontSize: 8 },
+        alternateRowStyles: { fillColor: [248, 253, 250] },
+        margin: { left: 14, right: 14 }
+      });
+      curY = (doc as any).lastAutoTable.finalY + 10;
+    }
+
+    // ── LEAVE SECTION ─────────────────────────────
+    if (curY > 230) { doc.addPage(); curY = 20; }
+
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(10);
+    doc.setTextColor(220, 53, 69);
+    doc.text('LEAVE REQUESTS', 14, curY);
+    doc.setDrawColor(220, 53, 69);
+    doc.line(14, curY + 2, pageW - 14, curY + 2);
+
+    if (leaves.length === 0) {
+      doc.setFont('helvetica', 'italic'); doc.setFontSize(9); doc.setTextColor(150, 150, 150);
+      doc.text('No leave requests found.', 18, curY + 10);
+      curY += 18;
+    } else {
+      autoTable(doc, {
+        startY: curY + 6,
+        head: [['Type', 'Start Date', 'End Date', 'Days', 'Status']],
+        body: leaves.map((l: any) => [
+          leaveTypeMap[l.leaveType] || l.leaveType,
+          l.startDate ? l.startDate.split('T')[0] : '—',
+          l.endDate ? l.endDate.split('T')[0] : '—',
+          l.totalDays ?? '—',
+          statusMap[l.status] || l.status
+        ]),
+        theme: 'grid',
+        headStyles: { fillColor: [255, 240, 242], textColor: [100, 20, 30], fontStyle: 'bold', fontSize: 8 },
+        bodyStyles: { fontSize: 8 },
+        alternateRowStyles: { fillColor: [255, 248, 249] },
+        margin: { left: 14, right: 14 }
+      });
+      curY = (doc as any).lastAutoTable.finalY + 10;
+    }
+
+    // ── SUMMARY BOX ────────────────────────────────
+    if (curY > 235) { doc.addPage(); curY = 20; }
+
+    const approvedLeaves = leaves.filter((l: any) => l.status === 1 || l.status === 'Approved');
+    const totalLeaveDays = approvedLeaves.reduce((acc: number, l: any) => acc + (l.totalDays || 0), 0);
+    const completedSessions = attendance.filter((a: any) => a.clockOut && a.clockOut !== '00:00:00').length;
+    const latestSalary = salaries[0];
+
+    doc.setFillColor(240, 243, 255);
+    doc.roundedRect(10, curY, pageW - 20, 32, 3, 3, 'F');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(67, 97, 238);
+    doc.text('REPORT SUMMARY', 18, curY + 8);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(50, 50, 80);
+    doc.text(`Total Attendance Records: ${attendance.length}   |   Completed Sessions: ${completedSessions}`, 18, curY + 16);
+    doc.text(`Total Approved Leave Days: ${totalLeaveDays}   |   Latest Net Salary: $${latestSalary?.netAmount ?? 'N/A'}`, 18, curY + 23);
+
+    // ── FOOTER ────────────────────────────────────
+    const pageCount = (doc.internal as any).getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(180, 180, 180);
+      doc.text('Confidential – Kawadir HRMS – System Generated Report', 14, doc.internal.pageSize.getHeight() - 8);
+      doc.text(`Page ${i} of ${pageCount}`, pageW - 30, doc.internal.pageSize.getHeight() - 8);
+    }
+
+    const fileName = `Report_${empName.replace(/ /g, '_')}_${todayStr}.pdf`;
+    doc.save(fileName);
   }
 }
