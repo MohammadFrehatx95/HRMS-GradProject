@@ -1,0 +1,78 @@
+/* ── Settings Button ── */
+.settings-btn {
+  transition: transform 0.3s ease;
+}
+
+.settings-btn:hover {
+  transform: rotate(90deg);
+}
+
+.settings-btn:hover i {
+  color: #667eea !important;
+}
+
+/* ── Settings Panel ── */
+.settings-panel {
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Settings Icon Circle ── */
+.settings-icon-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  color: #f39c12;
+  transition: all 0.3s ease;
+}
+
+.settings-icon-circle.active {
+  background: linear-gradient(135deg, #2d3436, #636e72);
+  color: #ffeaa7;
+}
+
+.settings-icon-circle.lang {
+  background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+  color: #fff;
+}
+
+/* ── Language Toggle Button ── */
+.lang-toggle-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  border: none;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+
+.lang-toggle-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+  color: #fff;
+}
+
+/* ── Dark Mode Toggle Switch ── */
+.form-check-input:checked {
+  background-color: #667eea;
+  border-color: #667eea;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}

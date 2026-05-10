@@ -5,12 +5,14 @@ import { EmployeeService } from '../../core/services/employee.service';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
 
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
+
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-my-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './my-profile.component.html',
 })
 export class MyProfileComponent implements OnInit {

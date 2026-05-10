@@ -1,16 +1,18 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PositionService } from '../../core/services/position.service';
 import { DepartmentService } from '../../core/services/department.service';
 import Swal from 'sweetalert2';
+
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-positions',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe],
   templateUrl: './positions.component.html',
 })
 export class PositionsComponent implements OnInit {

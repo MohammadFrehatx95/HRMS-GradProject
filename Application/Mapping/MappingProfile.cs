@@ -26,7 +26,14 @@ public class MappingProfile : Profile
         // For retrieval, we want to map from Employee to EmployeeDto, including the department name
         CreateMap<Employee, EmployeeDto>()
             .ForMember(dest => dest.DepartmentName,
-                opt => opt.MapFrom(src => src.Department.Name));
+                opt => opt.MapFrom(src => src.Department != null ? src.Department.Name : string.Empty))
+            // ✅ W1/I4 Fix: map PositionId وPositionTitle وUserId
+            .ForMember(dest => dest.PositionId,
+                opt => opt.MapFrom(src => src.PositionId))
+            .ForMember(dest => dest.PositionTitle,
+                opt => opt.MapFrom(src => src.Position != null ? src.Position.Title : string.Empty))
+            .ForMember(dest => dest.UserId,
+                opt => opt.MapFrom(src => src.UserId));
 
 
         // For creation, we want to map from CreateEmployeeDto to Employee

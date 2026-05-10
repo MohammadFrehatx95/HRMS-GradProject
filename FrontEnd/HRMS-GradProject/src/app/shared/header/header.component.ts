@@ -4,11 +4,13 @@ import { NotificationService } from '../../core/services/notification.service';
 import { Router } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
 import { SidebarService } from '../../core/services/sidebar.service';
+import { SettingsService } from '../../core/services/settings.service';
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
@@ -17,7 +19,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private sidebarService = inject(SidebarService);
 
-  currentLanguage: string = 'en';
+  // ✅ public حتى نستخدمه في الـ template
+  settingsService = inject(SettingsService);
+
   notifications: any[] = [];
   unreadCount: number = 0;
   private pollingSub?: Subscription;
@@ -95,11 +99,5 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.router.navigate(['/attendance']);
     }
   }
-
-  toggleLanguage() {
-    this.currentLanguage = this.currentLanguage === 'en' ? 'ar' : 'en';
-    document.documentElement.lang = this.currentLanguage;
-    document.documentElement.dir =
-      this.currentLanguage === 'ar' ? 'rtl' : 'ltr';
-  }
 }
+

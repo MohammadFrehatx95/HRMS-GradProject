@@ -1,4 +1,4 @@
-﻿using Application.Common;
+using Application.Common;
 using Application.DTOs.Leave;
 using Application.Services.Interfaces;
 using HRMS_API.Filters;
@@ -27,7 +27,13 @@ namespace HRMS_GradProject.Controllers
         [HttpGet("my")]
         public async Task<IActionResult> GetMyLeaves([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            var employeeId = int.Parse(User.FindFirstValue("employeeId")!);
+            // ✅ Bug #9 Fix: حماية من NullReferenceException لو المستخدم ليس موظفاً
+            var employeeIdClaim = User.FindFirstValue("employeeId");
+            if (string.IsNullOrWhiteSpace(employeeIdClaim) ||
+                !int.TryParse(employeeIdClaim, out int employeeId))
+            {
+                return BadRequest(ApiResponse.Fail("Your account is not linked to an employee profile"));
+            }
             var result = await leaveService.GetMyLeavesAsync(employeeId, pageNumber, pageSize);
             return Ok(ApiResponse<PagedResult<LeaveDto>>.Ok(result));
         }
@@ -75,7 +81,13 @@ namespace HRMS_GradProject.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var employeeId = int.Parse(User.FindFirstValue("employeeId")!);
+            // ✅ Bug #9 Fix: حماية من NullReferenceException
+            var employeeIdClaim = User.FindFirstValue("employeeId");
+            if (string.IsNullOrWhiteSpace(employeeIdClaim) ||
+                !int.TryParse(employeeIdClaim, out int employeeId))
+            {
+                return BadRequest(ApiResponse.Fail("Your account is not linked to an employee profile"));
+            }
             await leaveService.DeleteAsync(id, employeeId);
             return Ok(ApiResponse.Ok("Leave request deleted successfully"));
         }

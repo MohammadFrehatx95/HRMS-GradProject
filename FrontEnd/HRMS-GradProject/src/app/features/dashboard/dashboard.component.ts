@@ -7,13 +7,14 @@ import { AuthService } from '../../core/services/auth.service';
 import { AttendanceService } from '../../core/services/attendance.service';
 import { SalaryService } from '../../core/services/salary.service';
 import { Chart, registerables } from 'chart.js';
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 Chart.register(...registerables);
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
@@ -83,20 +84,24 @@ export class DashboardComponent implements OnInit {
         else if (res?.data && Array.isArray(res.data)) extracted = res.data;
 
         this.pendingLeaves = extracted.filter(
+          // ✅ Backend يُرجع 'Pending' كـ string من MappingProfile .ToString()
           (l: any) => l.status === 'Pending',
         ).length;
+        
+        extracted.sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
         this.recentLeaves = extracted.slice(0, 5);
 
         const totalLeaves = extracted.length;
         let annual = 0, sick = 0, emergency = 0;
 
         if (totalLeaves > 0) {
-          annual = extracted.filter((l: any) => String(l.leaveType).toLowerCase().includes('annual') || l.leaveType === 0 || l.leaveType === '0').length;
-          sick = extracted.filter((l: any) => String(l.leaveType).toLowerCase().includes('sick') || l.leaveType === 1 || l.leaveType === '1').length;
-          emergency = extracted.filter((l: any) => String(l.leaveType).toLowerCase().includes('emergency') || l.leaveType === 2 || l.leaveType === '2').length;
+          // ✅ Backend يُرجع LeaveType كـ string من .ToString()
+          annual    = extracted.filter((l: any) => l.leaveType === 'Annual').length;
+          sick      = extracted.filter((l: any) => l.leaveType === 'Sick').length;
+          emergency = extracted.filter((l: any) => l.leaveType === 'Emergency').length;
           
-          this.annualLeavePercent = Math.round((annual / totalLeaves) * 100);
-          this.sickLeavePercent = Math.round((sick / totalLeaves) * 100);
+          this.annualLeavePercent    = Math.round((annual    / totalLeaves) * 100);
+          this.sickLeavePercent      = Math.round((sick      / totalLeaves) * 100);
           this.emergencyLeavePercent = Math.round((emergency / totalLeaves) * 100);
         } else {
           this.annualLeavePercent = 0;
@@ -203,12 +208,15 @@ export class DashboardComponent implements OnInit {
       1,
     ).toLocaleString('en-US', { month: 'short' });
 
+    // ✅ Bug #5 Fix: قيمة احتياطية محلية تظهر فوراً
+    // loadNextPayday() ستُحدّثها بقيمة أدق من الـ API
     if (today.getDate() > this.PAYDAY) {
       this.employeeNextPayday = `${nextMonth} ${this.PAYDAY}`;
     } else {
       this.employeeNextPayday = `${currentMonth} ${this.PAYDAY}`;
     }
 
+    // جلب القيمة الدقيقة من آخر سجل راتب موجود في الـ DB
     this.loadNextPayday();
 
     this.leaveService.getMyLeaves().subscribe({
@@ -219,15 +227,16 @@ export class DashboardComponent implements OnInit {
           extracted = res.data.items;
         else if (res?.data && Array.isArray(res.data)) extracted = res.data;
 
+        // ✅ Bug #4 Fix: Backend يُرجع 'Pending'/'Approved'/'Annual' كـ strings
         this.employeePendingLeaves = extracted.filter(
-          (l: any) => l.status === 0 || l.status === '0',
+          (l: any) => l.status === 'Pending',
         ).length;
 
         const approvedAnnualLeavesDays = extracted
           .filter(
             (l: any) =>
-              (l.status === 1 || l.status === '1') &&
-              (l.leaveType === 0 || l.leaveType === '0'),
+              l.status === 'Approved' &&
+              l.leaveType === 'Annual',
           )
           .reduce((acc: number, l: any) => acc + (l.totalDays || 0), 0);
 

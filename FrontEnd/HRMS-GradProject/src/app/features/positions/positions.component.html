@@ -1,10 +1,10 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="fw-bold text-secondary">
-        <i class="bi bi-briefcase-fill me-2"></i>Job Positions
+        <i class="bi bi-briefcase-fill me-2"></i>{{ 'Job Positions' | t }}
     </h2>
     <button class="btn btn-primary shadow-sm fw-bold px-4"
         (click)="openModal()">
-        <i class="bi bi-plus-lg me-1"></i> Add Position
+        <i class="bi bi-plus-lg me-1"></i> {{ 'Add Position' | t }}
     </button>
 </div>
 
@@ -20,10 +20,10 @@
             <thead class="table-light text-uppercase small fw-bold">
                 <tr>
                     <th>ID</th>
-                    <th>Job Title</th>
-                    <th>Department</th>
-                    <th>Salary Range (Min - Max)</th>
-                    <th>Actions</th>
+                    <th>{{ 'Job Title' | t }}</th>
+                    <th>{{ 'Department' | t }}</th>
+                    <th>{{ 'Salary Range (Min - Max)' | t }}</th>
+                    <th>{{ 'Actions' | t }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -60,7 +60,7 @@
                     <td colspan="5" class="text-center py-5 text-muted">
                         <i
                             class="bi bi-briefcase fs-1 d-block mb-2 opacity-25"></i>
-                        No positions defined in the system.
+                        {{ 'No positions defined in the system.' | t }}
                     </td>
                 </tr>
                 }
@@ -78,7 +78,7 @@
                 <h5 class="modal-title text-primary fw-bold">
                     <i class="bi" [class.bi-plus-circle]="!isEditMode"
                         [class.bi-pencil-square]="isEditMode"></i>
-                    {{ isEditMode ? 'Modify Position' : 'Create New Position' }}
+                    {{ isEditMode ? ('Modify Position' | t) : ('Create New Position' | t) }}
                 </h5>
                 <button type="button" class="btn-close shadow-none"
                     data-bs-dismiss="modal" aria-label="Close"></button>

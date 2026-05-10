@@ -1,4 +1,4 @@
-﻿
+
 
 namespace Application.DTOs.Employee;
 
@@ -14,4 +14,9 @@ public class EmployeeDto
     public bool IsActive { get; set; }
     public int DepartmentId { get; set; }
     public string DepartmentName { get; set; } = string.Empty; 
+    // ✅ W1/I4 Fix: أضف PositionId وPositionTitle لدعم نموذج التعديل وعرض البيانات
+    public int PositionId { get; set; }
+    public string PositionTitle { get; set; } = string.Empty;
+    public int UserId { get; set; }
 }
+

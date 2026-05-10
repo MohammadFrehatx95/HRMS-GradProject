@@ -1,16 +1,18 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { LeaveService } from '../../core/services/leave.service';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-leave',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink, TranslatePipe],
   templateUrl: './leave.component.html',
 })
 export class LeaveComponent implements OnInit {
@@ -65,8 +67,8 @@ export class LeaveComponent implements OnInit {
   leaveTypes = [
     { id: 0, name: 'Annual' },
     { id: 1, name: 'Sick' },
-    { id: 2, name: 'Unpaid' },
-    { id: 3, name: 'Maternity' },
+    { id: 2, name: 'Emergency' }, // ✅ يطابق Backend enum: Emergency=2
+    { id: 3, name: 'Unpaid' },   // ✅ يطابق Backend enum: Unpaid=3
   ];
 
   ngOnInit() {
@@ -107,11 +109,12 @@ export class LeaveComponent implements OnInit {
               return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
             });
           } else if (!this.isAdminOrHR) {
+            // ✅ Backend يُرجع strings: 'Approved', 'Annual'
             const approvedAnnualLeavesDays = this.allLeavesList
               .filter(
                 (l: any) =>
-                  (l.status === 1 || l.status === '1') &&
-                  (l.leaveType === 0 || l.leaveType === '0'),
+                  l.status === 'Approved' &&
+                  l.leaveType === 'Annual',
               )
               .reduce((acc: number, l: any) => acc + (l.totalDays || 0), 0);
             this.employeeAnnualLeaveBalance = 14 - approvedAnnualLeavesDays;
@@ -152,18 +155,25 @@ export class LeaveComponent implements OnInit {
     });
 
     this.currentPage = 1;
-    if (this.isAdminOrHR && this.leavesList.length > 0) {
+    if (this.leavesList.length > 0) {
       this.leavesList.sort((a, b) => {
-        const statusA = this.getStatusText(a.status);
-        const statusB = this.getStatusText(b.status);
-        if (statusA === 'Pending' && statusB !== 'Pending') return -1;
-        if (statusA !== 'Pending' && statusB === 'Pending') return 1;
+        if (this.isAdminOrHR) {
+          const statusA = this.getStatusText(a.status);
+          const statusB = this.getStatusText(b.status);
+          if (statusA === 'Pending' && statusB !== 'Pending') return -1;
+          if (statusA !== 'Pending' && statusB === 'Pending') return 1;
+        }
         return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
       });
     }
   }
 
   getStatusText(statusCode: any): string {
+    // ✅ Backend يُرجع string مباشرة من MappingProfile (.ToString())
+    if (typeof statusCode === 'string' && isNaN(Number(statusCode))) {
+      return statusCode; // 'Pending' | 'Approved' | 'Rejected'
+    }
+    // توافقية مع القيم الرقمية القديمة
     if (statusCode === 0 || statusCode === '0') return 'Pending';
     if (statusCode === 1 || statusCode === '1') return 'Approved';
     if (statusCode === 2 || statusCode === '2') return 'Rejected';
@@ -171,10 +181,15 @@ export class LeaveComponent implements OnInit {
   }
 
   getLeaveTypeText(typeCode: any): string {
+    // ✅ Backend يُرجع string مباشرة: 'Annual', 'Sick', 'Emergency', 'Unpaid'
     if (typeof typeCode === 'string' && isNaN(Number(typeCode))) {
-      return typeCode.charAt(0).toUpperCase() + typeCode.slice(1);
+      const found = this.leaveTypes.find(
+        (t) => t.name.toLowerCase() === typeCode.toLowerCase()
+      );
+      return found ? found.name : (typeCode.charAt(0).toUpperCase() + typeCode.slice(1));
     }
-    const type = this.leaveTypes.find((t) => t.id == Number(typeCode));
+    // توافقية مع القيم الرقمية
+    const type = this.leaveTypes.find((t) => t.id === Number(typeCode));
     return type ? type.name : (typeCode != null ? String(typeCode) : 'Unknown');
   }
 

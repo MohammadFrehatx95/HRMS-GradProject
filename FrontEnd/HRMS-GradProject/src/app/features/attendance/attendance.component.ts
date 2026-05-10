@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { AttendanceService } from '../../core/services/attendance.service';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 @Component({
   selector: 'app-attendance',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './attendance.component.html',
 })
 export class AttendanceComponent implements OnInit {
@@ -132,6 +133,9 @@ export class AttendanceComponent implements OnInit {
     });
     
     this.currentPage = 1;
+    if (this.attendanceRecords.length > 0) {
+      this.attendanceRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    }
   }
 
   private analyzeSessionStatus(records: any[]) {

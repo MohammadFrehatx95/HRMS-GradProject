@@ -43,7 +43,27 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('jwt_token');
+    const token = localStorage.getItem('jwt_token');
+    if (!token) return false;
+
+    // ✅ تحقق من صلاحية التوكن (هل منتهي الصلاحية؟)
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const exp = payload.exp;
+      if (!exp) return true; // لو ما فيه exp نعتبره صالح
+
+      // exp بالثواني، Date.now() بالملي ثانية
+      if (Date.now() >= exp * 1000) {
+        // التوكن منتهي — نظف الـ localStorage
+        this.logout();
+        return false;
+      }
+      return true;
+    } catch {
+      // لو فشل الـ parsing، التوكن فاسد — احذفه
+      this.logout();
+      return false;
+    }
   }
 
   getUserRole(): string | null {

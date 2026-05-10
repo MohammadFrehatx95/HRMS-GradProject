@@ -10,6 +10,7 @@ import {
 import { DepartmentService } from '../../core/services/department.service';
 import { EmployeeService } from '../../core/services/employee.service';
 import { PositionService } from '../../core/services/position.service';
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import Swal from 'sweetalert2';
 
 declare var bootstrap: any;
@@ -17,7 +18,7 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-departments',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe],
   templateUrl: './departments.component.html',
 })
 export class DepartmentsComponent implements OnInit {
