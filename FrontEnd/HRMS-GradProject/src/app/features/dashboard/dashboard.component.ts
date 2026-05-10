@@ -6,6 +6,9 @@ import { DepartmentService } from '../../core/services/department.service';
 import { AuthService } from '../../core/services/auth.service';
 import { AttendanceService } from '../../core/services/attendance.service';
 import { SalaryService } from '../../core/services/salary.service';
+import { Chart, registerables } from 'chart.js';
+
+Chart.register(...registerables);
 
 @Component({
   selector: 'app-dashboard',
@@ -45,6 +48,7 @@ export class DashboardComponent implements OnInit {
   // يوم الراتب
   readonly PAYDAY = 25;
 
+  leaveChartInstance: any;
 
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
@@ -84,15 +88,25 @@ export class DashboardComponent implements OnInit {
         this.recentLeaves = extracted.slice(0, 5);
 
         const totalLeaves = extracted.length;
+        let annual = 0, sick = 0, emergency = 0;
+
         if (totalLeaves > 0) {
-          const annual = extracted.filter(l => String(l.leaveType).toLowerCase().includes('annual') || l.leaveType === 0 || l.leaveType === '0').length;
-          const sick = extracted.filter(l => String(l.leaveType).toLowerCase().includes('sick') || l.leaveType === 1 || l.leaveType === '1').length;
-          const emergency = extracted.filter(l => String(l.leaveType).toLowerCase().includes('emergency') || l.leaveType === 2 || l.leaveType === '2').length;
+          annual = extracted.filter((l: any) => String(l.leaveType).toLowerCase().includes('annual') || l.leaveType === 0 || l.leaveType === '0').length;
+          sick = extracted.filter((l: any) => String(l.leaveType).toLowerCase().includes('sick') || l.leaveType === 1 || l.leaveType === '1').length;
+          emergency = extracted.filter((l: any) => String(l.leaveType).toLowerCase().includes('emergency') || l.leaveType === 2 || l.leaveType === '2').length;
           
           this.annualLeavePercent = Math.round((annual / totalLeaves) * 100);
           this.sickLeavePercent = Math.round((sick / totalLeaves) * 100);
           this.emergencyLeavePercent = Math.round((emergency / totalLeaves) * 100);
+        } else {
+          this.annualLeavePercent = 0;
+          this.sickLeavePercent = 0;
+          this.emergencyLeavePercent = 0;
         }
+
+        setTimeout(() => {
+          this.renderLeaveChart(annual, sick, emergency);
+        }, 100);
       },
       error: (err) => console.error('Error fetching leaves:', err),
     });
@@ -265,6 +279,72 @@ export class DashboardComponent implements OnInit {
         this.employeeHoursWorked = Math.round(totalHours);
       },
       error: (err) => console.error('Error fetching my attendance:', err),
+    });
+  }
+
+  renderLeaveChart(annual: number, sick: number, emergency: number) {
+    const ctx = document.getElementById('leaveTypeChart') as HTMLCanvasElement;
+    if (!ctx) return;
+    
+    if (this.leaveChartInstance) {
+      this.leaveChartInstance.destroy();
+    }
+
+    // Render empty chart if no leaves
+    if (annual === 0 && sick === 0 && emergency === 0) {
+      this.leaveChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['No Data'],
+          datasets: [{
+            data: [1],
+            backgroundColor: ['#e9ecef'],
+            borderWidth: 0,
+            hoverOffset: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { enabled: false }
+          },
+          cutout: '75%'
+        }
+      });
+      return;
+    }
+
+    this.leaveChartInstance = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Annual', 'Sick', 'Emergency'],
+        datasets: [{
+          data: [annual, sick, emergency],
+          backgroundColor: ['#0d6efd', '#dc3545', '#ffc107'],
+          borderWidth: 0,
+          hoverOffset: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              usePointStyle: true,
+              padding: 20,
+              font: {
+                family: "'Inter', sans-serif",
+                size: 12
+              }
+            }
+          }
+        },
+        cutout: '75%'
+      }
     });
   }
 }
