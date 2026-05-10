@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../core/services/auth.service';
 
-import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 
 @Component({
   selector: 'app-login',

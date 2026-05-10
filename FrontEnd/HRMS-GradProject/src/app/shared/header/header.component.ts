@@ -86,14 +86,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     ) {
       this.router.navigate(['/leave']);
     } else if (
-      type.includes('Salary') || 
-      msg.includes('salary') || 
+      type.includes('Salary') ||
+      msg.includes('salary') ||
       msg.includes('راتب')
     ) {
       this.router.navigate(['/salary']);
     } else if (
-      type.includes('Clock') || 
-      msg.includes('attendance') || 
+      type.includes('Clock') ||
+      msg.includes('attendance') ||
       msg.includes('حضور')
     ) {
       this.router.navigate(['/attendance']);

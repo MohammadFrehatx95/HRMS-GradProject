@@ -87,7 +87,7 @@ export class DashboardComponent implements OnInit {
           // ✅ Backend يُرجع 'Pending' كـ string من MappingProfile .ToString()
           (l: any) => l.status === 'Pending',
         ).length;
-        
+
         extracted.sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
         this.recentLeaves = extracted.slice(0, 5);
 
@@ -96,12 +96,12 @@ export class DashboardComponent implements OnInit {
 
         if (totalLeaves > 0) {
           // ✅ Backend يُرجع LeaveType كـ string من .ToString()
-          annual    = extracted.filter((l: any) => l.leaveType === 'Annual').length;
-          sick      = extracted.filter((l: any) => l.leaveType === 'Sick').length;
+          annual = extracted.filter((l: any) => l.leaveType === 'Annual').length;
+          sick = extracted.filter((l: any) => l.leaveType === 'Sick').length;
           emergency = extracted.filter((l: any) => l.leaveType === 'Emergency').length;
-          
-          this.annualLeavePercent    = Math.round((annual    / totalLeaves) * 100);
-          this.sickLeavePercent      = Math.round((sick      / totalLeaves) * 100);
+
+          this.annualLeavePercent = Math.round((annual / totalLeaves) * 100);
+          this.sickLeavePercent = Math.round((sick / totalLeaves) * 100);
           this.emergencyLeavePercent = Math.round((emergency / totalLeaves) * 100);
         } else {
           this.annualLeavePercent = 0;
@@ -193,7 +193,7 @@ export class DashboardComponent implements OnInit {
           this.employeeNextPayday = `${monthNames[nextPayMonth - 1]} ${this.PAYDAY}`;
         }
       },
-      error: () => {},
+      error: () => { },
     });
   }
 
@@ -294,7 +294,7 @@ export class DashboardComponent implements OnInit {
   renderLeaveChart(annual: number, sick: number, emergency: number) {
     const ctx = document.getElementById('leaveTypeChart') as HTMLCanvasElement;
     if (!ctx) return;
-    
+
     if (this.leaveChartInstance) {
       this.leaveChartInstance.destroy();
     }
