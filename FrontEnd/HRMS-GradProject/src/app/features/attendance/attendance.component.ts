@@ -18,10 +18,10 @@ export class AttendanceComponent implements OnInit {
 
   allAttendanceRecords: any[] = [];
   attendanceRecords: any[] = [];
-  
+
   searchQuery: string = '';
   selectedStatus: string = '';
-  
+
   isLoading = true;
   isProcessing = false;
   isAdmin = false;
@@ -67,7 +67,7 @@ export class AttendanceComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.isAdmin     = this.authService.isAdmin();
+    this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
     if (this.isAdmin) {
       this.loadAllAttendance(); // الأدمن يشوف الكل مباشرة
@@ -121,17 +121,17 @@ export class AttendanceComponent implements OnInit {
         const dateStr = String(rec.date || '').toLowerCase();
         matchesSearch = empName.includes(query) || empId.includes(query) || dateStr.includes(query);
       }
-      
+
       let matchesStatus = true;
       if (this.selectedStatus) {
         const isCompleted = rec.clockOut && rec.clockOut !== '00:00:00';
         const currentStatus = isCompleted ? 'Completed' : 'Working';
         matchesStatus = currentStatus === this.selectedStatus;
       }
-      
+
       return matchesSearch && matchesStatus;
     });
-    
+
     this.currentPage = 1;
     if (this.attendanceRecords.length > 0) {
       this.attendanceRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -211,7 +211,7 @@ export class AttendanceComponent implements OnInit {
     const isOldSession =
       this.activeSession &&
       new Date(this.activeSession.date).toDateString() !==
-        new Date().toDateString();
+      new Date().toDateString();
 
     const clockOutTime = isOldSession ? '23:59:00' : timeString;
 
