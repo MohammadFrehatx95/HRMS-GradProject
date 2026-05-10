@@ -11,12 +11,12 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../core/services/auth.service';
 
-import { TranslatePipe } from '../../../core/pipes/translate.pipe';
+
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
@@ -61,8 +61,8 @@ export class LoginComponent {
       error: (err) => {
         this.isLoading = false;
         Swal.fire(
-          'فشل تسجيل الدخول',
-          err.error?.message || 'تأكد من صحة البريد الإلكتروني وكلمة المرور',
+          'Login Failed',
+          err.error?.message || 'Please check your email and password.',
           'error',
         );
       },

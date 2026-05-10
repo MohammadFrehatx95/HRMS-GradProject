@@ -39,6 +39,7 @@ export class DashboardComponent implements OnInit {
   annualLeavePercent: number = 0;
   sickLeavePercent: number = 0;
   emergencyLeavePercent: number = 0;
+  unpaidLeavePercent: number = 0;
   attendanceRate: number = 0;
 
   employeeAnnualLeaveBalance: number | string = 14;
@@ -92,25 +93,28 @@ export class DashboardComponent implements OnInit {
         this.recentLeaves = extracted.slice(0, 5);
 
         const totalLeaves = extracted.length;
-        let annual = 0, sick = 0, emergency = 0;
+        let annual = 0, sick = 0, emergency = 0, unpaid = 0;
 
         if (totalLeaves > 0) {
           // ✅ Backend يُرجع LeaveType كـ string من .ToString()
           annual = extracted.filter((l: any) => l.leaveType === 'Annual').length;
           sick = extracted.filter((l: any) => l.leaveType === 'Sick').length;
           emergency = extracted.filter((l: any) => l.leaveType === 'Emergency').length;
+          unpaid = extracted.filter((l: any) => l.leaveType === 'Unpaid').length;
 
           this.annualLeavePercent = Math.round((annual / totalLeaves) * 100);
           this.sickLeavePercent = Math.round((sick / totalLeaves) * 100);
           this.emergencyLeavePercent = Math.round((emergency / totalLeaves) * 100);
+          this.unpaidLeavePercent = Math.round((unpaid / totalLeaves) * 100);
         } else {
           this.annualLeavePercent = 0;
           this.sickLeavePercent = 0;
           this.emergencyLeavePercent = 0;
+          this.unpaidLeavePercent = 0;
         }
 
         setTimeout(() => {
-          this.renderLeaveChart(annual, sick, emergency);
+          this.renderLeaveChart(annual, sick, emergency, unpaid);
         }, 100);
       },
       error: (err) => console.error('Error fetching leaves:', err),
@@ -126,6 +130,19 @@ export class DashboardComponent implements OnInit {
         this.departmentsCount = extracted.length;
       },
       error: (err) => console.error('Error fetching departments:', err),
+    });
+
+    this.salaryService.getAllSalaries().subscribe({
+      next: (res: any) => {
+        let extracted: any[] = [];
+        if (Array.isArray(res)) extracted = res;
+        else if (res?.data?.items && Array.isArray(res.data.items))
+          extracted = res.data.items;
+        else if (res?.data && Array.isArray(res.data)) extracted = res.data;
+        
+        this.totalSalaries = extracted.reduce((sum, current) => sum + (current.netAmount || 0), 0);
+      },
+      error: (err) => console.error('Error fetching salaries:', err),
     });
 
     this.attendanceService.getAllAttendance().subscribe({
@@ -291,7 +308,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  renderLeaveChart(annual: number, sick: number, emergency: number) {
+  renderLeaveChart(annual: number, sick: number, emergency: number, unpaid: number) {
     const ctx = document.getElementById('leaveTypeChart') as HTMLCanvasElement;
     if (!ctx) return;
 
@@ -300,7 +317,7 @@ export class DashboardComponent implements OnInit {
     }
 
     // Render empty chart if no leaves
-    if (annual === 0 && sick === 0 && emergency === 0) {
+    if (annual === 0 && sick === 0 && emergency === 0 && unpaid === 0) {
       this.leaveChartInstance = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -328,10 +345,10 @@ export class DashboardComponent implements OnInit {
     this.leaveChartInstance = new Chart(ctx, {
       type: 'doughnut',
       data: {
-        labels: ['Annual', 'Sick', 'Emergency'],
+        labels: ['Annual', 'Sick', 'Emergency', 'Unpaid'],
         datasets: [{
-          data: [annual, sick, emergency],
-          backgroundColor: ['#0d6efd', '#dc3545', '#ffc107'],
+          data: [annual, sick, emergency, unpaid],
+          backgroundColor: ['#0d6efd', '#dc3545', '#ffc107', '#6c757d'],
           borderWidth: 0,
           hoverOffset: 6
         }]
