@@ -89,7 +89,7 @@
                     <div style="height: 250px; position: relative;" class="d-flex justify-content-center align-items-center">
                         <canvas id="leaveTypeChart"></canvas>
                         
-                        <div *ngIf="annualLeavePercent === 0 && sickLeavePercent === 0 && emergencyLeavePercent === 0" class="position-absolute text-center text-muted small">
+                        <div *ngIf="annualLeavePercent === 0 && sickLeavePercent === 0 && emergencyLeavePercent === 0 && unpaidLeavePercent === 0" class="position-absolute text-center text-muted small">
                             {{ 'No Data' | t }}
                         </div>
                     </div>
@@ -133,7 +133,8 @@
                                         <i class="bi me-2" 
                                            [class.bi-airplane-fill]="leave.leaveType === 'Annual'"
                                            [class.bi-heart-pulse-fill]="leave.leaveType === 'Sick'"
-                                           [class.bi-exclamation-triangle-fill]="leave.leaveType === 'Emergency'"></i>
+                                           [class.bi-exclamation-triangle-fill]="leave.leaveType === 'Emergency'"
+                                           [class.bi-wallet-fill]="leave.leaveType === 'Unpaid'"></i>
                                         {{ leave.leaveType | t }}
                                     </span>
                                 </td>

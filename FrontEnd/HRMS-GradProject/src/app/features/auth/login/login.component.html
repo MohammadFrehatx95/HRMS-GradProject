@@ -1,4 +1,4 @@
-<div class="login-page d-flex align-items-center justify-content-center vh-100">
+<div class="login-page d-flex align-items-center justify-content-center vh-100" dir="ltr">
 
     <!-- خلفية متحركة -->
     <div class="bg-blobs" aria-hidden="true">
@@ -21,20 +21,20 @@
                 </div>
                 <div class="d-flex flex-column justify-content-center">
                     <span style="font-size: 2rem; font-weight: 800; color: #111; letter-spacing: 0.5px; line-height: 1;">Kawadir</span>
-                    <span style="font-size: 0.85rem; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 6px;">{{ 'HR Management' | t }}</span>
+                    <span style="font-size: 0.85rem; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 6px;">HR Management</span>
                 </div>
             </div>
 
             <div class="form-content mt-4 px-lg-3">
                 <div class="text-center mb-5">
-                    <h3 class="fw-normal text-dark mb-2">{{ 'Login to your account' | t }}</h3>
+                    <h3 class="fw-normal text-dark mb-2">Login to your account</h3>
                     <p class="text-muted small">Access your HR dashboard</p>
                 </div>
 
                 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                     
                     <div class="mb-3">
-                        <label class="form-label text-secondary small fw-medium ms-3 mb-2">{{ 'Email Address' | t }}</label>
+                        <label class="form-label text-secondary small fw-medium ms-3 mb-2">Email Address</label>
                         <input type="email" class="form-control rounded-pill custom-input px-4 py-3 border-0"
                             formControlName="email" placeholder="example@company.com"
                             [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
@@ -49,7 +49,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label class="form-label text-secondary small fw-medium ms-3 mb-2">{{ 'Password' | t }}</label>
+                        <label class="form-label text-secondary small fw-medium ms-3 mb-2">Password</label>
                         <div class="position-relative">
                             <input [type]="isPasswordVisible ? 'text' : 'password'"
                                 class="form-control rounded-pill custom-input px-4 py-3 border-0 pe-5"
@@ -76,7 +76,7 @@
                         @if (isLoading) {
                         <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                         }
-                        {{ 'Login' | t }}
+                        Login
                     </button>
                 </form>
             </div>
