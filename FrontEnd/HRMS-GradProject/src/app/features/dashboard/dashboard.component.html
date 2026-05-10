@@ -138,13 +138,20 @@
                                         {{ leave.leaveType | t }}
                                     </span>
                                 </td>
-                                <td>{{ leave.totalDays }} {{ 'Days Remaining' | t }}</td>
+                                <td>{{ leave.totalDays }} {{ 'Days' | t }}</td>
                                 <td>
-                                    <span class="badge"
-                                        [class.bg-warning]="leave.status === 'Pending'"
-                                        [class.text-dark]="leave.status === 'Pending'"
-                                        [class.bg-success]="leave.status === 'Approved'"
-                                        [class.bg-danger]="leave.status === 'Rejected'">
+                                    <span class="status-badge"
+                                        [ngClass]="{
+                                            'status-approved': leave.status === 'Approved',
+                                            'status-pending': leave.status === 'Pending',
+                                            'status-rejected': leave.status === 'Rejected'
+                                        }">
+                                        <i class="bi me-1"
+                                            [ngClass]="{
+                                                'bi-check-circle-fill': leave.status === 'Approved',
+                                                'bi-hourglass-split': leave.status === 'Pending',
+                                                'bi-x-circle-fill': leave.status === 'Rejected'
+                                            }"></i>
                                         {{ leave.status | t }}
                                     </span>
                                 </td>

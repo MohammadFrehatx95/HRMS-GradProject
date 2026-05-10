@@ -86,8 +86,8 @@
                     <td data-label="Email" class="py-3 px-4 text-muted">{{ emp.email }}</td>
                     <td data-label="Department" class="py-3 px-4">{{ emp.departmentName || emp.departmentId || '—' }}</td>
                     <td data-label="Status" class="py-3 px-4">
-                        <span class="badge"
-                            [ngClass]="emp.isActive ? 'bg-success bg-opacity-10 text-success border border-success border-opacity-25' : 'bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25'">
+                        <span class="status-badge"
+                            [ngClass]="emp.isActive ? 'status-active' : 'status-inactive'">
                             <i class="bi" [ngClass]="emp.isActive ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
                             {{ emp.isActive ? ('Active' | t) : ('Inactive' | t) }}
                         </span>
@@ -175,7 +175,7 @@
                             selectedEmployeeProfile?.lastName) }}
                         </h4>
                         <span
-                            class="badge bg-white bg-opacity-20 text-white mt-1 px-2 py-1 rounded-pill">
+                            class="badge bg-white text-primary mt-1 px-3 py-2 rounded-pill shadow-sm">
                             {{ selectedEmployeeProfile?.positionTitle ||
                             'Employee' }}
                         </span>
@@ -273,9 +273,8 @@
                     Status
                 </h6>
                 <div class="d-flex gap-3 flex-wrap">
-                    <span class="status-chip"
-                        [class.chip-active]="selectedEmployeeProfile?.isActive !== false"
-                        [class.chip-inactive]="selectedEmployeeProfile?.isActive === false">
+                    <span class="status-badge"
+                        [ngClass]="selectedEmployeeProfile?.isActive !== false ? 'status-active' : 'status-inactive'">
                         <i class="bi me-1"
                             [class.bi-check-circle-fill]="selectedEmployeeProfile?.isActive !== false"
                             [class.bi-x-circle-fill]="selectedEmployeeProfile?.isActive === false"></i>
@@ -375,6 +374,7 @@
   color: #1a202c;
 }
 
+
 .status-chip {
   display: inline-flex;
   align-items: center;
@@ -384,17 +384,7 @@
   font-weight: 600;
 }
 
-.chip-active {
-  background: #d1fae5;
-  color: #065f46;
-  border: 1px solid #6ee7b7;
-}
 
-.chip-inactive {
-  background: #fee2e2;
-  color: #991b1b;
-  border: 1px solid #fca5a5;
-}
 
 .cursor-pointer {
   cursor: pointer;

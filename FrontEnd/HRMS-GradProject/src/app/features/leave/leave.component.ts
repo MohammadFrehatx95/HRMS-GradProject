@@ -230,7 +230,6 @@ export class LeaveComponent implements OnInit {
         this.isProcessing = false;
         this.leaveModal.hide();
         Swal.fire({
-          position: 'top-end',
           icon: 'success',
           title: 'Success',
           showConfirmButton: false,

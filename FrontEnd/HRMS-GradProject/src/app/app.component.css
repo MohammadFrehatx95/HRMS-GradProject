@@ -9,19 +9,19 @@
 
 .app-sidebar {
   display: block;
-  width: 260px;
+  width: var(--sidebar-width, 260px);
   flex-shrink: 0;
-  transition: all 0.3s ease;
+  transition: margin 0.3s ease, transform 0.3s ease;
   z-index: 1040;
 }
 
 .app-sidebar.hidden {
-  margin-left: -260px; /* Hide sidebar LTR */
+  margin-left: calc(-1 * var(--sidebar-width, 260px)); /* Hide sidebar LTR */
 }
 
 :host-context(html[dir="rtl"]) .app-sidebar.hidden {
   margin-left: 0;
-  margin-right: -260px; /* Hide sidebar RTL */
+  margin-right: calc(-1 * var(--sidebar-width, 260px)); /* Hide sidebar RTL */
 }
 
 .main-panel {
@@ -52,7 +52,7 @@
   .app-sidebar {
     position: fixed;
     top: 0;
-    left: -260px;
+    left: calc(-1 * var(--sidebar-width, 260px));
     margin-left: 0 !important;
     height: 100vh;
   }
@@ -63,7 +63,7 @@
   
   :host-context(html[dir="rtl"]) .app-sidebar {
     left: auto;
-    right: -260px;
+    right: calc(-1 * var(--sidebar-width, 260px));
     margin-right: 0 !important;
   }
   

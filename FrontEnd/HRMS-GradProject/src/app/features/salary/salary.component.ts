@@ -278,7 +278,6 @@ export class SalaryComponent implements OnInit {
     this.isProcessing = false;
     this.salaryModal.hide();
     Swal.fire({
-      position: 'top-end',
       icon: 'success',
       title: message,
       showConfirmButton: false,

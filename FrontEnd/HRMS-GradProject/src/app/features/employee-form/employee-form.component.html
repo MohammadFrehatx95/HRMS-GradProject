@@ -187,9 +187,26 @@
             </label>
             <input type="text" class="form-control field-input"
                 formControlName="phoneNumber"
-                placeholder="+962 79 000 0000"
+                placeholder="0791234567"
+                maxlength="10"
+                inputmode="numeric"
                 [class.is-invalid]="employeeForm.get('phoneNumber')?.invalid && employeeForm.get('phoneNumber')?.touched">
-            <div class="invalid-feedback">Phone number is required.</div>
+            @if (employeeForm.get('phoneNumber')?.touched) {
+              @if (employeeForm.get('phoneNumber')?.errors?.['required']) {
+                <div class="invalid-feedback d-block">
+                  <i class="bi bi-exclamation-circle me-1"></i>رقم الهاتف مطلوب.
+                </div>
+              } @else if (employeeForm.get('phoneNumber')?.errors?.['pattern']) {
+                <div class="invalid-feedback d-block">
+                  <i class="bi bi-exclamation-triangle me-1"></i>
+                  رقم الهاتف يجب أن يتكون من 10 أرقام فقط بدون مسافات أو رموز.
+                </div>
+              }
+            }
+            <small class="field-hint">
+              <i class="bi bi-info-circle me-1"></i>
+              أدخل 10 أرقام فقط — مثال: 0791234567
+            </small>
           </div>
         </div>
       </div>

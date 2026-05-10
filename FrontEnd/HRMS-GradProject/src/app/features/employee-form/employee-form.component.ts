@@ -41,7 +41,10 @@ export class EmployeeFormComponent implements OnInit {
     firstName: new FormControl('', Validators.required),
     lastName: new FormControl('', Validators.required),
     email: new FormControl('', [Validators.required, Validators.email]),
-    phoneNumber: new FormControl('', [Validators.required]),
+    phoneNumber: new FormControl('', [
+      Validators.required,
+      Validators.pattern(/^[0-9]{10}$/),
+    ]),
     hireDate: new FormControl('', Validators.required),
     departmentId: new FormControl('', Validators.required),
     positionId: new FormControl(
@@ -175,15 +178,84 @@ export class EmployeeFormComponent implements OnInit {
     return this.employeeForm.getRawValue().email || '';
   }
 
-  // الحفظ
+  // ─── تحليل أخطاء الباك ايند وتحويلها لرسالة واضحة ───
+  private parseBackendError(err: any): string {
+    const body = err?.error;
+
+    if (!body) return 'حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى.';
+
+    // ASP.NET ValidationProblemDetails: { errors: { FieldName: ['msg1', 'msg2'] } }
+    if (body.errors && typeof body.errors === 'object') {
+      const fieldLabels: Record<string, string> = {
+        PhoneNumber: 'رقم الهاتف',
+        FirstName:   'الاسم الأول',
+        LastName:    'اسم العائلة',
+        Email:       'البريد الإلكتروني',
+        HireDate:    'تاريخ التعيين',
+        DepartmentId:'القسم',
+        PositionId:  'المسمى الوظيفي',
+        UserId:      'حساب المستخدم',
+      };
+
+      const messages: string[] = [];
+      for (const [field, errors] of Object.entries(body.errors)) {
+        const label = fieldLabels[field] || field;
+        const msgs  = Array.isArray(errors) ? errors : [String(errors)];
+        for (const msg of msgs) {
+          // ترجمة رسائل الباك ايند الشائعة
+          const translated = this.translateBackendMsg(String(msg));
+          messages.push(`• ${label}: ${translated}`);
+        }
+      }
+      if (messages.length) return messages.join('\n');
+    }
+
+    // رسالة عادية
+    if (body.message) return body.message;
+    if (body.title)   return body.title;
+    if (typeof body === 'string') return body;
+
+    return 'حدث خطأ أثناء الإرسال، يرجى المحاولة مرة أخرى.';
+  }
+
+  // ترجمة رسائل الخطأ الإنجليزية من الباك ايند
+  private translateBackendMsg(msg: string): string {
+    const map: Record<string, string> = {
+      'Invalid phone number format.':         'صيغة رقم الهاتف غير صحيحة (يجب أن يكون 10 أرقام)',
+      'Phone number must be 10 digits.':      'يجب أن يكون رقم الهاتف 10 أرقام بالضبط',
+      'The field PhoneNumber must be a string or array type with a maximum length of 10.': 'رقم الهاتف يجب ألا يتجاوز 10 أرقام',
+      'is required.':                         'هذا الحقل مطلوب',
+      'already exists':                       'هذا السجل موجود مسبقاً',
+    };
+    for (const [en, ar] of Object.entries(map)) {
+      if (msg.toLowerCase().includes(en.toLowerCase())) return ar;
+    }
+    return msg;
+  }
+
+  // ─── الحفظ ───
   onSubmit() {
     if (this.employeeForm.invalid) {
       this.employeeForm.markAllAsTouched();
-      Swal.fire(
-        'بيانات ناقصة',
-        'يرجى التأكد من تعبئة جميع الحقول المطلوبة',
-        'warning',
-      );
+
+      // إظهار رسالة خطأ مخصصة لرقم الهاتف مباشرة
+      const phone = this.employeeForm.get('phoneNumber');
+      if (phone?.errors?.['pattern']) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'رقم هاتف غير صحيح',
+          text: 'رقم الهاتف يجب أن يتكون من 10 أرقام فقط (أرقام فقط بدون مسافات أو رموز)',
+          confirmButtonText: 'حسناً',
+        });
+        return;
+      }
+
+      Swal.fire({
+        icon: 'warning',
+        title: 'بيانات ناقصة',
+        text: 'يرجى التأكد من تعبئة جميع الحقول المطلوبة بشكل صحيح',
+        confirmButtonText: 'حسناً',
+      });
       return;
     }
 
@@ -193,7 +265,7 @@ export class EmployeeFormComponent implements OnInit {
     const payload = {
       ...rawValues,
       departmentId: Number(rawValues.departmentId),
-      positionId: Number(rawValues.positionId),
+      positionId:   Number(rawValues.positionId),
       hireDate: rawValues.hireDate
         ? new Date(rawValues.hireDate).toISOString()
         : new Date().toISOString(),
@@ -210,7 +282,9 @@ export class EmployeeFormComponent implements OnInit {
           },
           error: (err) => {
             this.isLoading = false;
-            Swal.fire('خطأ', err.error?.message || 'فشل التعديل', 'error');
+            const msg = this.parseBackendError(err);
+            Swal.fire({ icon: 'error', title: 'فشل التعديل', text: msg, confirmButtonText: 'حسناً' });
+            console.error('Update error:', err);
           },
         });
     } else {
@@ -222,13 +296,9 @@ export class EmployeeFormComponent implements OnInit {
         },
         error: (err) => {
           this.isLoading = false;
-          const errorMsg =
-            err.error?.message ||
-            (err.error && typeof err.error === 'object'
-              ? JSON.stringify(err.error)
-              : 'فشل الإضافة');
-          Swal.fire('خطأ', errorMsg, 'error');
-          console.error('Full Error:', err);
+          const msg = this.parseBackendError(err);
+          Swal.fire({ icon: 'error', title: 'فشل الإضافة', text: msg, confirmButtonText: 'حسناً' });
+          console.error('Add error:', err);
         },
       });
     }
