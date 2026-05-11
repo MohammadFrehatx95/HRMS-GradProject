@@ -44,6 +44,10 @@ public class AppDbContext : DbContext
         //   .HasForeignKey<Employee>(e => e.Email)
         //   .OnDelete(DeleteBehavior.Restrict);
 
+        modelBuilder.Entity<Employee>()
+             .Property(e => e.Id)
+             .ValueGeneratedNever();
+
 
         modelBuilder.Entity<Position>()
             .HasOne(p => p.Department)
@@ -86,8 +90,8 @@ public class AppDbContext : DbContext
 
 
         modelBuilder.Entity<Department>().HasData(
-           new Department { Id = 1, Name = "Human Resources" },
-           new Department { Id = 2, Name = "Information Technology" },
+           new Department { Id = 1, Name = "HR" },
+           new Department { Id = 2, Name = "IT" },
            new Department { Id = 3, Name = "Finance" },
            new Department { Id = 4, Name = "Operations" });
 
