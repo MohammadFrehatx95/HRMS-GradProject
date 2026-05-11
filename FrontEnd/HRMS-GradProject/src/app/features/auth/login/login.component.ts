@@ -10,8 +10,7 @@ import {
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../core/services/auth.service';
-
-
+import { getFriendlyErrorMessage } from '../../../core/utils/error-handler.util';
 
 @Component({
   selector: 'app-login',
@@ -62,7 +61,7 @@ export class LoginComponent {
         this.isLoading = false;
         Swal.fire(
           'Login Failed',
-          err.error?.message || 'Please check your email and password.',
+          getFriendlyErrorMessage(err, 'Incorrect email or password. Please try again.'),
           'error',
         );
       },

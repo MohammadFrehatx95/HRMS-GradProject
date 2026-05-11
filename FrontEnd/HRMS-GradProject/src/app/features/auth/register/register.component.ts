@@ -9,6 +9,7 @@ import {
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import Swal from 'sweetalert2';
+import { getFriendlyErrorMessage } from '../../../core/utils/error-handler.util';
 
 @Component({
   selector: 'app-register',
@@ -72,7 +73,7 @@ export class RegisterComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        Swal.fire('خطأ', err.error?.message || 'فشل التسجيل', 'error');
+        Swal.fire('خطأ', getFriendlyErrorMessage(err, 'فشل إنشاء الحساب. يرجى المحاولة مرة أخرى.'), 'error');
       },
     });
   }

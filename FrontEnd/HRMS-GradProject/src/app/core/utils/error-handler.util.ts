@@ -1,0 +1,91 @@
+// بدل ما تعرض رسائل تقنية من الـ backend، نحولها لشيء مفهوم
+export function getFriendlyErrorMessage(
+  err: any,
+  fallback: string = 'Something went wrong. Please try again later.',
+): string {
+  const status: number = err?.status ?? 0;
+  const rawMessage: string =
+    err?.error?.message || err?.error?.title || err?.message || '';
+
+  // مشكلة شبكة أو الـ server مش شغال
+  if (
+    status === 0 ||
+    (err?.name === 'HttpErrorResponse' && !navigator.onLine)
+  ) {
+    return 'No internet connection. Please check your network and try again.';
+  }
+
+  // أخطاء تقنية من الـ DB — المستخدم ما يحتاج يشوفها
+  if (
+    rawMessage.includes('EADDRNOTALLOWED') ||
+    rawMessage.includes('allow_list') ||
+    rawMessage.includes('tenant') ||
+    rawMessage.includes('XX000') ||
+    rawMessage.includes('PGRST') ||
+    rawMessage.includes('connection refused') ||
+    rawMessage.includes('ECONNREFUSED')
+  ) {
+    return 'Unable to connect to the server. Please contact support or try again later.';
+  }
+
+  if (status === 401) {
+    return 'Your session has expired. Please log in again.';
+  }
+
+  if (status === 403) {
+    return 'You do not have permission to perform this action.';
+  }
+
+  if (status === 404) {
+    return 'The requested resource was not found.';
+  }
+
+  if (status === 400) {
+    // لو الرسالة قصيرة ومفهومة نعرضها مباشرة
+    if (
+      rawMessage &&
+      rawMessage.length < 150 &&
+      !looksLikeTechError(rawMessage)
+    ) {
+      return rawMessage;
+    }
+    return 'Invalid input. Please check the form and try again.';
+  }
+
+  if (status >= 500) {
+    return 'A server error occurred. Please try again later.';
+  }
+
+  if (
+    rawMessage &&
+    rawMessage.length < 150 &&
+    !looksLikeTechError(rawMessage)
+  ) {
+    return rawMessage;
+  }
+
+  return fallback;
+}
+
+// نتحقق إذا كانت الرسالة تقنية وما تصلح للمستخدم
+function looksLikeTechError(msg: string): boolean {
+  const techPatterns = [
+    'XX',
+    'PGRST',
+    'EADDR',
+    'ECONN',
+    'stack trace',
+    'NullReferenceException',
+    'SqlException',
+    'DbUpdateException',
+    'System.',
+    'Microsoft.',
+    'allow_list',
+    'tenant',
+    'Object reference',
+    'Unhandled exception',
+    'at System',
+    'at Microsoft',
+  ];
+  return techPatterns.some((p) => msg.includes(p));
+}

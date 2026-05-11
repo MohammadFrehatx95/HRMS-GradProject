@@ -34,7 +34,7 @@ export class EmployeeFormComponent implements OnInit {
   positions: any[] = [];
   unassignedUsers: any[] = [];
 
-  // معلومات اليوزر لو بنعدل
+  // بيانات اليوزر اللي مربوط بالموظف في حالة التعديل
   linkedUserInfo: { username: string; email: string; role: string } | null = null;
 
   employeeForm = new FormGroup({
@@ -58,28 +58,28 @@ export class EmployeeFormComponent implements OnInit {
     const state = window.history.state;
 
     if (state && state.editMode && state.employeeId) {
-      // ─── EDIT MODE ───
+      // edit mode
       this.isEditMode = true;
       this.currentEmployeeId = state.employeeId;
       this.loadEmployeeDetails(this.currentEmployeeId!);
-      // ما بنقدر نعدل الـ userId في التعديل
+      // userId والإيميل ما يتعدلوا
       this.employeeForm.get('userId')?.disable();
       this.employeeForm.get('email')?.disable();
     } else {
-      // ─── ADD MODE ───
-      // لو فيه داتا جاية من الراوت
+      // add mode
+      // لو جاية داتا من صفحة ثانية نعبيها مباشرة
       if (state && (state.userId || state.email)) {
         this.employeeForm.patchValue({
           userId: state.userId,
           email: state.email,
         });
       }
-      // بنعطل الإيميل عشان بيتعبى لحاله
+      // الإيميل يتعبى تلقائياً من اليوزر المختار
       this.employeeForm.get('email')?.disable();
 
       this.loadUnassignedUsers();
 
-      // لما نختار يوزر بنعبي ايميله
+      // نعبي الإيميل لما يختار يوزر من الـ dropdown
       this.employeeForm.get('userId')?.valueChanges.subscribe((selectedId) => {
         const user = this.unassignedUsers.find(
           (u) => String(u.id) === String(selectedId),
@@ -113,7 +113,7 @@ export class EmployeeFormComponent implements OnInit {
           this.employeeForm.get('positionId')?.enable();
         }
 
-        // بنعبي الفورم بالداتا اللي رجعت
+        // نعبي الفورم بالداتا الموجودة
         this.employeeForm.patchValue({
           firstName: profile.firstName || profile.fullName?.split(' ')[0] || '',
           lastName:  profile.lastName  || profile.fullName?.split(' ').slice(1).join(' ') || '',
@@ -127,7 +127,7 @@ export class EmployeeFormComponent implements OnInit {
           userId: profile.userId || '',
         });
 
-        // بنجهز معلومات اليوزر المربوط
+        // معلومات بسيطة للعرض في الـ header
         this.linkedUserInfo = {
           username: profile.fullName || `${profile.firstName || ''} ${profile.lastName || ''}`.trim() || 'Employee',
           email:    profile.email || '',
@@ -142,7 +142,6 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  // الاقسام
   loadDepartments() {
     this.departmentService.getDepartments().subscribe({
       next: (res: any) => {
@@ -151,7 +150,7 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  // اليوزرات الفاضية
+  // اليوزرات اللي ما ربطوا بموظف بعد
   loadUnassignedUsers() {
     this.authService.getUnassignedEmployeeUsers().subscribe({
       next: (res: any) => {
@@ -163,7 +162,7 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  // المسميات الوظيفية
+  // positions حسب القسم
   loadPositions(deptId: number) {
     this.positionService.getPositionsByDepartment(deptId).subscribe({
       next: (res: any) => {
@@ -173,18 +172,18 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  // الايميل بالشاشة
+  // الإيميل disabled فنحتاج getRawValue
   get displayEmail(): string {
     return this.employeeForm.getRawValue().email || '';
   }
 
-  // ─── تحليل أخطاء الباك ايند وتحويلها لرسالة واضحة ───
+  // تحويل أخطاء الـ backend لرسائل مفهومة
   private parseBackendError(err: any): string {
     const body = err?.error;
 
     if (!body) return 'حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى.';
 
-    // ASP.NET ValidationProblemDetails: { errors: { FieldName: ['msg1', 'msg2'] } }
+    // ASP.NET validation errors — كل field فيه list من الـ errors
     if (body.errors && typeof body.errors === 'object') {
       const fieldLabels: Record<string, string> = {
         PhoneNumber: 'رقم الهاتف',
@@ -202,7 +201,7 @@ export class EmployeeFormComponent implements OnInit {
         const label = fieldLabels[field] || field;
         const msgs  = Array.isArray(errors) ? errors : [String(errors)];
         for (const msg of msgs) {
-          // ترجمة رسائل الباك ايند الشائعة
+          // نترجم الرسالة للعربي لو عندنا ترجمة
           const translated = this.translateBackendMsg(String(msg));
           messages.push(`• ${label}: ${translated}`);
         }
@@ -218,7 +217,7 @@ export class EmployeeFormComponent implements OnInit {
     return 'حدث خطأ أثناء الإرسال، يرجى المحاولة مرة أخرى.';
   }
 
-  // ترجمة رسائل الخطأ الإنجليزية من الباك ايند
+  // ترجمة بعض رسائل الـ backend الشائعة للعربي
   private translateBackendMsg(msg: string): string {
     const map: Record<string, string> = {
       'Invalid phone number format.':         'صيغة رقم الهاتف غير صحيحة (يجب أن يكون 10 أرقام)',
@@ -233,12 +232,11 @@ export class EmployeeFormComponent implements OnInit {
     return msg;
   }
 
-  // ─── الحفظ ───
   onSubmit() {
     if (this.employeeForm.invalid) {
       this.employeeForm.markAllAsTouched();
 
-      // إظهار رسالة خطأ مخصصة لرقم الهاتف مباشرة
+      // خطأ رقم الهاتف له رسالة مخصصة
       const phone = this.employeeForm.get('phoneNumber');
       if (phone?.errors?.['pattern']) {
         Swal.fire({

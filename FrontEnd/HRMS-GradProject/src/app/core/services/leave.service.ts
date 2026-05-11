@@ -10,7 +10,7 @@ export class LeaveService {
   private apiUrl = 'https://localhost:7204/api/leaves';
 
   getMyLeaves(): Observable<any[]> {
-    return this.http.get<any>(`${this.apiUrl}/my`).pipe(
+    return this.http.get<any>(`${this.apiUrl}/my?pageNumber=1&pageSize=1000`).pipe(
       map((response) => {
         if (response && response.data && response.data.items) return response.data.items;
         if (Array.isArray(response)) return response;
@@ -25,7 +25,7 @@ export class LeaveService {
   }
 
   getAllLeaves(): Observable<any[]> {
-    return this.http.get<any>(this.apiUrl).pipe(
+    return this.http.get<any>(`${this.apiUrl}?pageNumber=1&pageSize=1000`).pipe(
       map((response) => {
         if (response && response.data && response.data.items) return response.data.items;
         if (Array.isArray(response)) return response;

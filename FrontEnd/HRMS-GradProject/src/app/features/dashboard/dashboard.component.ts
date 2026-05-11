@@ -47,7 +47,7 @@ export class DashboardComponent implements OnInit {
   employeeHoursWorked: number = 0;
   employeeNextPayday: string = '';
 
-  // يوم الراتب
+  // يوم 25 من كل شهر
   readonly PAYDAY = 25;
 
   leaveChartInstance: any;
@@ -85,7 +85,7 @@ export class DashboardComponent implements OnInit {
         else if (res?.data && Array.isArray(res.data)) extracted = res.data;
 
         this.pendingLeaves = extracted.filter(
-          // ✅ Backend يُرجع 'Pending' كـ string من MappingProfile .ToString()
+          // الـ backend بيرجع string مش رقم
           (l: any) => l.status === 'Pending',
         ).length;
 
@@ -96,7 +96,7 @@ export class DashboardComponent implements OnInit {
         let annual = 0, sick = 0, emergency = 0, unpaid = 0;
 
         if (totalLeaves > 0) {
-          // ✅ Backend يُرجع LeaveType كـ string من .ToString()
+          // كلها strings من الـ backend
           annual = extracted.filter((l: any) => l.leaveType === 'Annual').length;
           sick = extracted.filter((l: any) => l.leaveType === 'Sick').length;
           emergency = extracted.filter((l: any) => l.leaveType === 'Emergency').length;
@@ -225,15 +225,14 @@ export class DashboardComponent implements OnInit {
       1,
     ).toLocaleString('en-US', { month: 'short' });
 
-    // ✅ Bug #5 Fix: قيمة احتياطية محلية تظهر فوراً
-    // loadNextPayday() ستُحدّثها بقيمة أدق من الـ API
+    // قيمة مؤقتة تظهر فوراً، تتحدث لما يرجع الـ API
     if (today.getDate() > this.PAYDAY) {
       this.employeeNextPayday = `${nextMonth} ${this.PAYDAY}`;
     } else {
       this.employeeNextPayday = `${currentMonth} ${this.PAYDAY}`;
     }
 
-    // جلب القيمة الدقيقة من آخر سجل راتب موجود في الـ DB
+    // نجيب التاريخ الدقيق من آخر راتب
     this.loadNextPayday();
 
     this.leaveService.getMyLeaves().subscribe({
@@ -244,7 +243,7 @@ export class DashboardComponent implements OnInit {
           extracted = res.data.items;
         else if (res?.data && Array.isArray(res.data)) extracted = res.data;
 
-        // ✅ Bug #4 Fix: Backend يُرجع 'Pending'/'Approved'/'Annual' كـ strings
+        // backend يرجع strings مش أرقام
         this.employeePendingLeaves = extracted.filter(
           (l: any) => l.status === 'Pending',
         ).length;
@@ -316,7 +315,7 @@ export class DashboardComponent implements OnInit {
       this.leaveChartInstance.destroy();
     }
 
-    // Render empty chart if no leaves
+    // لو مافي داتا نعرض دائرة فاضية
     if (annual === 0 && sick === 0 && emergency === 0 && unpaid === 0) {
       this.leaveChartInstance = new Chart(ctx, {
         type: 'doughnut',

@@ -10,7 +10,7 @@ export class DepartmentService {
   private apiUrl = 'https://localhost:7204/api/departments';
 
   getDepartments(): Observable<any[]> {
-    return this.http.get<any>('https://localhost:7204/api/departments').pipe(
+    return this.http.get<any>('https://localhost:7204/api/departments?pageNumber=1&pageSize=1000').pipe(
       map((response) => {
         if (response && response.data && response.data.items)
           return response.data.items;

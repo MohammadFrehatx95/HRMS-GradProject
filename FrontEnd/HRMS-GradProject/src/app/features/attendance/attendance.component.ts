@@ -50,14 +50,14 @@ export class AttendanceComponent implements OnInit {
     return Math.min(a, b);
   }
 
-  // حالة الموظف الحالية
-  isCheckedInToday = false; // تحققنا من Clock In اليوم
-  isCheckedOutToday = false; // الـ session مكتملة
+  // حالة clock in/out اليوم
+  isCheckedInToday = false;
+  isCheckedOutToday = false;
   todayWorkedHours = 0;
-  activeSession: any = null; // أي session مفتوحة (Working) من أي يوم
-  readonly today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD للمقارنة في الـ template
+  activeSession: any = null; // session مفتوحة بدون clock out
+  readonly today = new Date().toISOString().split('T')[0]; // للمقارنة في الـ template
 
-  /** true إذا كان هناك session مفتوحة من يوم سابق (مش اليوم) */
+  // session من يوم سابق ونسي يعمل clock out
   get isStaleSession(): boolean {
     if (!this.activeSession?.date) return false;
     const sessionDate = new Date(this.activeSession.date)
@@ -70,13 +70,12 @@ export class AttendanceComponent implements OnInit {
     this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
     if (this.isAdmin) {
-      this.loadAllAttendance(); // الأدمن يشوف الكل مباشرة
+      this.loadAllAttendance();
     } else {
-      this.loadMyAttendance(); // بقية الأدوار يشوفون سجلاتهم
+      this.loadMyAttendance();
     }
   }
 
-  // الأدمن يجلب كل سجلات الموظفين
   loadAllAttendance() {
     this.isLoading = true;
     this.attendanceService.getAllAttendance().subscribe({
@@ -91,7 +90,6 @@ export class AttendanceComponent implements OnInit {
     });
   }
 
-  // ─── جلب سجلاتي الشخصية ───
   loadMyAttendance() {
     this.isLoading = true;
     this.attendanceService.getMyAttendance().subscribe({
@@ -174,7 +172,7 @@ export class AttendanceComponent implements OnInit {
     this.isProcessing = true;
     const now = new Date();
     const dateIso = now.toISOString();
-    const timeString = now.toTimeString().split(' ')[0]; // HH:MM:SS
+    const timeString = now.toTimeString().split(' ')[0]; // HH:MM:SS format
 
     this.attendanceService
       .clockIn({ date: dateIso, clockIn: timeString })
@@ -205,9 +203,9 @@ export class AttendanceComponent implements OnInit {
   onClockOut() {
     this.isProcessing = true;
     const now = new Date();
-    const timeString = now.toTimeString().split(' ')[0]; // HH:MM:SS
+    const timeString = now.toTimeString().split(' ')[0];
 
-    // إذا كانت الـ session من يوم سابق، نرسل وقت 23:59 أو وقت الآن
+    // session من يوم سابق نغلقها بـ 23:59
     const isOldSession =
       this.activeSession &&
       new Date(this.activeSession.date).toDateString() !==
@@ -265,7 +263,7 @@ export class AttendanceComponent implements OnInit {
       ].map(value => `"${String(value).replace(/"/g, '""')}"`).join(','); 
     });
     
-    // UTF-8 BOM for Excel + sep=, delimiter hint
+    // BOM + sep hint عشان Excel يفتحه صح
     const csvContent = '\uFEFFsep=,\r\n' + [headers.join(','), ...csvData].join('\r\n');
     
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });

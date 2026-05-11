@@ -48,7 +48,7 @@ export const routes: Routes = [
     component: DepartmentsComponent,
     canActivate: [authGuard, adminGuard],
   },
-  // الكل بشوف الاجازات، بس القبول والرفض للأدمن والـ hr
+  // الكل يشوف الإجازات، القبول/الرفض للـ admin وhr فقط
   { path: 'leave', component: LeaveComponent, canActivate: [authGuard] },
   {
     path: 'attendance',
@@ -60,7 +60,7 @@ export const routes: Routes = [
     component: AllAttendanceComponent,
     canActivate: [authGuard, hrGuard],
   },
-  // الكل بشوف راتبه، بس الاضافة والتعديل للأدمن
+  // كل موظف يشوف راتبه، الإضافة والتعديل للـ admin
   { path: 'salary', component: SalaryComponent, canActivate: [authGuard] },
   {
     path: 'employee-form',

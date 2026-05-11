@@ -46,21 +46,19 @@ export class AuthService {
     const token = localStorage.getItem('jwt_token');
     if (!token) return false;
 
-    // ✅ تحقق من صلاحية التوكن (هل منتهي الصلاحية؟)
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       const exp = payload.exp;
-      if (!exp) return true; // لو ما فيه exp نعتبره صالح
+      if (!exp) return true; // مافي exp — نعتبره صالح
 
-      // exp بالثواني، Date.now() بالملي ثانية
+      // exp بالثواني، Date.now() بالمللي ثانية
       if (Date.now() >= exp * 1000) {
-        // التوكن منتهي — نظف الـ localStorage
         this.logout();
         return false;
       }
       return true;
     } catch {
-      // لو فشل الـ parsing، التوكن فاسد — احذفه
+      // توكن فاسد
       this.logout();
       return false;
     }
@@ -78,7 +76,7 @@ export class AuthService {
     return this.hasRole('hr');
   }
 
-  // أدمن أو hr عندهم نفس الصلاحيات لبعض الاشياء
+  // admin أو hr عندهم نفس الصلاحيات لبعض الأشياء
   isAdminOrHR(): boolean {
     return this.hasRole('admin') || this.hasRole('hr');
   }
@@ -113,21 +111,21 @@ export class AuthService {
     localStorage.removeItem('user_name');
   }
 
-  // نجيب كل اليوزرات اللي عندهم ملف موظف
+  // كل اليوزرات
   getUsers(pageNumber = 1, pageSize = 100): Observable<any> {
     return this.http
       .get<any>(`${this.apiUrl}/users?pageNumber=${pageNumber}&pageSize=${pageSize}`)
       .pipe(map((response) => response?.data ?? response));
   }
 
-  // اليوزرات اللي لسا ما انربطوا بموظف
+  // يوزرات بدون ملف موظف
   getUnassignedEmployeeUsers(pageNumber = 1, pageSize = 100): Observable<any> {
     return this.http
       .get<any>(`${this.apiUrl}/unassigned-employees?pageNumber=${pageNumber}&pageSize=${pageSize}`)
       .pipe(map((response) => response?.data ?? response));
   }
 
-  // نجيب ايدي اليوزر من ايميله
+  // نجيب الـ id من الإيميل
   getUserIdByEmail(email: string): Observable<any> {
     return this.http
       .get<any>(`${this.apiUrl}/get-user-id-by-email/${encodeURIComponent(email)}`)

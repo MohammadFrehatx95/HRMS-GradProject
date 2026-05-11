@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { LeaveService } from '../../core/services/leave.service';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
+import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 declare var bootstrap: any;
@@ -142,12 +143,15 @@ export class LeaveComponent implements OnInit {
       
       let matchesStatus = true;
       if (this.selectedLeaveStatus) {
-        matchesStatus = this.getStatusText(l.status) === this.selectedLeaveStatus;
+        matchesStatus = this.getStatusText(l.status).toLowerCase() === this.selectedLeaveStatus.toLowerCase();
       }
       
       let matchesType = true;
       if (this.selectedLeaveType) {
-        matchesType = String(l.leaveType) === this.selectedLeaveType;
+        // الـ backend يرجع string مثل "Annual" أو رقم مثل 0
+        // نحوّل كلاهما لاسم ونقارن بـ case-insensitive
+        const leaveTypeName = this.getLeaveTypeText(l.leaveType).toLowerCase();
+        matchesType = leaveTypeName === this.selectedLeaveType.toLowerCase();
       }
       
       return matchesSearch && matchesStatus && matchesType;
@@ -239,9 +243,7 @@ export class LeaveComponent implements OnInit {
       },
       error: (err) => {
         this.isProcessing = false;
-        const msg =
-          err.error?.message || err.error?.title || 'Failed to submit request';
-        Swal.fire('Error', msg, 'warning');
+        Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to submit leave request. Please try again.'), 'warning');
       },
     });
   }
@@ -283,8 +285,7 @@ export class LeaveComponent implements OnInit {
         },
         error: (err) => {
           console.error('Status update error:', err);
-          const msg = err.error?.message || err.error?.title || 'Failed to update status.';
-          Swal.fire('Error!', msg, 'error');
+          Swal.fire('Error!', getFriendlyErrorMessage(err, 'Failed to update leave status. Please try again.'), 'error');
         },
       });
   }
