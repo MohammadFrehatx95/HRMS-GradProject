@@ -8,14 +8,48 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Implementations;
 
+
 public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
 {
+   
+    //   2026010001  
+    private async Task<int> GenerateEmployeeIdAsync(int departmentId, DateTime hireDate)
+    {
+        var year = hireDate.Year;
+
+        // آخر ID موجود لنفس القسم ونفس السنة
+        var prefix = int.Parse($"{year}{departmentId:D2}");
+        var prefixMin = prefix * 10000;       // 2026010000
+        var prefixMax = prefixMin + 9999;     // 2026019999
+
+        var lastId = await uow.Repository<Employee>()
+                              .GetAllQueryable()
+                              .Where(e => e.Id >= prefixMin && e.Id <= prefixMax)
+                              .OrderByDescending(e => e.Id)
+                              .Select(e => e.Id)
+                              .FirstOrDefaultAsync();
+
+        // لو ما في موظفين قبل → يبدأ من 0001
+        var nextSeq = lastId == 0
+            ? 1
+            : (lastId % 10000) + 1;
+
+        if (nextSeq > 9999)
+            throw new InvalidOperationException(
+                $"Employee limit reached for dept {departmentId} in {year}");
+
+        return int.Parse($"{year}{departmentId:D2}{nextSeq:D4}");
+        // ← 2026 + 01 + 0001 = 2026010001
+    }
+
+    
     public async Task<PagedResult<EmployeeDto>> GetAllAsync(int pageNumber, int pageSize)
     {
         var query = uow.Repository<Employee>()
                        .GetAllQueryable()
                        .Include(e => e.Department)
-                       .Include(e => e.Position); // ✅ W1/I4 Fix: أضف Position للـ mapping
+                       .OrderBy(e => e.DepartmentId)
+                       .ThenBy(e => e.Id);
 
         var total = await query.CountAsync();
         var items = await query
@@ -32,7 +66,6 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
         var employee = await uow.Repository<Employee>()
                                 .GetAllQueryable()
                                 .Include(e => e.Department)
-                                .Include(e => e.Position) // ✅ W1/I4 Fix
                                 .FirstOrDefaultAsync(e => e.Id == id);
 
         return employee is null ? null : mapper.Map<EmployeeDto>(employee);
@@ -40,22 +73,27 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
 
     public async Task<EmployeeDto> CreateAsync(CreateEmployeeDto dto)
     {
-       
         var emailExists = await uow.Repository<Employee>()
                                    .GetAllQueryable()
                                    .AnyAsync(e => e.Email == dto.Email);
-
         if (emailExists)
-        {
-            throw new InvalidOperationException("Email is already in use");
-        }
+            throw new InvalidOperationException("Email already used");
+
+        var deptExists = await uow.Repository<Department>()
+                                  .GetAllQueryable()
+                                  .AnyAsync(d => d.Id == dto.DepartmentId);
+        if (!deptExists)
+            throw new KeyNotFoundException($"Department {dto.DepartmentId} not found");
+
         var employee = mapper.Map<Employee>(dto);
         employee.IsActive = true;
+
+        // ← توليد الـ ID قبل الحفظ
+        employee.Id = await GenerateEmployeeIdAsync(dto.DepartmentId, dto.HireDate);
 
         await uow.Repository<Employee>().AddAsync(employee);
         await uow.SaveChangesAsync();
 
-        // ✅ I1 Fix: أعد جلب الموظف مع Include حتى يحتوي الـ Response على DepartmentName و PositionTitle
         return (await GetByIdAsync(employee.Id))!;
     }
 
@@ -65,15 +103,13 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
                                 .GetAllQueryable()
                                 .FirstOrDefaultAsync(e => e.Id == id);
 
-        if (employee is null)
-        {
-            return null;
-        }
+        if (employee is null) return null;
+
         mapper.Map(dto, employee);
         uow.Repository<Employee>().Update(employee);
         await uow.SaveChangesAsync();
 
-        return mapper.Map<EmployeeDto>(employee);
+        return await GetByIdAsync(id);
     }
 
     public async Task<bool> DeleteAsync(int id)
@@ -82,10 +118,8 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
                                 .GetAllQueryable()
                                 .FirstOrDefaultAsync(e => e.Id == id);
 
-        if (employee is null)
-        {
-            return false;
-        }
+        if (employee is null) return false;
+
         uow.Repository<Employee>().Delete(employee);
         await uow.SaveChangesAsync();
         return true;
@@ -97,6 +131,7 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
                                  .GetAllQueryable()
                                  .Where(e => e.DepartmentId == departmentId)
                                  .Include(e => e.Department)
+                                 .OrderBy(e => e.Id)
                                  .ToListAsync();
 
         return mapper.Map<IEnumerable<EmployeeDto>>(employees);
