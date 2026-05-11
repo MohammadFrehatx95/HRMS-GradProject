@@ -10,7 +10,7 @@ export class EmployeeService {
   private apiUrl = 'https://localhost:7204/api/employees';
 
   getEmployees(): Observable<any[]> {
-    return this.http.get<any>(this.apiUrl).pipe(
+    return this.http.get<any>(`${this.apiUrl}?pageNumber=1&pageSize=1000`).pipe(
       map((response) => {
         if (response && response.data && response.data.items) {
           return response.data.items;

@@ -12,6 +12,7 @@ import { EmployeeService } from '../../core/services/employee.service';
 import { PositionService } from '../../core/services/position.service';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import Swal from 'sweetalert2';
+import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
 
 declare var bootstrap: any;
 
@@ -237,8 +238,7 @@ export class DepartmentsComponent implements OnInit {
         },
         error: (err) => {
           this.isSubmitting = false;
-          const msg = err.error?.message || 'Failed to update department';
-          Swal.fire('Error', msg, 'error');
+          Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to update department. Please try again.'), 'error');
         },
       });
     } else {
@@ -251,8 +251,7 @@ export class DepartmentsComponent implements OnInit {
         },
         error: (err) => {
           this.isSubmitting = false;
-          const msg = err.error?.message || 'Failed to add department';
-          Swal.fire('Error', msg, 'error');
+          Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to add department. Please try again.'), 'error');
         },
       });
     }
@@ -276,8 +275,7 @@ export class DepartmentsComponent implements OnInit {
           },
           error: (err) => {
             console.error('Delete error:', err);
-            const msg = err.error?.message || 'Failed to delete department.';
-            Swal.fire('Error!', msg, 'error');
+            Swal.fire('Error!', getFriendlyErrorMessage(err, 'Failed to delete department. It may have employees assigned to it.'), 'error');
           }
         });
       }

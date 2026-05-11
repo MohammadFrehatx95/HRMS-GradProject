@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { EmployeeService } from '../../core/services/employee.service';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
+import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
 
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
@@ -117,7 +118,7 @@ export class MyProfileComponent implements OnInit {
           this.isChangingPwd = false;
           hasError = true;
           requestsPending--;
-          Swal.fire('Error', err.error?.message || 'Failed to change password.', 'error');
+          Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to change password. Please check your current password and try again.'), 'error');
           this.checkDone(requestsPending, hasError);
         }
       });
@@ -154,7 +155,7 @@ export class MyProfileComponent implements OnInit {
             this.isUpdatingProfile = false;
             hasError = true;
             requestsPending--;
-            Swal.fire('Error', err.error?.message || 'Failed to update profile details.', 'error');
+            Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to update profile. Please try again.'), 'error');
             this.checkDone(requestsPending, hasError);
           }
         });
