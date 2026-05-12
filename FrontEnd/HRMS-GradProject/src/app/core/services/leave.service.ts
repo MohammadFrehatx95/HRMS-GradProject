@@ -7,7 +7,7 @@ import { Observable, map } from 'rxjs';
 })
 export class LeaveService {
   private http = inject(HttpClient);
-  private apiUrl = 'https://localhost:7204/api/leaves';
+  private apiUrl = 'https://hrms-gradproject.onrender.com/api/leaves';
 
   getMyLeaves(): Observable<any[]> {
     return this.http.get<any>(`${this.apiUrl}/my?pageNumber=1&pageSize=1000`).pipe(
@@ -56,3 +56,4 @@ export class LeaveService {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }
+

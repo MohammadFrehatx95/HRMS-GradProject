@@ -7,7 +7,7 @@ import { Observable, map } from 'rxjs';
 })
 export class PositionService {
   private http = inject(HttpClient);
-  private apiUrl = 'https://localhost:7204/api/positions';
+  private apiUrl = 'https://hrms-gradproject.onrender.com/api/positions';
 
   getPositions(): Observable<any[]> {
     return this.http.get<any>(this.apiUrl).pipe(
@@ -48,3 +48,4 @@ export class PositionService {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }
+
