@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EmployeeService } from '../../core/services/employee.service';
 import { LeaveService } from '../../core/services/leave.service';
@@ -8,17 +8,21 @@ import { AttendanceService } from '../../core/services/attendance.service';
 import { SalaryService } from '../../core/services/salary.service';
 import { Chart, registerables } from 'chart.js';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { AiWidgetComponent } from '../../shared/ai-widget/ai-widget.component';
+import { RouterLink } from '@angular/router';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 Chart.register(...registerables);
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, TranslatePipe],
+  imports: [CommonModule, RouterLink, TranslatePipe, AiWidgetComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, AfterViewInit {
   private empService = inject(EmployeeService);
   private leaveService = inject(LeaveService);
   private deptService = inject(DepartmentService);
@@ -47,20 +51,22 @@ export class DashboardComponent implements OnInit {
   employeeHoursWorked: number = 0;
   employeeNextPayday: string = '';
 
-  // يوم 25 من كل شهر
+  // يوم 25 هو موعد الراتب الثابت
   readonly PAYDAY = 25;
 
   leaveChartInstance: any;
+  attendanceChartInstance: any;
 
   ngOnInit() {
-    this.isAdmin = this.authService.isAdmin();
-
+    this.isAdmin = this.authService.isAdmin() || this.authService.isAdminOrHR();
     if (this.isAdmin) {
       this.loadAdminStats();
     } else {
       this.loadEmployeeStats();
     }
   }
+
+  ngAfterViewInit() {}
 
   loadAdminStats() {
     this.empService.getEmployees().subscribe({
@@ -85,7 +91,7 @@ export class DashboardComponent implements OnInit {
         else if (res?.data && Array.isArray(res.data)) extracted = res.data;
 
         this.pendingLeaves = extracted.filter(
-          // الـ backend بيرجع string مش رقم
+          // backend يرجع string مش enum
           (l: any) => l.status === 'Pending',
         ).length;
 
@@ -96,7 +102,7 @@ export class DashboardComponent implements OnInit {
         let annual = 0, sick = 0, emergency = 0, unpaid = 0;
 
         if (totalLeaves > 0) {
-          // كلها strings من الـ backend
+          // القيم string مش أرقام — جاية من backend كذا
           annual = extracted.filter((l: any) => l.leaveType === 'Annual').length;
           sick = extracted.filter((l: any) => l.leaveType === 'Sick').length;
           emergency = extracted.filter((l: any) => l.leaveType === 'Emergency').length;
@@ -173,6 +179,10 @@ export class DashboardComponent implements OnInit {
       this.attendanceRate = Math.round((validAtt.length / totalExpected) * 100);
       if (this.attendanceRate > 100) this.attendanceRate = 100;
     }
+    
+    setTimeout(() => {
+      this.renderAttendanceChart();
+    }, 100);
   }
 
   loadNextPayday() {
@@ -232,7 +242,7 @@ export class DashboardComponent implements OnInit {
       this.employeeNextPayday = `${currentMonth} ${this.PAYDAY}`;
     }
 
-    // نجيب التاريخ الدقيق من آخر راتب
+    // نجيب التاريخ الحقيقي من آخر راتب
     this.loadNextPayday();
 
     this.leaveService.getMyLeaves().subscribe({
@@ -243,7 +253,7 @@ export class DashboardComponent implements OnInit {
           extracted = res.data.items;
         else if (res?.data && Array.isArray(res.data)) extracted = res.data;
 
-        // backend يرجع strings مش أرقام
+        // status يجي string من الـ API مش رقم
         this.employeePendingLeaves = extracted.filter(
           (l: any) => l.status === 'Pending',
         ).length;
@@ -372,4 +382,230 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
+
+  getRecentAttendanceData() {
+    if (this.totalEmployees === 0 || this.allAttendances.length === 0) return { labels: [], data: [] };
+
+    // Group attendances by date
+    const dateGroups: { [date: string]: number } = {};
+    
+    this.allAttendances.forEach(a => {
+      if (a.date && a.clockIn) {
+        const d = a.date.split('T')[0];
+        dateGroups[d] = (dateGroups[d] || 0) + 1;
+      }
+    });
+
+    // Get the last 7 unique dates
+    const sortedDates = Object.keys(dateGroups).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+    const last7Dates = sortedDates.slice(-7);
+
+    const labels: string[] = [];
+    const data: number[] = [];
+
+    last7Dates.forEach(dateStr => {
+      const attended = dateGroups[dateStr];
+      const rate = Math.round((attended / this.totalEmployees) * 100);
+      
+      const dateObj = new Date(dateStr);
+      labels.push(dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+      data.push(rate > 100 ? 100 : rate);
+    });
+
+    return { labels, data };
+  }
+
+  renderAttendanceChart() {
+    const ctx = document.getElementById('attendanceRateChart') as HTMLCanvasElement;
+    if (!ctx) return;
+
+    if (this.attendanceChartInstance) {
+      this.attendanceChartInstance.destroy();
+    }
+
+    const { labels, data } = this.getRecentAttendanceData();
+
+    if (labels.length === 0) {
+      this.attendanceChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['No Data'],
+          datasets: [{
+            data: [0],
+            backgroundColor: '#e9ecef',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: { enabled: false } },
+          scales: { y: { display: false }, x: { display: false } }
+        }
+      });
+      return;
+    }
+
+    this.attendanceChartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Attendance Rate',
+          data: data,
+          backgroundColor: '#0d6efd',
+          borderRadius: 4,
+          barThickness: 25
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return context.parsed.y + '%';
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              stepSize: 25,
+              callback: function(value) {
+                return value + '%';
+              }
+            },
+            grid: {
+              color: '#f1f5f9'
+            },
+            border: { display: false }
+          },
+          x: {
+            grid: {
+              display: false
+            },
+            border: { display: false }
+          }
+        }
+      }
+    });
+  }
+
+  downloadSystemReport() {
+    const doc = new jsPDF();
+    const now = new Date();
+    const generatedDateStr = now.toLocaleDateString('en-US') + ' ' + now.toLocaleTimeString('en-US');
+    
+    // Add Header
+    doc.setFontSize(22);
+    doc.setTextColor(40);
+    doc.text('Kawadir HRMS', 14, 22);
+    
+    doc.setFontSize(16);
+    doc.setTextColor(100);
+    doc.text('Comprehensive System Report', 14, 32);
+    
+    doc.setFontSize(11);
+    doc.setTextColor(150);
+    doc.text(`Generated On: ${generatedDateStr}`, 14, 40);
+    
+    // 1. System Overview Table
+    doc.setFontSize(14);
+    doc.setTextColor(40);
+    doc.text('1. System Overview', 14, 55);
+    
+    autoTable(doc, {
+      startY: 60,
+      head: [['Statistic', 'Value']],
+      body: [
+        ['Total Employees', this.totalEmployees.toString()],
+        ['Total Departments', this.departmentsCount.toString()],
+        ['Total Salaries (Net)', `${this.totalSalaries.toLocaleString()} JD`],
+        ['Pending Leaves', this.pendingLeaves.toString()],
+        ['Overall Attendance Rate', `${this.attendanceRate}%`],
+      ],
+      theme: 'striped',
+      headStyles: { fillColor: [13, 110, 253] }
+    });
+
+    // 2. Leave Distribution
+    let currentY = (doc as any).lastAutoTable.finalY + 15;
+    doc.setFontSize(14);
+    doc.text('2. Leave Distribution', 14, currentY);
+    
+    autoTable(doc, {
+      startY: currentY + 5,
+      head: [['Leave Type', 'Percentage']],
+      body: [
+        ['Annual Leave', `${this.annualLeavePercent}%`],
+        ['Sick Leave', `${this.sickLeavePercent}%`],
+        ['Emergency Leave', `${this.emergencyLeavePercent}%`],
+        ['Unpaid Leave', `${this.unpaidLeavePercent}%`]
+      ],
+      theme: 'striped',
+      headStyles: { fillColor: [220, 53, 69] } // Red/Pinkish
+    });
+
+    // 3. Recent Leaves Activity
+    currentY = (doc as any).lastAutoTable.finalY + 15;
+    if (currentY > 250) {
+      doc.addPage();
+      currentY = 20;
+    }
+    
+    doc.setFontSize(14);
+    doc.text('3. Recent Leave Requests', 14, currentY);
+    
+    const recentLeavesData = this.recentLeaves.map(l => [
+      l.employeeName || `Emp #${l.employeeId}`,
+      l.leaveType,
+      `${l.totalDays} Days`,
+      l.status
+    ]);
+
+    autoTable(doc, {
+      startY: currentY + 5,
+      head: [['Employee', 'Leave Type', 'Duration', 'Status']],
+      body: recentLeavesData.length > 0 ? recentLeavesData : [['No recent leave requests found', '', '', '']],
+      theme: 'striped',
+      headStyles: { fillColor: [255, 193, 7] }, // Yellow
+      styles: { textColor: [40, 40, 40] }
+    });
+
+    // 4. Recent Attendance Activity
+    currentY = (doc as any).lastAutoTable.finalY + 15;
+    if (currentY > 250) {
+      doc.addPage();
+      currentY = 20;
+    }
+    
+    doc.setFontSize(14);
+    doc.text('4. Recent Attendance Tracking', 14, currentY);
+    
+    const recentAttendanceData = this.recentAttendances.map(a => [
+      a.employeeName || `Emp #${a.employeeId}`,
+      a.date ? new Date(a.date).toLocaleDateString('en-US') : 'N/A',
+      a.clockIn || '--:--',
+      (a.clockOut && a.clockOut !== '00:00:00') ? a.clockOut : '--:--'
+    ]);
+
+    autoTable(doc, {
+      startY: currentY + 5,
+      head: [['Employee', 'Date', 'Clock In', 'Clock Out']],
+      body: recentAttendanceData.length > 0 ? recentAttendanceData : [['No recent attendance records found', '', '', '']],
+      theme: 'striped',
+      headStyles: { fillColor: [25, 135, 84] } // Green
+    });
+
+    // Save PDF
+    const fileDateStr = now.toLocaleDateString('en-US').replace(/\//g, '-');
+    doc.save(`Kawadir_System_Report_${fileDateStr}.pdf`);
+  }
 }
+

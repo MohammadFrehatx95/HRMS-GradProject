@@ -1,5 +1,7 @@
 <div class="page-container p-4">
 
+    <app-ai-widget page="leaves"></app-ai-widget>
+
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div>
             <h3 class="fw-bold text-dark mb-1">{{ isAdminOrHR ? ('All Leave Requests' | t) : ('My Leave Requests' | t) }}</h3>
@@ -210,7 +212,7 @@
             </ul>
         </div>
     </div>
-</div>
+
 
 <div class="modal fade" id="leaveModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

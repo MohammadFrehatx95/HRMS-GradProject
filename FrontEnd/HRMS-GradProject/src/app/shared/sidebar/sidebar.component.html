@@ -20,6 +20,7 @@
             <li><a routerLink="/leave" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-calendar2-check"></i> {{ 'Leave Requests' | t }}</a></li>
             <li><a routerLink="/attendance" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-clock-history"></i> {{ 'Attendance' | t }}</a></li>
             <li><a routerLink="/salary" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-cash-stack"></i> {{ 'Salaries' | t }}</a></li>
+            <li><a routerLink="/ai-chat" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-stars text-warning"></i> <span class="text-warning fw-bold" style="text-shadow: 0 0 10px rgba(255,193,7,0.4);">{{ 'Smart Assistant' | t }}</span></a></li>
 
             @if (isAdmin) {
             <li class="section-title">{{ 'System Control' | t }}</li>
