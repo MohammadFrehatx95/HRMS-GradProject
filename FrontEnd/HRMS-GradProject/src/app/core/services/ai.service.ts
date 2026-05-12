@@ -9,11 +9,27 @@ export class AiService {
   private http = inject(HttpClient);
   private apiUrl = 'https://localhost:7204/api/AIInsights';
 
-  /** Page-aware insight — calls /api/AIInsights/insight/{page}?role=admin|employee */
+  private insightCache = new Map<string, { data: string, timestamp: number }>();
+  private readonly CACHE_DURATION_MS = 5 * 60 * 1000; // 5 minutes cache
+
+  // page-specific insight — each page gets a different tip
   getPageInsight(page: string, role: 'admin' | 'employee'): Observable<string> {
+    const cacheKey = `${page}_${role}`;
+    const cached = this.insightCache.get(cacheKey);
+    
+    // Return cached insight if it's less than 5 minutes old
+    if (cached && (Date.now() - cached.timestamp < this.CACHE_DURATION_MS)) {
+      return of(cached.data);
+    }
+
     return this.http.get<any>(`${this.apiUrl}/insight/${page}?role=${role}`).pipe(
-      map(res => res.data || '💡 النظام يعمل بكفاءة.'),
-      catchError(() => of('💡 تأكد من تشغيل السيرفر للحصول على تحليل ذكي.'))
+      map(res => {
+        const insightText = res.data || '💡 النظام يعمل بكفاءة.';
+        // Save to cache
+        this.insightCache.set(cacheKey, { data: insightText, timestamp: Date.now() });
+        return insightText;
+      }),
+      catchError(() => of('💡 عذراً، الذكاء الاصطناعي غير متاح حالياً. يرجى المحاولة لاحقاً.'))
     );
   }
 

@@ -246,12 +246,12 @@ export class AttendanceComponent implements OnInit {
     }
 
     const headers = ['Date', 'Employee Name', 'Employee ID', 'Clock In', 'Clock Out', 'Status', 'Total Hours'];
-    
+
     const csvData = this.attendanceRecords.map(rec => {
       const isCompleted = rec.clockOut && rec.clockOut !== '00:00:00';
       const status = isCompleted ? 'Completed' : 'Working';
       const empName = rec.employeeName || ('Emp #' + rec.employeeId);
-      
+
       return [
         rec.date ? new Date(rec.date).toLocaleDateString() : '',
         empName,
@@ -260,12 +260,12 @@ export class AttendanceComponent implements OnInit {
         (rec.clockOut && rec.clockOut !== '00:00:00') ? rec.clockOut : '--:--',
         status,
         rec.totalHours || '0'
-      ].map(value => `"${String(value).replace(/"/g, '""')}"`).join(','); 
+      ].map(value => `"${String(value).replace(/"/g, '""')}"`).join(',');
     });
-    
+
     // BOM + sep hint عشان Excel يفتحه صح
     const csvContent = '\uFEFFsep=,\r\n' + [headers.join(','), ...csvData].join('\r\n');
-    
+
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -274,7 +274,7 @@ export class AttendanceComponent implements OnInit {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    
+
     Swal.fire({
       icon: 'success',
       title: 'Exported Successfully',

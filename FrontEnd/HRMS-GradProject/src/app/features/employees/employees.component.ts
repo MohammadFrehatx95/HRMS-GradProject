@@ -83,7 +83,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.isAdmin     = this.authService.isAdmin();
+    this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
     this.loadEmployees();
   }
@@ -107,7 +107,7 @@ export class EmployeesComponent implements OnInit {
     }
 
     const headers = ['ID', 'First Name', 'Last Name', 'Email', 'Phone', 'Address', 'Status', 'Role ID'];
-    
+
     const csvData = this.employeesList.map(emp => {
       return [
         emp.id,
@@ -118,13 +118,13 @@ export class EmployeesComponent implements OnInit {
         emp.address || 'N/A',
         emp.isActive ? 'Active' : 'Inactive',
         emp.roleId || 'N/A'
-      ].map(value => `"${String(value).replace(/"/g, '""')}"`).join(','); 
+      ].map(value => `"${String(value).replace(/"/g, '""')}"`).join(',');
     });
-    
+
     // Add UTF-8 BOM for Excel to read Arabic/Special characters correctly
     // Add sep=, to force Excel to recognize comma as delimiter regardless of region
     const csvContent = '\uFEFFsep=,\r\n' + [headers.join(','), ...csvData].join('\r\n');
-    
+
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -133,7 +133,7 @@ export class EmployeesComponent implements OnInit {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    
+
     Swal.fire({
       icon: 'success',
       title: 'Exported Successfully',
@@ -162,10 +162,10 @@ export class EmployeesComponent implements OnInit {
       next: (data) => {
         this.allEmployeesList = data;
         this.employeesList = [...this.allEmployeesList];
-        
+
         const depts = data.map((e: any) => e.departmentName || e.departmentId).filter(Boolean);
         this.uniqueDepartments = Array.from(new Set(depts)) as string[];
-        
+
         this.isLoading = false;
       },
       error: (err) => {
@@ -183,23 +183,23 @@ export class EmployeesComponent implements OnInit {
         const fullName = `${emp.firstName || ''} ${emp.lastName || ''}`.toLowerCase();
         const idStr = String(emp.id);
         const deptStr = String(emp.departmentName || emp.departmentId || '').toLowerCase();
-        
+
         matchesSearch = fullName.includes(query) || idStr.includes(query) || deptStr.includes(query);
       }
-      
+
       let matchesDept = true;
       if (this.selectedDepartment) {
         matchesDept = (emp.departmentName || String(emp.departmentId)) === this.selectedDepartment;
       }
-      
+
       let matchesStatus = true;
       if (this.selectedStatus) {
         matchesStatus = (this.selectedStatus === 'Active') ? emp.isActive : !emp.isActive;
       }
-      
+
       return matchesSearch && matchesDept && matchesStatus;
     });
-    
+
     this.currentPage = 1; // Reset to first page on filter
   }
 
@@ -219,7 +219,7 @@ export class EmployeesComponent implements OnInit {
             this.employeesList = this.employeesList.filter(
               (emp) => emp.id !== id,
             );
-            
+
             // Adjust pagination if needed
             if (this.currentPage > this.totalPages) {
               this.currentPage = this.totalPages;
@@ -314,9 +314,9 @@ export class EmployeesComponent implements OnInit {
         .sort((a: any, b: any) => new Date(b.startDate || 0).getTime() - new Date(a.startDate || 0).getTime());
 
       const empSalaries = salaries.filter((s: any) => s.employeeId === emp.id)
-        .sort((a: any, b: any) => { 
-          if (b.year !== a.year) return b.year - a.year; 
-          return b.month - a.month; 
+        .sort((a: any, b: any) => {
+          if (b.year !== a.year) return b.year - a.year;
+          return b.month - a.month;
         });
 
       this.buildEmployeePDF(emp, empName, empAttendance, empLeaves, empSalaries);
@@ -327,7 +327,7 @@ export class EmployeesComponent implements OnInit {
     const doc = new jsPDF();
     const pageW = doc.internal.pageSize.getWidth();
     const today = new Date();
-    const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     // ✅ W3 Fix: تأكد من صحة كل أنواع الإجازات بما يطابق Backend enum
     const leaveTypeMap: any = {
       0: 'Annual', 1: 'Sick', 2: 'Emergency', 3: 'Unpaid',

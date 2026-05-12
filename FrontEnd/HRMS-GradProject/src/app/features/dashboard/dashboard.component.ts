@@ -66,7 +66,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   loadAdminStats() {
     this.empService.getEmployees().subscribe({
@@ -145,7 +145,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         else if (res?.data?.items && Array.isArray(res.data.items))
           extracted = res.data.items;
         else if (res?.data && Array.isArray(res.data)) extracted = res.data;
-        
+
         this.totalSalaries = extracted.reduce((sum, current) => sum + (current.netAmount || 0), 0);
       },
       error: (err) => console.error('Error fetching salaries:', err),
@@ -179,7 +179,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       this.attendanceRate = Math.round((validAtt.length / totalExpected) * 100);
       if (this.attendanceRate > 100) this.attendanceRate = 100;
     }
-    
+
     setTimeout(() => {
       this.renderAttendanceChart();
     }, 100);
@@ -388,7 +388,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     // Group attendances by date
     const dateGroups: { [date: string]: number } = {};
-    
+
     this.allAttendances.forEach(a => {
       if (a.date && a.clockIn) {
         const d = a.date.split('T')[0];
@@ -406,7 +406,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     last7Dates.forEach(dateStr => {
       const attended = dateGroups[dateStr];
       const rate = Math.round((attended / this.totalEmployees) * 100);
-      
+
       const dateObj = new Date(dateStr);
       labels.push(dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
       data.push(rate > 100 ? 100 : rate);
@@ -465,7 +465,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           legend: { display: false },
           tooltip: {
             callbacks: {
-              label: function(context) {
+              label: function (context) {
                 return context.parsed.y + '%';
               }
             }
@@ -477,7 +477,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             max: 100,
             ticks: {
               stepSize: 25,
-              callback: function(value) {
+              callback: function (value) {
                 return value + '%';
               }
             },
@@ -501,25 +501,25 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     const doc = new jsPDF();
     const now = new Date();
     const generatedDateStr = now.toLocaleDateString('en-US') + ' ' + now.toLocaleTimeString('en-US');
-    
+
     // Add Header
     doc.setFontSize(22);
     doc.setTextColor(40);
     doc.text('Kawadir HRMS', 14, 22);
-    
+
     doc.setFontSize(16);
     doc.setTextColor(100);
     doc.text('Comprehensive System Report', 14, 32);
-    
+
     doc.setFontSize(11);
     doc.setTextColor(150);
     doc.text(`Generated On: ${generatedDateStr}`, 14, 40);
-    
+
     // 1. System Overview Table
     doc.setFontSize(14);
     doc.setTextColor(40);
     doc.text('1. System Overview', 14, 55);
-    
+
     autoTable(doc, {
       startY: 60,
       head: [['Statistic', 'Value']],
@@ -538,7 +538,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     let currentY = (doc as any).lastAutoTable.finalY + 15;
     doc.setFontSize(14);
     doc.text('2. Leave Distribution', 14, currentY);
-    
+
     autoTable(doc, {
       startY: currentY + 5,
       head: [['Leave Type', 'Percentage']],
@@ -558,10 +558,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       doc.addPage();
       currentY = 20;
     }
-    
+
     doc.setFontSize(14);
     doc.text('3. Recent Leave Requests', 14, currentY);
-    
+
     const recentLeavesData = this.recentLeaves.map(l => [
       l.employeeName || `Emp #${l.employeeId}`,
       l.leaveType,
@@ -584,10 +584,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       doc.addPage();
       currentY = 20;
     }
-    
+
     doc.setFontSize(14);
     doc.text('4. Recent Attendance Tracking', 14, currentY);
-    
+
     const recentAttendanceData = this.recentAttendances.map(a => [
       a.employeeName || `Emp #${a.employeeId}`,
       a.date ? new Date(a.date).toLocaleDateString('en-US') : 'N/A',

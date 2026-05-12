@@ -10,8 +10,7 @@
                 <div class="mb-3">
                     <label class="form-label fw-bold text-muted small">Leave
                         Type</label>
-                    <select class="form-select bg-light"
-                        formControlName="leaveType">
+                    <select class="form-select bg-light" formControlName="leaveType">
                         <option value="" disabled selected>Select Leave
                             Type</option>
                         <!-- ✅ استخدم أرقام تطابق Backend enum: Annual=0, Sick=1, Emergency=2, Unpaid=3 -->
@@ -26,30 +25,24 @@
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold text-muted small">Start
                             Date</label>
-                        <input type="date" class="form-control bg-light"
-                            formControlName="startDate">
+                        <input type="date" class="form-control bg-light" formControlName="startDate">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold text-muted small">End
                             Date</label>
-                        <input type="date" class="form-control bg-light"
-                            formControlName="endDate">
+                        <input type="date" class="form-control bg-light" formControlName="endDate">
                     </div>
                 </div>
 
                 <div class="mb-4">
-                    <label
-                        class="form-label fw-bold text-muted small">Reason</label>
-                    <textarea class="form-control bg-light"
-                        formControlName="reason" rows="3"
+                    <label class="form-label fw-bold text-muted small">Reason</label>
+                    <textarea class="form-control bg-light" formControlName="reason" rows="3"
                         placeholder="Explain your reason..."></textarea>
                 </div>
 
                 <div class="d-flex justify-content-end gap-2">
-                    <a routerLink="/leave"
-                        class="btn btn-light px-4 fw-bold text-muted">Cancel</a>
-                    <button type="submit" class="btn btn-primary px-5 fw-bold"
-                        [disabled]="isLoading">
+                    <a routerLink="/leave" class="btn btn-light px-4 fw-bold text-muted">Cancel</a>
+                    <button type="submit" class="btn btn-primary px-5 fw-bold" [disabled]="isLoading">
                         {{ isLoading ? 'Submitting...' : 'Submit Request' }}
                     </button>
                 </div>
