@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { LeaveService } from '../../core/services/leave.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-leave-form',
@@ -20,6 +21,8 @@ export class LeaveFormComponent {
   private router = inject(Router);
 
   isLoading = false;
+  loadingMessage = 'Submitting...';
+  private slowWarningTimer: any;
 
   leaveForm = new FormGroup({
     leaveType: new FormControl('', Validators.required),
@@ -54,18 +57,22 @@ export class LeaveFormComponent {
 
     console.log('Sending Leave Data:', newLeave);
 
+    // show slow-server warning after 6 seconds
+    this.slowWarningTimer = setTimeout(() => {
+      this.loadingMessage = 'Server is starting up, please wait a moment...';
+    }, 6000);
+
     this.leaveService.applyLeave(newLeave).subscribe({
       next: (res) => {
-        console.log('Success:', res);
+        clearTimeout(this.slowWarningTimer);
         this.isLoading = false;
+        Swal.fire({ icon: 'success', title: 'Done!', text: 'Leave request submitted successfully.', timer: 2000, showConfirmButton: false });
         this.router.navigate(['/leave']);
       },
       error: (err) => {
+        clearTimeout(this.slowWarningTimer);
         this.isLoading = false;
-        console.error('Error applying leave:', err);
-        alert(
-          'Backend Error: Could not apply leave. Check Console (F12) for details.',
-        );
+        Swal.fire('Error', 'Could not submit leave request. Please try again.', 'error');
       },
     });
   }

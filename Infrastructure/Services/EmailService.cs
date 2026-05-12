@@ -1,4 +1,4 @@
-﻿// Infrastructure/Services/EmailService.cs
+// Infrastructure/Services/EmailService.cs
 using Application.Interfaces;
 using Application.Services.Interfaces;
 using Application.Settings;
