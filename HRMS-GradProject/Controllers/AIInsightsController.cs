@@ -80,7 +80,16 @@ namespace HRMS_API.Controllers
             }
 
             var errStr = await response.Content.ReadAsStringAsync();
-            return $"💡 عذراً، حدث خطأ: {response.StatusCode} - {errStr}";
+            
+            // تسجيل الخطأ الحقيقي في الكونسول لغايات التتبع دون إظهاره للمستخدم
+            System.Console.WriteLine($"[Gemini API Error] {response.StatusCode}: {errStr}");
+
+            if ((int)response.StatusCode == 429)
+            {
+                return "💡 الذكاء الاصطناعي غير متاح حالياً بسبب الضغط المرتفع. يرجى المحاولة بعد دقيقة.";
+            }
+            
+            return "💡 عذراً، الذكاء الاصطناعي غير متاح في الوقت الحالي. يرجى المحاولة لاحقاً.";
         }
 
         // ─── Build full admin context from ALL tables ──────────────────────────
@@ -279,9 +288,9 @@ namespace HRMS_API.Controllers
 البيانات المتوفرة:
 {contextData}
 التعليمات:
-1. أجب بشكل مختصر ومباشر دون مقدمات.
-2. أجب كأنك جزء من النظام نفسه وليس كذكاء اصطناعي خارجي.
-3. إذا سألك المستخدم أسئلة عامة عن الموارد البشرية أو النظام، أجب بمهنية.
+1. أجب بإيجاز شديد جداً وبشكل مباشر على قدر السؤال (جملة أو جملتين كحد أقصى).
+2. لا تقم بسرد تفاصيل أو شروحات إضافية إلا إذا طلب منك المستخدم ذلك صراحةً (لتوفير الاستهلاك).
+3. أجب كأنك جزء من النظام نفسه وليس كذكاء اصطناعي خارجي.
 رسالة المستخدم: {request.Message}";
 
             string response = await GetGeminiInsightAsync(systemPrompt);

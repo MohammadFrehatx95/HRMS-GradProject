@@ -1,6 +1,6 @@
 <div class="page-container p-4">
 
-    <app-ai-widget page="salary"></app-ai-widget>
+
 
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div>
@@ -10,30 +10,32 @@
         <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end">
             <div class="input-group shadow-sm" style="max-width: 350px;">
                 <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                <input type="text" class="form-control border-start-0 ps-0" 
-                    placeholder="Search by name, ID, or amount..." 
-                    [(ngModel)]="salarySearchQuery" 
+                <input type="text" class="form-control border-start-0 ps-0"
+                    placeholder="Search by name, ID, or amount..." [(ngModel)]="salarySearchQuery"
                     (input)="filterSalaries()">
             </div>
 
             <div class="dropdown">
-                <button class="btn btn-outline-secondary shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Filter Salaries">
+                <button class="btn btn-outline-secondary shadow-sm" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false" title="Filter Salaries">
                     <i class="bi bi-funnel-fill"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4" style="width: 250px;">
                     <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">Filter Options</h6>
-                    
+
                     <div class="mb-3">
                         <label class="form-label small fw-semibold text-muted mb-1">{{ 'Year' | t }}</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="selectedYear" (change)="filterSalaries()">
+                        <select class="form-select form-select-sm" [(ngModel)]="selectedYear"
+                            (change)="filterSalaries()">
                             <option value="">All Years</option>
                             <option *ngFor="let yr of uniqueYears" [value]="yr">{{ yr }}</option>
                         </select>
                     </div>
-                    
+
                     <div class="mb-2">
                         <label class="form-label small fw-semibold text-muted mb-1">{{ 'Month' | t }}</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="selectedMonth" (change)="filterSalaries()">
+                        <select class="form-select form-select-sm" [(ngModel)]="selectedMonth"
+                            (change)="filterSalaries()">
                             <option value="">All Months</option>
                             <option value="1">January</option>
                             <option value="2">February</option>
@@ -52,8 +54,7 @@
                 </div>
             </div>
 
-            <button *ngIf="isAdmin"
-                class="btn btn-primary px-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
+            <button *ngIf="isAdmin" class="btn btn-primary px-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
                 (click)="openModal()">
                 <i class="bi bi-plus-lg me-2"></i> {{ 'Add Salary' | t }}
             </button>
@@ -64,8 +65,7 @@
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
 
-                <thead class="bg-light text-muted small text-uppercase"
-                    style="letter-spacing: 0.5px;">
+                <thead class="bg-light text-muted small text-uppercase" style="letter-spacing: 0.5px;">
                     <tr>
                         <th *ngIf="isAdminOrHR" class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Employee' | t }}</th>
                         <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Month' | t }}/{{ 'Year' | t }}</th>
@@ -81,8 +81,7 @@
 
                     <tr *ngIf="isLoading">
                         <td colspan="7" class="text-center py-5 text-muted">
-                            <span
-                                class="spinner-border spinner-border-sm me-2"></span>
+                            <span class="spinner-border spinner-border-sm me-2"></span>
                             {{ 'Loading...' | t }}
                         </td>
                     </tr>
@@ -90,7 +89,8 @@
                     <tr *ngIf="!isLoading && salariesList.length === 0">
                         <td [colSpan]="isAdminOrHR ? 7 : 6" class="text-center py-5">
                             <div class="d-flex flex-column align-items-center">
-                                <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center"
+                                    style="width: 80px; height: 80px;">
                                     <i class="bi bi-wallet2 text-secondary fs-1"></i>
                                 </div>
                                 <h5 class="fw-bold text-dark mb-1">{{ 'No Data' | t }}</h5>
@@ -108,27 +108,27 @@
                             <span class="badge bg-light text-dark border">{{
                                 salary.month | number:'2.0' }} / {{ salary.year
                                 }}</span>
-                            <div class="text-muted mt-1"
-                                style="font-size: 0.7rem;">Eff: {{
+                            <div class="text-muted mt-1" style="font-size: 0.7rem;">Eff: {{
                                 salary.effectiveDate | date:'dd MMM yyyy'
                                 }}</div>
                         </td>
                         <td data-label="Base Salary" class="py-3 px-3 text-secondary">${{ salary.baseAmount }}</td>
-                        <td data-label="Allowances" class="py-3 px-3 text-success fw-medium">+${{ salary.allowances }}</td>
-                        <td data-label="Deductions" class="py-3 px-3 text-danger fw-medium">-${{ salary.deductions }}</td>
+                        <td data-label="Allowances" class="py-3 px-3 text-success fw-medium">+${{ salary.allowances }}
+                        </td>
+                        <td data-label="Deductions" class="py-3 px-3 text-danger fw-medium">-${{ salary.deductions }}
+                        </td>
                         <td data-label="Net Pay" class="py-3 px-3">
                             <span class="fw-bold text-primary fs-6">${{ salary.netAmount }}</span>
-                            <div class="text-muted" style="font-size: 0.7rem;">Before Deductions: ${{ salary.grossAmount }}</div>
+                            <div class="text-muted" style="font-size: 0.7rem;">Before Deductions: ${{ salary.grossAmount
+                                }}</div>
                         </td>
                         <!-- صلاحيات أدمن بس -->
                         <td data-label="Actions" class="py-3 px-4 text-end text-nowrap actions-cell">
-                            <button
-                                class="btn btn-sm btn-outline-danger rounded-circle shadow-sm me-2"
+                            <button class="btn btn-sm btn-outline-danger rounded-circle shadow-sm me-2"
                                 (click)="downloadPayslip(salary)" title="Download Payslip (PDF)">
                                 <i class="bi bi-file-earmark-pdf-fill"></i>
                             </button>
-                            <button *ngIf="isAdmin"
-                                class="btn btn-sm btn-light text-primary rounded-circle shadow-sm"
+                            <button *ngIf="isAdmin" class="btn btn-sm btn-light text-primary rounded-circle shadow-sm"
                                 (click)="openModal(salary)" title="Edit Record">
                                 <i class="bi bi-pencil-square"></i>
                             </button>
@@ -139,9 +139,11 @@
         </div>
 
         <!-- Pagination Footer -->
-        <div *ngIf="salariesList.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div *ngIf="salariesList.length > 0"
+            class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
             <small class="text-muted fw-medium">
-                Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, salariesList.length) }} of {{ salariesList.length }} entries
+                Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage,
+                salariesList.length) }} of {{ salariesList.length }} entries
             </small>
             <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
                 <li class="page-item" [class.disabled]="currentPage === 1">
@@ -167,50 +169,47 @@
                         [ngClass]="isEditMode ? 'bi-pencil-square text-primary' : 'bi-plus-circle text-primary'"></i>
                     {{ isEditMode ? ' Edit Salary Record' : ' Add New Salary' }}
                 </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
                 <form #salaryForm="ngForm">
 
                     <div class="mb-4 position-relative">
-                        <label class="form-label fw-semibold text-secondary small">Employee <span class="text-danger">*</span></label>
+                        <label class="form-label fw-semibold text-secondary small">Employee <span
+                                class="text-danger">*</span></label>
                         <div class="input-group">
                             <span class="input-group-text bg-light border-end-0"><i class="bi bi-person"></i></span>
-                            <input type="text"
-                                class="form-control bg-light border-start-0"
-                                name="employeeSearchText"
-                                [(ngModel)]="employeeSearchText"
-                                (ngModelChange)="onEmployeeSearchChange($event)"
-                                (focus)="showEmployeeDropdown = true"
-                                (blur)="hideDropdownWithDelay()"
-                                autocomplete="off"
-                                required
-                                placeholder="Search by name or ID...">
+                            <input type="text" class="form-control bg-light border-start-0" name="employeeSearchText"
+                                [(ngModel)]="employeeSearchText" (ngModelChange)="onEmployeeSearchChange($event)"
+                                (focus)="showEmployeeDropdown = true" (blur)="hideDropdownWithDelay()"
+                                autocomplete="off" required placeholder="Search by name or ID...">
                         </div>
-                        
+
                         <!-- Custom Dropdown -->
                         <div class="dropdown-menu w-100 shadow-lg border-0 rounded-4 mt-2 py-2"
-                             [class.show]="showEmployeeDropdown"
-                             style="position: absolute; top: 100%; left: 0; max-height: 250px; overflow-y: auto; z-index: 1050;">
-                            
+                            [class.show]="showEmployeeDropdown"
+                            style="position: absolute; top: 100%; left: 0; max-height: 250px; overflow-y: auto; z-index: 1050;">
+
                             <ng-container *ngIf="filteredEmployeesList.length > 0; else noEmployees">
-                                <button type="button" class="dropdown-item d-flex justify-content-between align-items-center py-2 px-3 border-bottom border-light"
-                                        *ngFor="let emp of filteredEmployeesList"
-                                        (mousedown)="selectEmployee(emp)"
-                                        style="transition: background-color 0.2s;">
+                                <button type="button"
+                                    class="dropdown-item d-flex justify-content-between align-items-center py-2 px-3 border-bottom border-light"
+                                    *ngFor="let emp of filteredEmployeesList" (mousedown)="selectEmployee(emp)"
+                                    style="transition: background-color 0.2s;">
                                     <div class="d-flex align-items-center gap-3">
-                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 36px; height: 36px; font-size: 13px;">
+                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                                            style="width: 36px; height: 36px; font-size: 13px;">
                                             {{ emp.firstName[0] }}{{ emp.lastName[0] }}
                                         </div>
                                         <div class="d-flex flex-column">
-                                            <span class="fw-semibold text-dark" style="font-size: 14px;">{{ emp.firstName }} {{ emp.lastName }}</span>
+                                            <span class="fw-semibold text-dark" style="font-size: 14px;">{{
+                                                emp.firstName }} {{ emp.lastName }}</span>
                                         </div>
                                     </div>
-                                    <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3 py-2" style="font-size: 11px;">ID: {{ emp.id }}</span>
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3 py-2"
+                                        style="font-size: 11px;">ID: {{ emp.id }}</span>
                                 </button>
                             </ng-container>
-                            
+
                             <ng-template #noEmployees>
                                 <div class="text-center py-4 text-muted">
                                     <i class="bi bi-search mb-2 fs-4 text-black-50"></i>
@@ -222,82 +221,56 @@
 
                     <div class="row mb-4">
                         <div class="col-6">
-                            <label
-                                class="form-label fw-semibold text-secondary small">Month
+                            <label class="form-label fw-semibold text-secondary small">Month
                                 <span class="text-danger">*</span></label>
-                            <input type="number"
-                                class="form-control bg-light border-0"
-                                name="month" [(ngModel)]="salaryData.month"
-                                required min="1" max="12">
+                            <input type="number" class="form-control bg-light border-0" name="month"
+                                [(ngModel)]="salaryData.month" required min="1" max="12">
                         </div>
                         <div class="col-6">
-                            <label
-                                class="form-label fw-semibold text-secondary small">Year
+                            <label class="form-label fw-semibold text-secondary small">Year
                                 <span class="text-danger">*</span></label>
-                            <input type="number"
-                                class="form-control bg-light border-0"
-                                name="year" [(ngModel)]="salaryData.year"
-                                required min="2000">
+                            <input type="number" class="form-control bg-light border-0" name="year"
+                                [(ngModel)]="salaryData.year" required min="2000">
                         </div>
                     </div>
 
                     <div class="mb-4">
-                        <label
-                            class="form-label fw-semibold text-secondary small">Base
-                            Salary ($) <span
-                                class="text-danger">*</span></label>
-                        <input type="number"
-                            class="form-control form-control-lg bg-light border-0"
-                            name="baseAmount"
-                            [(ngModel)]="salaryData.baseAmount" required
-                            min="0">
+                        <label class="form-label fw-semibold text-secondary small">Base
+                            Salary ($) <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control form-control-lg bg-light border-0" name="baseAmount"
+                            [(ngModel)]="salaryData.baseAmount" required min="0">
                     </div>
 
                     <div class="row mb-4">
                         <div class="col-6">
-                            <label
-                                class="form-label fw-semibold text-success small">Allowances
+                            <label class="form-label fw-semibold text-success small">Allowances
                                 (+) <span class="text-danger">*</span></label>
-                            <input type="number"
-                                class="form-control border-success border-opacity-25 bg-light"
-                                name="allowances"
-                                [(ngModel)]="salaryData.allowances" required
-                                min="0">
+                            <input type="number" class="form-control border-success border-opacity-25 bg-light"
+                                name="allowances" [(ngModel)]="salaryData.allowances" required min="0">
                         </div>
                         <div class="col-6">
-                            <label
-                                class="form-label fw-semibold text-danger small">Deductions
+                            <label class="form-label fw-semibold text-danger small">Deductions
                                 (-) <span class="text-danger">*</span></label>
-                            <input type="number"
-                                class="form-control border-danger border-opacity-25 bg-light"
-                                name="deductions"
-                                [(ngModel)]="salaryData.deductions" required
-                                min="0">
+                            <input type="number" class="form-control border-danger border-opacity-25 bg-light"
+                                name="deductions" [(ngModel)]="salaryData.deductions" required min="0">
                         </div>
                     </div>
 
                     <div class="mb-2">
-                        <label
-                            class="form-label fw-semibold text-secondary small">Effective
+                        <label class="form-label fw-semibold text-secondary small">Effective
                             Date <span class="text-danger">*</span></label>
-                        <input type="date"
-                            class="form-control bg-light border-0"
-                            name="effectiveDate"
+                        <input type="date" class="form-control bg-light border-0" name="effectiveDate"
                             [(ngModel)]="salaryData.effectiveDate" required>
                     </div>
 
                 </form>
             </div>
             <div class="modal-footer border-top-0 pb-4 px-4">
-                <button type="button"
-                    class="btn btn-light px-4 rounded-3 fw-semibold"
+                <button type="button" class="btn btn-light px-4 rounded-3 fw-semibold"
                     data-bs-dismiss="modal">Cancel</button>
-                <button type="button"
-                    class="btn btn-primary px-4 rounded-3 fw-semibold"
-                    (click)="saveSalary()"
+                <button type="button" class="btn btn-primary px-4 rounded-3 fw-semibold" (click)="saveSalary()"
                     [disabled]="salaryForm.invalid || isProcessing || !salaryData.employeeId">
-                    <span *ngIf="isProcessing"
-                        class="spinner-border spinner-border-sm me-2"></span>
+                    <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2"></span>
                     {{ isProcessing ? 'Saving...' : 'Save Record' }}
                 </button>
             </div>
@@ -306,68 +279,70 @@
 </div>
 
 <style>
-.cursor-pointer {
-  cursor: pointer;
-}
+    .cursor-pointer {
+        cursor: pointer;
+    }
 
-/* Mobile Responsive Cards for Table */
-@media screen and (max-width: 768px) {
-  .table-responsive table, 
-  .table-responsive thead, 
-  .table-responsive tbody, 
-  .table-responsive th, 
-  .table-responsive td, 
-  .table-responsive tr {
-    display: block;
-  }
-  
-  .table-responsive thead tr {
-    display: none; /* Hide header row */
-  }
-  
-  .table-responsive tr {
-    border: 1px solid #e8ecf0;
-    border-radius: 0.75rem;
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-    background: #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-  }
-  
-  .table-responsive td {
-    border: none;
-    border-bottom: 1px solid #f0f2f5;
-    position: relative;
-    padding-left: 45% !important;
-    text-align: right !important;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    min-height: 50px;
-  }
-  
-  .table-responsive td:last-child {
-    border-bottom: 0;
-  }
-  
-  .table-responsive td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 1rem;
-    width: 40%;
-    text-align: left;
-    font-weight: 700;
-    color: #8592a3;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  
-  .actions-cell {
-    justify-content: flex-end !important;
-    padding-top: 1rem !important;
-    padding-bottom: 1rem !important;
-  }
-}
+    /* Mobile Responsive Cards for Table */
+    @media screen and (max-width: 768px) {
+
+        .table-responsive table,
+        .table-responsive thead,
+        .table-responsive tbody,
+        .table-responsive th,
+        .table-responsive td,
+        .table-responsive tr {
+            display: block;
+        }
+
+        .table-responsive thead tr {
+            display: none;
+            /* Hide header row */
+        }
+
+        .table-responsive tr {
+            border: 1px solid #e8ecf0;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .table-responsive td {
+            border: none;
+            border-bottom: 1px solid #f0f2f5;
+            position: relative;
+            padding-left: 45% !important;
+            text-align: right !important;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            min-height: 50px;
+        }
+
+        .table-responsive td:last-child {
+            border-bottom: 0;
+        }
+
+        .table-responsive td::before {
+            content: attr(data-label);
+            position: absolute;
+            left: 1rem;
+            width: 40%;
+            text-align: left;
+            font-weight: 700;
+            color: #8592a3;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .actions-cell {
+            justify-content: flex-end !important;
+            padding-top: 1rem !important;
+            padding-bottom: 1rem !important;
+        }
+    }
 </style>

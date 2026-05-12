@@ -45,10 +45,10 @@ export class MyProfileComponent implements OnInit {
           this.userEmail =
             payload['email'] ||
             payload[
-              'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
+            'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
             ] ||
             '';
-        } catch {}
+        } catch { }
       }
       this.isLoading = false;
     } else {
@@ -93,7 +93,7 @@ export class MyProfileComponent implements OnInit {
     this.editData.email = this.profile?.email || this.userEmail || '';
     this.editData.phone = this.profile?.phone || this.profile?.phoneNumber || '';
     this.pwdData = { oldPassword: '', newPassword: '' };
-    
+
     const modalEl = document.getElementById('editProfileModal');
     if (modalEl) {
       new bootstrap.Modal(modalEl).show();
@@ -132,22 +132,22 @@ export class MyProfileComponent implements OnInit {
       if (this.profile && this.profile.id) {
         requestsPending++;
         this.isUpdatingProfile = true;
-        
+
         // Prepare updated employee object
-        const updatedEmp = { 
-          ...this.profile, 
-          email: this.editData.email, 
+        const updatedEmp = {
+          ...this.profile,
+          email: this.editData.email,
           phone: this.editData.phone,
-          phoneNumber: this.editData.phone 
+          phoneNumber: this.editData.phone
         };
-        
+
         this.employeeService.updateEmployee(this.profile.id, updatedEmp).subscribe({
           next: () => {
             this.isUpdatingProfile = false;
             this.profile.email = this.editData.email;
             this.profile.phone = this.editData.phone;
             this.userEmail = this.editData.email;
-            
+
             requestsPending--;
             this.checkDone(requestsPending, hasError);
           },

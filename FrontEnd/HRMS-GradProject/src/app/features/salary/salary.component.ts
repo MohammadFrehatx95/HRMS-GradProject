@@ -33,7 +33,7 @@ export class SalaryComponent implements OnInit {
   salaryModal: any;
   isEditMode: boolean = false;
   currentSalaryId: number | null = null;
-  
+
   employeesList: any[] = [];
   filteredEmployeesList: any[] = [];
   showEmployeeDropdown: boolean = false;
@@ -141,10 +141,10 @@ export class SalaryComponent implements OnInit {
         const extractedData = Array.isArray(res) ? res : res?.data || [];
         this.allSalariesList = Array.isArray(extractedData) ? extractedData : [];
         this.salariesList = [...this.allSalariesList];
-        
+
         const years = this.allSalariesList.map(s => s.year).filter(y => y != null);
         this.uniqueYears = Array.from(new Set(years)).sort().reverse() as number[];
-        
+
         this.isLoading = false;
       },
       error: (err) => {
@@ -164,20 +164,20 @@ export class SalaryComponent implements OnInit {
         const baseAmt = String(s.baseAmount || '');
         matchesSearch = empName.includes(query) || empId.includes(query) || baseAmt.includes(query);
       }
-      
+
       let matchesYear = true;
       if (this.selectedYear) {
         matchesYear = String(s.year) === this.selectedYear;
       }
-      
+
       let matchesMonth = true;
       if (this.selectedMonth) {
         matchesMonth = String(s.month) === this.selectedMonth;
       }
-      
+
       return matchesSearch && matchesYear && matchesMonth;
     });
-    
+
     if (this.salariesList.length > 0) {
       this.salariesList.sort((a, b) => {
         if (b.year !== a.year) {
@@ -221,7 +221,7 @@ export class SalaryComponent implements OnInit {
         effectiveDate: new Date().toISOString().split('T')[0],
       };
     }
-    
+
     this.filteredEmployeesList = [...this.employeesList];
     this.showEmployeeDropdown = false;
 
@@ -299,36 +299,36 @@ export class SalaryComponent implements OnInit {
 
   downloadPayslip(salary: any) {
     const doc = new jsPDF();
-    
+
     // Add Header
     doc.setFontSize(22);
-    doc.setTextColor(13, 110, 253); 
+    doc.setTextColor(13, 110, 253);
     doc.text('Kawadir HRMS', 14, 20);
-    
+
     doc.setFontSize(14);
     doc.setTextColor(0, 0, 0);
     doc.text('Salary Payslip', 14, 30);
-    
+
     const today = new Date();
     const dateGen = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    
+
     doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
     doc.text(`Date Generated: ${dateGen}`, 14, 38);
-    
+
     const empName = salary.employeeName || `Employee #${salary.employeeId}`;
     const period = `${salary.month} / ${salary.year}`;
-    
+
     const effObj = new Date(salary.effectiveDate);
     const effDate = `${effObj.getFullYear()}-${String(effObj.getMonth() + 1).padStart(2, '0')}-${String(effObj.getDate()).padStart(2, '0')}`;
-    
+
     // Employee Info
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(12);
     doc.text(`Employee Name: ${empName}`, 14, 50);
     doc.text(`Payroll Period: ${period}`, 14, 58);
     doc.text(`Effective Date: ${effDate}`, 14, 66);
-    
+
     // Salary Details Table
     autoTable(doc, {
       startY: 75,
@@ -344,21 +344,21 @@ export class SalaryComponent implements OnInit {
       bodyStyles: { textColor: [50, 50, 50] },
       alternateRowStyles: { fillColor: [252, 252, 252] },
     });
-    
+
     const finalY = (doc as any).lastAutoTable.finalY || 130;
-    
+
     // Net Pay Highlight
     doc.setFontSize(14);
-    doc.setTextColor(25, 135, 84); 
+    doc.setTextColor(25, 135, 84);
     doc.setFont('helvetica', 'bold');
     doc.text(`Net Pay: ${salary.netAmount} JD`, 14, finalY + 15);
-    
+
     // Footer
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.setTextColor(150, 150, 150);
     doc.text('This is a system generated payslip and requires no signature.', 14, finalY + 40);
-    
+
     // Download
     const fileName = `Payslip_${empName.replace(/ /g, '_')}_${salary.month}_${salary.year}.pdf`;
     doc.save(fileName);

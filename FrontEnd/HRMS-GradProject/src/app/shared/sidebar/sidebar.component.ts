@@ -38,10 +38,10 @@ export class SidebarComponent implements OnInit {
     // Apply bounds (200px to 400px)
     if (newWidth >= 200 && newWidth <= 400) {
       this.sidebarRef.nativeElement.style.width = `${newWidth}px`;
-      
+
       // Update global CSS variable so the entire layout resizes smoothly
       document.documentElement.style.setProperty('--sidebar-width', `${newWidth}px`);
-      
+
       // Calculate scale relative to default width (260px)
       const scale = newWidth / 260;
       this.sidebarRef.nativeElement.style.setProperty('--sidebar-scale', scale.toString());
@@ -64,7 +64,7 @@ export class SidebarComponent implements OnInit {
           this.userRole = profile.positionTitle;
         }
       },
-      error: () => {} // ignore errors (e.g. if admin has no profile)
+      error: () => { } // ignore errors (e.g. if admin has no profile)
     });
   }
 
