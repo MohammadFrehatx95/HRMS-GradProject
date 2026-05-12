@@ -1,11 +1,11 @@
-﻿
+
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.DTOs.Auth
 {
     public  class ChangePasswordDto
     {
-        public string Email { get; set; } = null!;
+        public string? Email { get; set; }
 
         [RegularExpression(@"^(?=.*[A-Z])(?=.*\d).{8,}$",
     ErrorMessage = "Must have uppercase letter and number")]

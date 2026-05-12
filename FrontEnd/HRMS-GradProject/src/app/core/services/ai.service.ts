@@ -1,13 +1,14 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, catchError, of } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AiService {
   private http = inject(HttpClient);
-  private apiUrl = 'https://hrms-gradproject.onrender.com/api/AIInsights';
+  private apiUrl = `${environment.apiUrl}/AIInsights`;
 
   private insightCache = new Map<string, { data: string, timestamp: number }>();
   private readonly CACHE_DURATION_MS = 5 * 60 * 1000; // 5 minutes cache
