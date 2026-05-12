@@ -47,9 +47,12 @@ export class AuthService {
     if (!token) return false;
 
     try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
+      const parts = token.split('.');
+      if (parts.length < 2) return false;
+
+      const payload = JSON.parse(atob(parts[1]));
       const exp = payload.exp;
-      if (!exp) return true; // مافي exp — نعتبره صالح
+      if (!exp) return true;
 
       // exp بالثواني، Date.now() بالمللي ثانية
       if (Date.now() >= exp * 1000) {
