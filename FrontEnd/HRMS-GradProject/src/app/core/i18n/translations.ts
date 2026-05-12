@@ -146,6 +146,7 @@ export const TRANSLATIONS: { [key: string]: { en: string; ar: string } } = {
   'Change Password':     { en: 'Change Password',      ar: 'تغيير كلمة المرور' },
   'Current Password':    { en: 'Current Password',     ar: 'كلمة المرور الحالية' },
   'New Password':        { en: 'New Password',         ar: 'كلمة المرور الجديدة' },
+  'Confirm New Password': { en: 'Confirm New Password', ar: 'تأكيد كلمة المرور' },
   'System Admin':        { en: 'System Admin',         ar: 'مدير النظام' },
 
   // ── Additional Fields ──
