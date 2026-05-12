@@ -28,7 +28,7 @@ export class MyProfileComponent implements OnInit {
   userEmail: string = '';
 
   editData = { email: '', phone: '' };
-  pwdData = { oldPassword: '', newPassword: '' };
+  pwdData = { oldPassword: '', newPassword: '', confirmNewPassword: '' };
   isUpdatingProfile = false;
   isChangingPwd = false;
 
@@ -80,6 +80,7 @@ export class MyProfileComponent implements OnInit {
     this.employeeService.getMyProfile().subscribe({
       next: (res: any) => {
         this.profile = res?.data || res;
+        this.userEmail = this.profile?.email || this.userEmail;
         this.isLoading = false;
       },
       error: (err) => {
@@ -92,7 +93,7 @@ export class MyProfileComponent implements OnInit {
   openEditModal() {
     this.editData.email = this.profile?.email || this.userEmail || '';
     this.editData.phone = this.profile?.phone || this.profile?.phoneNumber || '';
-    this.pwdData = { oldPassword: '', newPassword: '' };
+    this.pwdData = { oldPassword: '', newPassword: '', confirmNewPassword: '' };
 
     const modalEl = document.getElementById('editProfileModal');
     if (modalEl) {
@@ -106,9 +107,22 @@ export class MyProfileComponent implements OnInit {
 
     // 1. Password Update
     if (this.pwdData.oldPassword && this.pwdData.newPassword) {
+      if (this.pwdData.newPassword !== this.pwdData.confirmNewPassword) {
+        Swal.fire('Error', 'New passwords do not match', 'error');
+        return;
+      }
+
       requestsPending++;
       this.isChangingPwd = true;
-      this.authService.changePassword({ oldPassword: this.pwdData.oldPassword, newPassword: this.pwdData.newPassword }).subscribe({
+
+      const passwordPayload = {
+        email: this.editData.email,
+        currentPassword: this.pwdData.oldPassword,
+        newPassword: this.pwdData.newPassword,
+        confirmNewPassword: this.pwdData.confirmNewPassword
+      };
+
+      this.authService.changePassword(passwordPayload).subscribe({
         next: () => {
           this.isChangingPwd = false;
           requestsPending--;
