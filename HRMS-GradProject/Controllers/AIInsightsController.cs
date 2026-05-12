@@ -44,9 +44,9 @@ namespace HRMS_API.Controllers
         private async Task<string> GetGeminiInsightAsync(string prompt)
         {
             string apiKey = _configuration["GeminiApiKey"];
-            if (string.IsNullOrEmpty(apiKey)) return "💡 يرجى إضافة مفتاح Gemini في الإعدادات.";
+            if (string.IsNullOrEmpty(apiKey) || apiKey == "YOUR_API_KEY_HERE") return null;
 
-            string model = "gemini-2.5-flash";
+            string model = "gemini-2.0-flash"; // updated to a more stable version
             string url = $"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={apiKey}";
 
             var requestBody = new
@@ -76,20 +76,63 @@ namespace HRMS_API.Controllers
                     text = text.Replace("**", "").Replace("\n", " ");
                     return "✨ " + text.Trim();
                 }
-                catch { return "💡 اكتمل التحليل الذكي، الأمور تبدو جيدة."; }
+                catch { return null; }
             }
+            return null;
+        }
 
-            var errStr = await response.Content.ReadAsStringAsync();
-            
-            // تسجيل الخطأ الحقيقي في الكونسول لغايات التتبع دون إظهاره للمستخدم
-            System.Console.WriteLine($"[Gemini API Error] {response.StatusCode}: {errStr}");
+        // ─── Core Groq helper (OpenAI Compatible) ──────────────────────────────
+        private async Task<string> GetGroqInsightAsync(string prompt)
+        {
+            string apiKey = _configuration["GroqApiKey"];
+            if (string.IsNullOrEmpty(apiKey)) return null;
 
-            if ((int)response.StatusCode == 429)
+            string url = "https://api.groq.com/openai/v1/chat/completions";
+            var requestBody = new
             {
-                return "💡 الذكاء الاصطناعي غير متاح حالياً بسبب الضغط المرتفع. يرجى المحاولة بعد دقيقة.";
+                model = "llama-3.3-70b-versatile",
+                messages = new[]
+                {
+                    new { role = "user", content = prompt }
+                },
+                temperature = 0.7
+            };
+
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+
+            var content = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync(url, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                using var jsonDoc = JsonDocument.Parse(responseString);
+                var root = jsonDoc.RootElement;
+                try
+                {
+                    string text = root.GetProperty("choices")[0]
+                                     .GetProperty("message")
+                                     .GetProperty("content").GetString() ?? "";
+                    text = text.Replace("**", "").Replace("\n", " ");
+                    return "🚀 " + text.Trim();
+                }
+                catch { return null; }
             }
-            
-            return "💡 عذراً، الذكاء الاصطناعي غير متاح في الوقت الحالي. يرجى المحاولة لاحقاً.";
+            return null;
+        }
+
+        // ─── Multi-Provider Fallback ───────────────────────────────────────────
+        private async Task<string> GetAIResponseAsync(string prompt)
+        {
+            // Try Groq first, then Gemini
+            string response = await GetGroqInsightAsync(prompt);
+            if (!string.IsNullOrEmpty(response)) return response;
+
+            response = await GetGeminiInsightAsync(prompt);
+            if (!string.IsNullOrEmpty(response)) return response;
+
+            return "💡 عذراً، خدمة الذكاء الاصطناعي غير متوفرة حالياً. يرجى التأكد من إعداد مفاتيح API (Groq أو Gemini).";
         }
 
         // ─── Build full admin context from ALL tables ──────────────────────────
@@ -198,7 +241,7 @@ namespace HRMS_API.Controllers
                 };
             }
 
-            string advice = await GetGeminiInsightAsync(prompt);
+            string advice = await GetAIResponseAsync(prompt);
             return Ok(new { data = advice, success = true });
         }
 
@@ -240,8 +283,8 @@ namespace HRMS_API.Controllers
 إجمالي طلبات الإجازة: {totalLeaves}، الإجازات الموافق عليها: {approvedLeaves}، حالات نسيان بصمة الخروج: {missingPunches}.
 اقترح إجراءً (ترقية / تحفيز / لفت نظر) بناءً على هذه الأرقام. كن مباشراً واحترافياً بالعربية.";
 
-                string advice = await GetGeminiInsightAsync(prompt);
-                advice = advice.Replace("✨ ", "").Replace("💡 ", "");
+                string advice = await GetAIResponseAsync(prompt);
+                advice = advice.Replace("✨ ", "").Replace("💡 ", "").Replace("🚀 ", "");
                 return Ok(new { data = advice, success = true });
             }
             catch
@@ -293,8 +336,8 @@ namespace HRMS_API.Controllers
 3. أجب كأنك جزء من النظام نفسه وليس كذكاء اصطناعي خارجي.
 رسالة المستخدم: {request.Message}";
 
-            string response = await GetGeminiInsightAsync(systemPrompt);
-            response = response.Replace("✨ ", "").Replace("💡 ", "");
+            string response = await GetAIResponseAsync(systemPrompt);
+            response = response.Replace("✨ ", "").Replace("💡 ", "").Replace("🚀 ", "");
             return Ok(new { data = response, success = true });
         }
     }
