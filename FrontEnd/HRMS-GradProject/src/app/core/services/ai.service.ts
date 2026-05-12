@@ -7,7 +7,7 @@ import { Observable, map, catchError, of } from 'rxjs';
 })
 export class AiService {
   private http = inject(HttpClient);
-  private apiUrl = 'https://localhost:7204/api/AIInsights';
+  private apiUrl = 'https://hrms-gradproject.onrender.com/api/AIInsights';
 
   private insightCache = new Map<string, { data: string, timestamp: number }>();
   private readonly CACHE_DURATION_MS = 5 * 60 * 1000; // 5 minutes cache
@@ -56,3 +56,4 @@ export class AiService {
     );
   }
 }
+

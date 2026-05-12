@@ -8,7 +8,7 @@ import { Observable, map } from 'rxjs';
 export class NotificationService {
   private http = inject(HttpClient);
 
-  private apiUrl = 'https://localhost:7204/api/notifications';
+  private apiUrl = 'https://hrms-gradproject.onrender.com/api/notifications';
 
   getNotifications(): Observable<any[]> {
     return this.http.get<any>(this.apiUrl).pipe(
@@ -40,3 +40,4 @@ export class NotificationService {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }
+

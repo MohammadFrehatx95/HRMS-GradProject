@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl = 'https://localhost:7204/api/auth';
+  private apiUrl = 'https://hrms-gradproject.onrender.com/api/auth';
 
   login(credentials: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
@@ -132,3 +132,4 @@ export class AuthService {
       .pipe(map((response) => response?.data ?? response));
   }
 }
+
