@@ -40,99 +40,51 @@ namespace HRMS_API.Controllers
             _configuration = configuration;
         }
 
-        // ─── Core Gemini helper ────────────────────────────────────────────────
-        private async Task<string> GetGeminiInsightAsync(string prompt)
-        {
-            string apiKey = _configuration["GeminiApiKey"];
-            if (string.IsNullOrEmpty(apiKey) || apiKey == "YOUR_API_KEY_HERE") return null;
-
-            string model = "gemini-2.0-flash"; // updated to a more stable version
-            string url = $"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={apiKey}";
-
-            var requestBody = new
-            {
-                contents = new[]
-                {
-                    new { parts = new[] { new { text = prompt } } }
-                }
-            };
-
-            var content = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json");
-
-            using var httpClient = new HttpClient();
-            var response = await httpClient.PostAsync(url, content);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var responseString = await response.Content.ReadAsStringAsync();
-                using var jsonDoc = JsonDocument.Parse(responseString);
-                var root = jsonDoc.RootElement;
-                try
-                {
-                    string text = root.GetProperty("candidates")[0]
-                                     .GetProperty("content")
-                                     .GetProperty("parts")[0]
-                                     .GetProperty("text").GetString() ?? "";
-                    text = text.Replace("**", "").Replace("\n", " ");
-                    return "✨ " + text.Trim();
-                }
-                catch { return null; }
-            }
-            return null;
-        }
-
         // ─── Core Groq helper (OpenAI Compatible) ──────────────────────────────
-        private async Task<string> GetGroqInsightAsync(string prompt)
+        private async Task<string> GetAIResponseAsync(string prompt)
         {
             string apiKey = _configuration["GroqApiKey"];
-            if (string.IsNullOrEmpty(apiKey)) return null;
+            if (string.IsNullOrEmpty(apiKey)) return "💡 يرجى إعداد مفتاح Groq API.";
 
             string url = "https://api.groq.com/openai/v1/chat/completions";
             var requestBody = new
             {
-                model = "llama-3.3-70b-versatile",
+                model = "llama-3.1-8b-instant",
                 messages = new[]
                 {
                     new { role = "user", content = prompt }
                 },
-                temperature = 0.7
+                temperature = 0.5
             };
 
             using var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
 
             var content = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync(url, content);
-
-            if (response.IsSuccessStatusCode)
+            
+            try 
             {
-                var responseString = await response.Content.ReadAsStringAsync();
-                using var jsonDoc = JsonDocument.Parse(responseString);
-                var root = jsonDoc.RootElement;
-                try
+                var response = await httpClient.PostAsync(url, content);
+
+                if (response.IsSuccessStatusCode)
                 {
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    using var jsonDoc = JsonDocument.Parse(responseString);
+                    var root = jsonDoc.RootElement;
                     string text = root.GetProperty("choices")[0]
                                      .GetProperty("message")
                                      .GetProperty("content").GetString() ?? "";
+                    
                     text = text.Replace("**", "").Replace("\n", " ");
                     return "🚀 " + text.Trim();
                 }
-                catch { return null; }
+
+                return "💡 عذراً، خدمة الذكاء الاصطناعي (Groq) غير متوفرة حالياً.";
             }
-            return null;
-        }
-
-        // ─── Multi-Provider Fallback ───────────────────────────────────────────
-        private async Task<string> GetAIResponseAsync(string prompt)
-        {
-            // Try Groq first, then Gemini
-            string response = await GetGroqInsightAsync(prompt);
-            if (!string.IsNullOrEmpty(response)) return response;
-
-            response = await GetGeminiInsightAsync(prompt);
-            if (!string.IsNullOrEmpty(response)) return response;
-
-            return "💡 عذراً، خدمة الذكاء الاصطناعي غير متوفرة حالياً. يرجى التأكد من إعداد مفاتيح API (Groq أو Gemini).";
+            catch 
+            {
+                return "💡 حدث خطأ أثناء الاتصال بالذكاء الاصطناعي.";
+            }
         }
 
         // ─── Build full admin context from ALL tables ──────────────────────────

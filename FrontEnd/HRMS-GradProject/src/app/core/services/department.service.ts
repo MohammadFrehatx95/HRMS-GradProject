@@ -1,16 +1,17 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DepartmentService {
   private http = inject(HttpClient);
-  private apiUrl = 'https://hrms-gradproject.onrender.com/api/departments';
+  private apiUrl = `${environment.apiUrl}/departments`;
 
   getDepartments(): Observable<any[]> {
-    return this.http.get<any>('https://hrms-gradproject.onrender.com/api/departments?pageNumber=1&pageSize=1000').pipe(
+    return this.http.get<any>(`${this.apiUrl}?pageNumber=1&pageSize=1000`).pipe(
       map((response) => {
         if (response && response.data && response.data.items)
           return response.data.items;
