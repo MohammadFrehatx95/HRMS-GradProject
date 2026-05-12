@@ -44,7 +44,7 @@ namespace HRMS_API.Controllers
         private async Task<string> GetGeminiInsightAsync(string prompt)
         {
             string apiKey = _configuration["GeminiApiKey"];
-            if (string.IsNullOrEmpty(apiKey)) return "💡 يرجى إضافة مفتاح Gemini في الإعدادات.";
+            if (string.IsNullOrEmpty(apiKey)) return " يرجى إضافة مفتاح Gemini في الإعدادات.";
 
             string model = "gemini-2.5-flash";
             string url = $"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={apiKey}";
