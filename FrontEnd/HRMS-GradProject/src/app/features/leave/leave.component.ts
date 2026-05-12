@@ -6,13 +6,14 @@ import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
 import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { AiWidgetComponent } from '../../shared/ai-widget/ai-widget.component';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-leave',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, TranslatePipe, AiWidgetComponent],
   templateUrl: './leave.component.html',
 })
 export class LeaveComponent implements OnInit {
@@ -34,7 +35,6 @@ export class LeaveComponent implements OnInit {
 
   leaveModal: any;
 
-  // Pagination
   currentPage: number = 1;
   itemsPerPage: number = 7;
 
@@ -67,8 +67,8 @@ export class LeaveComponent implements OnInit {
   leaveTypes = [
     { id: 0, name: 'Annual' },
     { id: 1, name: 'Sick' },
-    { id: 2, name: 'Emergency' }, // ✅ يطابق Backend enum: Emergency=2
-    { id: 3, name: 'Unpaid' },   // ✅ يطابق Backend enum: Unpaid=3
+    { id: 2, name: 'Emergency' }, // يطابق backend enum
+    { id: 3, name: 'Unpaid' },
   ];
 
   ngOnInit() {
@@ -109,7 +109,7 @@ export class LeaveComponent implements OnInit {
               return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
             });
           } else if (!this.isAdminOrHR) {
-            // ✅ Backend يُرجع strings: 'Approved', 'Annual'
+            // status يجي كـ string من backend مش رقم
             const approvedAnnualLeavesDays = this.allLeavesList
               .filter(
                 (l: any) =>
@@ -148,8 +148,7 @@ export class LeaveComponent implements OnInit {
       
       let matchesType = true;
       if (this.selectedLeaveType) {
-        // الـ backend يرجع string مثل "Annual" أو رقم مثل 0
-        // نحوّل كلاهما لاسم ونقارن بـ case-insensitive
+        // backend قد يرجع string أو رقم — نحولهم للاسم ونقارن
         const leaveTypeName = this.getLeaveTypeText(l.leaveType).toLowerCase();
         matchesType = leaveTypeName === this.selectedLeaveType.toLowerCase();
       }
@@ -172,11 +171,11 @@ export class LeaveComponent implements OnInit {
   }
 
   getStatusText(statusCode: any): string {
-    // ✅ Backend يُرجع string مباشرة من MappingProfile (.ToString())
+    // الـ backend يرجع string مباشرة من toString()
     if (typeof statusCode === 'string' && isNaN(Number(statusCode))) {
       return statusCode; // 'Pending' | 'Approved' | 'Rejected'
     }
-    // توافقية مع القيم الرقمية القديمة
+    // fallback للقيم الرقمية القديمة — تجنب الكسر إذا تغير الـ backend
     if (statusCode === 0 || statusCode === '0') return 'Pending';
     if (statusCode === 1 || statusCode === '1') return 'Approved';
     if (statusCode === 2 || statusCode === '2') return 'Rejected';
@@ -184,14 +183,14 @@ export class LeaveComponent implements OnInit {
   }
 
   getLeaveTypeText(typeCode: any): string {
-    // ✅ Backend يُرجع string مباشرة: 'Annual', 'Sick', 'Emergency', 'Unpaid'
+    // backend يرجع string مباشرة — نطابقه بـ case-insensitive
     if (typeof typeCode === 'string' && isNaN(Number(typeCode))) {
       const found = this.leaveTypes.find(
         (t) => t.name.toLowerCase() === typeCode.toLowerCase()
       );
       return found ? found.name : (typeCode.charAt(0).toUpperCase() + typeCode.slice(1));
     }
-    // توافقية مع القيم الرقمية
+    // fallback للأرقام في حال تغير شيء بالـ API
     const type = this.leaveTypes.find((t) => t.id === Number(typeCode));
     return type ? type.name : (typeCode != null ? String(typeCode) : 'Unknown');
   }

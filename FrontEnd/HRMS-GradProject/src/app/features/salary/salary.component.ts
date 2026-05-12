@@ -8,13 +8,14 @@ import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { AiWidgetComponent } from '../../shared/ai-widget/ai-widget.component';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-salary',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, TranslatePipe, AiWidgetComponent],
   templateUrl: './salary.component.html',
 })
 export class SalaryComponent implements OnInit {

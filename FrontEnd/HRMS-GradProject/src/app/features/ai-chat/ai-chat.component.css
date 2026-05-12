@@ -1,0 +1,94 @@
+.chat-container {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08) !important;
+}
+
+.chat-body::-webkit-scrollbar {
+    width: 6px;
+}
+.chat-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+.chat-body::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+.chat-body::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.bot-msg-bubble {
+    background-color: #ffffff;
+    color: #334155;
+    padding: 1rem 1.25rem;
+    border-radius: 1.25rem;
+    border-top-left-radius: 0;
+    max-width: 80%;
+    border: 1px solid #e2e8f0;
+}
+
+.user-msg-bubble {
+    background: linear-gradient(135deg, #bf953f, #b38728);
+    color: #ffffff;
+    padding: 1rem 1.25rem;
+    border-radius: 1.25rem;
+    border-top-right-radius: 0;
+    max-width: 80%;
+    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.2);
+}
+
+.ai-chat-input {
+    height: 55px;
+    font-size: 1rem;
+    padding-right: 60px !important;
+    background-color: #f1f5f9 !important;
+    transition: all 0.3s ease;
+}
+
+.ai-chat-input:focus {
+    background-color: #ffffff !important;
+    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15) !important;
+    outline: none;
+}
+
+.send-btn {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #bf953f, #b38728);
+    color: white;
+    border: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+html[dir="rtl"] .send-btn {
+    right: auto;
+    left: 5px;
+}
+html[dir="rtl"] .ai-chat-input {
+    padding-right: 1.5rem !important;
+    padding-left: 60px !important;
+}
+
+.send-btn:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4) !important;
+}
+
+.send-btn:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+    box-shadow: none !important;
+}
+
+.send-btn i {
+    font-size: 1.1rem;
+    margin-left: -2px;
+}
+
+html[dir="rtl"] .send-btn i {
+    margin-left: 0;
+    margin-right: -2px;
+    transform: scaleX(-1);
+}

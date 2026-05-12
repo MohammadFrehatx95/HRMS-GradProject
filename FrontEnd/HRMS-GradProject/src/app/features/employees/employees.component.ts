@@ -9,18 +9,20 @@ import { AuthService } from '../../core/services/auth.service';
 import { AttendanceService } from '../../core/services/attendance.service';
 import { LeaveService } from '../../core/services/leave.service';
 import { SalaryService } from '../../core/services/salary.service';
+import { AiService } from '../../core/services/ai.service';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { AiWidgetComponent } from '../../shared/ai-widget/ai-widget.component';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-employees',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, TranslatePipe],
+  imports: [CommonModule, RouterLink, FormsModule, TranslatePipe, AiWidgetComponent],
   templateUrl: './employees.component.html',
 })
 export class EmployeesComponent implements OnInit {
@@ -30,6 +32,7 @@ export class EmployeesComponent implements OnInit {
   private attendanceService = inject(AttendanceService);
   private leaveService = inject(LeaveService);
   private salaryService = inject(SalaryService);
+  private aiService = inject(AiService);
 
   allEmployeesList: any[] = [];
   employeesList: any[] = [];
@@ -259,6 +262,32 @@ export class EmployeesComponent implements OnInit {
   editEmployee(id: number) {
     this.router.navigate(['/employee-form'], {
       state: { editMode: true, employeeId: id },
+    });
+  }
+
+  getAiInsight(emp: any) {
+    Swal.fire({
+      title: 'Analyzing...',
+      text: 'جاري قراءة ملف الموظف باستخدام الذكاء الاصطناعي...',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    this.aiService.getEmployeeSpecificInsight(emp.id).subscribe({
+      next: (advice) => {
+        Swal.fire({
+          title: `تقييم الذكاء الاصطناعي للموظف ${emp.firstName}`,
+          text: advice,
+          icon: 'info',
+          confirmButtonText: 'إغلاق',
+          confirmButtonColor: '#4361ee'
+        });
+      },
+      error: () => {
+        Swal.fire('خطأ', 'تعذر جلب التقييم', 'error');
+      }
     });
   }
 
