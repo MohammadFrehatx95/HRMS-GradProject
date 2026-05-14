@@ -11,7 +11,6 @@ import { DepartmentService } from '../../core/services/department.service';
 import { EmployeeService } from '../../core/services/employee.service';
 import { PositionService } from '../../core/services/position.service';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
-import { AiWidgetComponent } from '../../shared/ai-widget/ai-widget.component';
 import Swal from 'sweetalert2';
 import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
 
@@ -20,7 +19,7 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-departments',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe, AiWidgetComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe],
   templateUrl: './departments.component.html',
 })
 export class DepartmentsComponent implements OnInit {
