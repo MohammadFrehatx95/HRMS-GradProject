@@ -1,39 +1,56 @@
 
 
-<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+<div
+    class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
     <h2 class="fw-bold text-secondary mb-0">
         <i class="bi bi-people-fill me-2"></i>{{ 'Employee Management' | t }}
     </h2>
-    <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end">
+    <div
+        class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end">
         <div class="input-group shadow-sm" style="max-width: 350px;">
-            <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-            <input type="text" class="form-control border-start-0 ps-0" 
-                placeholder="{{ 'Search employees...' | t }}" 
-                [(ngModel)]="searchQuery" 
+            <span class="input-group-text bg-white border-end-0 text-muted"><i
+                    class="bi bi-search"></i></span>
+            <input type="text" class="form-control border-start-0 ps-0"
+                placeholder="{{ 'Search employees...' | t }}"
+                [(ngModel)]="searchQuery"
                 (input)="filterEmployees()">
         </div>
 
         <div class="dropdown">
-            <button class="btn btn-outline-secondary shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Filter Employees">
+            <button class="btn btn-outline-secondary shadow-sm" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                title="Filter Employees">
                 <i class="bi bi-funnel-fill"></i>
             </button>
-            <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4" style="width: 250px;">
-                <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">Filter Options</h6>
-                
+            <div
+                class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4"
+                style="width: 250px;">
+                <h6
+                    class="dropdown-header px-0 text-primary fw-bold mb-2">Filter
+                    Options</h6>
+
                 <div class="mb-3">
-                    <label class="form-label small fw-semibold text-muted mb-1">{{ 'Department' | t }}</label>
-                    <select class="form-select form-select-sm" [(ngModel)]="selectedDepartment" (change)="filterEmployees()">
-                        <option value="">All Departments</option>
+                    <label
+                        class="form-label small fw-semibold text-muted mb-1">{{
+                        'Department' | t }}</label>
+                    <select class="form-select form-select-sm"
+                        [(ngModel)]="selectedDepartment"
+                        (change)="filterEmployees()">
+                        <option value>All Departments</option>
                         @for (dept of uniqueDepartments; track dept) {
-                            <option [value]="dept">{{ dept }}</option>
+                        <option [value]="dept">{{ dept }}</option>
                         }
                     </select>
                 </div>
-                
+
                 <div class="mb-2">
-                    <label class="form-label small fw-semibold text-muted mb-1">{{ 'Status' | t }}</label>
-                    <select class="form-select form-select-sm" [(ngModel)]="selectedStatus" (change)="filterEmployees()">
-                        <option value="">All Statuses</option>
+                    <label
+                        class="form-label small fw-semibold text-muted mb-1">{{
+                        'Status' | t }}</label>
+                    <select class="form-select form-select-sm"
+                        [(ngModel)]="selectedStatus"
+                        (change)="filterEmployees()">
+                        <option value>All Statuses</option>
                         <option value="Active">Active</option>
                         <option value="Inactive">Inactive</option>
                     </select>
@@ -43,11 +60,15 @@
 
         @if (isAdmin) {
         <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-outline-success px-4 fw-semibold me-2" (click)="exportToExcel()">
-                <i class="bi bi-file-earmark-excel-fill me-2"></i> {{ 'Export to Excel' | t }}
+            <button class="btn btn-outline-success px-4 fw-semibold me-2"
+                (click)="exportToExcel()">
+                <i class="bi bi-file-earmark-excel-fill me-2"></i> {{
+                'Export to Excel' | t }}
             </button>
-            <button class="btn btn-primary px-4 fw-semibold" routerLink="/employee-form">
-                <i class="bi bi-person-plus-fill me-2"></i> {{ 'Add Employee' | t }}
+            <button class="btn btn-primary px-4 fw-semibold"
+                routerLink="/employee-form">
+                <i class="bi bi-person-plus-fill me-2"></i> {{ 'Add Employee' |
+                t }}
             </button>
         </div>
         }
@@ -64,57 +85,78 @@
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
             <thead class="table-light">
-                <tr class="text-muted small text-uppercase" style="letter-spacing: 0.5px;">
-                    <th class="py-3 px-4 fw-semibold text-muted border-bottom-0">ID</th>
-                    <th class="py-3 px-4 fw-semibold text-muted border-bottom-0">{{ 'Employee' | t }}</th>
-                    <th class="py-3 px-4 fw-semibold text-muted border-bottom-0">{{ 'Email' | t }}</th>
-                    <th class="py-3 px-4 fw-semibold text-muted border-bottom-0">{{ 'Department' | t }}</th>
-                    <th class="py-3 px-4 fw-semibold text-muted border-bottom-0 text-center">{{ 'Status' | t }}</th>
-                    @if (isAdminOrHR) { <th class="py-3 px-4 fw-semibold text-muted border-bottom-0 text-end">{{ 'Actions' | t }}</th> }
+                <tr class="text-muted small text-uppercase"
+                    style="letter-spacing: 0.5px;">
+                    <th
+                        class="py-3 px-4 fw-semibold text-muted border-bottom-0">ID</th>
+                    <th
+                        class="py-3 px-4 fw-semibold text-muted border-bottom-0">{{
+                        'Employee' | t }}</th>
+                    <th
+                        class="py-3 px-4 fw-semibold text-muted border-bottom-0">{{
+                        'Email' | t }}</th>
+                    <th
+                        class="py-3 px-4 fw-semibold text-muted border-bottom-0">{{
+                        'Department' | t }}</th>
+                    <th
+                        class="py-3 px-4 fw-semibold text-muted border-bottom-0 text-center">{{
+                        'Status' | t }}</th>
+                    @if (isAdminOrHR) { <th
+                        class="py-3 px-4 fw-semibold text-muted border-bottom-0 text-end">{{
+                        'Actions' | t }}</th> }
                 </tr>
             </thead>
             <tbody>
                 @for (emp of paginatedEmployees; track emp.id) {
                 <tr>
-                    <td data-label="ID" class="py-3 px-4 fw-bold text-dark">#{{ emp.id }}</td>
-                    <td data-label="Full Name" class="py-3 px-4 fw-bold text-dark">
+                    <td data-label="ID" class="py-3 px-4 fw-bold text-dark">#{{
+                        emp.id }}</td>
+                    <td data-label="Full Name"
+                        class="py-3 px-4 fw-bold text-dark">
                         <div class="d-flex align-items-center">
-                            <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; font-size: 14px;">
-                                {{ emp.firstName ? emp.firstName.charAt(0).toUpperCase() : 'U' }}
+                            <div
+                                class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-3 rounded-circle d-flex align-items-center justify-content-center"
+                                style="width: 35px; height: 35px; font-size: 14px;">
+                                {{ emp.firstName ?
+                                emp.firstName.charAt(0).toUpperCase() : 'U' }}
                             </div>
                             {{ emp.firstName }} {{ emp.lastName }}
                         </div>
                     </td>
-                    <td data-label="Email" class="py-3 px-4 text-muted">{{ emp.email }}</td>
-                    <td data-label="Department" class="py-3 px-4">{{ emp.departmentName || emp.departmentId || '—' }}</td>
+                    <td data-label="Email" class="py-3 px-4 text-muted">{{
+                        emp.email }}</td>
+                    <td data-label="Department" class="py-3 px-4">{{
+                        emp.departmentName || emp.departmentId || '—' }}</td>
                     <td data-label="Status" class="py-3 px-4">
                         <span class="status-badge"
                             [ngClass]="emp.isActive ? 'status-active' : 'status-inactive'">
-                            <i class="bi" [ngClass]="emp.isActive ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
-                            {{ emp.isActive ? ('Active' | t) : ('Inactive' | t) }}
+                            <i class="bi"
+                                [ngClass]="emp.isActive ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+                            {{ emp.isActive ? ('Active' | t) : ('Inactive' | t)
+                            }}
                         </span>
                     </td>
                     @if (isAdminOrHR) {
-                    <td data-label="Actions" class="py-3 px-4 text-end text-nowrap actions-cell">
-                        <button class="btn btn-outline-info btn-sm me-2" title="Details"
+                    <td data-label="Actions"
+                        class="py-3 px-4 text-end text-nowrap actions-cell">
+                        <button class="btn btn-outline-info btn-sm me-2"
+                            title="Details"
                             (click)="viewFullDetails(emp)">
                             <i class="bi bi-file-earmark-person"></i>
                         </button>
                         @if (isAdmin) {
-                        <button class="btn btn-sm text-white me-2 shadow-sm border-0" title="AI Insight"
-                            style="background: linear-gradient(135deg, #bf953f, #b38728);"
-                            (click)="getAiInsight(emp)">
-                            <i class="bi bi-stars"></i> AI
-                        </button>
-                        <button class="btn btn-sm btn-outline-secondary me-2" title="Download Report"
+                        <button class="btn btn-sm btn-outline-secondary me-2"
+                            title="Download Report"
                             (click)="downloadEmployeeReport(emp)">
                             <i class="bi bi-file-earmark-pdf"></i>
                         </button>
-                        <button class="btn btn-outline-primary btn-sm" title="Edit"
+                        <button class="btn btn-outline-primary btn-sm"
+                            title="Edit"
                             (click)="editEmployee(emp.id)">
                             <i class="bi bi-pencil-square"></i>
                         </button>
-                        <button class="btn btn-sm btn-outline-danger ms-2" title="Delete"
+                        <button class="btn btn-sm btn-outline-danger ms-2"
+                            title="Delete"
                             (click)="onDelete(emp.id)">
                             <i class="bi bi-trash3"></i>
                         </button>
@@ -124,13 +166,18 @@
                 </tr>
                 } @empty {
                 <tr>
-                    <td [colSpan]="isAdminOrHR ? 6 : 5" class="text-center py-5">
+                    <td [colSpan]="isAdminOrHR ? 6 : 5"
+                        class="text-center py-5">
                         <div class="d-flex flex-column align-items-center">
-                            <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <div
+                                class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center"
+                                style="width: 80px; height: 80px;">
                                 <i class="bi bi-people text-secondary fs-1"></i>
                             </div>
-                            <h5 class="fw-bold text-dark mb-1">{{ 'No Employees Found' | t }}</h5>
-                            <p class="text-muted small mb-0">Try adjusting your filters or search query.</p>
+                            <h5 class="fw-bold text-dark mb-1">{{
+                                'No Employees Found' | t }}</h5>
+                            <p class="text-muted small mb-0">Try adjusting your
+                                filters or search query.</p>
                         </div>
                     </td>
                 </tr>
@@ -141,21 +188,27 @@
 
     <!-- Pagination Footer -->
     @if (employeesList.length > 0) {
-    <div class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+    <div
+        class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
         <small class="text-muted fw-medium">
-            Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, employeesList.length) }} of {{ employeesList.length }} entries
+            Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{
+            getMathMin(currentPage * itemsPerPage, employeesList.length) }} of
+            {{ employeesList.length }} entries
         </small>
         <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
             <li class="page-item" [class.disabled]="currentPage === 1">
-                <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
+                <a class="page-link cursor-pointer px-3"
+                    (click)="changePage(currentPage - 1)">Previous</a>
             </li>
-            
+
             <li class="page-item active">
-                <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
+                <a class="page-link px-3 bg-primary border-primary">{{
+                    currentPage }} / {{ totalPages }}</a>
             </li>
-            
+
             <li class="page-item" [class.disabled]="currentPage === totalPages">
-                <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
+                <a class="page-link cursor-pointer px-3"
+                    (click)="changePage(currentPage + 1)">Next</a>
             </li>
         </ul>
     </div>
@@ -293,9 +346,12 @@
                 }
             </div>
 
-            <div class="modal-footer border-0 bg-light d-flex justify-content-between align-items-center">
+            <div
+                class="modal-footer border-0 bg-light d-flex justify-content-between align-items-center">
                 <span class="text-muted small">
-                    <i class="bi bi-shield-lock-fill me-1 text-secondary"></i>Confidential Employee Record
+                    <i
+                        class="bi bi-shield-lock-fill me-1 text-secondary"></i>Confidential
+                    Employee Record
                 </span>
                 <div class="d-flex gap-2">
                     <button type="button"
@@ -309,12 +365,16 @@
                         [disabled]="isGeneratingReport"
                         (click)="downloadEmployeeReport(selectedEmployeeProfile)">
                         @if (isGeneratingReport) {
-                            <span class="spinner-border spinner-border-sm me-2"></span> {{ 'Loading...' | t }}
+                        <span
+                            class="spinner-border spinner-border-sm me-2"></span>
+                        {{ 'Loading...' | t }}
                         } @else {
-                            <i class="bi bi-file-earmark-pdf-fill me-1"></i> {{ 'Download Report' | t }}
+                        <i class="bi bi-file-earmark-pdf-fill me-1"></i> {{
+                        'Download Report' | t }}
                         }
                     </button>
-                    <button type="button" class="btn btn-primary rounded-pill px-4"
+                    <button type="button"
+                        class="btn btn-primary rounded-pill px-4"
                         (click)="editEmployee(selectedEmployeeProfile?.id); detailsModal?.hide()">
                         <i class="bi bi-pencil-square me-1"></i> Edit Employee
                     </button>
