@@ -10,7 +10,8 @@
         <div>
           <h2 class="form-title mb-0">{{ isEditMode ? 'Edit Employee Profile' : 'Add New Employee' }}</h2>
           <p class="form-subtitle mb-0">
-            {{ isEditMode ? 'Update employee information and employment details' : 'Link a registered user to a new employee profile' }}
+            {{ isEditMode ? 'Update employee information and employment details' : 'Link a registered user to a new
+            employee profile' }}
           </p>
         </div>
       </div>
@@ -21,17 +22,25 @@
 
     <!-- ═══ LOADING SKELETON ═══ -->
     @if (isLoading && isEditMode) {
-      <div class="form-body-card">
-        <div class="skeleton-wrap">
-          <div class="skeleton-line w-40"></div>
-          <div class="row g-3 mt-2">
-            <div class="col-6"><div class="skeleton-input"></div></div>
-            <div class="col-6"><div class="skeleton-input"></div></div>
-            <div class="col-6"><div class="skeleton-input"></div></div>
-            <div class="col-6"><div class="skeleton-input"></div></div>
+    <div class="form-body-card">
+      <div class="skeleton-wrap">
+        <div class="skeleton-line w-40"></div>
+        <div class="row g-3 mt-2">
+          <div class="col-6">
+            <div class="skeleton-input"></div>
+          </div>
+          <div class="col-6">
+            <div class="skeleton-input"></div>
+          </div>
+          <div class="col-6">
+            <div class="skeleton-input"></div>
+          </div>
+          <div class="col-6">
+            <div class="skeleton-input"></div>
           </div>
         </div>
       </div>
+    </div>
     }
 
     @if (!isLoading || !isEditMode) {
@@ -39,91 +48,89 @@
 
       <!-- ═══ ADD MODE: Linked User Banner ═══ -->
       @if (!isEditMode && employeeForm.get('userId')?.value) {
-        <div class="linked-user-banner">
-          <div class="linked-user-avatar">
-            <i class="bi bi-person-fill"></i>
-          </div>
-          <div class="linked-user-info">
-            <span class="linked-label">Linked Account</span>
-            <span class="linked-email">{{ displayEmail }}</span>
-          </div>
-          <div class="linked-check">
-            <i class="bi bi-check-circle-fill"></i>
-          </div>
+      <div class="linked-user-banner">
+        <div class="linked-user-avatar">
+          <i class="bi bi-person-fill"></i>
         </div>
+        <div class="linked-user-info">
+          <span class="linked-label">Linked Account</span>
+          <span class="linked-email">{{ displayEmail }}</span>
+        </div>
+        <div class="linked-check">
+          <i class="bi bi-check-circle-fill"></i>
+        </div>
+      </div>
       }
 
       <!-- ═══ EDIT MODE: Linked Account Info Card ═══ -->
       @if (isEditMode && linkedUserInfo) {
-        <div class="linked-account-card">
-          <div class="lac-icon">
-            <i class="bi bi-person-badge-fill"></i>
-          </div>
-          <div class="lac-body">
-            <div class="lac-title">Linked User Account</div>
-            <div class="lac-detail">
-              <i class="bi bi-person me-1 text-muted"></i>{{ linkedUserInfo.username }}
-            </div>
-            <div class="lac-detail">
-              <i class="bi bi-envelope me-1 text-muted"></i>{{ linkedUserInfo.email }}
-            </div>
-          </div>
-          <span class="lac-badge">{{ linkedUserInfo.role }}</span>
+      <div class="linked-account-card">
+        <div class="lac-icon">
+          <i class="bi bi-person-badge-fill"></i>
         </div>
+        <div class="lac-body">
+          <div class="lac-title">Linked User Account</div>
+          <div class="lac-detail">
+            <i class="bi bi-person me-1 text-muted"></i>{{ linkedUserInfo.username }}
+          </div>
+          <div class="lac-detail">
+            <i class="bi bi-envelope me-1 text-muted"></i>{{ linkedUserInfo.email }}
+          </div>
+        </div>
+        <span class="lac-badge">{{ linkedUserInfo.role }}</span>
+      </div>
       }
 
       <!-- ═══ SECTION: Link User (Add mode only) ═══ -->
       @if (!isEditMode) {
-        <div class="form-section">
-          <div class="section-header">
-            <i class="bi bi-link-45deg"></i>
-            <span>Link User Account</span>
-            <span class="required-badge">Required</span>
+      <div class="form-section">
+        <div class="section-header">
+          <i class="bi bi-link-45deg"></i>
+          <span>Link User Account</span>
+          <span class="required-badge">Required</span>
+        </div>
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="field-label">
+              <i class="bi bi-person-lock text-primary"></i>
+              Select Registered User <span class="text-danger">*</span>
+            </label>
+            <select class="form-select field-input" formControlName="userId"
+              [class.is-invalid]="employeeForm.get('userId')?.invalid && employeeForm.get('userId')?.touched">
+              <option value="" disabled selected>
+                {{ unassignedUsers.length === 0 ? 'No unlinked Employee accounts found...' : 'Choose a registered
+                user...' }}
+              </option>
+              @for (user of unassignedUsers; track user.id) {
+              <option [value]="user.id">{{ user.username }} — {{ user.email }}</option>
+              }
+            </select>
+            <div class="invalid-feedback">Please select a user account to link.</div>
+            <small class="field-hint">
+              <i class="bi bi-info-circle me-1"></i>
+              Only Employee accounts that are not yet linked to a profile are shown.
+              Email will be auto-filled from the selected account.
+            </small>
           </div>
-          <div class="row g-3">
-            <div class="col-12">
-              <label class="field-label">
-                <i class="bi bi-person-lock text-primary"></i>
-                Select Registered User <span class="text-danger">*</span>
-              </label>
-              <select class="form-select field-input"
-                  formControlName="userId"
-                  [class.is-invalid]="employeeForm.get('userId')?.invalid && employeeForm.get('userId')?.touched">
-                <option value="" disabled selected>
-                  {{ unassignedUsers.length === 0 ? 'No unlinked Employee accounts found...' : 'Choose a registered user...' }}
-                </option>
-                @for (user of unassignedUsers; track user.id) {
-                  <option [value]="user.id">{{ user.username }} — {{ user.email }}</option>
-                }
-              </select>
-              <div class="invalid-feedback">Please select a user account to link.</div>
-              <small class="field-hint">
-                <i class="bi bi-info-circle me-1"></i>
-                Only Employee accounts that are not yet linked to a profile are shown.
-                Email will be auto-filled from the selected account.
-              </small>
-            </div>
 
-            <!-- الايميل مسكر، بيتعبى لحاله -->
-            <div class="col-12">
-              <label class="field-label">
-                <i class="bi bi-envelope text-primary"></i>
-                Email Address
-              </label>
-              <div class="readonly-field-wrap">
-                <i class="bi bi-envelope-fill readonly-icon"></i>
-                <input type="email" class="form-control field-input readonly-field"
-                    formControlName="email"
-                    placeholder="Auto-filled when you select a user above"
-                    readonly>
-              </div>
-              <small class="field-hint">
-                <i class="bi bi-magic me-1"></i>
-                This field is auto-filled when you select a user from the dropdown above.
-              </small>
+          <!-- الايميل مسكر، بيتعبى لحاله -->
+          <div class="col-12">
+            <label class="field-label">
+              <i class="bi bi-envelope text-primary"></i>
+              Email Address
+            </label>
+            <div class="readonly-field-wrap">
+              <i class="bi bi-envelope-fill readonly-icon"></i>
+              <input type="email" class="form-control field-input readonly-field" formControlName="email"
+                placeholder="Auto-filled when you select a user above" readonly>
             </div>
+            <small class="field-hint">
+              <i class="bi bi-magic me-1"></i>
+              This field is auto-filled when you select a user from the dropdown above.
+            </small>
           </div>
         </div>
+      </div>
       }
 
       <!-- ═══ SECTION: Personal Information ═══ -->
@@ -138,9 +145,8 @@
               <i class="bi bi-person text-primary"></i>
               First Name <span class="text-danger">*</span>
             </label>
-            <input type="text" class="form-control field-input"
-                formControlName="firstName" placeholder="e.g. Mohammad"
-                [class.is-invalid]="employeeForm.get('firstName')?.invalid && employeeForm.get('firstName')?.touched">
+            <input type="text" class="form-control field-input" formControlName="firstName" placeholder="e.g. Mohammad"
+              [class.is-invalid]="employeeForm.get('firstName')?.invalid && employeeForm.get('firstName')?.touched">
             <div class="invalid-feedback">First name is required.</div>
           </div>
           <div class="col-md-6">
@@ -148,9 +154,8 @@
               <i class="bi bi-person text-primary"></i>
               Last Name <span class="text-danger">*</span>
             </label>
-            <input type="text" class="form-control field-input"
-                formControlName="lastName" placeholder="e.g. Al-Ahmad"
-                [class.is-invalid]="employeeForm.get('lastName')?.invalid && employeeForm.get('lastName')?.touched">
+            <input type="text" class="form-control field-input" formControlName="lastName" placeholder="e.g. Al-Ahmad"
+              [class.is-invalid]="employeeForm.get('lastName')?.invalid && employeeForm.get('lastName')?.touched">
             <div class="invalid-feedback">Last name is required.</div>
           </div>
         </div>
@@ -165,43 +170,39 @@
         <div class="row g-3">
           <!-- الايميل بس ينعرض -->
           @if (isEditMode) {
-            <div class="col-md-6">
-              <label class="field-label">
-                <i class="bi bi-envelope text-primary"></i>
-                Email Address
-              </label>
-              <div class="readonly-field-wrap">
-                <i class="bi bi-envelope-fill readonly-icon"></i>
-                <input type="email" class="form-control field-input readonly-field"
-                    formControlName="email" readonly>
-              </div>
-              <small class="field-hint">
-                <i class="bi bi-lock-fill me-1"></i>Email is linked to the user account and cannot be changed here.
-              </small>
+          <div class="col-md-6">
+            <label class="field-label">
+              <i class="bi bi-envelope text-primary"></i>
+              Email Address
+            </label>
+            <div class="readonly-field-wrap">
+              <i class="bi bi-envelope-fill readonly-icon"></i>
+              <input type="email" class="form-control field-input readonly-field" formControlName="email" readonly>
             </div>
+            <small class="field-hint">
+              <i class="bi bi-lock-fill me-1"></i>Email is linked to the user account and cannot be changed here.
+            </small>
+          </div>
           }
           <div [class]="isEditMode ? 'col-md-6' : 'col-12'">
             <label class="field-label">
               <i class="bi bi-telephone text-primary"></i>
               Phone Number <span class="text-danger">*</span>
             </label>
-            <input type="text" class="form-control field-input"
-                formControlName="phoneNumber"
-                placeholder="0791234567"
-                maxlength="10"
-                inputmode="numeric"
-                [class.is-invalid]="employeeForm.get('phoneNumber')?.invalid && employeeForm.get('phoneNumber')?.touched">
+            <input type="text" class="form-control field-input" formControlName="phoneNumber" placeholder="0791234567"
+              maxlength="10" inputmode="numeric"
+              [class.is-invalid]="employeeForm.get('phoneNumber')?.invalid && employeeForm.get('phoneNumber')?.touched">
             @if (employeeForm.get('phoneNumber')?.touched) {
-              @if (employeeForm.get('phoneNumber')?.errors?.['required']) {
-                <div class="invalid-feedback d-block">
-                  <i class="bi bi-exclamation-circle me-1"></i>رقم الهاتف مطلوب.
-                </div>
-              } @else if (employeeForm.get('phoneNumber')?.errors?.['pattern']) {
-                <div class="invalid-feedback d-block">
-                  <i class="bi bi-exclamation-triangle me-1"></i>
-                  رقم الهاتف يجب أن يتكون من 10 أرقام فقط بدون مسافات أو رموز.
-                </div>
-              }
+            @if (employeeForm.get('phoneNumber')?.errors?.['required']) {
+            <div class="invalid-feedback d-block">
+              <i class="bi bi-exclamation-circle me-1"></i>رقم الهاتف مطلوب.
+            </div>
+            } @else if (employeeForm.get('phoneNumber')?.errors?.['pattern']) {
+            <div class="invalid-feedback d-block">
+              <i class="bi bi-exclamation-triangle me-1"></i>
+              رقم الهاتف يجب أن يتكون من 10 أرقام فقط بدون مسافات أو رموز.
+            </div>
+            }
             }
             <small class="field-hint">
               <i class="bi bi-info-circle me-1"></i>
@@ -223,9 +224,8 @@
               <i class="bi bi-calendar-date text-primary"></i>
               Hire Date <span class="text-danger">*</span>
             </label>
-            <input type="date" class="form-control field-input"
-                formControlName="hireDate"
-                [class.is-invalid]="employeeForm.get('hireDate')?.invalid && employeeForm.get('hireDate')?.touched">
+            <input type="date" class="form-control field-input" formControlName="hireDate"
+              [class.is-invalid]="employeeForm.get('hireDate')?.invalid && employeeForm.get('hireDate')?.touched">
             <div class="invalid-feedback">Hire date is required.</div>
           </div>
           <div class="col-md-4">
@@ -233,12 +233,11 @@
               <i class="bi bi-building text-primary"></i>
               Department <span class="text-danger">*</span>
             </label>
-            <select class="form-select field-input"
-                formControlName="departmentId"
-                [class.is-invalid]="employeeForm.get('departmentId')?.invalid && employeeForm.get('departmentId')?.touched">
+            <select class="form-select field-input" formControlName="departmentId"
+              [class.is-invalid]="employeeForm.get('departmentId')?.invalid && employeeForm.get('departmentId')?.touched">
               <option value="" disabled selected>Select department...</option>
               @for (dept of departments; track dept.id) {
-                <option [value]="dept.id">{{ dept.name }}</option>
+              <option [value]="dept.id">{{ dept.name }}</option>
               }
             </select>
             <div class="invalid-feedback">Please select a department.</div>
@@ -248,22 +247,22 @@
               <i class="bi bi-person-badge text-primary"></i>
               Job Position <span class="text-danger">*</span>
             </label>
-            <select class="form-select field-input"
-                formControlName="positionId"
-                [class.is-invalid]="employeeForm.get('positionId')?.invalid && employeeForm.get('positionId')?.touched">
+            <select class="form-select field-input" formControlName="positionId"
+              [class.is-invalid]="employeeForm.get('positionId')?.invalid && employeeForm.get('positionId')?.touched">
               <option value="" disabled selected>
-                {{ departments.length === 0 ? 'Select a department first...' : positions.length === 0 ? 'Select department first...' : 'Select position...' }}
+                {{ departments.length === 0 ? 'Select a department first...' : positions.length === 0 ? 'Select
+                department first...' : 'Select position...' }}
               </option>
               @for (pos of positions; track pos.id) {
-                <option [value]="pos.id">{{ pos.title }}</option>
+              <option [value]="pos.id">{{ pos.title }}</option>
               }
             </select>
             <div class="invalid-feedback">Please select a job position.</div>
             @if (positions.length > 0) {
-              <small class="field-hint">
-                <i class="bi bi-info-circle me-1"></i>
-                {{ positions.length }} position(s) available in this department.
-              </small>
+            <small class="field-hint">
+              <i class="bi bi-info-circle me-1"></i>
+              {{ positions.length }} position(s) available in this department.
+            </small>
             }
           </div>
         </div>
@@ -276,11 +275,11 @@
         </a>
         <button type="submit" class="btn btn-submit" [disabled]="isLoading || employeeForm.invalid">
           @if (isLoading) {
-            <span class="spinner-border spinner-border-sm me-2"></span>
-            {{ isEditMode ? 'Saving Changes...' : 'Creating Profile...' }}
+          <span class="spinner-border spinner-border-sm me-2"></span>
+          {{ isEditMode ? 'Saving Changes...' : 'Creating Profile...' }}
           } @else {
-            <i class="bi me-2" [class.bi-check2-circle]="!isEditMode" [class.bi-floppy-fill]="isEditMode"></i>
-            {{ isEditMode ? 'Save Changes' : 'Create Employee Profile' }}
+          <i class="bi me-2" [class.bi-check2-circle]="!isEditMode" [class.bi-floppy-fill]="isEditMode"></i>
+          {{ isEditMode ? 'Save Changes' : 'Create Employee Profile' }}
           }
         </button>
       </div>

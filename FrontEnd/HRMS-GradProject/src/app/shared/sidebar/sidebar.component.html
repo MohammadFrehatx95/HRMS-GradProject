@@ -14,18 +14,30 @@
     <!-- ── Navigation ── -->
     <nav class="sidebar-nav">
         <ul>
-            <li><a routerLink="/dashboard" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-house"></i> {{ 'Dashboard' | t }}</a></li>
-            <li><a routerLink="/my-profile" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-person"></i> {{ 'My Profile' | t }}</a></li>
-            <li><a routerLink="/employees" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-people"></i> {{ 'Employees' | t }}</a></li>
-            <li><a routerLink="/leave" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-calendar2-check"></i> {{ 'Leave Requests' | t }}</a></li>
-            <li><a routerLink="/attendance" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-clock-history"></i> {{ 'Attendance' | t }}</a></li>
-            <li><a routerLink="/salary" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-cash-stack"></i> {{ 'Salaries' | t }}</a></li>
+            <li><a routerLink="/dashboard" routerLinkActive="active" (click)="closeMobileSidebar()"><i
+                        class="bi bi-house"></i> {{ 'Dashboard' | t }}</a></li>
+            <li><a routerLink="/my-profile" routerLinkActive="active" (click)="closeMobileSidebar()"><i
+                        class="bi bi-person"></i> {{ 'My Profile' | t }}</a></li>
+            <li><a routerLink="/employees" routerLinkActive="active" (click)="closeMobileSidebar()"><i
+                        class="bi bi-people"></i> {{ 'Employees' | t }}</a></li>
+            <li><a routerLink="/leave" routerLinkActive="active" (click)="closeMobileSidebar()"><i
+                        class="bi bi-calendar2-check"></i> {{ 'Leave Requests' | t }}</a></li>
+            <li><a routerLink="/attendance" routerLinkActive="active" (click)="closeMobileSidebar()"><i
+                        class="bi bi-clock-history"></i> {{ 'Attendance' | t }}</a></li>
+            <li><a routerLink="/salary" routerLinkActive="active" (click)="closeMobileSidebar()"><i
+                        class="bi bi-cash-stack"></i> {{ 'Salaries' | t }}</a></li>
+            <li><a routerLink="/ai-chat" routerLinkActive="active" (click)="closeMobileSidebar()"><i
+                        class="bi bi-stars text-warning"></i> <span class="text-warning fw-bold"
+                        style="text-shadow: 0 0 10px rgba(255,193,7,0.4);">{{ 'Smart Assistant' | t }}</span></a></li>
 
             @if (isAdmin) {
             <li class="section-title">{{ 'System Control' | t }}</li>
-            <li><a routerLink="/departments" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-diagram-3"></i> {{ 'Departments' | t }}</a></li>
-            <li><a routerLink="/positions" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-briefcase"></i> {{ 'Positions' | t }}</a></li>
-            <li><a routerLink="/register" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-person-plus"></i> {{ 'Register User' | t }} </a></li>
+            <li><a routerLink="/departments" routerLinkActive="active" (click)="closeMobileSidebar()"><i
+                        class="bi bi-diagram-3"></i> {{ 'Departments' | t }}</a></li>
+            <li><a routerLink="/positions" routerLinkActive="active" (click)="closeMobileSidebar()"><i
+                        class="bi bi-briefcase"></i> {{ 'Positions' | t }}</a></li>
+            <li><a routerLink="/register" routerLinkActive="active" (click)="closeMobileSidebar()"><i
+                        class="bi bi-person-plus"></i> {{ 'Register User' | t }} </a></li>
             }
         </ul>
     </nav>

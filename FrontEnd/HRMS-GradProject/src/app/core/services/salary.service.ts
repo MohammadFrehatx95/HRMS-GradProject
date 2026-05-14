@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +9,7 @@ import { Observable, map } from 'rxjs';
 export class SalaryService {
   // شغل الرواتب
   private http = inject(HttpClient);
-  private apiUrl = 'https://localhost:7204/api/salaries';
+  private apiUrl = `${environment.apiUrl}/salaries`;
 
   getAllSalaries(): Observable<any[]> {
     return this.http.get<any>(`${this.apiUrl}?pageNumber=1&pageSize=1000`).pipe(
@@ -57,3 +58,4 @@ export class SalaryService {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }
+
