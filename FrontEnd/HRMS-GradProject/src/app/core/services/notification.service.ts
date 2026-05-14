@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +10,7 @@ export class NotificationService {
   // شغل التنبيهات
   private http = inject(HttpClient);
 
-  private apiUrl = 'https://localhost:7204/api/notifications';
+  private apiUrl = `${environment.apiUrl}/notifications`;
 
   getNotifications(): Observable<any[]> {
     return this.http.get<any>(this.apiUrl).pipe(
@@ -41,3 +42,4 @@ export class NotificationService {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }
+

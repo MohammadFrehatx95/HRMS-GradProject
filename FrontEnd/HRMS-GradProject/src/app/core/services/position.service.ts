@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +9,7 @@ import { Observable, map } from 'rxjs';
 export class PositionService {
   // شغل المسميات
   private http = inject(HttpClient);
-  private apiUrl = 'https://localhost:7204/api/positions';
+  private apiUrl = `${environment.apiUrl}/positions`;
 
   getPositions(): Observable<any[]> {
     return this.http.get<any>(this.apiUrl).pipe(
@@ -49,3 +50,4 @@ export class PositionService {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }
+

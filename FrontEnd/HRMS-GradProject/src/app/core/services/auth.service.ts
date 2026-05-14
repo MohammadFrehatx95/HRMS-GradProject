@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +10,7 @@ import { Observable } from 'rxjs';
 export class AuthService {
   // شغل التوثيق
   private http = inject(HttpClient);
-  private apiUrl = 'https://localhost:7204/api/auth';
+  private apiUrl = `${environment.apiUrl}/auth`;
 
   login(credentials: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
@@ -48,9 +49,12 @@ export class AuthService {
     if (!token) return false;
 
     try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
+      const parts = token.split('.');
+      if (parts.length < 2) return false;
+
+      const payload = JSON.parse(atob(parts[1]));
       const exp = payload.exp;
-      if (!exp) return true; // مافي exp — نعتبره صالح
+      if (!exp) return true;
 
       // exp بالثواني، Date.now() بالمللي ثانية
       if (Date.now() >= exp * 1000) {
@@ -141,3 +145,4 @@ export class AuthService {
       .pipe(map((response) => response?.data ?? response));
   }
 }
+

@@ -1,4 +1,4 @@
-﻿using Application.DTOs.Auth;
+using Application.DTOs.Auth;
 using Application.Interfaces;
 using Application.Services.Interfaces;
 using BCrypt.Net;
@@ -62,7 +62,7 @@ namespace Application.Services.Implementations
         {
             var user = await uow.Repository<User>()
                                 .GetAllQueryable()
-                                .FirstOrDefaultAsync(u => u.Id == userId && u.Email == dto.Email);
+                                .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user is null || !BCrypt.Net.BCrypt.Verify(dto.CurrentPassword, user.PasswordHash))
             {

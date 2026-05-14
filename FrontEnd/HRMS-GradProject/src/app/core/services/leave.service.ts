@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +9,7 @@ import { Observable, map } from 'rxjs';
 export class LeaveService {
   // شغل الإجازات
   private http = inject(HttpClient);
-  private apiUrl = 'https://localhost:7204/api/leaves';
+  private apiUrl = `${environment.apiUrl}/leaves`;
 
   getMyLeaves(): Observable<any[]> {
     return this.http
@@ -65,3 +66,4 @@ export class LeaveService {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }
+
