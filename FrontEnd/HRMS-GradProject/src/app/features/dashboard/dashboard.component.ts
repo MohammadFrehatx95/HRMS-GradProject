@@ -8,6 +8,7 @@ import { AttendanceService } from '../../core/services/attendance.service';
 import { SalaryService } from '../../core/services/salary.service';
 import { Chart, registerables } from 'chart.js';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import Swal from 'sweetalert2';
 
 Chart.register(...registerables);
 
@@ -51,6 +52,14 @@ export class DashboardComponent implements OnInit {
   readonly PAYDAY = 25;
 
   leaveChartInstance: any;
+
+  downloadSystemReport() {
+    Swal.fire(
+      'Notice',
+      'Report generation is not fully implemented yet.',
+      'info',
+    );
+  }
 
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();

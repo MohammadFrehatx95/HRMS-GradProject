@@ -28,7 +28,7 @@ export class MyProfileComponent implements OnInit {
   userEmail: string = '';
 
   editData = { email: '', phone: '' };
-  pwdData = { oldPassword: '', newPassword: '' };
+  pwdData = { oldPassword: '', newPassword: '', confirmNewPassword: '' };
   isUpdatingProfile = false;
   isChangingPwd = false;
 
@@ -95,7 +95,7 @@ export class MyProfileComponent implements OnInit {
     this.editData.email = this.profile?.email || this.userEmail || '';
     this.editData.phone =
       this.profile?.phone || this.profile?.phoneNumber || '';
-    this.pwdData = { oldPassword: '', newPassword: '' };
+    this.pwdData = { oldPassword: '', newPassword: '', confirmNewPassword: '' };
 
     const modalEl = document.getElementById('editProfileModal');
     if (modalEl) {
