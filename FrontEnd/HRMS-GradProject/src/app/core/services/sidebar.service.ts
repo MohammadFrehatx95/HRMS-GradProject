@@ -1,9 +1,10 @@
 import { Injectable, signal } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SidebarService {
+  // حالة السايدبار
   isSidebarHidden = signal<boolean>(false);
   isMobileSidebarOpen = signal<boolean>(false);
 

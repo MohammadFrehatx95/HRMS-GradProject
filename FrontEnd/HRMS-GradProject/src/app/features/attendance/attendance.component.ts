@@ -33,7 +33,10 @@ export class AttendanceComponent implements OnInit {
 
   get paginatedRecords() {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.attendanceRecords.slice(startIndex, startIndex + this.itemsPerPage);
+    return this.attendanceRecords.slice(
+      startIndex,
+      startIndex + this.itemsPerPage,
+    );
   }
 
   get totalPages() {
@@ -77,20 +80,28 @@ export class AttendanceComponent implements OnInit {
   }
 
   loadAllAttendance() {
+    // تحميل كل الحضور
     this.isLoading = true;
     this.attendanceService.getAllAttendance().subscribe({
       next: (res: any) => {
-        const items = Array.isArray(res) ? res : res?.items ?? res?.data?.items ?? res?.data ?? [];
+        const items = Array.isArray(res)
+          ? res
+          : (res?.items ?? res?.data?.items ?? res?.data ?? []);
         this.allAttendanceRecords = Array.isArray(items) ? items : [];
-        this.allAttendanceRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        this.allAttendanceRecords.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+        );
         this.attendanceRecords = [...this.allAttendanceRecords];
         this.isLoading = false;
       },
-      error: () => { this.isLoading = false; },
+      error: () => {
+        this.isLoading = false;
+      },
     });
   }
 
   loadMyAttendance() {
+    // تحميل حضوري
     this.isLoading = true;
     this.attendanceService.getMyAttendance().subscribe({
       next: (res: any) => {
@@ -110,14 +121,17 @@ export class AttendanceComponent implements OnInit {
   }
 
   filterRecords() {
-    this.attendanceRecords = this.allAttendanceRecords.filter(rec => {
+    this.attendanceRecords = this.allAttendanceRecords.filter((rec) => {
       let matchesSearch = true;
       if (this.searchQuery) {
         const query = this.searchQuery.toLowerCase();
         const empName = (rec.employeeName || '').toLowerCase();
         const empId = String(rec.employeeId || '');
         const dateStr = String(rec.date || '').toLowerCase();
-        matchesSearch = empName.includes(query) || empId.includes(query) || dateStr.includes(query);
+        matchesSearch =
+          empName.includes(query) ||
+          empId.includes(query) ||
+          dateStr.includes(query);
       }
 
       let matchesStatus = true;
@@ -132,11 +146,14 @@ export class AttendanceComponent implements OnInit {
 
     this.currentPage = 1;
     if (this.attendanceRecords.length > 0) {
-      this.attendanceRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      this.attendanceRecords.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+      );
     }
   }
 
   private analyzeSessionStatus(records: any[]) {
+    // تحليل حالة الدوام
     const today = new Date().toDateString();
 
     const openSession = records.find(
@@ -169,6 +186,7 @@ export class AttendanceComponent implements OnInit {
   }
 
   onClockIn() {
+    // تسجيل دخول
     this.isProcessing = true;
     const now = new Date();
     const dateIso = now.toISOString();
@@ -209,7 +227,7 @@ export class AttendanceComponent implements OnInit {
     const isOldSession =
       this.activeSession &&
       new Date(this.activeSession.date).toDateString() !==
-      new Date().toDateString();
+        new Date().toDateString();
 
     const clockOutTime = isOldSession ? '23:59:00' : timeString;
 
@@ -240,47 +258,66 @@ export class AttendanceComponent implements OnInit {
   }
   // ─── Export to Excel (CSV) ───
   exportToExcel() {
+    // تصدير الملف
     if (this.attendanceRecords.length === 0) {
-      Swal.fire('No Data', 'There are no attendance records to export.', 'info');
+      Swal.fire(
+        'No Data',
+        'There are no attendance records to export.',
+        'info',
+      );
       return;
     }
 
-    const headers = ['Date', 'Employee Name', 'Employee ID', 'Clock In', 'Clock Out', 'Status', 'Total Hours'];
-    
-    const csvData = this.attendanceRecords.map(rec => {
+    const headers = [
+      'Date',
+      'Employee Name',
+      'Employee ID',
+      'Clock In',
+      'Clock Out',
+      'Status',
+      'Total Hours',
+    ];
+
+    const csvData = this.attendanceRecords.map((rec) => {
       const isCompleted = rec.clockOut && rec.clockOut !== '00:00:00';
       const status = isCompleted ? 'Completed' : 'Working';
-      const empName = rec.employeeName || ('Emp #' + rec.employeeId);
-      
+      const empName = rec.employeeName || 'Emp #' + rec.employeeId;
+
       return [
         rec.date ? new Date(rec.date).toLocaleDateString() : '',
         empName,
         rec.employeeId || 'N/A',
         rec.clockIn || '--:--',
-        (rec.clockOut && rec.clockOut !== '00:00:00') ? rec.clockOut : '--:--',
+        rec.clockOut && rec.clockOut !== '00:00:00' ? rec.clockOut : '--:--',
         status,
-        rec.totalHours || '0'
-      ].map(value => `"${String(value).replace(/"/g, '""')}"`).join(','); 
+        rec.totalHours || '0',
+      ]
+        .map((value) => `"${String(value).replace(/"/g, '""')}"`)
+        .join(',');
     });
-    
+
     // BOM + sep hint عشان Excel يفتحه صح
-    const csvContent = '\uFEFFsep=,\r\n' + [headers.join(','), ...csvData].join('\r\n');
-    
+    const csvContent =
+      '\uFEFFsep=,\r\n' + [headers.join(','), ...csvData].join('\r\n');
+
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `Attendance_Kawadir_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute(
+      'download',
+      `Attendance_Kawadir_${new Date().toISOString().split('T')[0]}.csv`,
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    
+
     Swal.fire({
       icon: 'success',
       title: 'Exported Successfully',
       text: 'Attendance data has been exported to Excel (CSV).',
       timer: 2000,
-      showConfirmButton: false
+      showConfirmButton: false,
     });
   }
 }

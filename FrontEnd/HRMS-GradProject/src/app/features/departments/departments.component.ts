@@ -5,7 +5,7 @@ import {
   FormGroup,
   FormControl,
   Validators,
-  FormsModule
+  FormsModule,
 } from '@angular/forms';
 import { DepartmentService } from '../../core/services/department.service';
 import { EmployeeService } from '../../core/services/employee.service';
@@ -38,10 +38,10 @@ export class DepartmentsComponent implements OnInit {
   selectedDepartment: any = null;
   private detailsModal: any;
   private addModalInstance: any;
-  
+
   allEmployees: any[] = [];
   departmentStats: any = {}; // id -> { totalEmployees: 0, positions: { posName: count } }
-  
+
   deptEmployees: any[] = [];
   filteredDeptEmployees: any[] = [];
   searchEmpQuery: string = '';
@@ -61,27 +61,29 @@ export class DepartmentsComponent implements OnInit {
     // جلب الـ positions أولاً ثم الموظفين لعمل join صحيح
     this.positionService.getPositions().subscribe({
       next: (res: any) => {
-        this.allPositions = Array.isArray(res) ? res : (res?.data || []);
+        this.allPositions = Array.isArray(res) ? res : res?.data || [];
         this.loadEmployees();
       },
-      error: () => this.loadEmployees() // تحميل الموظفين حتى لو فشل جلب الـ positions
+      error: () => this.loadEmployees(), // تحميل الموظفين حتى لو فشل جلب الـ positions
     });
   }
 
   loadEmployees() {
     this.employeeService.getEmployees().subscribe({
       next: (res: any) => {
-        const extracted: any[] = Array.isArray(res) ? res : (res?.data?.items || res?.data || []);
+        const extracted: any[] = Array.isArray(res)
+          ? res
+          : res?.data?.items || res?.data || [];
         // ربط اسم الـ position بكل موظف
-        this.allEmployees = extracted.map(emp => {
+        this.allEmployees = extracted.map((emp) => {
           if (!emp.positionName && emp.positionId) {
-            const pos = this.allPositions.find(p => p.id === emp.positionId);
+            const pos = this.allPositions.find((p) => p.id === emp.positionId);
             return { ...emp, positionName: pos?.title || null };
           }
           return emp;
         });
         this.calculateStats();
-      }
+      },
     });
   }
 
@@ -90,11 +92,11 @@ export class DepartmentsComponent implements OnInit {
     for (const emp of this.allEmployees) {
       const deptId = emp.departmentId;
       if (!deptId) continue;
-      
+
       if (!this.departmentStats[deptId]) {
         this.departmentStats[deptId] = { totalEmployees: 0, positions: {} };
       }
-      
+
       this.departmentStats[deptId].totalEmployees++;
       const posName = emp.positionName; // نتجاهل الموظفين الذين ليس لديهم position
       if (!posName) continue; // لا نُدرجهم في الـ Positions Breakdown
@@ -112,12 +114,13 @@ export class DepartmentsComponent implements OnInit {
     }
     if (type === 'positions') {
       // العدّ الحقيقي من قائمة الـ positions المرتبطة بالقسم
-      return this.allPositions.filter(p => p.departmentId === deptId).length;
+      return this.allPositions.filter((p) => p.departmentId === deptId).length;
     }
     return 0;
   }
 
   loadDepartments() {
+    // تحميل الأقسام
     this.isLoading = true;
     this.departmentService.getDepartments().subscribe({
       next: (res: any) => {
@@ -139,26 +142,29 @@ export class DepartmentsComponent implements OnInit {
   }
 
   viewDetails(dept: any) {
+    // تفاصيل القسم
     this.selectedDepartment = dept;
     const stats = this.departmentStats[dept.id] || { totalEmployees: 0 };
     this.selectedDepartment.stats = stats;
     // الـ positions الحقيقية المرتبطة بهذا القسم من الـ API
-    const deptPositions = this.allPositions.filter(p => p.departmentId === dept.id);
+    const deptPositions = this.allPositions.filter(
+      (p) => p.departmentId === dept.id,
+    );
     this.selectedDepartment.totalPositions = deptPositions.length;
 
     // جدول الموظفين داخل الـ modal — مع ربط الـ position
     this.deptEmployees = this.allEmployees
-      .filter(e => e.departmentId === dept.id)
-      .map(emp => {
+      .filter((e) => e.departmentId === dept.id)
+      .map((emp) => {
         if (!emp.positionName && emp.positionId) {
-          const pos = this.allPositions.find(p => p.id === emp.positionId);
+          const pos = this.allPositions.find((p) => p.id === emp.positionId);
           return { ...emp, positionName: pos?.title || null };
         }
         return emp;
       });
     this.filteredDeptEmployees = [...this.deptEmployees];
     // بناء قائمة الـ positions من الـ API مباشرةً وليس من الموظفين
-    this.uniquePositions = deptPositions.map(p => p.title).filter(Boolean);
+    this.uniquePositions = deptPositions.map((p) => p.title).filter(Boolean);
     this.searchEmpQuery = '';
     this.selectedPositionFilter = '';
 
@@ -172,11 +178,13 @@ export class DepartmentsComponent implements OnInit {
   }
 
   filterDeptEmployees() {
-    this.filteredDeptEmployees = this.deptEmployees.filter(emp => {
+    // فلترة موظفين القسم
+    this.filteredDeptEmployees = this.deptEmployees.filter((emp) => {
       let matchesSearch = true;
       if (this.searchEmpQuery) {
         const query = this.searchEmpQuery.toLowerCase();
-        const fullName = `${emp.firstName || ''} ${emp.lastName || ''}`.toLowerCase();
+        const fullName =
+          `${emp.firstName || ''} ${emp.lastName || ''}`.toLowerCase();
         const idStr = String(emp.id);
         matchesSearch = fullName.includes(query) || idStr.includes(query);
       }
@@ -184,7 +192,9 @@ export class DepartmentsComponent implements OnInit {
       let matchesPos = true;
       if (this.selectedPositionFilter) {
         // مقارنة بـ positionName أو عن طريق positionId
-        const pos = this.allPositions.find(p => p.title === this.selectedPositionFilter);
+        const pos = this.allPositions.find(
+          (p) => p.title === this.selectedPositionFilter,
+        );
         if (pos) {
           matchesPos = emp.positionId === pos.id;
         } else {
@@ -211,7 +221,7 @@ export class DepartmentsComponent implements OnInit {
     this.isEditMode = true;
     this.currentDepartmentId = dept.id;
     this.addForm.patchValue({ name: dept.name });
-    
+
     const modalElement = document.getElementById('addDeptModal');
     if (modalElement) {
       this.addModalInstance = new bootstrap.Modal(modalElement);
@@ -220,6 +230,7 @@ export class DepartmentsComponent implements OnInit {
   }
 
   saveDepartment() {
+    // حفظ القسم
     if (this.addForm.invalid) {
       Swal.fire('Warning', 'Please enter a valid department name.', 'warning');
       return;
@@ -229,18 +240,27 @@ export class DepartmentsComponent implements OnInit {
     const payload = this.addForm.getRawValue();
 
     if (this.isEditMode && this.currentDepartmentId) {
-      this.departmentService.updateDepartment(this.currentDepartmentId, payload).subscribe({
-        next: () => {
-          this.isSubmitting = false;
-          this.addModalInstance.hide();
-          Swal.fire('Success', 'Department updated successfully!', 'success');
-          this.loadDepartments();
-        },
-        error: (err) => {
-          this.isSubmitting = false;
-          Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to update department. Please try again.'), 'error');
-        },
-      });
+      this.departmentService
+        .updateDepartment(this.currentDepartmentId, payload)
+        .subscribe({
+          next: () => {
+            this.isSubmitting = false;
+            this.addModalInstance.hide();
+            Swal.fire('Success', 'Department updated successfully!', 'success');
+            this.loadDepartments();
+          },
+          error: (err) => {
+            this.isSubmitting = false;
+            Swal.fire(
+              'Error',
+              getFriendlyErrorMessage(
+                err,
+                'Failed to update department. Please try again.',
+              ),
+              'error',
+            );
+          },
+        });
     } else {
       this.departmentService.addDepartment(payload).subscribe({
         next: () => {
@@ -251,7 +271,14 @@ export class DepartmentsComponent implements OnInit {
         },
         error: (err) => {
           this.isSubmitting = false;
-          Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to add department. Please try again.'), 'error');
+          Swal.fire(
+            'Error',
+            getFriendlyErrorMessage(
+              err,
+              'Failed to add department. Please try again.',
+            ),
+            'error',
+          );
         },
       });
     }
@@ -265,7 +292,7 @@ export class DepartmentsComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: 'Yes, delete it!',
     }).then((result) => {
       if (result.isConfirmed) {
         this.departmentService.deleteDepartment(id).subscribe({
@@ -275,8 +302,15 @@ export class DepartmentsComponent implements OnInit {
           },
           error: (err) => {
             console.error('Delete error:', err);
-            Swal.fire('Error!', getFriendlyErrorMessage(err, 'Failed to delete department. It may have employees assigned to it.'), 'error');
-          }
+            Swal.fire(
+              'Error!',
+              getFriendlyErrorMessage(
+                err,
+                'Failed to delete department. It may have employees assigned to it.',
+              ),
+              'error',
+            );
+          },
         });
       }
     });

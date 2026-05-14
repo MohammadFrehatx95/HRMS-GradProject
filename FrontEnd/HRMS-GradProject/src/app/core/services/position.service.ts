@@ -6,6 +6,7 @@ import { Observable, map } from 'rxjs';
   providedIn: 'root',
 })
 export class PositionService {
+  // شغل المسميات
   private http = inject(HttpClient);
   private apiUrl = 'https://localhost:7204/api/positions';
 

@@ -39,10 +39,12 @@ export class RegisterComponent {
   roles = ['Employee', 'Admin', 'HR'];
 
   onSubmit() {
+    // إنشاء حساب جديد
     if (this.registerForm.invalid) return;
 
     this.isLoading = true;
     const payload = this.registerForm.getRawValue();
+    // بيانات التسجيل
 
     this.authService.register(payload).subscribe({
       next: (res: any) => {
@@ -73,7 +75,14 @@ export class RegisterComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        Swal.fire('خطأ', getFriendlyErrorMessage(err, 'فشل إنشاء الحساب. يرجى المحاولة مرة أخرى.'), 'error');
+        Swal.fire(
+          'خطأ',
+          getFriendlyErrorMessage(
+            err,
+            'فشل إنشاء الحساب. يرجى المحاولة مرة أخرى.',
+          ),
+          'error',
+        );
       },
     });
   }

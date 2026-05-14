@@ -4,6 +4,7 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class SettingsService {
+  // إعدادات المستخدم
   // الثيم: dark أو light
   private _isDarkMode = signal(false);
   // اللغة: en أو ar
@@ -48,7 +49,10 @@ export class SettingsService {
   }
 
   private applyTheme(isDark: boolean) {
-    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    document.documentElement.setAttribute(
+      'data-theme',
+      isDark ? 'dark' : 'light',
+    );
     document.body.classList.toggle('dark-mode', isDark);
   }
 

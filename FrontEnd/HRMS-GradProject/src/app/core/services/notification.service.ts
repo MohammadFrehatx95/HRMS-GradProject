@@ -6,6 +6,7 @@ import { Observable, map } from 'rxjs';
   providedIn: 'root',
 })
 export class NotificationService {
+  // شغل التنبيهات
   private http = inject(HttpClient);
 
   private apiUrl = 'https://localhost:7204/api/notifications';

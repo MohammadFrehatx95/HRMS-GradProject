@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
+  // شغل التوثيق
   private http = inject(HttpClient);
   private apiUrl = 'https://localhost:7204/api/auth';
 
@@ -89,7 +90,9 @@ export class AuthService {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       const userRole =
-        payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ||
+        payload[
+          'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+        ] ||
         payload['role'] ||
         payload['Role'];
 
@@ -114,21 +117,27 @@ export class AuthService {
   // كل اليوزرات
   getUsers(pageNumber = 1, pageSize = 100): Observable<any> {
     return this.http
-      .get<any>(`${this.apiUrl}/users?pageNumber=${pageNumber}&pageSize=${pageSize}`)
+      .get<any>(
+        `${this.apiUrl}/users?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+      )
       .pipe(map((response) => response?.data ?? response));
   }
 
   // يوزرات بدون ملف موظف
   getUnassignedEmployeeUsers(pageNumber = 1, pageSize = 100): Observable<any> {
     return this.http
-      .get<any>(`${this.apiUrl}/unassigned-employees?pageNumber=${pageNumber}&pageSize=${pageSize}`)
+      .get<any>(
+        `${this.apiUrl}/unassigned-employees?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+      )
       .pipe(map((response) => response?.data ?? response));
   }
 
   // نجيب الـ id من الإيميل
   getUserIdByEmail(email: string): Observable<any> {
     return this.http
-      .get<any>(`${this.apiUrl}/get-user-id-by-email/${encodeURIComponent(email)}`)
+      .get<any>(
+        `${this.apiUrl}/get-user-id-by-email/${encodeURIComponent(email)}`,
+      )
       .pipe(map((response) => response?.data ?? response));
   }
 }
