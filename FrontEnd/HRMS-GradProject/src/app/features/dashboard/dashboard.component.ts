@@ -63,6 +63,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadAdminStats() {
+    // تحميل بيانات الأدمن
     this.empService.getEmployees().subscribe({
       next: (res: any) => {
         let extracted: any[] = [];
@@ -89,22 +90,36 @@ export class DashboardComponent implements OnInit {
           (l: any) => l.status === 'Pending',
         ).length;
 
-        extracted.sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
+        extracted.sort(
+          (a, b) =>
+            new Date(b.startDate).getTime() - new Date(a.startDate).getTime(),
+        );
         this.recentLeaves = extracted.slice(0, 5);
 
         const totalLeaves = extracted.length;
-        let annual = 0, sick = 0, emergency = 0, unpaid = 0;
+        let annual = 0,
+          sick = 0,
+          emergency = 0,
+          unpaid = 0;
 
         if (totalLeaves > 0) {
           // كلها strings من الـ backend
-          annual = extracted.filter((l: any) => l.leaveType === 'Annual').length;
+          annual = extracted.filter(
+            (l: any) => l.leaveType === 'Annual',
+          ).length;
           sick = extracted.filter((l: any) => l.leaveType === 'Sick').length;
-          emergency = extracted.filter((l: any) => l.leaveType === 'Emergency').length;
-          unpaid = extracted.filter((l: any) => l.leaveType === 'Unpaid').length;
+          emergency = extracted.filter(
+            (l: any) => l.leaveType === 'Emergency',
+          ).length;
+          unpaid = extracted.filter(
+            (l: any) => l.leaveType === 'Unpaid',
+          ).length;
 
           this.annualLeavePercent = Math.round((annual / totalLeaves) * 100);
           this.sickLeavePercent = Math.round((sick / totalLeaves) * 100);
-          this.emergencyLeavePercent = Math.round((emergency / totalLeaves) * 100);
+          this.emergencyLeavePercent = Math.round(
+            (emergency / totalLeaves) * 100,
+          );
           this.unpaidLeavePercent = Math.round((unpaid / totalLeaves) * 100);
         } else {
           this.annualLeavePercent = 0;
@@ -139,8 +154,11 @@ export class DashboardComponent implements OnInit {
         else if (res?.data?.items && Array.isArray(res.data.items))
           extracted = res.data.items;
         else if (res?.data && Array.isArray(res.data)) extracted = res.data;
-        
-        this.totalSalaries = extracted.reduce((sum, current) => sum + (current.netAmount || 0), 0);
+
+        this.totalSalaries = extracted.reduce(
+          (sum, current) => sum + (current.netAmount || 0),
+          0,
+        );
       },
       error: (err) => console.error('Error fetching salaries:', err),
     });
@@ -165,9 +183,10 @@ export class DashboardComponent implements OnInit {
   }
 
   calculateAttendanceRate() {
+    // نحسب نسبة الحضور
     if (this.totalEmployees === 0 || this.allAttendances.length === 0) return;
-    const validAtt = this.allAttendances.filter(a => a.date && a.clockIn);
-    const uniqueDays = new Set(validAtt.map(a => a.date.split('T')[0])).size;
+    const validAtt = this.allAttendances.filter((a) => a.date && a.clockIn);
+    const uniqueDays = new Set(validAtt.map((a) => a.date.split('T')[0])).size;
     if (uniqueDays > 0) {
       const totalExpected = uniqueDays * this.totalEmployees;
       this.attendanceRate = Math.round((validAtt.length / totalExpected) * 100);
@@ -176,6 +195,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadNextPayday() {
+    // نحسب موعد الراتب القادم
     this.salaryService.getMySalaries().subscribe({
       next: (salaries: any[]) => {
         if (!salaries || salaries.length === 0) return;
@@ -204,17 +224,28 @@ export class DashboardComponent implements OnInit {
           this.employeeNextPayday = `${monthLabel} ${dayLabel}`;
         } else {
           const monthNames = [
-            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec',
           ];
           this.employeeNextPayday = `${monthNames[nextPayMonth - 1]} ${this.PAYDAY}`;
         }
       },
-      error: () => { },
+      error: () => {},
     });
   }
 
   loadEmployeeStats() {
+    // تحميل بيانات الموظف
     console.log('Loading Employee Dashboard...');
 
     const today = new Date();
@@ -250,9 +281,7 @@ export class DashboardComponent implements OnInit {
 
         const approvedAnnualLeavesDays = extracted
           .filter(
-            (l: any) =>
-              l.status === 'Approved' &&
-              l.leaveType === 'Annual',
+            (l: any) => l.status === 'Approved' && l.leaveType === 'Annual',
           )
           .reduce((acc: number, l: any) => acc + (l.totalDays || 0), 0);
 
@@ -307,7 +336,13 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  renderLeaveChart(annual: number, sick: number, emergency: number, unpaid: number) {
+  renderLeaveChart(
+    annual: number,
+    sick: number,
+    emergency: number,
+    unpaid: number,
+  ) {
+    // رسم تشارت الإجازات
     const ctx = document.getElementById('leaveTypeChart') as HTMLCanvasElement;
     if (!ctx) return;
 
@@ -321,22 +356,24 @@ export class DashboardComponent implements OnInit {
         type: 'doughnut',
         data: {
           labels: ['No Data'],
-          datasets: [{
-            data: [1],
-            backgroundColor: ['#e9ecef'],
-            borderWidth: 0,
-            hoverOffset: 0
-          }]
+          datasets: [
+            {
+              data: [1],
+              backgroundColor: ['#e9ecef'],
+              borderWidth: 0,
+              hoverOffset: 0,
+            },
+          ],
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
             legend: { display: false },
-            tooltip: { enabled: false }
+            tooltip: { enabled: false },
           },
-          cutout: '75%'
-        }
+          cutout: '75%',
+        },
       });
       return;
     }
@@ -345,12 +382,14 @@ export class DashboardComponent implements OnInit {
       type: 'doughnut',
       data: {
         labels: ['Annual', 'Sick', 'Emergency', 'Unpaid'],
-        datasets: [{
-          data: [annual, sick, emergency, unpaid],
-          backgroundColor: ['#0d6efd', '#dc3545', '#ffc107', '#6c757d'],
-          borderWidth: 0,
-          hoverOffset: 6
-        }]
+        datasets: [
+          {
+            data: [annual, sick, emergency, unpaid],
+            backgroundColor: ['#0d6efd', '#dc3545', '#ffc107', '#6c757d'],
+            borderWidth: 0,
+            hoverOffset: 6,
+          },
+        ],
       },
       options: {
         responsive: true,
@@ -363,13 +402,13 @@ export class DashboardComponent implements OnInit {
               padding: 20,
               font: {
                 family: "'Inter', sans-serif",
-                size: 12
-              }
-            }
-          }
+                size: 12,
+              },
+            },
+          },
         },
-        cutout: '75%'
-      }
+        cutout: '75%',
+      },
     });
   }
 }

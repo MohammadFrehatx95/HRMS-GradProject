@@ -15,10 +15,10 @@ export class AllAttendanceComponent implements OnInit {
 
   allRecords: any[] = [];
   records: any[] = [];
-  
+
   searchQuery: string = '';
   selectedStatus: string = '';
-  
+
   isLoading = true;
 
   // Pagination
@@ -45,38 +45,49 @@ export class AllAttendanceComponent implements OnInit {
   }
 
   ngOnInit() {
+    // تحميل السجلات
     this.attendanceService.getAllAttendance().subscribe({
       next: (res: any) => {
-        const items = Array.isArray(res) ? res : res?.items ?? res?.data?.items ?? res?.data ?? [];
+        const items = Array.isArray(res)
+          ? res
+          : (res?.items ?? res?.data?.items ?? res?.data ?? []);
         this.allRecords = Array.isArray(items) ? items : [];
-        this.allRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        this.allRecords.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+        );
         this.records = [...this.allRecords];
         this.isLoading = false;
       },
-      error: () => { this.isLoading = false; },
+      error: () => {
+        this.isLoading = false;
+      },
     });
   }
 
   filterRecords() {
-    this.records = this.allRecords.filter(rec => {
+    // فلترة السجلات
+    this.records = this.allRecords.filter((rec) => {
       let matchesSearch = true;
       if (this.searchQuery) {
         const query = this.searchQuery.toLowerCase();
         const empName = (rec.employeeName || '').toLowerCase();
         const empId = String(rec.employeeId || '');
         const dateStr = String(rec.date || '').toLowerCase();
-        matchesSearch = empName.includes(query) || empId.includes(query) || dateStr.includes(query);
+        matchesSearch =
+          empName.includes(query) ||
+          empId.includes(query) ||
+          dateStr.includes(query);
       }
-      
+
       let matchesStatus = true;
       if (this.selectedStatus) {
         const currentStatus = this.getStatusLabel(rec);
         matchesStatus = currentStatus === this.selectedStatus;
       }
-      
+
       return matchesSearch && matchesStatus;
     });
-    
+
     this.currentPage = 1;
   }
 

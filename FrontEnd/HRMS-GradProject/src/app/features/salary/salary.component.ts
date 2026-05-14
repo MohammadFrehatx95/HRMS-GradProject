@@ -25,14 +25,14 @@ export class SalaryComponent implements OnInit {
   allSalariesList: any[] = [];
   salariesList: any[] = [];
   isLoading: boolean = true;
-  isAdmin: boolean = false;       // أدمن (يضيف ويعدل)
-  isAdminOrHR: boolean = false;   // أدمن أو hr (يشوف بس)
+  isAdmin: boolean = false; // أدمن (يضيف ويعدل)
+  isAdminOrHR: boolean = false; // أدمن أو hr (يشوف بس)
   isProcessing: boolean = false;
 
   salaryModal: any;
   isEditMode: boolean = false;
   currentSalaryId: number | null = null;
-  
+
   employeesList: any[] = [];
   filteredEmployeesList: any[] = [];
   showEmployeeDropdown: boolean = false;
@@ -86,6 +86,7 @@ export class SalaryComponent implements OnInit {
   }
 
   loadEmployees() {
+    // تحميل الموظفين
     this.employeeService.getEmployees().subscribe({
       next: (res: any) => {
         const extractedData = Array.isArray(res) ? res : res?.data || [];
@@ -107,7 +108,7 @@ export class SalaryComponent implements OnInit {
     }
 
     const query = val.toLowerCase();
-    this.filteredEmployeesList = this.employeesList.filter(emp => {
+    this.filteredEmployeesList = this.employeesList.filter((emp) => {
       const fullName = `${emp.firstName} ${emp.lastName}`.toLowerCase();
       const idStr = String(emp.id);
       return fullName.includes(query) || idStr.includes(query);
@@ -130,6 +131,7 @@ export class SalaryComponent implements OnInit {
   }
 
   loadSalaries() {
+    // تحميل الرواتب
     this.isLoading = true;
     const request = this.isAdminOrHR
       ? this.salaryService.getAllSalaries()
@@ -138,12 +140,18 @@ export class SalaryComponent implements OnInit {
     request.subscribe({
       next: (res: any) => {
         const extractedData = Array.isArray(res) ? res : res?.data || [];
-        this.allSalariesList = Array.isArray(extractedData) ? extractedData : [];
+        this.allSalariesList = Array.isArray(extractedData)
+          ? extractedData
+          : [];
         this.salariesList = [...this.allSalariesList];
-        
-        const years = this.allSalariesList.map(s => s.year).filter(y => y != null);
-        this.uniqueYears = Array.from(new Set(years)).sort().reverse() as number[];
-        
+
+        const years = this.allSalariesList
+          .map((s) => s.year)
+          .filter((y) => y != null);
+        this.uniqueYears = Array.from(new Set(years))
+          .sort()
+          .reverse() as number[];
+
         this.isLoading = false;
       },
       error: (err) => {
@@ -154,29 +162,33 @@ export class SalaryComponent implements OnInit {
   }
 
   filterSalaries() {
-    this.salariesList = this.allSalariesList.filter(s => {
+    // فلترة الرواتب
+    this.salariesList = this.allSalariesList.filter((s) => {
       let matchesSearch = true;
       if (this.salarySearchQuery) {
         const query = this.salarySearchQuery.toLowerCase();
         const empName = (s.employeeName || '').toLowerCase();
         const empId = String(s.employeeId || '');
         const baseAmt = String(s.baseAmount || '');
-        matchesSearch = empName.includes(query) || empId.includes(query) || baseAmt.includes(query);
+        matchesSearch =
+          empName.includes(query) ||
+          empId.includes(query) ||
+          baseAmt.includes(query);
       }
-      
+
       let matchesYear = true;
       if (this.selectedYear) {
         matchesYear = String(s.year) === this.selectedYear;
       }
-      
+
       let matchesMonth = true;
       if (this.selectedMonth) {
         matchesMonth = String(s.month) === this.selectedMonth;
       }
-      
+
       return matchesSearch && matchesYear && matchesMonth;
     });
-    
+
     if (this.salariesList.length > 0) {
       this.salariesList.sort((a, b) => {
         if (b.year !== a.year) {
@@ -204,8 +216,12 @@ export class SalaryComponent implements OnInit {
           ? salary.effectiveDate.split('T')[0]
           : '',
       };
-      const emp = this.employeesList.find(e => e.id === salary.employeeId);
-      this.employeeSearchText = emp ? `${emp.firstName} ${emp.lastName}` : (salary.employeeId ? String(salary.employeeId) : '');
+      const emp = this.employeesList.find((e) => e.id === salary.employeeId);
+      this.employeeSearchText = emp
+        ? `${emp.firstName} ${emp.lastName}`
+        : salary.employeeId
+          ? String(salary.employeeId)
+          : '';
     } else {
       this.isEditMode = false;
       this.currentSalaryId = null;
@@ -220,7 +236,7 @@ export class SalaryComponent implements OnInit {
         effectiveDate: new Date().toISOString().split('T')[0],
       };
     }
-    
+
     this.filteredEmployeesList = [...this.employeesList];
     this.showEmployeeDropdown = false;
 
@@ -232,6 +248,7 @@ export class SalaryComponent implements OnInit {
   }
 
   saveSalary() {
+    // حفظ الراتب
     this.isProcessing = true;
 
     const isoDate = new Date(this.salaryData.effectiveDate).toISOString();
@@ -297,37 +314,38 @@ export class SalaryComponent implements OnInit {
   }
 
   downloadPayslip(salary: any) {
+    // تنزيل كشف الراتب
     const doc = new jsPDF();
-    
+
     // Add Header
     doc.setFontSize(22);
-    doc.setTextColor(13, 110, 253); 
+    doc.setTextColor(13, 110, 253);
     doc.text('Kawadir HRMS', 14, 20);
-    
+
     doc.setFontSize(14);
     doc.setTextColor(0, 0, 0);
     doc.text('Salary Payslip', 14, 30);
-    
+
     const today = new Date();
     const dateGen = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    
+
     doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
     doc.text(`Date Generated: ${dateGen}`, 14, 38);
-    
+
     const empName = salary.employeeName || `Employee #${salary.employeeId}`;
     const period = `${salary.month} / ${salary.year}`;
-    
+
     const effObj = new Date(salary.effectiveDate);
     const effDate = `${effObj.getFullYear()}-${String(effObj.getMonth() + 1).padStart(2, '0')}-${String(effObj.getDate()).padStart(2, '0')}`;
-    
+
     // Employee Info
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(12);
     doc.text(`Employee Name: ${empName}`, 14, 50);
     doc.text(`Payroll Period: ${period}`, 14, 58);
     doc.text(`Effective Date: ${effDate}`, 14, 66);
-    
+
     // Salary Details Table
     autoTable(doc, {
       startY: 75,
@@ -339,25 +357,33 @@ export class SalaryComponent implements OnInit {
         ['Deductions', `-${salary.deductions} JD`],
       ],
       theme: 'grid',
-      headStyles: { fillColor: [240, 242, 245], textColor: [0, 0, 0], fontStyle: 'bold' },
+      headStyles: {
+        fillColor: [240, 242, 245],
+        textColor: [0, 0, 0],
+        fontStyle: 'bold',
+      },
       bodyStyles: { textColor: [50, 50, 50] },
       alternateRowStyles: { fillColor: [252, 252, 252] },
     });
-    
+
     const finalY = (doc as any).lastAutoTable.finalY || 130;
-    
+
     // Net Pay Highlight
     doc.setFontSize(14);
-    doc.setTextColor(25, 135, 84); 
+    doc.setTextColor(25, 135, 84);
     doc.setFont('helvetica', 'bold');
     doc.text(`Net Pay: ${salary.netAmount} JD`, 14, finalY + 15);
-    
+
     // Footer
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.setTextColor(150, 150, 150);
-    doc.text('This is a system generated payslip and requires no signature.', 14, finalY + 40);
-    
+    doc.text(
+      'This is a system generated payslip and requires no signature.',
+      14,
+      finalY + 40,
+    );
+
     // Download
     const fileName = `Payslip_${empName.replace(/ /g, '_')}_${salary.month}_${salary.year}.pdf`;
     doc.save(fileName);

@@ -75,12 +75,13 @@ export class EmployeesComponent implements OnInit {
       title: message,
       showConfirmButton: false,
       timer: 2000,
-      timerProgressBar: true
+      timerProgressBar: true,
     });
   }
 
   ngOnInit() {
-    this.isAdmin     = this.authService.isAdmin();
+    // أول تحميل
+    this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
     this.loadEmployees();
   }
@@ -103,9 +104,18 @@ export class EmployeesComponent implements OnInit {
       return;
     }
 
-    const headers = ['ID', 'First Name', 'Last Name', 'Email', 'Phone', 'Address', 'Status', 'Role ID'];
-    
-    const csvData = this.employeesList.map(emp => {
+    const headers = [
+      'ID',
+      'First Name',
+      'Last Name',
+      'Email',
+      'Phone',
+      'Address',
+      'Status',
+      'Role ID',
+    ];
+
+    const csvData = this.employeesList.map((emp) => {
       return [
         emp.id,
         emp.firstName || '',
@@ -114,29 +124,35 @@ export class EmployeesComponent implements OnInit {
         emp.phoneNumber || 'N/A',
         emp.address || 'N/A',
         emp.isActive ? 'Active' : 'Inactive',
-        emp.roleId || 'N/A'
-      ].map(value => `"${String(value).replace(/"/g, '""')}"`).join(','); 
+        emp.roleId || 'N/A',
+      ]
+        .map((value) => `"${String(value).replace(/"/g, '""')}"`)
+        .join(',');
     });
-    
+
     // Add UTF-8 BOM for Excel to read Arabic/Special characters correctly
     // Add sep=, to force Excel to recognize comma as delimiter regardless of region
-    const csvContent = '\uFEFFsep=,\r\n' + [headers.join(','), ...csvData].join('\r\n');
-    
+    const csvContent =
+      '\uFEFFsep=,\r\n' + [headers.join(','), ...csvData].join('\r\n');
+
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `Employees_Kawadir_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute(
+      'download',
+      `Employees_Kawadir_${new Date().toISOString().split('T')[0]}.csv`,
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    
+
     Swal.fire({
       icon: 'success',
       title: 'Exported Successfully',
       text: 'Employees list has been exported to Excel (CSV).',
       timer: 2000,
-      showConfirmButton: false
+      showConfirmButton: false,
     });
   }
 
@@ -154,15 +170,18 @@ export class EmployeesComponent implements OnInit {
   }
 
   loadEmployees() {
+    // تحميل الموظفين
     this.isLoading = true;
     this.employeeService.getEmployees().subscribe({
       next: (data) => {
         this.allEmployeesList = data;
         this.employeesList = [...this.allEmployeesList];
-        
-        const depts = data.map((e: any) => e.departmentName || e.departmentId).filter(Boolean);
+
+        const depts = data
+          .map((e: any) => e.departmentName || e.departmentId)
+          .filter(Boolean);
         this.uniqueDepartments = Array.from(new Set(depts)) as string[];
-        
+
         this.isLoading = false;
       },
       error: (err) => {
@@ -173,30 +192,40 @@ export class EmployeesComponent implements OnInit {
   }
 
   filterEmployees() {
-    this.employeesList = this.allEmployeesList.filter(emp => {
+    // فلترة القائمة
+    this.employeesList = this.allEmployeesList.filter((emp) => {
       let matchesSearch = true;
       if (this.searchQuery) {
         const query = this.searchQuery.toLowerCase();
-        const fullName = `${emp.firstName || ''} ${emp.lastName || ''}`.toLowerCase();
+        const fullName =
+          `${emp.firstName || ''} ${emp.lastName || ''}`.toLowerCase();
         const idStr = String(emp.id);
-        const deptStr = String(emp.departmentName || emp.departmentId || '').toLowerCase();
-        
-        matchesSearch = fullName.includes(query) || idStr.includes(query) || deptStr.includes(query);
+        const deptStr = String(
+          emp.departmentName || emp.departmentId || '',
+        ).toLowerCase();
+
+        matchesSearch =
+          fullName.includes(query) ||
+          idStr.includes(query) ||
+          deptStr.includes(query);
       }
-      
+
       let matchesDept = true;
       if (this.selectedDepartment) {
-        matchesDept = (emp.departmentName || String(emp.departmentId)) === this.selectedDepartment;
+        matchesDept =
+          (emp.departmentName || String(emp.departmentId)) ===
+          this.selectedDepartment;
       }
-      
+
       let matchesStatus = true;
       if (this.selectedStatus) {
-        matchesStatus = (this.selectedStatus === 'Active') ? emp.isActive : !emp.isActive;
+        matchesStatus =
+          this.selectedStatus === 'Active' ? emp.isActive : !emp.isActive;
       }
-      
+
       return matchesSearch && matchesDept && matchesStatus;
     });
-    
+
     this.currentPage = 1; // Reset to first page on filter
   }
 
@@ -216,7 +245,7 @@ export class EmployeesComponent implements OnInit {
             this.employeesList = this.employeesList.filter(
               (emp) => emp.id !== id,
             );
-            
+
             // Adjust pagination if needed
             if (this.currentPage > this.totalPages) {
               this.currentPage = this.totalPages;
@@ -234,6 +263,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   viewFullDetails(emp: any) {
+    // تفاصيل الموظف
     this.selectedEmployeeProfile = { ...emp, isLoadingDetails: true };
 
     const modalElement = document.getElementById('employeeDetailsModal');
@@ -263,50 +293,89 @@ export class EmployeesComponent implements OnInit {
   }
 
   downloadEmployeeReport(emp: any) {
+    // تقرير الموظف
     if (!emp) return;
 
     this.isGeneratingReport = true;
-    const empName = `${emp.firstName || ''} ${emp.lastName || ''}`.trim() || `Employee #${emp.id}`;
+    const empName =
+      `${emp.firstName || ''} ${emp.lastName || ''}`.trim() ||
+      `Employee #${emp.id}`;
 
     // Fetch all data in parallel
     forkJoin({
-      attendance: this.attendanceService.getAllAttendance().pipe(catchError(() => of([]))),
+      attendance: this.attendanceService
+        .getAllAttendance()
+        .pipe(catchError(() => of([]))),
       leaves: this.leaveService.getAllLeaves().pipe(catchError(() => of([]))),
-      salaries: this.salaryService.getAllSalaries().pipe(catchError(() => of([])))
+      salaries: this.salaryService
+        .getAllSalaries()
+        .pipe(catchError(() => of([]))),
     }).subscribe(({ attendance, leaves, salaries }) => {
       this.isGeneratingReport = false;
 
       // Filter data for this specific employee
-      const empAttendance = attendance.filter((a: any) => a.employeeId === emp.id)
-        .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      const empAttendance = attendance
+        .filter((a: any) => a.employeeId === emp.id)
+        .sort(
+          (a: any, b: any) =>
+            new Date(b.date).getTime() - new Date(a.date).getTime(),
+        )
         .slice(0, 15);
 
-      const empLeaves = leaves.filter((l: any) => l.employeeId === emp.id)
-        .sort((a: any, b: any) => new Date(b.startDate || 0).getTime() - new Date(a.startDate || 0).getTime());
+      const empLeaves = leaves
+        .filter((l: any) => l.employeeId === emp.id)
+        .sort(
+          (a: any, b: any) =>
+            new Date(b.startDate || 0).getTime() -
+            new Date(a.startDate || 0).getTime(),
+        );
 
-      const empSalaries = salaries.filter((s: any) => s.employeeId === emp.id)
-        .sort((a: any, b: any) => { 
-          if (b.year !== a.year) return b.year - a.year; 
-          return b.month - a.month; 
+      const empSalaries = salaries
+        .filter((s: any) => s.employeeId === emp.id)
+        .sort((a: any, b: any) => {
+          if (b.year !== a.year) return b.year - a.year;
+          return b.month - a.month;
         });
 
-      this.buildEmployeePDF(emp, empName, empAttendance, empLeaves, empSalaries);
+      this.buildEmployeePDF(
+        emp,
+        empName,
+        empAttendance,
+        empLeaves,
+        empSalaries,
+      );
     });
   }
 
-  private buildEmployeePDF(emp: any, empName: string, attendance: any[], leaves: any[], salaries: any[]) {
+  private buildEmployeePDF(
+    emp: any,
+    empName: string,
+    attendance: any[],
+    leaves: any[],
+    salaries: any[],
+  ) {
     const doc = new jsPDF();
     const pageW = doc.internal.pageSize.getWidth();
     const today = new Date();
-    const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     // ✅ W3 Fix: تأكد من صحة كل أنواع الإجازات بما يطابق Backend enum
     const leaveTypeMap: any = {
-      0: 'Annual', 1: 'Sick', 2: 'Emergency', 3: 'Unpaid',
-      'Annual': 'Annual', 'Sick': 'Sick', 'Emergency': 'Emergency', 'Unpaid': 'Unpaid'
+      0: 'Annual',
+      1: 'Sick',
+      2: 'Emergency',
+      3: 'Unpaid',
+      Annual: 'Annual',
+      Sick: 'Sick',
+      Emergency: 'Emergency',
+      Unpaid: 'Unpaid',
     };
     const statusMap: any = {
-      0: 'Pending', 1: 'Approved', 2: 'Rejected',
-      'Pending': 'Pending', 'Approved': 'Approved', 'Rejected': 'Rejected'
+      0: 'Pending',
+      1: 'Approved',
+      2: 'Rejected',
+      Pending: 'Pending',
+      Approved: 'Approved',
+      Rejected: 'Rejected',
     };
 
     // ── HEADER BANNER ──────────────────────────────
@@ -344,7 +413,11 @@ export class EmployeesComponent implements OnInit {
     const hireDate = emp.hireDate ? emp.hireDate.split('T')[0] : '—';
     doc.text(`Hire Date: ${hireDate}`, pageW / 2, 62);
     doc.text(`Email: ${emp.email || '—'}`, pageW / 2, 68);
-    doc.text(`Status: ${emp.isActive !== false ? 'Active' : 'Inactive'}`, pageW / 2, 74);
+    doc.text(
+      `Status: ${emp.isActive !== false ? 'Active' : 'Inactive'}`,
+      pageW / 2,
+      74,
+    );
 
     let curY = 90;
 
@@ -358,40 +431,65 @@ export class EmployeesComponent implements OnInit {
     doc.line(14, curY + 2, pageW - 14, curY + 2);
 
     if (salaries.length === 0) {
-      doc.setFont('helvetica', 'italic'); doc.setFontSize(9); doc.setTextColor(150, 150, 150);
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(9);
+      doc.setTextColor(150, 150, 150);
       doc.text('No salary records found.', 18, curY + 10);
       curY += 18;
     } else {
       autoTable(doc, {
         startY: curY + 6,
-        head: [['Month', 'Year', 'Base ($)', 'Allowances ($)', 'Deductions ($)', 'Net Pay ($)']],
-        body: salaries.slice(0, 6).map((s: any) => [
-          s.month, s.year,
-          `$${s.baseAmount ?? '—'}`,
-          `+$${s.allowances ?? 0}`,
-          `-$${s.deductions ?? 0}`,
-          `$${s.netAmount ?? '—'}`
-        ]),
+        head: [
+          [
+            'Month',
+            'Year',
+            'Base ($)',
+            'Allowances ($)',
+            'Deductions ($)',
+            'Net Pay ($)',
+          ],
+        ],
+        body: salaries
+          .slice(0, 6)
+          .map((s: any) => [
+            s.month,
+            s.year,
+            `$${s.baseAmount ?? '—'}`,
+            `+$${s.allowances ?? 0}`,
+            `-$${s.deductions ?? 0}`,
+            `$${s.netAmount ?? '—'}`,
+          ]),
         theme: 'grid',
-        headStyles: { fillColor: [240, 243, 255], textColor: [50, 50, 80], fontStyle: 'bold', fontSize: 8 },
+        headStyles: {
+          fillColor: [240, 243, 255],
+          textColor: [50, 50, 80],
+          fontStyle: 'bold',
+          fontSize: 8,
+        },
         bodyStyles: { fontSize: 8 },
         alternateRowStyles: { fillColor: [252, 253, 255] },
-        margin: { left: 14, right: 14 }
+        margin: { left: 14, right: 14 },
       });
       curY = (doc as any).lastAutoTable.finalY + 10;
     }
 
     // ── ATTENDANCE SECTION ────────────────────────
-    if (curY > 230) { doc.addPage(); curY = 20; }
+    if (curY > 230) {
+      doc.addPage();
+      curY = 20;
+    }
 
-    doc.setFont('helvetica', 'bold'); doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
     doc.setTextColor(25, 135, 84);
     doc.text('RECENT ATTENDANCE (Last 15 Records)', 14, curY);
     doc.setDrawColor(25, 135, 84);
     doc.line(14, curY + 2, pageW - 14, curY + 2);
 
     if (attendance.length === 0) {
-      doc.setFont('helvetica', 'italic'); doc.setFontSize(9); doc.setTextColor(150, 150, 150);
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(9);
+      doc.setTextColor(150, 150, 150);
       doc.text('No attendance records found.', 18, curY + 10);
       curY += 18;
     } else {
@@ -401,30 +499,41 @@ export class EmployeesComponent implements OnInit {
         body: attendance.map((a: any) => [
           a.date ? a.date.split('T')[0] : '—',
           a.clockIn || '—',
-          (a.clockOut && a.clockOut !== '00:00:00') ? a.clockOut : '—',
+          a.clockOut && a.clockOut !== '00:00:00' ? a.clockOut : '—',
           a.totalHours || '—',
-          (a.clockOut && a.clockOut !== '00:00:00') ? 'Completed' : 'Working'
+          a.clockOut && a.clockOut !== '00:00:00' ? 'Completed' : 'Working',
         ]),
         theme: 'grid',
-        headStyles: { fillColor: [232, 248, 240], textColor: [20, 80, 50], fontStyle: 'bold', fontSize: 8 },
+        headStyles: {
+          fillColor: [232, 248, 240],
+          textColor: [20, 80, 50],
+          fontStyle: 'bold',
+          fontSize: 8,
+        },
         bodyStyles: { fontSize: 8 },
         alternateRowStyles: { fillColor: [248, 253, 250] },
-        margin: { left: 14, right: 14 }
+        margin: { left: 14, right: 14 },
       });
       curY = (doc as any).lastAutoTable.finalY + 10;
     }
 
     // ── LEAVE SECTION ─────────────────────────────
-    if (curY > 230) { doc.addPage(); curY = 20; }
+    if (curY > 230) {
+      doc.addPage();
+      curY = 20;
+    }
 
-    doc.setFont('helvetica', 'bold'); doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
     doc.setTextColor(220, 53, 69);
     doc.text('LEAVE REQUESTS', 14, curY);
     doc.setDrawColor(220, 53, 69);
     doc.line(14, curY + 2, pageW - 14, curY + 2);
 
     if (leaves.length === 0) {
-      doc.setFont('helvetica', 'italic'); doc.setFontSize(9); doc.setTextColor(150, 150, 150);
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(9);
+      doc.setTextColor(150, 150, 150);
       doc.text('No leave requests found.', 18, curY + 10);
       curY += 18;
     } else {
@@ -436,40 +545,77 @@ export class EmployeesComponent implements OnInit {
           l.startDate ? l.startDate.split('T')[0] : '—',
           l.endDate ? l.endDate.split('T')[0] : '—',
           l.totalDays ?? '—',
-          statusMap[l.status] || l.status
+          statusMap[l.status] || l.status,
         ]),
         theme: 'grid',
-        headStyles: { fillColor: [255, 240, 242], textColor: [100, 20, 30], fontStyle: 'bold', fontSize: 8 },
+        headStyles: {
+          fillColor: [255, 240, 242],
+          textColor: [100, 20, 30],
+          fontStyle: 'bold',
+          fontSize: 8,
+        },
         bodyStyles: { fontSize: 8 },
         alternateRowStyles: { fillColor: [255, 248, 249] },
-        margin: { left: 14, right: 14 }
+        margin: { left: 14, right: 14 },
       });
       curY = (doc as any).lastAutoTable.finalY + 10;
     }
 
     // ── SUMMARY BOX ────────────────────────────────
-    if (curY > 235) { doc.addPage(); curY = 20; }
+    if (curY > 235) {
+      doc.addPage();
+      curY = 20;
+    }
 
-    const approvedLeaves = leaves.filter((l: any) => l.status === 1 || l.status === 'Approved');
-    const totalLeaveDays = approvedLeaves.reduce((acc: number, l: any) => acc + (l.totalDays || 0), 0);
-    const completedSessions = attendance.filter((a: any) => a.clockOut && a.clockOut !== '00:00:00').length;
+    const approvedLeaves = leaves.filter(
+      (l: any) => l.status === 1 || l.status === 'Approved',
+    );
+    const totalLeaveDays = approvedLeaves.reduce(
+      (acc: number, l: any) => acc + (l.totalDays || 0),
+      0,
+    );
+    const completedSessions = attendance.filter(
+      (a: any) => a.clockOut && a.clockOut !== '00:00:00',
+    ).length;
     const latestSalary = salaries[0];
 
     doc.setFillColor(240, 243, 255);
     doc.roundedRect(10, curY, pageW - 20, 32, 3, 3, 'F');
-    doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(67, 97, 238);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(67, 97, 238);
     doc.text('REPORT SUMMARY', 18, curY + 8);
-    doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(50, 50, 80);
-    doc.text(`Total Attendance Records: ${attendance.length}   |   Completed Sessions: ${completedSessions}`, 18, curY + 16);
-    doc.text(`Total Approved Leave Days: ${totalLeaveDays}   |   Latest Net Salary: $${latestSalary?.netAmount ?? 'N/A'}`, 18, curY + 23);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(50, 50, 80);
+    doc.text(
+      `Total Attendance Records: ${attendance.length}   |   Completed Sessions: ${completedSessions}`,
+      18,
+      curY + 16,
+    );
+    doc.text(
+      `Total Approved Leave Days: ${totalLeaveDays}   |   Latest Net Salary: $${latestSalary?.netAmount ?? 'N/A'}`,
+      18,
+      curY + 23,
+    );
 
     // ── FOOTER ────────────────────────────────────
     const pageCount = (doc.internal as any).getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
-      doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(180, 180, 180);
-      doc.text('Confidential – Kawadir HRMS – System Generated Report', 14, doc.internal.pageSize.getHeight() - 8);
-      doc.text(`Page ${i} of ${pageCount}`, pageW - 30, doc.internal.pageSize.getHeight() - 8);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(180, 180, 180);
+      doc.text(
+        'Confidential – Kawadir HRMS – System Generated Report',
+        14,
+        doc.internal.pageSize.getHeight() - 8,
+      );
+      doc.text(
+        `Page ${i} of ${pageCount}`,
+        pageW - 30,
+        doc.internal.pageSize.getHeight() - 8,
+      );
     }
 
     const fileName = `Report_${empName.replace(/ /g, '_')}_${todayStr}.pdf`;

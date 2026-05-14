@@ -18,14 +18,17 @@ export class AppComponent {
   sidebarService = inject(SidebarService);
 
   get isSidebarHidden() {
+    // حالة السايدبار
     return this.sidebarService.isSidebarHidden();
   }
 
   get isMobileSidebarOpen() {
+    // فتح السايدبار بالموبايل
     return this.sidebarService.isMobileSidebarOpen();
   }
 
   closeMobileSidebar() {
+    // إغلاق السايدبار بالموبايل
     this.sidebarService.closeMobileSidebar();
   }
 }

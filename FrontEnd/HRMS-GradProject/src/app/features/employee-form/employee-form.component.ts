@@ -35,7 +35,8 @@ export class EmployeeFormComponent implements OnInit {
   unassignedUsers: any[] = [];
 
   // بيانات اليوزر اللي مربوط بالموظف في حالة التعديل
-  linkedUserInfo: { username: string; email: string; role: string } | null = null;
+  linkedUserInfo: { username: string; email: string; role: string } | null =
+    null;
 
   employeeForm = new FormGroup({
     firstName: new FormControl('', Validators.required),
@@ -55,6 +56,7 @@ export class EmployeeFormComponent implements OnInit {
   });
 
   ngOnInit() {
+    // تجهيز النموذج
     const state = window.history.state;
 
     if (state && state.editMode && state.employeeId) {
@@ -116,22 +118,28 @@ export class EmployeeFormComponent implements OnInit {
         // نعبي الفورم بالداتا الموجودة
         this.employeeForm.patchValue({
           firstName: profile.firstName || profile.fullName?.split(' ')[0] || '',
-          lastName:  profile.lastName  || profile.fullName?.split(' ').slice(1).join(' ') || '',
-          email:     profile.email     || '',
+          lastName:
+            profile.lastName ||
+            profile.fullName?.split(' ').slice(1).join(' ') ||
+            '',
+          email: profile.email || '',
           phoneNumber: profile.phoneNumber || profile.phone || '',
           hireDate: profile.hireDate
             ? new Date(profile.hireDate).toISOString().split('T')[0]
             : '',
           departmentId: profile.departmentId || '',
-          positionId:   profile.positionId   || '',
+          positionId: profile.positionId || '',
           userId: profile.userId || '',
         });
 
         // معلومات بسيطة للعرض في الـ header
         this.linkedUserInfo = {
-          username: profile.fullName || `${profile.firstName || ''} ${profile.lastName || ''}`.trim() || 'Employee',
-          email:    profile.email || '',
-          role:     profile.positionTitle || profile.departmentName || 'Employee',
+          username:
+            profile.fullName ||
+            `${profile.firstName || ''} ${profile.lastName || ''}`.trim() ||
+            'Employee',
+          email: profile.email || '',
+          role: profile.positionTitle || profile.departmentName || 'Employee',
         };
       },
       error: (err) => {
@@ -143,6 +151,7 @@ export class EmployeeFormComponent implements OnInit {
   }
 
   loadDepartments() {
+    // تحميل الأقسام
     this.departmentService.getDepartments().subscribe({
       next: (res: any) => {
         this.departments = Array.isArray(res) ? res : res?.data || [];
@@ -152,6 +161,7 @@ export class EmployeeFormComponent implements OnInit {
 
   // اليوزرات اللي ما ربطوا بموظف بعد
   loadUnassignedUsers() {
+    // تحميل يوزرات بدون موظف
     this.authService.getUnassignedEmployeeUsers().subscribe({
       next: (res: any) => {
         this.unassignedUsers = res?.items ?? (Array.isArray(res) ? res : []);
@@ -164,6 +174,7 @@ export class EmployeeFormComponent implements OnInit {
 
   // positions حسب القسم
   loadPositions(deptId: number) {
+    // تحميل المناصب
     this.positionService.getPositionsByDepartment(deptId).subscribe({
       next: (res: any) => {
         this.positions = Array.isArray(res) ? res : res?.data || [];
@@ -187,19 +198,19 @@ export class EmployeeFormComponent implements OnInit {
     if (body.errors && typeof body.errors === 'object') {
       const fieldLabels: Record<string, string> = {
         PhoneNumber: 'رقم الهاتف',
-        FirstName:   'الاسم الأول',
-        LastName:    'اسم العائلة',
-        Email:       'البريد الإلكتروني',
-        HireDate:    'تاريخ التعيين',
-        DepartmentId:'القسم',
-        PositionId:  'المسمى الوظيفي',
-        UserId:      'حساب المستخدم',
+        FirstName: 'الاسم الأول',
+        LastName: 'اسم العائلة',
+        Email: 'البريد الإلكتروني',
+        HireDate: 'تاريخ التعيين',
+        DepartmentId: 'القسم',
+        PositionId: 'المسمى الوظيفي',
+        UserId: 'حساب المستخدم',
       };
 
       const messages: string[] = [];
       for (const [field, errors] of Object.entries(body.errors)) {
         const label = fieldLabels[field] || field;
-        const msgs  = Array.isArray(errors) ? errors : [String(errors)];
+        const msgs = Array.isArray(errors) ? errors : [String(errors)];
         for (const msg of msgs) {
           // نترجم الرسالة للعربي لو عندنا ترجمة
           const translated = this.translateBackendMsg(String(msg));
@@ -211,7 +222,7 @@ export class EmployeeFormComponent implements OnInit {
 
     // رسالة عادية
     if (body.message) return body.message;
-    if (body.title)   return body.title;
+    if (body.title) return body.title;
     if (typeof body === 'string') return body;
 
     return 'حدث خطأ أثناء الإرسال، يرجى المحاولة مرة أخرى.';
@@ -220,11 +231,14 @@ export class EmployeeFormComponent implements OnInit {
   // ترجمة بعض رسائل الـ backend الشائعة للعربي
   private translateBackendMsg(msg: string): string {
     const map: Record<string, string> = {
-      'Invalid phone number format.':         'صيغة رقم الهاتف غير صحيحة (يجب أن يكون 10 أرقام)',
-      'Phone number must be 10 digits.':      'يجب أن يكون رقم الهاتف 10 أرقام بالضبط',
-      'The field PhoneNumber must be a string or array type with a maximum length of 10.': 'رقم الهاتف يجب ألا يتجاوز 10 أرقام',
-      'is required.':                         'هذا الحقل مطلوب',
-      'already exists':                       'هذا السجل موجود مسبقاً',
+      'Invalid phone number format.':
+        'صيغة رقم الهاتف غير صحيحة (يجب أن يكون 10 أرقام)',
+      'Phone number must be 10 digits.':
+        'يجب أن يكون رقم الهاتف 10 أرقام بالضبط',
+      'The field PhoneNumber must be a string or array type with a maximum length of 10.':
+        'رقم الهاتف يجب ألا يتجاوز 10 أرقام',
+      'is required.': 'هذا الحقل مطلوب',
+      'already exists': 'هذا السجل موجود مسبقاً',
     };
     for (const [en, ar] of Object.entries(map)) {
       if (msg.toLowerCase().includes(en.toLowerCase())) return ar;
@@ -233,6 +247,7 @@ export class EmployeeFormComponent implements OnInit {
   }
 
   onSubmit() {
+    // إرسال النموذج
     if (this.employeeForm.invalid) {
       this.employeeForm.markAllAsTouched();
 
@@ -263,7 +278,7 @@ export class EmployeeFormComponent implements OnInit {
     const payload = {
       ...rawValues,
       departmentId: Number(rawValues.departmentId),
-      positionId:   Number(rawValues.positionId),
+      positionId: Number(rawValues.positionId),
       hireDate: rawValues.hireDate
         ? new Date(rawValues.hireDate).toISOString()
         : new Date().toISOString(),
@@ -281,7 +296,12 @@ export class EmployeeFormComponent implements OnInit {
           error: (err) => {
             this.isLoading = false;
             const msg = this.parseBackendError(err);
-            Swal.fire({ icon: 'error', title: 'فشل التعديل', text: msg, confirmButtonText: 'حسناً' });
+            Swal.fire({
+              icon: 'error',
+              title: 'فشل التعديل',
+              text: msg,
+              confirmButtonText: 'حسناً',
+            });
             console.error('Update error:', err);
           },
         });
@@ -295,7 +315,12 @@ export class EmployeeFormComponent implements OnInit {
         error: (err) => {
           this.isLoading = false;
           const msg = this.parseBackendError(err);
-          Swal.fire({ icon: 'error', title: 'فشل الإضافة', text: msg, confirmButtonText: 'حسناً' });
+          Swal.fire({
+            icon: 'error',
+            title: 'فشل الإضافة',
+            text: msg,
+            confirmButtonText: 'حسناً',
+          });
           console.error('Add error:', err);
         },
       });

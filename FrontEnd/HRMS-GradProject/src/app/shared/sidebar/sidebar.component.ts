@@ -1,4 +1,11 @@
-import { Component, OnInit, inject, ViewChild, ElementRef, HostListener } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  ViewChild,
+  ElementRef,
+  HostListener,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
@@ -28,23 +35,29 @@ export class SidebarComponent implements OnInit {
 
   startResize(event: MouseEvent) {
     this.isResizing = true;
-    event.preventDefault(); // Prevent text selection
+    event.preventDefault(); // ما نحدد نص
   }
 
   @HostListener('document:mousemove', ['$event'])
   onMouseMove(event: MouseEvent) {
     if (!this.isResizing) return;
     const newWidth = event.clientX;
-    // Apply bounds (200px to 400px)
+    // نحصر العرض
     if (newWidth >= 200 && newWidth <= 400) {
       this.sidebarRef.nativeElement.style.width = `${newWidth}px`;
-      
-      // Update global CSS variable so the entire layout resizes smoothly
-      document.documentElement.style.setProperty('--sidebar-width', `${newWidth}px`);
-      
-      // Calculate scale relative to default width (260px)
+
+      // نحدّث المتغير العام
+      document.documentElement.style.setProperty(
+        '--sidebar-width',
+        `${newWidth}px`,
+      );
+
+      // سكيل على 260
       const scale = newWidth / 260;
-      this.sidebarRef.nativeElement.style.setProperty('--sidebar-scale', scale.toString());
+      this.sidebarRef.nativeElement.style.setProperty(
+        '--sidebar-scale',
+        scale.toString(),
+      );
     }
   }
 
@@ -64,7 +77,7 @@ export class SidebarComponent implements OnInit {
           this.userRole = profile.positionTitle;
         }
       },
-      error: () => {} // ignore errors (e.g. if admin has no profile)
+      error: () => {}, // طنّش الأخطاء
     });
   }
 

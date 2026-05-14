@@ -6,6 +6,7 @@ import { Observable, map } from 'rxjs';
   providedIn: 'root',
 })
 export class EmployeeService {
+  // شغل الموظفين
   private http = inject(HttpClient);
   private apiUrl = 'https://localhost:7204/api/employees';
 

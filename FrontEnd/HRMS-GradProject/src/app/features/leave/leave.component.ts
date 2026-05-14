@@ -21,11 +21,11 @@ export class LeaveComponent implements OnInit {
 
   allLeavesList: any[] = [];
   leavesList: any[] = [];
-  
+
   leaveSearchQuery: string = '';
   selectedLeaveStatus: string = '';
   selectedLeaveType: string = '';
-  
+
   isLoading: boolean = true;
   isProcessing: boolean = false;
 
@@ -68,7 +68,7 @@ export class LeaveComponent implements OnInit {
     { id: 0, name: 'Annual' },
     { id: 1, name: 'Sick' },
     { id: 2, name: 'Emergency' }, // ✅ يطابق Backend enum: Emergency=2
-    { id: 3, name: 'Unpaid' },   // ✅ يطابق Backend enum: Unpaid=3
+    { id: 3, name: 'Unpaid' }, // ✅ يطابق Backend enum: Unpaid=3
   ];
 
   ngOnInit() {
@@ -77,6 +77,7 @@ export class LeaveComponent implements OnInit {
   }
 
   loadLeaves() {
+    // تحميل الإجازات
     this.isLoading = true;
 
     const request = this.isAdminOrHR
@@ -98,29 +99,29 @@ export class LeaveComponent implements OnInit {
         this.allLeavesList = extracted;
         this.leavesList = [...this.allLeavesList];
 
-          if (this.isAdminOrHR && this.leavesList.length > 0) {
-            this.leavesList.sort((a, b) => {
-              const statusA = this.getStatusText(a.status);
-              const statusB = this.getStatusText(b.status);
-              
-              if (statusA === 'Pending' && statusB !== 'Pending') return -1;
-              if (statusA !== 'Pending' && statusB === 'Pending') return 1;
-              
-              return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
-            });
-          } else if (!this.isAdminOrHR) {
-            // ✅ Backend يُرجع strings: 'Approved', 'Annual'
-            const approvedAnnualLeavesDays = this.allLeavesList
-              .filter(
-                (l: any) =>
-                  l.status === 'Approved' &&
-                  l.leaveType === 'Annual',
-              )
-              .reduce((acc: number, l: any) => acc + (l.totalDays || 0), 0);
-            this.employeeAnnualLeaveBalance = 14 - approvedAnnualLeavesDays;
-          }
+        if (this.isAdminOrHR && this.leavesList.length > 0) {
+          this.leavesList.sort((a, b) => {
+            const statusA = this.getStatusText(a.status);
+            const statusB = this.getStatusText(b.status);
 
-          this.isLoading = false;
+            if (statusA === 'Pending' && statusB !== 'Pending') return -1;
+            if (statusA !== 'Pending' && statusB === 'Pending') return 1;
+
+            return (
+              new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
+            );
+          });
+        } else if (!this.isAdminOrHR) {
+          // ✅ Backend يُرجع strings: 'Approved', 'Annual'
+          const approvedAnnualLeavesDays = this.allLeavesList
+            .filter(
+              (l: any) => l.status === 'Approved' && l.leaveType === 'Annual',
+            )
+            .reduce((acc: number, l: any) => acc + (l.totalDays || 0), 0);
+          this.employeeAnnualLeaveBalance = 14 - approvedAnnualLeavesDays;
+        }
+
+        this.isLoading = false;
       },
       error: (err) => {
         console.error('Error fetching leaves:', err);
@@ -131,21 +132,27 @@ export class LeaveComponent implements OnInit {
   }
 
   filterLeaves() {
-    this.leavesList = this.allLeavesList.filter(l => {
+    // فلترة الإجازات
+    this.leavesList = this.allLeavesList.filter((l) => {
       let matchesSearch = true;
       if (this.leaveSearchQuery) {
         const query = this.leaveSearchQuery.toLowerCase();
         const empName = (l.employeeName || '').toLowerCase();
         const empId = String(l.employeeId || '');
         const reason = (l.reason || '').toLowerCase();
-        matchesSearch = empName.includes(query) || empId.includes(query) || reason.includes(query);
+        matchesSearch =
+          empName.includes(query) ||
+          empId.includes(query) ||
+          reason.includes(query);
       }
-      
+
       let matchesStatus = true;
       if (this.selectedLeaveStatus) {
-        matchesStatus = this.getStatusText(l.status).toLowerCase() === this.selectedLeaveStatus.toLowerCase();
+        matchesStatus =
+          this.getStatusText(l.status).toLowerCase() ===
+          this.selectedLeaveStatus.toLowerCase();
       }
-      
+
       let matchesType = true;
       if (this.selectedLeaveType) {
         // الـ backend يرجع string مثل "Annual" أو رقم مثل 0
@@ -153,7 +160,7 @@ export class LeaveComponent implements OnInit {
         const leaveTypeName = this.getLeaveTypeText(l.leaveType).toLowerCase();
         matchesType = leaveTypeName === this.selectedLeaveType.toLowerCase();
       }
-      
+
       return matchesSearch && matchesStatus && matchesType;
     });
 
@@ -166,7 +173,9 @@ export class LeaveComponent implements OnInit {
           if (statusA === 'Pending' && statusB !== 'Pending') return -1;
           if (statusA !== 'Pending' && statusB === 'Pending') return 1;
         }
-        return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+        return (
+          new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
+        );
       });
     }
   }
@@ -187,13 +196,15 @@ export class LeaveComponent implements OnInit {
     // ✅ Backend يُرجع string مباشرة: 'Annual', 'Sick', 'Emergency', 'Unpaid'
     if (typeof typeCode === 'string' && isNaN(Number(typeCode))) {
       const found = this.leaveTypes.find(
-        (t) => t.name.toLowerCase() === typeCode.toLowerCase()
+        (t) => t.name.toLowerCase() === typeCode.toLowerCase(),
       );
-      return found ? found.name : (typeCode.charAt(0).toUpperCase() + typeCode.slice(1));
+      return found
+        ? found.name
+        : typeCode.charAt(0).toUpperCase() + typeCode.slice(1);
     }
     // توافقية مع القيم الرقمية
     const type = this.leaveTypes.find((t) => t.id === Number(typeCode));
-    return type ? type.name : (typeCode != null ? String(typeCode) : 'Unknown');
+    return type ? type.name : typeCode != null ? String(typeCode) : 'Unknown';
   }
 
   openModal() {
@@ -210,13 +221,18 @@ export class LeaveComponent implements OnInit {
   }
 
   submitLeaveRequest() {
+    // إرسال طلب الإجازة
     if (this.leaveData.startDate < this.getToday()) {
       Swal.fire('Invalid Date', 'Start Date cannot be in the past.', 'warning');
       return;
     }
-    
+
     if (this.leaveData.endDate < this.leaveData.startDate) {
-      Swal.fire('Invalid Date', 'End Date cannot be before the Start Date.', 'warning');
+      Swal.fire(
+        'Invalid Date',
+        'End Date cannot be before the Start Date.',
+        'warning',
+      );
       return;
     }
 
@@ -243,12 +259,20 @@ export class LeaveComponent implements OnInit {
       },
       error: (err) => {
         this.isProcessing = false;
-        Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to submit leave request. Please try again.'), 'warning');
+        Swal.fire(
+          'Error',
+          getFriendlyErrorMessage(
+            err,
+            'Failed to submit leave request. Please try again.',
+          ),
+          'warning',
+        );
       },
     });
   }
 
   changeStatus(id: number, newStatusCode: number) {
+    // تغيير الحالة
     if (newStatusCode === 2) {
       Swal.fire({
         title: 'Reject Leave Request',
@@ -264,7 +288,7 @@ export class LeaveComponent implements OnInit {
             return 'You need to write a rejection reason!';
           }
           return null;
-        }
+        },
       }).then((result) => {
         if (result.isConfirmed) {
           this.executeStatusChange(id, newStatusCode, result.value);
@@ -275,7 +299,11 @@ export class LeaveComponent implements OnInit {
     }
   }
 
-  private executeStatusChange(id: number, newStatusCode: number, rejectionReason?: string) {
+  private executeStatusChange(
+    id: number,
+    newStatusCode: number,
+    rejectionReason?: string,
+  ) {
     this.leaveService
       .updateLeaveStatus(id, newStatusCode, rejectionReason)
       .subscribe({
@@ -285,7 +313,14 @@ export class LeaveComponent implements OnInit {
         },
         error: (err) => {
           console.error('Status update error:', err);
-          Swal.fire('Error!', getFriendlyErrorMessage(err, 'Failed to update leave status. Please try again.'), 'error');
+          Swal.fire(
+            'Error!',
+            getFriendlyErrorMessage(
+              err,
+              'Failed to update leave status. Please try again.',
+            ),
+            'error',
+          );
         },
       });
   }

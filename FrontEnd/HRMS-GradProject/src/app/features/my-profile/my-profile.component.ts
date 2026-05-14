@@ -33,6 +33,7 @@ export class MyProfileComponent implements OnInit {
   isChangingPwd = false;
 
   ngOnInit() {
+    // تحميل البيانات
     this.isAdmin = this.authService.isAdmin();
     this.userName = localStorage.getItem('user_name') || 'User';
     this.userRole = localStorage.getItem('user_role') || 'Employee';
@@ -76,6 +77,7 @@ export class MyProfileComponent implements OnInit {
   }
 
   loadMyProfile() {
+    // جلب بروفايلي
     this.isLoading = true;
     this.employeeService.getMyProfile().subscribe({
       next: (res: any) => {
@@ -91,9 +93,10 @@ export class MyProfileComponent implements OnInit {
 
   openEditModal() {
     this.editData.email = this.profile?.email || this.userEmail || '';
-    this.editData.phone = this.profile?.phone || this.profile?.phoneNumber || '';
+    this.editData.phone =
+      this.profile?.phone || this.profile?.phoneNumber || '';
     this.pwdData = { oldPassword: '', newPassword: '' };
-    
+
     const modalEl = document.getElementById('editProfileModal');
     if (modalEl) {
       new bootstrap.Modal(modalEl).show();
@@ -101,6 +104,7 @@ export class MyProfileComponent implements OnInit {
   }
 
   saveProfile() {
+    // حفظ التعديلات
     let requestsPending = 0;
     let hasError = false;
 
@@ -108,61 +112,86 @@ export class MyProfileComponent implements OnInit {
     if (this.pwdData.oldPassword && this.pwdData.newPassword) {
       requestsPending++;
       this.isChangingPwd = true;
-      this.authService.changePassword({ oldPassword: this.pwdData.oldPassword, newPassword: this.pwdData.newPassword }).subscribe({
-        next: () => {
-          this.isChangingPwd = false;
-          requestsPending--;
-          this.checkDone(requestsPending, hasError);
-        },
-        error: (err) => {
-          this.isChangingPwd = false;
-          hasError = true;
-          requestsPending--;
-          Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to change password. Please check your current password and try again.'), 'error');
-          this.checkDone(requestsPending, hasError);
-        }
-      });
+      this.authService
+        .changePassword({
+          oldPassword: this.pwdData.oldPassword,
+          newPassword: this.pwdData.newPassword,
+        })
+        .subscribe({
+          next: () => {
+            this.isChangingPwd = false;
+            requestsPending--;
+            this.checkDone(requestsPending, hasError);
+          },
+          error: (err) => {
+            this.isChangingPwd = false;
+            hasError = true;
+            requestsPending--;
+            Swal.fire(
+              'Error',
+              getFriendlyErrorMessage(
+                err,
+                'Failed to change password. Please check your current password and try again.',
+              ),
+              'error',
+            );
+            this.checkDone(requestsPending, hasError);
+          },
+        });
     }
 
     // 2. Profile Info Update
-    const emailChanged = this.editData.email !== (this.profile?.email || this.userEmail);
-    const phoneChanged = this.profile && this.editData.phone !== (this.profile?.phone || this.profile?.phoneNumber);
+    const emailChanged =
+      this.editData.email !== (this.profile?.email || this.userEmail);
+    const phoneChanged =
+      this.profile &&
+      this.editData.phone !==
+        (this.profile?.phone || this.profile?.phoneNumber);
 
     if (emailChanged || phoneChanged) {
       if (this.profile && this.profile.id) {
         requestsPending++;
         this.isUpdatingProfile = true;
-        
+
         // Prepare updated employee object
-        const updatedEmp = { 
-          ...this.profile, 
-          email: this.editData.email, 
+        const updatedEmp = {
+          ...this.profile,
+          email: this.editData.email,
           phone: this.editData.phone,
-          phoneNumber: this.editData.phone 
+          phoneNumber: this.editData.phone,
         };
-        
-        this.employeeService.updateEmployee(this.profile.id, updatedEmp).subscribe({
-          next: () => {
-            this.isUpdatingProfile = false;
-            this.profile.email = this.editData.email;
-            this.profile.phone = this.editData.phone;
-            this.userEmail = this.editData.email;
-            
-            requestsPending--;
-            this.checkDone(requestsPending, hasError);
-          },
-          error: (err) => {
-            this.isUpdatingProfile = false;
-            hasError = true;
-            requestsPending--;
-            Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to update profile. Please try again.'), 'error');
-            this.checkDone(requestsPending, hasError);
-          }
-        });
+
+        this.employeeService
+          .updateEmployee(this.profile.id, updatedEmp)
+          .subscribe({
+            next: () => {
+              this.isUpdatingProfile = false;
+              this.profile.email = this.editData.email;
+              this.profile.phone = this.editData.phone;
+              this.userEmail = this.editData.email;
+
+              requestsPending--;
+              this.checkDone(requestsPending, hasError);
+            },
+            error: (err) => {
+              this.isUpdatingProfile = false;
+              hasError = true;
+              requestsPending--;
+              Swal.fire(
+                'Error',
+                getFriendlyErrorMessage(
+                  err,
+                  'Failed to update profile. Please try again.',
+                ),
+                'error',
+              );
+              this.checkDone(requestsPending, hasError);
+            },
+          });
       } else {
         // Admin without employee profile
         this.userEmail = this.editData.email;
-        // There might not be an endpoint to update Admin user email alone, 
+        // There might not be an endpoint to update Admin user email alone,
         // but we update it locally for UX.
       }
     }
@@ -191,7 +220,7 @@ export class MyProfileComponent implements OnInit {
       title: 'Profile Updated',
       text: 'Your profile has been updated successfully.',
       timer: 2000,
-      showConfirmButton: false
+      showConfirmButton: false,
     });
   }
 }

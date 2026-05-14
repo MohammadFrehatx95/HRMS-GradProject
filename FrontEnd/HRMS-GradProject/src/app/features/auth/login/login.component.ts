@@ -36,10 +36,12 @@ export class LoginComponent {
   });
 
   togglePasswordVisibility() {
+    // إظهار/إخفاء كلمة السر
     this.isPasswordVisible = !this.isPasswordVisible;
   }
 
   onSubmit() {
+    // تسجيل الدخول
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
@@ -48,6 +50,7 @@ export class LoginComponent {
     this.isLoading = true;
 
     const credentials = {
+      // بيانات الدخول
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
     };
@@ -61,7 +64,10 @@ export class LoginComponent {
         this.isLoading = false;
         Swal.fire(
           'Login Failed',
-          getFriendlyErrorMessage(err, 'Incorrect email or password. Please try again.'),
+          getFriendlyErrorMessage(
+            err,
+            'Incorrect email or password. Please try again.',
+          ),
           'error',
         );
       },

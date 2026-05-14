@@ -36,11 +36,13 @@ export class PositionsComponent implements OnInit {
   };
 
   ngOnInit() {
+    // أول تحميل
     this.loadDepartments();
     this.loadPositions();
   }
 
   loadDepartments() {
+    // جلب الأقسام
     this.departmentService.getDepartments().subscribe({
       next: (res: any) => {
         const extracted = Array.isArray(res) ? res : res?.data || [];
@@ -51,6 +53,7 @@ export class PositionsComponent implements OnInit {
   }
 
   loadPositions() {
+    // جلب المناصب
     this.isLoading = true;
     this.positionService.getPositions().subscribe({
       next: (res: any) => {
@@ -71,6 +74,7 @@ export class PositionsComponent implements OnInit {
   }
 
   openModal(position: any = null) {
+    // فتح المودال
     if (position) {
       this.isEditMode = true;
       this.currentPositionId = position.id;
@@ -99,6 +103,7 @@ export class PositionsComponent implements OnInit {
   }
 
   savePosition() {
+    // حفظ المسمى
     this.isProcessing = true;
 
     if (this.isEditMode && this.currentPositionId) {
@@ -117,6 +122,7 @@ export class PositionsComponent implements OnInit {
   }
 
   onDelete(id: number) {
+    // حذف المسمى
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",

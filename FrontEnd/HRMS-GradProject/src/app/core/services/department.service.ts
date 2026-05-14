@@ -6,19 +6,24 @@ import { Observable, map } from 'rxjs';
   providedIn: 'root',
 })
 export class DepartmentService {
+  // شغل الأقسام
   private http = inject(HttpClient);
   private apiUrl = 'https://localhost:7204/api/departments';
 
   getDepartments(): Observable<any[]> {
-    return this.http.get<any>('https://localhost:7204/api/departments?pageNumber=1&pageSize=1000').pipe(
-      map((response) => {
-        if (response && response.data && response.data.items)
-          return response.data.items;
-        if (Array.isArray(response)) return response;
-        if (response && Array.isArray(response.data)) return response.data;
-        return [];
-      }),
-    );
+    return this.http
+      .get<any>(
+        'https://localhost:7204/api/departments?pageNumber=1&pageSize=1000',
+      )
+      .pipe(
+        map((response) => {
+          if (response && response.data && response.data.items)
+            return response.data.items;
+          if (Array.isArray(response)) return response;
+          if (response && Array.isArray(response.data)) return response.data;
+          return [];
+        }),
+      );
   }
 
   addDepartment(data: any): Observable<any> {
