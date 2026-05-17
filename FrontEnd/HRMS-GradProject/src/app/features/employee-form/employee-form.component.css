@@ -1,6 +1,6 @@
-/* ═══════════════════════════════════════════
+/*
    PAGE WRAPPER
-═══════════════════════════════════════════ */
+*/
 .form-page-wrapper {
   min-height: 100vh;
   padding: 2rem 1rem 3rem;
@@ -13,9 +13,9 @@
   animation: slideUp 0.5s ease-out;
 }
 
-/* ═══════════════════════════════════════════
+/* 
    HEADER CARD
-═══════════════════════════════════════════ */
+*/
 .form-header-card {
   background: #fff;
   border-radius: 16px;
@@ -24,7 +24,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   border: 1px solid #e8ecf0;
 }
 
@@ -79,9 +79,9 @@
   color: #333;
 }
 
-/* ═══════════════════════════════════════════
+/*
    LINKED USER BANNER (Add mode — after selecting user)
-═══════════════════════════════════════════ */
+*/
 .linked-user-banner {
   background: linear-gradient(135deg, #d1fae5, #ecfdf5);
   border: 1px solid #6ee7b7;
@@ -135,9 +135,9 @@
   font-size: 1.5rem;
 }
 
-/* ═══════════════════════════════════════════
+/*
    LINKED ACCOUNT CARD (Edit mode)
-═══════════════════════════════════════════ */
+*/
 .linked-account-card {
   background: linear-gradient(135deg, #eff6ff, #dbeafe);
   border: 1px solid #93c5fd;
@@ -196,15 +196,15 @@
   flex-shrink: 0;
 }
 
-/* ═══════════════════════════════════════════
+/*
    FORM SECTIONS
-═══════════════════════════════════════════ */
+*/
 .form-section {
   background: #fff;
   border-radius: 16px;
   padding: 1.5rem 1.75rem;
   margin-bottom: 1.25rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   border: 1px solid #e8ecf0;
 }
 
@@ -249,9 +249,9 @@
   letter-spacing: 0.4px;
 }
 
-/* ═══════════════════════════════════════════
+/*
    FIELD STYLES
-═══════════════════════════════════════════ */
+*/
 .field-label {
   display: flex;
   align-items: center;
@@ -325,9 +325,9 @@
   border-color: #e2e8f0 !important;
 }
 
-/* ═══════════════════════════════════════════
+/*
    FORM ACTIONS
-═══════════════════════════════════════════ */
+*/
 .form-actions {
   display: flex;
   align-items: center;
@@ -362,7 +362,7 @@
   font-weight: 700;
   border: none;
   transition: all 0.25s;
-  box-shadow: 0 4px 14px rgba(67,97,238,0.35);
+  box-shadow: 0 4px 14px rgba(67, 97, 238, 0.35);
   min-width: 190px;
   display: flex;
   align-items: center;
@@ -371,7 +371,7 @@
 
 .btn-submit:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(67,97,238,0.45);
+  box-shadow: 0 6px 18px rgba(67, 97, 238, 0.45);
 }
 
 .btn-submit:disabled {
@@ -380,14 +380,14 @@
   cursor: not-allowed;
 }
 
-/* ═══════════════════════════════════════════
+/*
    SKELETON LOADING
-═══════════════════════════════════════════ */
+*/
 .form-body-card {
   background: #fff;
   border-radius: 16px;
   padding: 2rem;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   border: 1px solid #e8ecf0;
   margin-bottom: 1.25rem;
 }
@@ -403,7 +403,9 @@
   margin-bottom: 0.5rem;
 }
 
-.skeleton-line.w-40 { width: 40%; }
+.skeleton-line.w-40 {
+  width: 40%;
+}
 
 .skeleton-input {
   height: 42px;
@@ -411,31 +413,52 @@
   border-radius: 10px;
 }
 
-/* ═══════════════════════════════════════════
+/*
    ANIMATIONS
-═══════════════════════════════════════════ */
+*/
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
-/* ═══════════════════════════════════════════
+/*
    RESPONSIVE
-═══════════════════════════════════════════ */
+*/
 @media (max-width: 576px) {
-  .form-header-card { flex-direction: column; align-items: flex-start; gap: 1rem; }
-  .form-actions { flex-direction: column-reverse; }
-  .btn-cancel, .btn-submit { width: 100%; justify-content: center; }
+  .form-header-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+  .btn-cancel,
+  .btn-submit {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
-/* ═══════════════════════════════════════════
+/*
    DARK MODE OVERRIDES
-═══════════════════════════════════════════ */
+*/
 :host-context(body.dark-mode) .form-page-wrapper {
   background: var(--color-bg);
 }

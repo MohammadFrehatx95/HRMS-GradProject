@@ -1,4 +1,5 @@
-<div class="login-page d-flex align-items-center justify-content-center vh-100" dir="ltr">
+<div class="login-page d-flex align-items-center justify-content-center vh-100"
+    dir="ltr">
 
     <!-- خلفية متحركة -->
     <div class="bg-blobs" aria-hidden="true">
@@ -14,11 +15,14 @@
     <div class="login-card shadow-lg d-flex position-relative">
 
         <!-- Left Side: Form -->
-        <div class="login-form-section p-5 d-flex flex-column position-relative">
+        <div
+            class="login-form-section p-5 d-flex flex-column position-relative">
             <div class="logo-text mt-2 mb-4 d-flex align-items-center">
-                <div class="shadow-sm overflow-hidden d-flex align-items-center justify-content-center bg-white me-3"
-                    style="width: 60px; height: 60px; border-radius: 14px; border: 1px solid #e5e7eb;">
-                    <img src="kawadir-logo.png" alt="Kawadir" class="w-100 h-100 object-fit-cover">
+                <div
+                    class="shadow-sm overflow-hidden d-flex align-items-center justify-content-center bg-white me-3"
+                    style="width: 80px; height: 80px; border-radius: 14px; border: 1px solid #e5e7eb;">
+                    <img src="kawadir-logo.png" alt="Kawadir"
+                        class="w-100 h-100 object-fit-cover">
                 </div>
                 <div class="d-flex flex-column justify-content-center">
                     <span
@@ -31,47 +35,70 @@
 
             <div class="form-content mt-4 px-lg-3">
                 <div class="text-center mb-5">
-                    <h3 class="fw-normal text-dark mb-2">Login to your account</h3>
+                    <h3 class="fw-normal text-dark mb-2">Login to your
+                        account</h3>
                     <p class="text-muted small">Access your HR dashboard</p>
                 </div>
 
                 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
                     <div class="mb-3">
-                        <label class="form-label text-secondary small fw-medium ms-3 mb-2">Email Address</label>
-                        <input type="email" class="form-control rounded-pill custom-input px-4 py-3 border-0"
-                            formControlName="email" placeholder="example@company.com"
+                        <label
+                            class="form-label text-secondary small fw-medium ms-3 mb-2">Email
+                            Address</label>
+                        <input type="email"
+                            class="form-control rounded-pill custom-input px-4 py-3 border-0"
+                            formControlName="email"
+                            placeholder="example@company.com"
                             [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
                         <div class="invalid-feedback ms-3 mt-1">
-                            <span *ngIf="loginForm.get('email')?.errors?.['required']">
-                                <i class="bi bi-exclamation-circle me-1"></i>Email is required
+                            <span
+                                *ngIf="loginForm.get('email')?.errors?.['required']">
+                                <i
+                                    class="bi bi-exclamation-circle me-1"></i>Email
+                                is required
                             </span>
-                            <span *ngIf="loginForm.get('email')?.errors?.['email']">
-                                <i class="bi bi-exclamation-circle me-1"></i>Please enter a valid email address
+                            <span
+                                *ngIf="loginForm.get('email')?.errors?.['email']">
+                                <i
+                                    class="bi bi-exclamation-circle me-1"></i>Please
+                                enter a valid email address
                             </span>
                         </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="form-label text-secondary small fw-medium ms-3 mb-2">Password</label>
+                        <label
+                            class="form-label text-secondary small fw-medium ms-3 mb-2">Password</label>
                         <div class="position-relative">
-                            <input [type]="isPasswordVisible ? 'text' : 'password'"
+                            <input
+                                [type]="isPasswordVisible ? 'text' : 'password'"
                                 class="form-control rounded-pill custom-input px-4 py-3 border-0 pe-5"
-                                formControlName="password" placeholder="******************"
+                                formControlName="password"
+                                placeholder="******************"
                                 [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
 
                             <button
                                 class="btn btn-link text-muted position-absolute end-0 top-50 translate-middle-y me-2 text-decoration-none shadow-none"
-                                type="button" (click)="togglePasswordVisibility()" tabindex="-1" style="z-index: 5;">
-                                <i class="bi fs-5" [ngClass]="isPasswordVisible ? 'bi-eye-slash' : 'bi-eye'"></i>
+                                type="button"
+                                (click)="togglePasswordVisibility()"
+                                tabindex="-1" style="z-index: 5;">
+                                <i class="bi fs-5"
+                                    [ngClass]="isPasswordVisible ? 'bi-eye-slash' : 'bi-eye'"></i>
                             </button>
                         </div>
                         <div class="invalid-feedback ms-3 mt-1">
-                            <span *ngIf="loginForm.get('password')?.errors?.['required']">
-                                <i class="bi bi-exclamation-circle me-1"></i>Password is required
+                            <span
+                                *ngIf="loginForm.get('password')?.errors?.['required']">
+                                <i
+                                    class="bi bi-exclamation-circle me-1"></i>Password
+                                is required
                             </span>
-                            <span *ngIf="loginForm.get('password')?.errors?.['minlength']">
-                                <i class="bi bi-exclamation-circle me-1"></i>Password must be at least 6 characters
+                            <span
+                                *ngIf="loginForm.get('password')?.errors?.['minlength']">
+                                <i
+                                    class="bi bi-exclamation-circle me-1"></i>Password
+                                must be at least 6 characters
                             </span>
                         </div>
                     </div>
@@ -80,7 +107,8 @@
                         class="btn btn-warning w-100 rounded-pill py-3 fw-medium shadow-sm submit-btn text-dark mb-4"
                         [disabled]="isLoading">
                         @if (isLoading) {
-                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        <span class="spinner-border spinner-border-sm me-2"
+                            role="status" aria-hidden="true"></span>
                         }
                         Login
                     </button>
@@ -90,8 +118,10 @@
 
         <!-- Right Side: Image -->
         <div class="login-image-section p-3 d-none d-lg-block">
-            <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-                alt="Team working" class="h-100 w-100 object-fit-cover rounded-4 shadow-sm"
+            <img
+                src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+                alt="Team working"
+                class="h-100 w-100 object-fit-cover rounded-4 shadow-sm"
                 style="border-radius: 1.5rem !important;">
         </div>
 
