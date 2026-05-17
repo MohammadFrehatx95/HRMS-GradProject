@@ -1,4 +1,4 @@
-﻿using Application.Common;
+using Application.Common;
 using Application.DTOs.Attendance;
 using Application.Services.Interfaces;
 using HRMS_API.Filters;
@@ -43,6 +43,7 @@ namespace HRMS_GradProject.Controllers
 
         // GET /api/attendance/{id}
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,HR")]
         public async Task<IActionResult> GetById(int id)
         {
             var result = await attendanceService.GetByIdAsync(id) ?? throw new KeyNotFoundException($"Attendance {id} not found");

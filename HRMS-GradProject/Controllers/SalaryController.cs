@@ -1,4 +1,4 @@
-﻿using Application.Common;
+using Application.Common;
 using Application.DTOs.Salary;
 using Application.Services.Interfaces;
 using HRMS_API.Filters;
@@ -45,6 +45,7 @@ namespace HRMS_GradProject.Controllers
 
         // GET /api/salaries/{id}
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,HR")]
         public async Task<IActionResult> GetById(int id)
         {
             var result = await salaryService.GetByIdAsync(id)

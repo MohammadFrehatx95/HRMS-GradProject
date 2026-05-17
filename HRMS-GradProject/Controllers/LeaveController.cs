@@ -40,6 +40,7 @@ namespace HRMS_GradProject.Controllers
 
         // GET /api/leaves/{id}
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,HR")]
         public async Task<IActionResult> GetById(int id)
         {
             var result = await leaveService.GetByIdAsync(id)
