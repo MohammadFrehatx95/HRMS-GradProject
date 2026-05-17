@@ -1,4 +1,4 @@
-﻿using Application.Common;
+using Application.Common;
 using Application.DTOs.User;
 using Application.Services.Interfaces;
 using AutoMapper;
@@ -17,10 +17,9 @@ namespace Application.Services.Implementations
     {
         public async Task<PagedResult<UserDto>> GetAllEmployeesAsync(int pageNumber, int pageSize)
         {
-            // ✅ اجلب فقط Users اللذين لهم Employee مرتبطين
+            // اجلب جميع اليوزرز (سواء لهم موظف أو لا)
             var query = uow.Repository<User>()
                            .GetAllQueryable()
-                           .Where(u => u.Employee != null)  // فقط Users مع Employee
                            .Include(u => u.Employee)
                            .OrderByDescending(u => u.CreatedAt);
 
@@ -73,7 +72,7 @@ namespace Application.Services.Implementations
         {
             var query = uow.Repository<User>()
                            .GetAllQueryable()
-                           .Where(u => u.Role == "Employee" && u.Employee == null)  // Employee users بدون ربط
+                           .Where(u => u.Employee == null)  // Users بدون ربط
                            .OrderByDescending(u => u.CreatedAt);
 
             var total = await query.CountAsync();

@@ -1,4 +1,4 @@
-﻿using Application.Common;
+using Application.Common;
 using Application.DTOs.Employee;
 using Application.Services.Interfaces;
 using HRMS_API.Filters;
@@ -10,10 +10,12 @@ namespace HRMS_API.Controllers;
 
 [ApiController]
 [Route("api/employees")]
+[Authorize]
 public class EmployeeController(IEmployeeService employeeService) : ControllerBase
 {
     // GET api/employees?pageNumber=1&pageSize=10
     [HttpGet]
+    [Authorize(Roles = "Admin,HR")]
     public async Task<IActionResult> GetAll( [FromQuery] int pageNumber = 1,[FromQuery] int pageSize = 10)
     {
         var employees = await employeeService.GetAllAsync(pageNumber, pageSize);
@@ -23,6 +25,7 @@ public class EmployeeController(IEmployeeService employeeService) : ControllerBa
 
     // GET api/employees/5
     [HttpGet("{id}")]
+    [Authorize(Roles = "Admin,HR")]
     public async Task<IActionResult> GetById(int id)
     {
         var employee = await employeeService.GetByIdAsync(id);
@@ -35,6 +38,7 @@ public class EmployeeController(IEmployeeService employeeService) : ControllerBa
 
     // GET api/employees/5/profile
     [HttpGet("{id}/profile")]
+    [Authorize(Roles = "Admin,HR")]
     public async Task<IActionResult> GetProfile(int id)
     {
         var profile = await employeeService.GetProfileAsync(id);
@@ -68,6 +72,7 @@ public class EmployeeController(IEmployeeService employeeService) : ControllerBa
 
     // POST api/employees
     [HttpPost]
+    [Authorize(Roles = "Admin,HR")]
     [ValidateModel]
     public async Task<IActionResult> Create([FromBody] CreateEmployeeDto dto)
     {
@@ -80,6 +85,7 @@ public class EmployeeController(IEmployeeService employeeService) : ControllerBa
 
     // PUT api/employees/5
     [HttpPut("{id}")]
+    [Authorize(Roles = "Admin,HR")]
     [ValidateModel]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateEmployeeDto dto)
     {
@@ -93,6 +99,7 @@ public class EmployeeController(IEmployeeService employeeService) : ControllerBa
 
     // DELETE api/employees/5
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin,HR")]
     public async Task<IActionResult> Delete(int id)
     {
 

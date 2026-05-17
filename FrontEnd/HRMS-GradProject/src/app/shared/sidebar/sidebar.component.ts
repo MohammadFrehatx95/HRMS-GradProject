@@ -27,6 +27,7 @@ export class SidebarComponent implements OnInit {
   private employeeService = inject(EmployeeService);
 
   isAdmin: boolean = false;
+  isAdminOrHR: boolean = false;
   userName: string = 'User';
   userRole: string = 'Employee';
 
@@ -68,6 +69,7 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
+    this.isAdminOrHR = this.authService.isAdminOrHR();
     this.userName = localStorage.getItem('user_name') || 'User';
     this.userRole = localStorage.getItem('user_role') || 'Employee';
 
