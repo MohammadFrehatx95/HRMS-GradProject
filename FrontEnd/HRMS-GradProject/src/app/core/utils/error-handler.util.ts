@@ -41,11 +41,36 @@ export function getFriendlyErrorMessage(
   }
 
   if (status === 400) {
+    // Check if it's an array of Identity errors directly in the body
+    if (Array.isArray(err?.error)) {
+      const msgs = err.error.map((e: any) => e.description || e.errorMessage || e).filter((e: any) => typeof e === 'string');
+      if (msgs.length > 0) return msgs.join('\n');
+    }
+
+    // Check ASP.NET Core Validation Problem Details
+    if (err?.error?.errors && typeof err.error.errors === 'object') {
+      const errorMessages: string[] = [];
+      for (const key in err.error.errors) {
+        if (Object.prototype.hasOwnProperty.call(err.error.errors, key)) {
+          const messages = err.error.errors[key];
+          if (Array.isArray(messages)) {
+            errorMessages.push(...messages);
+          } else if (typeof messages === 'string') {
+            errorMessages.push(messages);
+          }
+        }
+      }
+      if (errorMessages.length > 0) {
+        return errorMessages.join('\n');
+      }
+    }
+
     // لو الرسالة قصيرة ومفهومة نعرضها مباشرة
     if (
       rawMessage &&
       rawMessage.length < 150 &&
-      !looksLikeTechError(rawMessage)
+      !looksLikeTechError(rawMessage) &&
+      rawMessage !== 'One or more validation errors occurred.'
     ) {
       return rawMessage;
     }

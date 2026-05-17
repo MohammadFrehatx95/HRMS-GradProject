@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../core/services/auth.service';
 import { getFriendlyErrorMessage } from '../../../core/utils/error-handler.util';
+import { SettingsService } from '../../../core/services/settings.service';
 
 @Component({
   selector: 'app-login',
@@ -19,9 +20,10 @@ import { getFriendlyErrorMessage } from '../../../core/utils/error-handler.util'
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private authService = inject(AuthService);
+  private settingsService = inject(SettingsService);
 
   isLoading = false;
   isPasswordVisible = false;
@@ -38,6 +40,20 @@ export class LoginComponent {
   togglePasswordVisibility() {
     // إظهار/إخفاء كلمة السر
     this.isPasswordVisible = !this.isPasswordVisible;
+  }
+
+  ngOnInit() {
+    // إجبار صفحة الدخول على الوضع الفاتح
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.body.classList.remove('dark-mode');
+  }
+
+  ngOnDestroy() {
+    // إعادة تطبيق ثيم المستخدم المحفوظ عند الدخول للمشروع
+    if (this.settingsService.isDarkMode) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      document.body.classList.add('dark-mode');
+    }
   }
 
   onSubmit() {
