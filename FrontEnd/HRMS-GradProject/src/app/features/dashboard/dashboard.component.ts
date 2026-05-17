@@ -52,6 +52,7 @@ export class DashboardComponent implements OnInit {
   readonly PAYDAY = 25;
 
   leaveChartInstance: any;
+  attendanceRateChartInstance: any;
 
   downloadSystemReport() {
     Swal.fire(
@@ -201,6 +202,10 @@ export class DashboardComponent implements OnInit {
       this.attendanceRate = Math.round((validAtt.length / totalExpected) * 100);
       if (this.attendanceRate > 100) this.attendanceRate = 100;
     }
+
+    setTimeout(() => {
+      this.renderAttendanceRateChart();
+    }, 100);
   }
 
   loadNextPayday() {
@@ -418,6 +423,106 @@ export class DashboardComponent implements OnInit {
         },
         cutout: '75%',
       },
+    });
+  }
+
+  renderAttendanceRateChart() {
+    const ctx = document.getElementById('attendanceRateChart') as HTMLCanvasElement;
+    if (!ctx) return;
+
+    if (this.attendanceRateChartInstance) {
+      this.attendanceRateChartInstance.destroy();
+    }
+
+    if (this.totalEmployees === 0 || this.allAttendances.length === 0) return;
+
+    // Get last 7 days calendar-wise
+    const labels = [];
+    const data = [];
+    let startDateStr = '';
+    
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dateString = d.toISOString().split('T')[0];
+
+      if (i === 6) {
+        startDateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      }
+      
+      const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
+      labels.push(dayName);
+      
+      const dayAtts = this.allAttendances.filter(a => a.date && a.date.startsWith(dateString) && a.clockIn);
+      let rate = Math.round((dayAtts.length / this.totalEmployees) * 100);
+      if (rate > 100) rate = 100;
+      data.push(rate);
+    }
+
+    this.attendanceRateChartInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Attendance Rate (%)',
+          data: data,
+          borderColor: '#198754', // Success color matching the badge
+          backgroundColor: 'rgba(25, 135, 84, 0.1)',
+          borderWidth: 3,
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: '#198754',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: `Attendance rates since ${startDateStr} (Renews every 7 days)`,
+            align: 'start',
+            color: '#6c757d',
+            font: {
+              family: "'Inter', sans-serif",
+              size: 13,
+              weight: 'normal'
+            },
+            padding: { bottom: 15 }
+          },
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(context: any) {
+                return context.parsed.y + '%';
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)',
+            },
+            ticks: {
+              callback: function(value: any) {
+                return value + '%';
+              }
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        }
+      }
     });
   }
 }
