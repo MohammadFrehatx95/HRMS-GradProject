@@ -84,8 +84,10 @@ namespace Application.Services.Implementations
 
             if (duplicate)
                 throw new InvalidOperationException(
-                    $"Salary for this employee in {dto.Month}/{dto.Year} already exists");
+                    $"Salary for employee {dto.EmployeeId} in {dto.Month}/{dto.Year} already exists. " +
+                    $"Use the update endpoint to modify it.");
 
+           
             var gross = dto.BaseAmount + dto.Allowances;
             var net = gross - dto.Deductions;
 

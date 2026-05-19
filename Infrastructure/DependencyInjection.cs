@@ -50,11 +50,13 @@ public static class DependencyInjection
         services.AddScoped<IUserService, UserService>();
 
         services.AddScoped<INotificationService, NotificationService>();
-        // أضف هاد
-        // obtain IConfiguration from the service collection to avoid missing 'configuration' variable
-        
-        services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
         services.AddScoped<IEmailService, EmailService>();
+       
+        // obtain IConfiguration from the service collection to avoid missing 'configuration' variable
+
+        services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+        
+        services.Configure<AttendanceSettings>(configuration.GetSection("AttendanceSettings"));
 
         return services;
     }

@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Application.Services.Interfaces;
 using BCrypt.Net;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,24 +38,24 @@ namespace Application.Services.Implementations
             var exists = await uow.Repository<User>()
                                   .GetAllQueryable()
                                   .AnyAsync(u => u.Email == dto.Email);
-            if (exists)
-            {
-                return false;
-            }
+            if (exists) return false;
+
+            // Validate role against enum before saving
+            if (!Enum.IsDefined(typeof(UserRole), dto.Role))
+                throw new ArgumentException($"Invalid role: {dto.Role}");
+
             var user = new User
             {
                 Username = dto.Username,
                 Email = dto.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-                Role = dto.Role.ToString(),
+                Role = dto.Role.ToString(),  
                 EmployeeId = dto.EmployeeId
             };
 
             await uow.Repository<User>().AddAsync(user);
             await uow.SaveChangesAsync();
-
             await emailService.SendWelcomeAsync(user.Email, user.Username);
-
             return true;
         }
 

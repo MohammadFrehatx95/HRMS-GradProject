@@ -11,6 +11,6 @@ namespace Application.DTOs.Attendance
         public DateTime Date { get; set; }
         public TimeOnly ClockIn { get; set; }
         public TimeOnly? ClockOut { get; set; }
-        public string? TotalHours { get; set; }  
+        public string TotalHours { get; set; } = string.Empty;
     }
 }

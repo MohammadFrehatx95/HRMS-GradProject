@@ -1,23 +1,26 @@
 using Application.Common;
 using Application.DTOs.Attendance;
 using Application.Services.Interfaces;
+using Application.Settings;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 
 namespace Application.Services.Implementations
 {
-
-    // Application/Services/Implementations/AttendanceService.cs
     public class AttendanceService(
         IUnitOfWork uow,
         IMapper mapper,
         INotificationService notificationService,
-        IEmailService emailService) : IAttendanceService
+        IEmailService emailService,
+        IOptions<AttendanceSettings> attendanceOptions) : IAttendanceService
     {
+        private readonly AttendanceSettings _attendanceSettings = attendanceOptions.Value;
+
         public async Task<PagedResult<AttendanceDto>> GetAllAsync(
             int pageNumber, int pageSize)
         {
@@ -67,10 +70,8 @@ namespace Application.Services.Implementations
 
         public async Task<AttendanceDto> ClockInAsync(int employeeId, ClockInDto dto)
         {
-            // ✅ Fix DateTime Kind
             var date = DateTime.SpecifyKind(dto.Date.Date, DateTimeKind.Utc);
 
-            // ── 1. تحقق من وجود session مفتوحة (Working) من أي يوم سابق
             var openSession = await uow.Repository<Attendance>()
                                         .GetAllQueryable()
                                         .FirstOrDefaultAsync(a =>
@@ -79,21 +80,23 @@ namespace Application.Services.Implementations
 
             if (openSession != null)
             {
-                // ── Auto Clock-out تلقائي: نغلق الـ session القديمة بـ 23:59 من نفس يومها
-                var autoClockOut = new TimeOnly(23, 59, 0);
-
-                // إذا الـ session هي من نفس اليوم المطلوب، ارفض وقل له يعمل Clock Out أولاً
                 if (openSession.Date.Date == date.Date)
                     throw new InvalidOperationException(
                         "You have already clocked in today. Please clock out first.");
 
-                // إذا من يوم سابق → Auto Clock-out
-                openSession.ClockOut = autoClockOut;
+                // ✅ Bug #5 Fix: Use configurable end time instead of hardcoded 23:59
+                openSession.ClockOut = _attendanceSettings.WorkDayEndTime;
+
+                var staleDuration = openSession.ClockOut.Value.ToTimeSpan()
+                                    - openSession.ClockIn.ToTimeSpan();
+                openSession.TotalHours = staleDuration.TotalHours > 0
+                    ? (int)Math.Round(staleDuration.TotalHours)
+                    : 0;
+
                 uow.Repository<Attendance>().Update(openSession);
                 await uow.SaveChangesAsync();
             }
 
-            // ── 2. تحقق ألا يكون Clock-in لنفس اليوم موجوداً (مكتمل أو لا)
             var alreadyClockedInToday = await uow.Repository<Attendance>()
                                                   .GetAllQueryable()
                                                   .AnyAsync(a =>
@@ -104,7 +107,6 @@ namespace Application.Services.Implementations
                 throw new InvalidOperationException(
                     "You have already clocked in today. Please clock out first.");
 
-            // ── 3. إنشاء سجل جديد
             var attendance = new Attendance
             {
                 EmployeeId = employeeId,
@@ -115,7 +117,6 @@ namespace Application.Services.Implementations
             await uow.Repository<Attendance>().AddAsync(attendance);
             await uow.SaveChangesAsync();
 
-            // ── إرسال الإشعار والإيميل
             var user = await uow.Repository<User>()
                                 .GetAllQueryable()
                                 .Include(u => u.Employee)
@@ -142,19 +143,15 @@ namespace Application.Services.Implementations
 
         public async Task<AttendanceDto> ClockOutAsync(int employeeId, ClockOutDto dto)
         {
-            // ── البحث عن أي session مفتوحة (ClockOut == null) لهذا الموظف
-            // (ليس فقط اليوم، لأن بعض الموظفين نسوا الـ Clock Out من أيام سابقة)
             var attendance = await uow.Repository<Attendance>()
                                       .GetAllQueryable()
                                       .Include(a => a.Employee)
                                       .Where(a => a.EmployeeId == employeeId && a.ClockOut == null)
-                                      .OrderByDescending(a => a.Date)  // الأحدث أولاً
+                                      .OrderByDescending(a => a.Date)
                                       .FirstOrDefaultAsync()
                             ?? throw new KeyNotFoundException(
                                    "No open clock-in record found. You are not currently clocked in.");
 
-            // تحقق من أن وقت Clock-out منطقي (بعد Clock-in)
-            // إذا كانت الـ session من يوم سابق، نقبل أي وقت
             if (attendance.Date.Date == DateTime.UtcNow.Date)
             {
                 if (dto.ClockOut <= attendance.ClockIn)
@@ -164,14 +161,12 @@ namespace Application.Services.Implementations
 
             attendance.ClockOut = dto.ClockOut;
 
-            // ✅ Bug #1 Fix: احسب TotalHours واحفظها في الـ Entity حتى تُخزَّن في DB
             var duration = dto.ClockOut.ToTimeSpan() - attendance.ClockIn.ToTimeSpan();
             attendance.TotalHours = duration.TotalHours > 0 ? (int)Math.Round(duration.TotalHours) : 0;
 
             uow.Repository<Attendance>().Update(attendance);
             await uow.SaveChangesAsync();
 
-            // ── إرسال الإشعار والإيميل
             var user = await uow.Repository<User>()
                                 .GetAllQueryable()
                                 .Include(u => u.Employee)
