@@ -84,9 +84,24 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<Leave>()
             .Property(l => l.RejectionReason)
-            .IsRequired(false)  // يقبل null
+            .IsRequired(false)  
             .HasMaxLength(500);
 
+        modelBuilder.Entity<User>()
+        .HasIndex(u => u.Email)
+        .IsUnique();
+
+        modelBuilder.Entity<User>()
+          .Property(u => u.Role)
+          .HasConversion<string>();
+
+        modelBuilder.Entity<User>()
+         .ToTable(t => t.HasCheckConstraint("CK_User_Role", "\"Role\" IN ('Admin', 'HR', 'Employee')"));
+
+        modelBuilder.Entity<Salary>()
+          .HasIndex(s => new { s.EmployeeId, s.Month, s.Year })
+          .IsUnique()
+          .HasDatabaseName("IX_Salaries_Employee_Month_Year_Unique");
 
 
         modelBuilder.Entity<Department>().HasData(
