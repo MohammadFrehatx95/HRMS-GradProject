@@ -1,4 +1,4 @@
-@import "bootstrap/dist/css/bootstrap.min.css";
+﻿@import "bootstrap/dist/css/bootstrap.min.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
 /*Light Mode Defaults*/
@@ -79,7 +79,7 @@ body {
 }
 
 /*
-   DARK MODE — Global Text & Element Rules
+   DARK MODE â€” Global Text & Element Rules
 */
 
 /* Force ALL text colour to inherit from parent in dark mode */
@@ -280,7 +280,7 @@ body.dark-mode .table td a {
   color: var(--color-table-td) !important;
 }
 
-/* ══════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    FORMS
 */
 body.dark-mode .form-control,
@@ -306,9 +306,9 @@ body.dark-mode .input-group-text {
   color: var(--color-text-label) !important;
 }
 
-/* ══════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    MODALS
-   ══════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 body.dark-mode .modal-content {
   background-color: var(--color-modal-bg) !important;
   border-color: var(--color-border) !important;
@@ -325,9 +325,9 @@ body.dark-mode .modal-body * {
   color: var(--color-text) !important;
 }
 
-/* ══════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    DROPDOWNS
-   ══════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 body.dark-mode .dropdown-menu {
   background-color: var(--color-surface) !important;
   border-color: var(--color-border) !important;
@@ -339,9 +339,9 @@ body.dark-mode .dropdown-item:hover {
   background-color: var(--color-surface-3) !important;
 }
 
-/* ══════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    BUTTONS
-   ══════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 body.dark-mode .btn-light {
   background-color: var(--color-surface-3) !important;
   border-color: #444 !important;
@@ -356,9 +356,9 @@ body.dark-mode .btn-outline-secondary:hover {
   color: #fff !important;
 }
 
-/* ══════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    UTILITY CLASSES
-   ══════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 body.dark-mode .bg-light {
   background-color: var(--color-surface-2) !important;
 }
@@ -375,9 +375,9 @@ body.dark-mode .badge {
   opacity: 0.95;
 }
 
-/* ══════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    STATUS BADGES
-   ══════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .status-badge {
   padding: 0.4rem 1rem;
   border-radius: 50rem;
@@ -385,6 +385,7 @@ body.dark-mode .badge {
   font-size: 0.85rem;
   display: inline-flex;
   align-items: center;
+  gap: 0.4rem;
   border: 1px solid transparent;
 }
 
@@ -442,9 +443,9 @@ body.dark-mode .status-inactive {
   border-color: rgba(239, 68, 68, 0.3) !important;
 }
 
-/* ══════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    PAGINATION
-   ══════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 body.dark-mode .page-link {
   background-color: var(--color-surface-2) !important;
   border-color: var(--color-border) !important;
@@ -461,9 +462,9 @@ body.dark-mode .page-item.disabled .page-link {
   border-color: var(--color-border) !important;
 }
 
-/* ══════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    RTL FIXES
-   ══════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 html[dir="rtl"] .bi-box-arrow-right,
 html[dir="rtl"] .bi-box-arrow-in-right,
 html[dir="rtl"] .bi-chevron-right,
@@ -484,9 +485,9 @@ html[dir="rtl"] .dropdown-menu-end {
   left: 0 !important;
 }
 
-/* ══════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    SCROLLBAR
-   ══════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 body.dark-mode ::-webkit-scrollbar {
   width: 8px;
 }
@@ -501,9 +502,9 @@ body.dark-mode ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
 
-/* ══════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    SWEETALERT2
-   ══════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 body.dark-mode .swal2-popup {
   background-color: var(--color-surface) !important;
   color: var(--color-text) !important;
@@ -515,9 +516,9 @@ body.dark-mode .swal2-html-container {
   color: var(--color-text-label) !important;
 }
 
-/* ══════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    EMPLOYEE DETAILS MODAL
-   ══════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 body.dark-mode .detail-item {
   background: #2d3139 !important;
   border-color: #3a3f4b !important;
@@ -538,4 +539,14 @@ body.dark-mode .detail-section-title {
 
 body.dark-mode .modal-footer.bg-light {
   background-color: var(--color-surface-2) !important;
+}
+
+
+/* ------------------------------------------
+   GLOBAL TEXT OVERFLOW FIXES
+   ------------------------------------------ */
+td, .detail-value, .info-value, .card-text, .text-break-all {
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  hyphens: auto;
 }

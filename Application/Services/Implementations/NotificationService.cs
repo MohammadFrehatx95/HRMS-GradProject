@@ -1,4 +1,4 @@
-﻿using Application.DTOs.Notification;
+using Application.DTOs.Notification;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -76,6 +76,23 @@ namespace Application.Services.Implementations
                                      $"Notification {notificationId} not found");
 
             uow.Repository<Notification>().Delete(notification);
+            await uow.SaveChangesAsync();
+        }
+
+        public async Task DeleteAllAsync(int userId)
+        {
+            var notifications = await uow.Repository<Notification>()
+                                         .GetAllQueryable()
+                                         .Where(n => n.UserId == userId)
+                                         .ToListAsync();
+
+            if (!notifications.Any()) return;
+
+            foreach (var n in notifications)
+            {
+                uow.Repository<Notification>().Delete(n);
+            }
+
             await uow.SaveChangesAsync();
         }
 

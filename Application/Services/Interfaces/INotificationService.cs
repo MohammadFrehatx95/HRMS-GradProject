@@ -1,4 +1,4 @@
-﻿using Application.DTOs.Notification;
+using Application.DTOs.Notification;
 using Domain.Enums;
 using System;
 using System.Collections.Generic;
@@ -16,6 +16,7 @@ namespace Application.Services.Interfaces
         Task MarkAsReadAsync(int notificationId, int userId);
         Task MarkAllAsReadAsync(int userId);
         Task DeleteAsync(int notificationId, int userId);
+        Task DeleteAllAsync(int userId);
 
         // Internal — تُستخدم جوا الـ Services
         Task CreateAsync(int userId, string title, string message, NotificationType type);

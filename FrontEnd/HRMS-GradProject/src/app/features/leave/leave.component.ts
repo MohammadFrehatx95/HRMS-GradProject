@@ -211,7 +211,11 @@ export class LeaveComponent implements OnInit {
     this.leaveData = { leaveType: 0, startDate: '', endDate: '', reason: '' };
     const modalEl = document.getElementById('leaveModal');
     if (modalEl) {
-      this.leaveModal = new bootstrap.Modal(modalEl);
+      let modalInstance = bootstrap.Modal.getInstance(modalEl);
+      if (!modalInstance) {
+        modalInstance = new bootstrap.Modal(modalEl);
+      }
+      this.leaveModal = modalInstance;
       this.leaveModal.show();
     }
   }

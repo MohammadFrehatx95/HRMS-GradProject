@@ -1,0 +1,61 @@
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header Icon */
+.header-icon {
+    flex-shrink: 0;
+}
+
+/* Minimalist Form Inputs */
+.clean-form .form-control,
+.clean-form .form-select {
+    background-color: var(--color-surface) !important;
+    border: 1px solid var(--color-border) !important;
+    color: var(--color-text);
+    transition: all 0.2s ease;
+}
+
+.clean-form .form-control:focus,
+.clean-form .form-select:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+body.dark-mode .clean-form .form-control:focus,
+body.dark-mode .clean-form .form-select:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+}
+
+.clean-form .form-control::placeholder {
+    color: var(--color-text-muted);
+}
+
+/* Submit Button */
+.submit-btn {
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2) !important;
+}
+
+.submit-btn:disabled {
+    background: var(--color-surface-3);
+    border-color: transparent;
+    color: var(--color-text-muted) !important;
+    box-shadow: none !important;
+}

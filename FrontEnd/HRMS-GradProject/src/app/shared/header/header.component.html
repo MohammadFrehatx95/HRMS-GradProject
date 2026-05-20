@@ -10,6 +10,19 @@
 
         <ul class="navbar-nav ms-auto align-items-center flex-row">
 
+            <!-- ✅ Install App Button (conditionally visible) -->
+            @if (pwaService.canInstall) {
+            <li class="nav-item me-3">
+                <button
+                    class="btn btn-primary btn-sm border-0 shadow-sm d-flex align-items-center gap-2 px-3 py-1"
+                    (click)="installApp()"
+                    title="Install App">
+                    <i class="bi bi-download fs-6"></i>
+                    <span class="fw-semibold d-none d-md-inline">{{ 'Install App' | t }}</span>
+                </button>
+            </li>
+            }
+
             <!-- ✅ Settings Dropdown -->
             <li class="nav-item me-3 dropdown">
                 <button
@@ -96,15 +109,32 @@
 
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-0"
                     aria-labelledby="notificationDropdown"
-                    style="width: 320px; max-height: 400px; overflow-y: auto;">
+                    style="width: 450px !important; min-width: 350px; max-height: 400px; overflow-y: auto;">
 
                     <li
                         class="p-3 border-bottom bg-light d-flex justify-content-between align-items-center">
-                        <span class="fw-bold text-dark">{{ 'Notifications' | t }}</span>
-                        @if (unreadCount > 0) {
-                        <span class="badge bg-primary rounded-pill">{{
-                            unreadCount }} {{ 'New' | t }}</span>
-                        }
+                        <div>
+                            <span class="fw-bold text-dark">{{ 'Notifications' | t }}</span>
+                            @if (unreadCount > 0) {
+                            <span class="badge bg-primary rounded-pill ms-2">{{ unreadCount }} {{ 'New' | t }}</span>
+                            }
+                        </div>
+                        <div class="d-flex gap-1">
+                            <button class="btn btn-link action-icon-btn text-decoration-none p-0 text-primary" 
+                                    (click)="markAllAsRead($event)" 
+                                    [disabled]="unreadCount === 0"
+                                    [class.text-muted]="unreadCount === 0"
+                                    title="Mark all as read">
+                                <i class="bi bi-check2-all fs-6"></i>
+                            </button>
+                            <button class="btn btn-link action-icon-btn text-decoration-none p-0 text-danger" 
+                                    (click)="deleteAllNotifications($event)" 
+                                    [disabled]="notifications.length === 0"
+                                    [class.text-muted]="notifications.length === 0"
+                                    title="Delete all notifications">
+                                <i class="bi bi-trash fs-6"></i>
+                            </button>
+                        </div>
                     </li>
 
                     @for (note of notifications; track note.id) {
@@ -115,17 +145,22 @@
                             (click)="markAsRead(note)">
 
                             <div
-                                class="d-flex w-100 justify-content-between align-items-center mb-1">
-                                <h6 class="mb-0 text-truncate fw-bold text-dark"
-                                    style="max-width: 200px;">
-                                    {{ note.title || ('System Alert' | t) }}
-                                </h6>
-                                <small class="text-muted"
-                                    style="font-size: 0.75rem;">{{
-                                    note.createdAt | date:'shortTime' }}</small>
+                                class="d-flex w-100 justify-content-between align-items-start mb-1">
+                                <div>
+                                    <h6 class="mb-0 text-truncate fw-bold text-dark"
+                                        style="max-width: 200px;">
+                                        {{ note.title || ('System Alert' | t) }}
+                                    </h6>
+                                    <small class="text-muted"
+                                        style="font-size: 0.75rem;">{{
+                                        note.createdAt | date:'shortTime' }}</small>
+                                </div>
+                                <button class="btn btn-link action-icon-btn text-danger p-0 ms-2" (click)="deleteNotification($event, note.id)" title="Delete">
+                                    <i class="bi bi-x-circle fs-6"></i>
+                                </button>
                             </div>
 
-                            <p class="mb-0 text-secondary text-wrap"
+                            <p class="mb-0 text-secondary text-wrap pe-4"
                                 style="font-size: 0.85rem;">
                                 {{ note.message }}
                             </p>
