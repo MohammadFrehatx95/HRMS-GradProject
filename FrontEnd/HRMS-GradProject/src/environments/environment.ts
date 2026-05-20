@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:7204/api'
+  apiUrl: 'https://kawadir-hrms.onrender.com/api'
 };
