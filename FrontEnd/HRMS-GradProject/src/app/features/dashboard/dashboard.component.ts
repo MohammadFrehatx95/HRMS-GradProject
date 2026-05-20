@@ -333,7 +333,7 @@ export class DashboardComponent implements OnInit {
           datasets: [
             {
               data: [1],
-              backgroundColor: ['#e9ecef'],
+              backgroundColor: ['rgba(150, 150, 150, 0.15)'],
               borderWidth: 0,
               hoverOffset: 0,
             },

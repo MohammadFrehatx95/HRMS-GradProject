@@ -1,4 +1,4 @@
-﻿using Application.Common;
+using Application.Common;
 using Application.DTOs.Notification;
 using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -57,6 +57,14 @@ namespace HRMS_GradProject.Controllers
         {
             await notificationService.DeleteAsync(id, GetUserId());
             return Ok(ApiResponse.Ok("Notification deleted"));
+        }
+
+        // DELETE /api/notifications/delete-all
+        [HttpDelete("delete-all")]
+        public async Task<IActionResult> DeleteAll()
+        {
+            await notificationService.DeleteAllAsync(GetUserId());
+            return Ok(ApiResponse.Ok("All notifications deleted"));
         }
     }
 }
