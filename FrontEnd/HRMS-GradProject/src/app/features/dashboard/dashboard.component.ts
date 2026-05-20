@@ -9,6 +9,8 @@ import { SalaryService } from '../../core/services/salary.service';
 import { Chart, registerables } from 'chart.js';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import Swal from 'sweetalert2';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 Chart.register(...registerables);
 
@@ -55,11 +57,244 @@ export class DashboardComponent implements OnInit {
   attendanceRateChartInstance: any;
 
   downloadSystemReport() {
-    Swal.fire(
-      'Notice',
-      'Report generation is not fully implemented yet.',
-      'info',
-    );
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 14;
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const timeStr = today.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+    // ── CORPORATE HEADER BANNER ─────────────────────────────────────────────
+    doc.setFillColor(67, 97, 238);
+    doc.rect(0, 0, pageW, 42, 'F');
+
+    // Subtle accent strip
+    doc.setFillColor(90, 120, 255);
+    doc.rect(0, 38, pageW, 4, 'F');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(20);
+    doc.setTextColor(255, 255, 255);
+    doc.text('Kawadir HRMS', margin, 15);
+
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(200, 210, 255);
+    doc.text('System Summary & Analytics Report', margin, 23);
+
+    doc.setFontSize(8.5);
+    doc.setTextColor(180, 195, 255);
+    doc.text(`Generated: ${todayStr}  ·  ${timeStr}`, margin, 30);
+
+    // Right side: badge label
+    doc.setFillColor(50, 75, 210);
+    doc.roundedRect(pageW - 52, 8, 38, 14, 3, 3, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(255, 255, 255);
+    doc.text('ADMIN REPORT', pageW - 33, 16, { align: 'center' });
+
+    // ── KPI STAT CARDS ──────────────────────────────────────────────────────
+    const cardY = 50;
+    const cardH = 28;
+    const cardW = (pageW - margin * 2 - 9) / 4; // 4 cards with 3 gaps of 3mm
+    const cards = [
+      { label: 'Total Employees', value: String(this.totalEmployees), accentColor: [239, 71, 111] as [number, number, number] },
+      { label: 'Pending Leaves',  value: String(this.pendingLeaves),  accentColor: [255, 165, 2] as [number, number, number] },
+      { label: 'Departments',     value: String(this.departmentsCount), accentColor: [67, 97, 238] as [number, number, number] },
+      { label: 'Total Payroll',   value: `${Number(this.totalSalaries).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} JD`, accentColor: [6, 214, 160] as [number, number, number] },
+    ];
+
+    cards.forEach((card, i) => {
+      const x = margin + i * (cardW + 3);
+      // Card background
+      doc.setFillColor(248, 249, 252);
+      doc.roundedRect(x, cardY, cardW, cardH, 3, 3, 'F');
+      doc.setDrawColor(225, 228, 240);
+      doc.roundedRect(x, cardY, cardW, cardH, 3, 3, 'S');
+      // Top accent line
+      doc.setFillColor(...card.accentColor);
+      doc.roundedRect(x, cardY, cardW, 3, 1.5, 1.5, 'F');
+      // Value
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.setTextColor(30, 30, 50);
+      doc.text(card.value, x + cardW / 2, cardY + 15, { align: 'center' });
+      // Label
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+      doc.setTextColor(120, 125, 145);
+      doc.text(card.label, x + cardW / 2, cardY + 22, { align: 'center' });
+    });
+
+    // ── ANALYTICS SECTION ───────────────────────────────────────────────────
+    let curY = cardY + cardH + 10;
+
+    // Section header line
+    this._pdfSectionHeader(doc, 'SYSTEM ANALYTICS', margin, curY, pageW);
+    curY += 8;
+
+    // Two-column analytics table (leave distribution + attendance)
+    const analyticsData = [
+      ['Annual Leave',    `${this.annualLeavePercent}%`],
+      ['Sick Leave',      `${this.sickLeavePercent}%`],
+      ['Emergency Leave', `${this.emergencyLeavePercent}%`],
+      ['Unpaid Leave',    `${this.unpaidLeavePercent}%`],
+      ['Overall Attendance Rate', `${this.attendanceRate}%`],
+    ];
+
+    autoTable(doc, {
+      startY: curY,
+      head: [['Metric', 'Value']],
+      body: analyticsData,
+      margin: { left: margin, right: margin },
+      theme: 'grid',
+      tableWidth: pageW - margin * 2,
+      headStyles: {
+        fillColor: [67, 97, 238],
+        textColor: [255, 255, 255],
+        fontStyle: 'bold',
+        fontSize: 9,
+        cellPadding: 3,
+      },
+      bodyStyles: {
+        textColor: [50, 55, 70],
+        fontSize: 9,
+        cellPadding: 3,
+      },
+      alternateRowStyles: { fillColor: [248, 249, 252] },
+      columnStyles: {
+        0: { cellWidth: (pageW - margin * 2) * 0.68 },
+        1: { cellWidth: (pageW - margin * 2) * 0.32, halign: 'center', fontStyle: 'bold' },
+      },
+    });
+
+    curY = (doc as any).lastAutoTable.finalY + 10;
+
+    // ── RECENT LEAVE REQUESTS TABLE ─────────────────────────────────────────
+    this._pdfSectionHeader(doc, 'RECENT LEAVE REQUESTS', margin, curY, pageW);
+    curY += 8;
+
+    const leaveRows = this.recentLeaves.map((l: any) => [
+      l.employeeName || `Emp #${l.employeeId}`,
+      l.leaveType || '—',
+      l.startDate ? l.startDate.split('T')[0] : '—',
+      l.endDate   ? l.endDate.split('T')[0]   : '—',
+      l.status || '—',
+    ]);
+
+    if (leaveRows.length === 0) {
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(9);
+      doc.setTextColor(170, 170, 180);
+      doc.text('No recent leave requests found.', margin + 4, curY + 5);
+      curY += 14;
+    } else {
+      autoTable(doc, {
+        startY: curY,
+        head: [['Employee', 'Type', 'Start Date', 'End Date', 'Status']],
+        body: leaveRows,
+        margin: { left: margin, right: margin },
+        theme: 'grid',
+        tableWidth: pageW - margin * 2,
+        headStyles: {
+          fillColor: [50, 62, 140],
+          textColor: [255, 255, 255],
+          fontStyle: 'bold',
+          fontSize: 8.5,
+          cellPadding: 2.5,
+        },
+        bodyStyles: { textColor: [50, 55, 70], fontSize: 8.5, cellPadding: 2.5 },
+        alternateRowStyles: { fillColor: [248, 249, 252] },
+        didDrawCell: (data: any) => {
+          if (data.section === 'body' && data.column.index === 4) {
+            const status = data.cell.raw as string;
+            if (status === 'Approved')  { doc.setTextColor(6, 150, 80); }
+            else if (status === 'Pending')  { doc.setTextColor(200, 120, 0); }
+            else if (status === 'Rejected') { doc.setTextColor(180, 30, 50); }
+            doc.setFont('helvetica', 'bold');
+            doc.text(
+              status,
+              data.cell.x + data.cell.width / 2,
+              data.cell.y + data.cell.height / 2 + 0.5,
+              { align: 'center', baseline: 'middle' }
+            );
+          }
+        },
+      });
+      curY = (doc as any).lastAutoTable.finalY + 10;
+    }
+
+    // ── RECENT ATTENDANCE TABLE ──────────────────────────────────────────────
+    this._pdfSectionHeader(doc, 'RECENT ATTENDANCE RECORDS', margin, curY, pageW);
+    curY += 8;
+
+    const attRows = this.recentAttendances.map((a: any) => [
+      a.employeeName || `Emp #${a.employeeId}`,
+      a.date ? a.date.split('T')[0] : '—',
+      a.clockIn  || '--:--',
+      (a.clockOut && a.clockOut !== '00:00:00') ? a.clockOut : '--:--',
+    ]);
+
+    if (attRows.length === 0) {
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(9);
+      doc.setTextColor(170, 170, 180);
+      doc.text('No recent attendance records found.', margin + 4, curY + 5);
+    } else {
+      autoTable(doc, {
+        startY: curY,
+        head: [['Employee', 'Date', 'Clock In', 'Clock Out']],
+        body: attRows,
+        margin: { left: margin, right: margin },
+        theme: 'grid',
+        tableWidth: pageW - margin * 2,
+        headStyles: {
+          fillColor: [20, 140, 100],
+          textColor: [255, 255, 255],
+          fontStyle: 'bold',
+          fontSize: 8.5,
+          cellPadding: 2.5,
+        },
+        bodyStyles: { textColor: [50, 55, 70], fontSize: 8.5, cellPadding: 2.5 },
+        alternateRowStyles: { fillColor: [248, 252, 249] },
+      });
+    }
+
+    // ── FOOTERS ON ALL PAGES ─────────────────────────────────────────────────
+    const totalPages = (doc as any).internal.getNumberOfPages();
+    for (let pg = 1; pg <= totalPages; pg++) {
+      doc.setPage(pg);
+      // Footer separator line
+      doc.setDrawColor(210, 215, 230);
+      doc.setLineWidth(0.4);
+      doc.line(margin, pageH - 12, pageW - margin, pageH - 12);
+      // Confidential left text
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+      doc.setTextColor(160, 165, 180);
+      doc.text('Confidential — Kawadir HRMS Internal Report', margin, pageH - 7);
+      // Page number right
+      doc.text(`Page ${pg} of ${totalPages}`, pageW - margin, pageH - 7, { align: 'right' });
+    }
+
+    // ── SAVE ─────────────────────────────────────────────────────────────────
+    doc.save(`System_Summary_Report_${todayStr}.pdf`);
+  }
+
+  /** Draws a styled section header underline in the PDF */
+  private _pdfSectionHeader(doc: jsPDF, title: string, x: number, y: number, pageW: number) {
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(67, 97, 238);
+    doc.text(title, x, y);
+    doc.setDrawColor(67, 97, 238);
+    doc.setLineWidth(0.4);
+    doc.line(x, y + 1.5, pageW - x, y + 1.5);
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.2);
+    doc.line(x, y + 2.5, pageW - x, y + 2.5);
   }
 
   ngOnInit() {
