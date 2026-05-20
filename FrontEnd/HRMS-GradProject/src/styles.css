@@ -30,10 +30,6 @@
   --color-modal-bg: #ffffff;
 }
 
-/*
-   CSS VARIABLES — Dark Mode Overrides
-   These cascade into ALL Angular components automatically
-*/
 body.dark-mode {
   --color-bg: #1a1d23;
   --color-bg-dot: rgba(255, 255, 255, 0.04);
