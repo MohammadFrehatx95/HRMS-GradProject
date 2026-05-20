@@ -12,27 +12,26 @@ namespace Application.Services.Implementations
     {
         public string GenerateToken(User user)
         {
-            var Key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!));
+            var keyValue = config["Jwt:Key"]
+                ?? throw new InvalidOperationException("Jwt:Key is not configured.");
 
-            var Clims= new[]
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyValue));
+
+            var claims = new[]
             {
-
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.Role,  user.Role.ToString()),
-            new Claim("employeeId", user.Employee?.Id.ToString() ?? "")
-
-            };
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        new Claim(ClaimTypes.Email, user.Email),
+        new Claim(ClaimTypes.Role, user.Role.ToString()),
+        new Claim("employeeId", user.Employee?.Id.ToString() ?? "")
+    };
 
             var token = new JwtSecurityToken(
-
                 issuer: config["Jwt:Issuer"],
                 audience: config["Jwt:Audience"],
-                claims: Clims,
-                expires : GetExpiration(),
-                signingCredentials: new SigningCredentials(Key, SecurityAlgorithms.HmacSha256)
-
-                );
+                claims: claims,
+                expires: GetExpiration(),
+                signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
+            );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }

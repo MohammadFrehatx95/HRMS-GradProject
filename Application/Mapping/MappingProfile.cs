@@ -89,18 +89,18 @@ public class MappingProfile : Profile
 
 
 
-
         CreateMap<Attendance, AttendanceDto>()
             .ForMember(d => d.EmployeeName,
                 o => o.MapFrom(s => s.Employee != null
                     ? $"{s.Employee.FirstName} {s.Employee.LastName}"
                     : string.Empty))
+            
             .ForMember(d => d.TotalHours,
                 o => o.MapFrom(s => s.ClockOut.HasValue
                     ? FormatHours(s.ClockIn, s.ClockOut.Value)
-                    : null));
+                    : string.Empty));
 
-        
+
         CreateMap<Salary, SalaryDto>()
             .ForMember(d => d.EmployeeName,
                 o => o.MapFrom(s => s.Employee != null

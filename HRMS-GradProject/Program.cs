@@ -18,16 +18,51 @@ builder.Services.AddControllers()
                .Add(new JsonStringEnumConverter());
     });
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAngular",
-        policy =>
+
+
+    builder.Services.AddCors(options =>
+    {
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        var allowedOrigins = builder.Configuration
+            .GetSection("AllowedOrigins")
+            .Get<string[]>();
+
+        if (allowedOrigins != null && allowedOrigins.Length > 0)
         {
+            policy.WithOrigins(allowedOrigins)
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        }
+        else
+        {
+            // Development fallback only
             policy.AllowAnyOrigin()
                   .AllowAnyHeader()
                   .AllowAnyMethod();
-        });
-});
+        }
+    });
+    });
+
+
+
+       var jwtKey = builder.Configuration["Jwt:Key"];
+      var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+      var jwtAudience = builder.Configuration["Jwt:Audience"];
+   
+   if (string.IsNullOrWhiteSpace(jwtKey))
+       throw new InvalidOperationException(
+           "JWT configuration error: 'Jwt:Key' is missing or empty. " +
+           "Please set it in appsettings.json or User Secrets.");
+   
+   if (string.IsNullOrWhiteSpace(jwtIssuer))
+       throw new InvalidOperationException(
+           "JWT configuration error: 'Jwt:Issuer' is missing or empty.");
+   
+   if (string.IsNullOrWhiteSpace(jwtAudience))
+       throw new InvalidOperationException(
+           "JWT configuration error: 'Jwt:Audience' is missing or empty.");
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
