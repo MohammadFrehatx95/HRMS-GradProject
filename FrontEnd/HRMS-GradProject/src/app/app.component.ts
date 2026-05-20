@@ -5,6 +5,7 @@ import { AuthService } from './core/services/auth.service';
 import { SidebarService } from './core/services/sidebar.service';
 import { SidebarComponent } from './shared/sidebar/sidebar.component';
 import { HeaderComponent } from './shared/header/header.component';
+import { UpdateService } from './core/services/update.service';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ import { HeaderComponent } from './shared/header/header.component';
 export class AppComponent {
   authService = inject(AuthService);
   sidebarService = inject(SidebarService);
+  updateService = inject(UpdateService);
 
   get isSidebarHidden() {
     // حالة السايدبار

@@ -37,10 +37,13 @@ export class LeaveFormComponent {
 
   onSubmit() {
     if (this.leaveForm.invalid) {
-      alert(
-        'Please fill all required fields. Note: Reason must be at least 5 characters long.',
-      );
-      console.log('Form Errors:', this.leaveForm.errors);
+      this.leaveForm.markAllAsTouched();
+      Swal.fire({
+        icon: 'warning',
+        title: 'Validation Error',
+        text: 'Please fill all required fields. Note: Reason must be at least 5 characters long.',
+        confirmButtonColor: '#0d6efd',
+      });
       return;
     }
 
@@ -54,8 +57,6 @@ export class LeaveFormComponent {
       endDate: new Date(formValue.endDate!).toISOString(),
       reason: formValue.reason,
     };
-
-    console.log('Sending Leave Data:', newLeave);
 
     // show slow-server warning after 6 seconds
     this.slowWarningTimer = setTimeout(() => {

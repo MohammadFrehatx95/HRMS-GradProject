@@ -26,7 +26,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(clonedReq).pipe(
     catchError((error: HttpErrorResponse) => {
       if ((error.status === 401 || error.status === 403) && !req.url.includes('/login')) {
-        localStorage.clear();
+        localStorage.removeItem('jwt_token');
+        localStorage.removeItem('user_role');
+        localStorage.removeItem('user_name');
         Swal.fire({
           icon: 'warning',
           title: 'Session Expired',
