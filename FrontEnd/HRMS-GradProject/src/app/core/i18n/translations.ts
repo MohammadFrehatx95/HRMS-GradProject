@@ -25,6 +25,8 @@ export const TRANSLATIONS: { [key: string]: { en: string; ar: string } } = {
   'No new notifications': { en: 'No new notifications', ar: 'لا توجد إشعارات جديدة' },
   'New':              { en: 'New',               ar: 'جديد' },
   'System Alert':     { en: 'System Alert',      ar: 'تنبيه النظام' },
+  'Install App':      { en: 'Install App',       ar: 'تثبيت التطبيق' },
+  'Overall':          { en: 'Overall',           ar: 'الإجمالي' },
 
   // ── Dashboard ──
   'Admin Dashboard':     { en: 'Admin Dashboard',     ar: 'لوحة تحكم المدير' },
