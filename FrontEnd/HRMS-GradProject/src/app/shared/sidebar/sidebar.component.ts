@@ -73,14 +73,17 @@ export class SidebarComponent implements OnInit {
     this.userName = localStorage.getItem('user_name') || 'User';
     this.userRole = localStorage.getItem('user_role') || 'Employee';
 
-    this.employeeService.getMyProfile().subscribe({
-      next: (profile) => {
-        if (profile && profile.positionTitle) {
-          this.userRole = profile.positionTitle;
-        }
-      },
-      error: () => {}, // طنّش الأخطاء
-    });
+    // الأدمن ليس له Employee profile — نتجنب طلب الـ API الزائد
+    if (!this.isAdmin) {
+      this.employeeService.getMyProfile().subscribe({
+        next: (profile) => {
+          if (profile && profile.positionTitle) {
+            this.userRole = profile.positionTitle;
+          }
+        },
+        error: () => {}, // طنّش الأخطاء
+      });
+    }
   }
 
   get initials(): string {

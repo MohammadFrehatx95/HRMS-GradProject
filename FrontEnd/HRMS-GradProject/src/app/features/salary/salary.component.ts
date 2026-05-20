@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
 
 declare var bootstrap: any;
 
@@ -306,11 +307,7 @@ export class SalaryComponent implements OnInit {
   private handleError(err: any) {
     this.isProcessing = false;
     console.error('Salary save error:', err);
-    Swal.fire(
-      'Error',
-      'Failed to save salary data. Check console for details.',
-      'error',
-    );
+    Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to save salary data.'), 'error');
   }
 
   downloadPayslip(salary: any) {

@@ -6,6 +6,7 @@ import { DepartmentService } from '../../core/services/department.service';
 import Swal from 'sweetalert2';
 
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
 
 declare var bootstrap: any;
 
@@ -162,6 +163,6 @@ export class PositionsComponent implements OnInit {
   private handleError(err: any) {
     this.isProcessing = false;
     console.error('Position save error:', err);
-    Swal.fire('Error', 'Failed to save position data.', 'error');
+    Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to save position data.'), 'error');
   }
 }

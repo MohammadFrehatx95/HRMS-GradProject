@@ -46,7 +46,7 @@ export const routes: Routes = [
   {
     path: 'departments',
     component: DepartmentsComponent,
-    canActivate: [authGuard, adminGuard],
+    canActivate: [authGuard, hrGuard],
   },
   // الكل يشوف الإجازات، القبول/الرفض للـ admin وhr فقط
   { path: 'leave', component: LeaveComponent, canActivate: [authGuard] },
@@ -70,7 +70,7 @@ export const routes: Routes = [
   {
     path: 'positions',
     component: PositionsComponent,
-    canActivate: [authGuard, adminGuard],
+    canActivate: [authGuard, hrGuard],
   },
   {
     path: 'my-profile',

@@ -75,38 +75,27 @@ export class DashboardComponent implements OnInit {
   loadAdminStats() {
     // تحميل بيانات الأدمن
     this.empService.getEmployees().subscribe({
-      next: (res: any) => {
-        let extracted: any[] = [];
-        if (Array.isArray(res)) extracted = res;
-        else if (res?.data?.items && Array.isArray(res.data.items))
-          extracted = res.data.items;
-        else if (res?.data && Array.isArray(res.data)) extracted = res.data;
-        this.totalEmployees = extracted.length;
+      next: (employees: any[]) => {
+        this.totalEmployees = employees.length;
         this.calculateAttendanceRate();
       },
       error: (err) => console.error('Error fetching employees:', err),
     });
 
     this.leaveService.getAllLeaves().subscribe({
-      next: (res: any) => {
-        let extracted: any[] = [];
-        if (Array.isArray(res)) extracted = res;
-        else if (res?.data?.items && Array.isArray(res.data.items))
-          extracted = res.data.items;
-        else if (res?.data && Array.isArray(res.data)) extracted = res.data;
-
-        this.pendingLeaves = extracted.filter(
+      next: (leaves: any[]) => {
+        this.pendingLeaves = leaves.filter(
           // الـ backend بيرجع string مش رقم
           (l: any) => l.status === 'Pending',
         ).length;
 
-        extracted.sort(
+        leaves.sort(
           (a, b) =>
             new Date(b.startDate).getTime() - new Date(a.startDate).getTime(),
         );
-        this.recentLeaves = extracted.slice(0, 5);
+        this.recentLeaves = leaves.slice(0, 5);
 
-        const totalLeaves = extracted.length;
+        const totalLeaves = leaves.length;
         let annual = 0,
           sick = 0,
           emergency = 0,
@@ -114,14 +103,14 @@ export class DashboardComponent implements OnInit {
 
         if (totalLeaves > 0) {
           // كلها strings من الـ backend
-          annual = extracted.filter(
+          annual = leaves.filter(
             (l: any) => l.leaveType === 'Annual',
           ).length;
-          sick = extracted.filter((l: any) => l.leaveType === 'Sick').length;
-          emergency = extracted.filter(
+          sick = leaves.filter((l: any) => l.leaveType === 'Sick').length;
+          emergency = leaves.filter(
             (l: any) => l.leaveType === 'Emergency',
           ).length;
-          unpaid = extracted.filter(
+          unpaid = leaves.filter(
             (l: any) => l.leaveType === 'Unpaid',
           ).length;
 
@@ -146,26 +135,15 @@ export class DashboardComponent implements OnInit {
     });
 
     this.deptService.getDepartments().subscribe({
-      next: (res: any) => {
-        let extracted: any[] = [];
-        if (Array.isArray(res)) extracted = res;
-        else if (res?.data?.items && Array.isArray(res.data.items))
-          extracted = res.data.items;
-        else if (res?.data && Array.isArray(res.data)) extracted = res.data;
-        this.departmentsCount = extracted.length;
+      next: (departments: any[]) => {
+        this.departmentsCount = departments.length;
       },
       error: (err) => console.error('Error fetching departments:', err),
     });
 
     this.salaryService.getAllSalaries().subscribe({
-      next: (res: any) => {
-        let extracted: any[] = [];
-        if (Array.isArray(res)) extracted = res;
-        else if (res?.data?.items && Array.isArray(res.data.items))
-          extracted = res.data.items;
-        else if (res?.data && Array.isArray(res.data)) extracted = res.data;
-
-        this.totalSalaries = extracted.reduce(
+      next: (salaries: any[]) => {
+        this.totalSalaries = salaries.reduce(
           (sum, current) => sum + (current.netAmount || 0),
           0,
         );
@@ -174,18 +152,12 @@ export class DashboardComponent implements OnInit {
     });
 
     this.attendanceService.getAllAttendance().subscribe({
-      next: (res: any) => {
-        let extracted: any[] = [];
-        if (Array.isArray(res)) extracted = res;
-        else if (res?.data?.items && Array.isArray(res.data.items))
-          extracted = res.data.items;
-        else if (res?.data && Array.isArray(res.data)) extracted = res.data;
-
-        extracted.sort(
+      next: (attendances: any[]) => {
+        attendances.sort(
           (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
         );
-        this.recentAttendances = extracted.slice(0, 5);
-        this.allAttendances = extracted;
+        this.recentAttendances = attendances.slice(0, 5);
+        this.allAttendances = attendances;
         this.calculateAttendanceRate();
       },
       error: (err) => console.error('Error fetching attendance overview:', err),
@@ -260,7 +232,6 @@ export class DashboardComponent implements OnInit {
 
   loadEmployeeStats() {
     // تحميل بيانات الموظف
-    console.log('Loading Employee Dashboard...');
 
     const today = new Date();
     const currentMonth = today.toLocaleString('en-US', { month: 'short' });
@@ -281,19 +252,13 @@ export class DashboardComponent implements OnInit {
     this.loadNextPayday();
 
     this.leaveService.getMyLeaves().subscribe({
-      next: (res: any) => {
-        let extracted: any[] = [];
-        if (Array.isArray(res)) extracted = res;
-        else if (res?.data?.items && Array.isArray(res.data.items))
-          extracted = res.data.items;
-        else if (res?.data && Array.isArray(res.data)) extracted = res.data;
-
+      next: (leaves: any[]) => {
         // backend يرجع strings مش أرقام
-        this.employeePendingLeaves = extracted.filter(
+        this.employeePendingLeaves = leaves.filter(
           (l: any) => l.status === 'Pending',
         ).length;
 
-        const approvedAnnualLeavesDays = extracted
+        const approvedAnnualLeavesDays = leaves
           .filter(
             (l: any) => l.status === 'Approved' && l.leaveType === 'Annual',
           )
@@ -305,18 +270,13 @@ export class DashboardComponent implements OnInit {
     });
 
     this.attendanceService.getMyAttendance().subscribe({
-      next: (res: any) => {
-        let extracted: any[] = [];
-        if (Array.isArray(res)) extracted = res;
-        else if (res?.data?.items && Array.isArray(res.data.items))
-          extracted = res.data.items;
-        else if (res?.data && Array.isArray(res.data)) extracted = res.data;
+      next: (attendances: any[]) => {
 
         const currentMonthNum = today.getMonth();
         const currentYear = today.getFullYear();
 
         let totalHours = 0;
-        extracted.forEach((att: any) => {
+        attendances.forEach((att: any) => {
           if (
             att.date &&
             att.clockIn &&
@@ -339,10 +299,10 @@ export class DashboardComponent implements OnInit {
           }
         });
 
-        extracted.sort(
+        attendances.sort(
           (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
         );
-        this.myRecentAttendances = extracted.slice(0, 5);
+        this.myRecentAttendances = attendances.slice(0, 5);
 
         this.employeeHoursWorked = Math.round(totalHours);
       },
