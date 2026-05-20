@@ -11,16 +11,20 @@ namespace Application.Services.Implementations;
 
 public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
 {
-   
+
     //   2026010001  
     private async Task<int> GenerateEmployeeIdAsync(int departmentId, DateTime hireDate)
     {
-        var year = hireDate.Year;
+        //  Guard against departmentId > 99
+        if (departmentId > 99)
+            throw new InvalidOperationException(
+                $"Department ID {departmentId} exceeds the maximum supported value of 99 " +
+                $"for employee ID generation. Please contact system administrator.");
 
-        // آخر ID موجود لنفس القسم ونفس السنة
+        var year = hireDate.Year;
         var prefix = int.Parse($"{year}{departmentId:D2}");
-        var prefixMin = prefix * 10000;       // 2026010000
-        var prefixMax = prefixMin + 9999;     // 2026019999
+        var prefixMin = prefix * 10000;
+        var prefixMax = prefixMin + 9999;
 
         var lastId = await uow.Repository<Employee>()
                               .GetAllQueryable()
@@ -29,7 +33,6 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
                               .Select(e => e.Id)
                               .FirstOrDefaultAsync();
 
-        // لو ما في موظفين قبل → يبدأ من 0001
         var nextSeq = lastId == 0
             ? 1
             : (lastId % 10000) + 1;
@@ -39,10 +42,9 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
                 $"Employee limit reached for dept {departmentId} in {year}");
 
         return int.Parse($"{year}{departmentId:D2}{nextSeq:D4}");
-        // ← 2026 + 01 + 0001 = 2026010001
     }
 
-    
+
     public async Task<PagedResult<EmployeeDto>> GetAllAsync(int pageNumber, int pageSize)
     {
         var query = uow.Repository<Employee>()
