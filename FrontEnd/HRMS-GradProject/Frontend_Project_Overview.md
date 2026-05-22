@@ -1,4 +1,4 @@
-# HRMS Frontend Project
+﻿# HRMS Frontend Project
 
 ## Project Structure
 
@@ -188,858 +188,17 @@ D:\PROJECTS\HRMS-TEAM\FRONTEND\HRMS-GRADPROJECT\SRC
 }
 ```
 
-### File: angular.json
-```json
-{
-  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "version": 1,
-  "newProjectRoot": "projects",
-  "projects": {
-    "HRMS-GradProject": {
-      "projectType": "application",
-      "schematics": {},
-      "root": "",
-      "sourceRoot": "src",
-      "prefix": "app",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:application",
-          "options": {
-            "outputPath": "dist/hrms-grad-project",
-            "index": "src/index.html",
-            "browser": "src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
-            "tsConfig": "tsconfig.app.json",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              },
-              "src/_redirects"
-            ],
-            "styles": [
-              "@angular/material/prebuilt-themes/azure-blue.css",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
-              "src/styles.css"
-            ],
-            "scripts": [
-              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-            ]
-          },
-          "configurations": {
-            "production": {
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2MB",
-                  "maximumError": "4MB"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "8kB",
-                  "maximumError": "16kB"
-                }
-              ],
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
-              "outputHashing": "all",
-              "serviceWorker": "ngsw-config.json"
-            },
-            "development": {
-              "optimization": false,
-              "extractLicenses": false,
-              "sourceMap": true
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "configurations": {
-            "production": {
-              "buildTarget": "HRMS-GradProject:build:production"
-            },
-            "development": {
-              "buildTarget": "HRMS-GradProject:build:development"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n"
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
-            "tsConfig": "tsconfig.spec.json",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
-            "styles": [
-              "@angular/material/prebuilt-themes/azure-blue.css",
-              "src/styles.css"
-            ],
-            "scripts": []
-          }
-        }
-      }
-    }
-  }
-}
-```
-
-### File: tsconfig.json
-```json
-/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
-/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
-{
-  "compileOnSave": false,
-  "compilerOptions": {
-    "outDir": "./dist/out-tsc",
-    "strict": true,
-    "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "moduleResolution": "bundler",
-    "importHelpers": true,
-    "target": "ES2022",
-    "module": "ES2022"
-  },
-  "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false,
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": true
-  }
-}
-
-```
-
-### File: src\index.html
-```html
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Kawadir</title>
-    <base href="/">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, maximum-scale=1">
-    <link rel="icon" type="image/png" href="/kawadir-logo.png?v=2">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="apple-touch-icon" href="/kawadir-logo.png?v=2">
-    <link rel="manifest" href="manifest.webmanifest">
-    <meta name="theme-color" content="#0d6efd">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Kawadir">
-</head>
-  <body class="mat-typography">
-    <app-root></app-root>
-    <noscript>Please enable JavaScript to continue using this application.</noscript>
-</body>
-</html>
-
-```
-
 ### File: src\main.ts
 ```typescript
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';
 
-// ????? ???????
+// تشغيل التطبيق
 bootstrapApplication(AppComponent, appConfig).catch((err) =>
   console.error(err),
 );
 
-```
-
-### File: src\styles.css
-```css
-@import "bootstrap/dist/css/bootstrap.min.css";
-@import "bootstrap-icons/font/bootstrap-icons.css";
-
-/*Light Mode Defaults*/
-:root {
-  --color-bg: #f8f9fb;
-  --color-bg-dot: rgba(0, 0, 0, 0.09);
-  --color-surface: #ffffff;
-  --color-surface-2: #f2f3f5;
-  --color-surface-3: #e5e7eb;
-  --color-border: #e5e7eb;
-  --color-text: #111111;
-  --color-text-sub: #4b5563;
-  --color-text-muted: #6b7280;
-  --color-text-label: #9ca3af;
-  --color-link: #5f6368;
-  --color-link-icon: #7f838a;
-  --color-link-hover-bg: #e5e7eb;
-  --color-link-hover: #111111;
-  --color-avatar-bg: #d1d5db;
-  --color-avatar-text: #111111;
-  --color-logout-border: #d1d5db;
-  --color-logout-text: #4b5563;
-  --color-input-bg: #ffffff;
-  --color-table-head-bg: #f8f9fa;
-  --color-table-td: #111111;
-  --color-table-th: #6c757d;
-  --color-table-hover: #f5f6f7;
-  --color-card-bg: #ffffff;
-  --color-modal-bg: #ffffff;
-}
-
-body.dark-mode {
-  --color-bg: #1a1d23;
-  --color-bg-dot: rgba(255, 255, 255, 0.04);
-  --color-surface: #22252b;
-  --color-surface-2: #282c34;
-  --color-surface-3: #2d3139;
-  --color-border: #333333;
-  --color-text: #ffffff;
-  --color-text-sub: #e0e0e0;
-  --color-text-muted: #94a3b8;
-  --color-text-label: #adb5bd;
-  --color-link: #adb5bd;
-  --color-link-icon: #adb5bd;
-  --color-link-hover-bg: rgba(102, 126, 234, 0.15);
-  --color-link-hover: #ffffff;
-  --color-avatar-bg: #333333;
-  --color-avatar-text: #f8f9fa;
-  --color-logout-border: #444444;
-  --color-logout-text: #adb5bd;
-  --color-input-bg: #2d3139;
-  --color-table-head-bg: #282c34;
-  --color-table-td: #e0e0e0;
-  --color-table-th: #adb5bd;
-  --color-table-hover: #2d3139;
-  --color-card-bg: #22252b;
-  --color-modal-bg: #22252b;
-}
-
-/*
-   BASE STYLES
-*/
-html,
-body {
-  height: 100%;
-}
-
-body {
-  margin: 0;
-  font-family: "Inter", Roboto, "Helvetica Neue", sans-serif;
-  background-color: var(--color-bg);
-  background-image: radial-gradient(var(--color-bg-dot) 2px, transparent 2px);
-  background-size: 24px 24px;
-  color: var(--color-text);
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
-}
-
-/*
-   DARK MODE — Global Text & Element Rules
-*/
-
-/* Force ALL text colour to inherit from parent in dark mode */
-body.dark-mode * {
-  color: inherit;
-}
-
-/* Headings */
-body.dark-mode h1,
-body.dark-mode h2,
-body.dark-mode h3,
-body.dark-mode h4,
-body.dark-mode h5,
-body.dark-mode h6 {
-  color: var(--color-text) !important;
-}
-
-/* Paragraphs */
-body.dark-mode p {
-  color: var(--color-text-sub) !important;
-}
-
-/* Labels */
-body.dark-mode label {
-  color: var(--color-text-sub) !important;
-}
-
-/* Small / helper text */
-body.dark-mode small,
-body.dark-mode .small {
-  color: var(--color-text-muted) !important;
-}
-
-/* Bootstrap text utilities */
-body.dark-mode .text-dark {
-  color: var(--color-text) !important;
-}
-body.dark-mode .text-secondary {
-  color: var(--color-text-label) !important;
-}
-body.dark-mode .text-muted {
-  color: var(--color-text-muted) !important;
-}
-body.dark-mode .fw-bold {
-  color: var(--color-text) !important;
-}
-body.dark-mode .text-uppercase {
-  color: var(--color-text-label) !important;
-}
-
-/* Layout */
-body.dark-mode .wrapper {
-  background-color: var(--color-bg) !important;
-}
-body.dark-mode .page-container {
-  color: var(--color-text);
-}
-
-/*
-   NAVBAR / HEADER
-*/
-body.dark-mode .navbar,
-body.dark-mode .header-bar {
-  background-color: var(--color-surface) !important;
-  border-color: var(--color-border) !important;
-}
-body.dark-mode .navbar *,
-body.dark-mode .header-bar * {
-  color: var(--color-text) !important;
-}
-
-/*
-   SIDEBAR
-*/
-body.dark-mode .sidebar {
-  background: linear-gradient(180deg, #1e2128 0%, #16181d 100%) !important;
-  border-right-color: var(--color-border) !important;
-}
-
-body.dark-mode .sidebar-brand-name {
-  color: var(--color-text) !important;
-}
-body.dark-mode .sidebar-brand-sub {
-  color: var(--color-text-label) !important;
-}
-body.dark-mode .section-title {
-  color: var(--color-text-label) !important;
-}
-body.dark-mode .sidebar-logo-wrap {
-  background-color: var(--color-surface-2) !important;
-}
-
-body.dark-mode .sidebar-nav a {
-  color: var(--color-link) !important;
-}
-body.dark-mode .sidebar-nav a i {
-  color: var(--color-link-icon) !important;
-}
-
-body.dark-mode .sidebar-nav a.active,
-body.dark-mode .sidebar-nav a:hover {
-  color: var(--color-link-hover) !important;
-  background-color: var(--color-link-hover-bg) !important;
-}
-body.dark-mode .sidebar-nav a.active i,
-body.dark-mode .sidebar-nav a:hover i {
-  color: var(--color-link-hover) !important;
-}
-
-body.dark-mode .sidebar-footer {
-  border-top-color: var(--color-border) !important;
-}
-body.dark-mode .user-info .name {
-  color: var(--color-text) !important;
-}
-body.dark-mode .user-info .status {
-  color: var(--color-text-label) !important;
-}
-body.dark-mode .user-profile:hover {
-  background-color: var(--color-surface-3) !important;
-}
-
-body.dark-mode .avatar-initials {
-  background: var(--color-avatar-bg) !important;
-  color: var(--color-avatar-text) !important;
-}
-
-body.dark-mode .btn-logout {
-  border-color: var(--color-logout-border) !important;
-  color: var(--color-logout-text) !important;
-}
-body.dark-mode .btn-logout:hover {
-  background-color: rgba(220, 38, 38, 0.1) !important;
-  color: #f87171 !important;
-  border-color: rgba(220, 38, 38, 0.3) !important;
-}
-
-/*
-   CARDS
-*/
-body.dark-mode .card {
-  background-color: var(--color-card-bg) !important;
-  border-color: var(--color-border) !important;
-  color: var(--color-text) !important;
-}
-body.dark-mode .card-header,
-body.dark-mode .card-footer {
-  background-color: var(--color-surface-2) !important;
-  border-color: var(--color-border) !important;
-  color: var(--color-text) !important;
-}
-body.dark-mode .card * {
-  color: inherit;
-}
-
-/* Dashboard specific cards */
-body.dark-mode .info-card,
-body.dark-mode .activity-card,
-body.dark-mode .chart-card,
-body.dark-mode .sales-stats {
-  background-color: var(--color-card-bg) !important;
-  color: var(--color-text) !important;
-}
-body.dark-mode .info-card *,
-body.dark-mode .activity-card *,
-body.dark-mode .chart-card * {
-  color: inherit;
-}
-
-/*
-   TABLES
-*/
-body.dark-mode .table {
-  --bs-table-bg: var(--color-surface);
-  --bs-table-color: var(--color-table-td);
-  --bs-table-hover-bg: var(--color-table-hover);
-  --bs-table-striped-bg: var(--color-surface-2);
-  color: var(--color-table-td) !important;
-  border-color: var(--color-border) !important;
-}
-body.dark-mode .table thead,
-body.dark-mode .table thead th {
-  background-color: var(--color-table-head-bg) !important;
-  color: var(--color-table-th) !important;
-  border-color: var(--color-border) !important;
-}
-body.dark-mode .table tbody td,
-body.dark-mode .table tbody tr {
-  color: var(--color-table-td) !important;
-  border-color: var(--color-border) !important;
-}
-body.dark-mode .table-hover tbody tr:hover {
-  background-color: var(--color-table-hover) !important;
-}
-body.dark-mode .table td span,
-body.dark-mode .table td p,
-body.dark-mode .table td a {
-  color: var(--color-table-td) !important;
-}
-
-/* ══════════════════════════════════════════
-   FORMS
-*/
-body.dark-mode .form-control,
-body.dark-mode .form-select {
-  background-color: var(--color-input-bg) !important;
-  border-color: #444 !important;
-  color: var(--color-text) !important;
-}
-body.dark-mode .form-control::placeholder {
-  color: #6c757d !important;
-}
-body.dark-mode .form-control:focus,
-body.dark-mode .form-select:focus {
-  border-color: #667eea !important;
-  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25) !important;
-}
-body.dark-mode .form-label {
-  color: var(--color-text-sub) !important;
-}
-body.dark-mode .input-group-text {
-  background-color: var(--color-input-bg) !important;
-  border-color: #444 !important;
-  color: var(--color-text-label) !important;
-}
-
-/* ══════════════════════════════════════════
-   MODALS
-   ══════════════════════════════════════════ */
-body.dark-mode .modal-content {
-  background-color: var(--color-modal-bg) !important;
-  border-color: var(--color-border) !important;
-  color: var(--color-text) !important;
-}
-body.dark-mode .modal-header,
-body.dark-mode .modal-footer {
-  border-color: var(--color-border) !important;
-}
-body.dark-mode .modal-title {
-  color: var(--color-text) !important;
-}
-body.dark-mode .modal-body * {
-  color: var(--color-text) !important;
-}
-
-/* ══════════════════════════════════════════
-   DROPDOWNS
-   ══════════════════════════════════════════ */
-body.dark-mode .dropdown-menu {
-  background-color: var(--color-surface) !important;
-  border-color: var(--color-border) !important;
-}
-body.dark-mode .dropdown-item {
-  color: var(--color-text) !important;
-}
-body.dark-mode .dropdown-item:hover {
-  background-color: var(--color-surface-3) !important;
-}
-
-/* ══════════════════════════════════════════
-   BUTTONS
-   ══════════════════════════════════════════ */
-body.dark-mode .btn-light {
-  background-color: var(--color-surface-3) !important;
-  border-color: #444 !important;
-  color: var(--color-text) !important;
-}
-body.dark-mode .btn-outline-secondary {
-  border-color: #555 !important;
-  color: var(--color-text-label) !important;
-}
-body.dark-mode .btn-outline-secondary:hover {
-  background-color: #333 !important;
-  color: #fff !important;
-}
-
-/* ══════════════════════════════════════════
-   UTILITY CLASSES
-   ══════════════════════════════════════════ */
-body.dark-mode .bg-light {
-  background-color: var(--color-surface-2) !important;
-}
-body.dark-mode .bg-white {
-  background-color: var(--color-surface) !important;
-}
-body.dark-mode .border-bottom {
-  border-color: var(--color-border) !important;
-}
-body.dark-mode .border {
-  border-color: var(--color-border) !important;
-}
-body.dark-mode .badge {
-  opacity: 0.95;
-}
-
-/* ══════════════════════════════════════════
-   STATUS BADGES
-   ══════════════════════════════════════════ */
-.status-badge {
-  padding: 0.4rem 1rem;
-  border-radius: 50rem;
-  font-weight: 600;
-  font-size: 0.85rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  border: 1px solid transparent;
-}
-
-/* Light Mode */
-.status-approved {
-  background-color: #d1fae5;
-  color: #065f46;
-  border-color: #6ee7b7;
-}
-.status-pending {
-  background-color: #fef3c7;
-  color: #92400e;
-  border-color: #fcd34d;
-}
-.status-rejected {
-  background-color: #fee2e2;
-  color: #991b1b;
-  border-color: #fca5a5;
-}
-.status-active {
-  background-color: #d1fae5;
-  color: #065f46;
-  border-color: #6ee7b7;
-}
-.status-inactive {
-  background-color: #fee2e2;
-  color: #991b1b;
-  border-color: #fca5a5;
-}
-
-/* Dark Mode */
-body.dark-mode .status-approved {
-  background-color: rgba(16, 185, 129, 0.15) !important;
-  color: #34d399 !important;
-  border-color: rgba(16, 185, 129, 0.3) !important;
-}
-body.dark-mode .status-pending {
-  background-color: rgba(245, 158, 11, 0.15) !important;
-  color: #fbbf24 !important;
-  border-color: rgba(245, 158, 11, 0.3) !important;
-}
-body.dark-mode .status-rejected {
-  background-color: rgba(239, 68, 68, 0.15) !important;
-  color: #f87171 !important;
-  border-color: rgba(239, 68, 68, 0.3) !important;
-}
-body.dark-mode .status-active {
-  background-color: rgba(16, 185, 129, 0.15) !important;
-  color: #34d399 !important;
-  border-color: rgba(16, 185, 129, 0.3) !important;
-}
-body.dark-mode .status-inactive {
-  background-color: rgba(239, 68, 68, 0.15) !important;
-  color: #f87171 !important;
-  border-color: rgba(239, 68, 68, 0.3) !important;
-}
-
-/* ══════════════════════════════════════════
-   PAGINATION
-   ══════════════════════════════════════════ */
-body.dark-mode .page-link {
-  background-color: var(--color-surface-2) !important;
-  border-color: var(--color-border) !important;
-  color: var(--color-text) !important;
-}
-body.dark-mode .page-item.active .page-link {
-  background-color: #0d6efd !important;
-  border-color: #0d6efd !important;
-  color: #ffffff !important;
-}
-body.dark-mode .page-item.disabled .page-link {
-  background-color: var(--color-surface) !important;
-  color: var(--color-text-muted) !important;
-  border-color: var(--color-border) !important;
-}
-
-/* ══════════════════════════════════════════
-   RTL FIXES
-   ══════════════════════════════════════════ */
-html[dir="rtl"] .bi-box-arrow-right,
-html[dir="rtl"] .bi-box-arrow-in-right,
-html[dir="rtl"] .bi-chevron-right,
-html[dir="rtl"] .bi-chevron-left {
-  transform: scaleX(-1);
-}
-
-html[dir="rtl"] .ms-auto {
-  margin-right: auto !important;
-  margin-left: 0 !important;
-}
-html[dir="rtl"] .me-auto {
-  margin-left: auto !important;
-  margin-right: 0 !important;
-}
-html[dir="rtl"] .dropdown-menu-end {
-  right: auto !important;
-  left: 0 !important;
-}
-
-/* ══════════════════════════════════════════
-   SCROLLBAR
-   ══════════════════════════════════════════ */
-body.dark-mode ::-webkit-scrollbar {
-  width: 8px;
-}
-body.dark-mode ::-webkit-scrollbar-track {
-  background: #1a1d23;
-}
-body.dark-mode ::-webkit-scrollbar-thumb {
-  background: #444;
-  border-radius: 4px;
-}
-body.dark-mode ::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/* ══════════════════════════════════════════
-   SWEETALERT2
-   ══════════════════════════════════════════ */
-body.dark-mode .swal2-popup {
-  background-color: var(--color-surface) !important;
-  color: var(--color-text) !important;
-}
-body.dark-mode .swal2-title {
-  color: var(--color-text) !important;
-}
-body.dark-mode .swal2-html-container {
-  color: var(--color-text-label) !important;
-}
-
-/* ══════════════════════════════════════════
-   EMPLOYEE DETAILS MODAL
-   ══════════════════════════════════════════ */
-body.dark-mode .detail-item {
-  background: #2d3139 !important;
-  border-color: #3a3f4b !important;
-}
-
-body.dark-mode .detail-value {
-  color: #e0e0e0 !important;
-}
-
-body.dark-mode .detail-label {
-  color: #94a3b8 !important;
-}
-
-body.dark-mode .detail-section-title {
-  color: #94a3b8 !important;
-  border-bottom-color: #333 !important;
-}
-
-body.dark-mode .modal-footer.bg-light {
-  background-color: var(--color-surface-2) !important;
-}
-
-
-/* ------------------------------------------
-   GLOBAL TEXT OVERFLOW FIXES
-   ------------------------------------------ */
-td, .detail-value, .info-value, .card-text, .text-break-all {
-  overflow-wrap: anywhere !important;
-  word-break: break-word !important;
-  hyphens: auto;
-}
-
-```
-
-### File: src\app\app.component.css
-```css
-.wrapper {
-  display: flex;
-  height: 100vh;
-  width: 100%;
-  overflow: hidden;
-  background-color: #f4f7fa;
-  position: relative;
-}
-
-.app-sidebar {
-  display: block;
-  width: var(--sidebar-width, 260px);
-  flex-shrink: 0;
-  transition: margin 0.3s ease, transform 0.3s ease;
-  z-index: 1040;
-}
-
-.app-sidebar.hidden {
-  margin-left: calc(-1 * var(--sidebar-width, 260px)); /* Hide sidebar LTR */
-}
-
-:host-context(html[dir="rtl"]) .app-sidebar.hidden {
-  margin-left: 0;
-  margin-right: calc(-1 * var(--sidebar-width, 260px)); /* Hide sidebar RTL */
-}
-
-.main-panel {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-.content {
-  padding: 30px;
-}
-
-.sidebar-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1030;
-  display: none;
-}
-
-@media (max-width: 768px) {
-  .app-sidebar {
-    position: fixed;
-    top: 0;
-    left: calc(-1 * var(--sidebar-width, 260px));
-    margin-left: 0 !important;
-    height: 100vh;
-  }
-  
-  .app-sidebar.mobile-open {
-    left: 0;
-  }
-  
-  :host-context(html[dir="rtl"]) .app-sidebar {
-    left: auto;
-    right: calc(-1 * var(--sidebar-width, 260px));
-    margin-right: 0 !important;
-  }
-  
-  :host-context(html[dir="rtl"]) .app-sidebar.mobile-open {
-    right: 0;
-  }
-  
-  .sidebar-overlay {
-    display: block;
-  }
-
-  .content {
-    padding: 15px;
-  }
-}
-
-```
-
-### File: src\app\app.component.html
-```html
-@if (authService.isLoggedIn()) {
-<div class="wrapper">
-    @if (isMobileSidebarOpen) {
-        <div class="sidebar-overlay" (click)="closeMobileSidebar()"></div>
-    }
-
-    <app-sidebar class="app-sidebar" [class.hidden]="isSidebarHidden" [class.mobile-open]="isMobileSidebarOpen"></app-sidebar>
-
-    <div class="main-panel" [class.expanded]="isSidebarHidden">
-        <app-header></app-header>
-
-        <main class="content">
-            <router-outlet></router-outlet>
-        </main>
-    </div>
-</div>
-} @else {
-<router-outlet></router-outlet>
-}
 ```
 
 ### File: src\app\app.component.ts
@@ -1068,17 +227,17 @@ export class AppComponent {
   pwaService = inject(PwaService);
 
   get isSidebarHidden() {
-    // ???? ?????????
+    // حالة السايدبار
     return this.sidebarService.isSidebarHidden();
   }
 
   get isMobileSidebarOpen() {
-    // ??? ????????? ?????????
+    // فتح السايدبار بالموبايل
     return this.sidebarService.isMobileSidebarOpen();
   }
 
   closeMobileSidebar() {
-    // ????? ????????? ?????????
+    // إغلاق السايدبار بالموبايل
     this.sidebarService.closeMobileSidebar();
   }
 }
@@ -1113,7 +272,7 @@ function initializeApp(authService: AuthService) {
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    // ??? ??? providers ????????
+    // ضبط الـ providers الرئيسية
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withHashLocation()),
     provideHttpClient(withInterceptors([authInterceptor])),
@@ -1183,7 +342,7 @@ export const routes: Routes = [
     component: DepartmentsComponent,
     canActivate: [authGuard, hrGuard],
   },
-  // ???? ???? ????????? ??????/????? ??? admin ?hr ???
+  // الكل يشوف الإجازات، القبول/الرفض للـ admin وhr فقط
   { path: 'leave', component: LeaveComponent, canActivate: [authGuard] },
   {
     path: 'attendance',
@@ -1195,7 +354,7 @@ export const routes: Routes = [
     component: AllAttendanceComponent,
     canActivate: [authGuard, hrGuard],
   },
-  // ?? ???? ???? ?????? ??????? ???????? ??? admin
+  // كل موظف يشوف راتبه، الإضافة والتعديل للـ admin
   { path: 'salary', component: SalaryComponent, canActivate: [authGuard] },
   {
     path: 'employee-form',
@@ -1232,7 +391,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   if (authService.isAdmin()) {
-    // ?????? ??
+    // الأدمن بس
     return true;
   } else {
     Swal.fire({
@@ -1254,7 +413,7 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-// ? ????? ??????? ???????? � ???? ??????? ??? ?? ??? ????
+// ✅ حماية الصفحات الداخلية — يرجع لللوجين إذا لم يكن مسجل
 export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
@@ -1267,7 +426,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   }
 };
 
-// ? ??? ???????? ?????? ?? ???? ???? ??????? � ???? ????????? ??? ??? ?????
+// ✅ منع المستخدم المسجل من رؤية صفحة اللوجين — يرجع للداشبورد إذا كان مسجلا
 export const noAuthGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
@@ -1287,7 +446,7 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-/** ???? ??? ?? Admin ?? HR */
+/** يسمح فقط لـ Admin أو HR */
 export const hrGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
@@ -1298,184 +457,6 @@ export const hrGuard: CanActivateFn = () => {
     router.navigate(['/dashboard']);
     return false;
   }
-};
-
-```
-
-### File: src\app\core\i18n\translations.ts
-```typescript
-// ????? ??????? ?????? � ????/???????
-export const TRANSLATIONS: { [key: string]: { en: string; ar: string } } = {
-
-  // -- Sidebar --
-  'Dashboard':        { en: 'Dashboard',        ar: '???? ??????' },
-  'My Profile':       { en: 'My Profile',       ar: '???? ??????' },
-  'Employees':        { en: 'Employees',        ar: '????????' },
-  'Leave Requests':   { en: 'Leave Requests',   ar: '????? ???????' },
-  'Attendance':       { en: 'Attendance',        ar: '?????? ?????????' },
-  'Salaries':         { en: 'Salaries',          ar: '???????' },
-  'System Control':   { en: 'System Control',    ar: '????? ??????' },
-  'Departments':      { en: 'Departments',       ar: '???????' },
-  'Positions':        { en: 'Positions',         ar: '???????? ????????' },
-  'Register User':    { en: 'Register User',     ar: '????? ??????' },
-  'Logout':           { en: 'Logout',            ar: '????? ??????' },
-  'HR Management':    { en: 'HR Management',     ar: '????? ??????? ???????' },
-
-  // -- Header --
-  'Settings':         { en: 'Settings',          ar: '?????????' },
-  'Theme':            { en: 'Theme',             ar: '??????' },
-  'Dark Mode':        { en: 'Dark Mode',         ar: '????? ??????' },
-  'Light Mode':       { en: 'Light Mode',        ar: '????? ??????' },
-  'Language':         { en: 'Language',           ar: '?????' },
-  'Notifications':    { en: 'Notifications',     ar: '?????????' },
-  'No new notifications': { en: 'No new notifications', ar: '?? ???? ??????? ?????' },
-  'New':              { en: 'New',               ar: '????' },
-  'System Alert':     { en: 'System Alert',      ar: '????? ??????' },
-  'Install App':      { en: 'Install App',       ar: '????? ???????' },
-  'Overall':          { en: 'Overall',           ar: '????????' },
-
-  // -- Dashboard --
-  'Admin Dashboard':     { en: 'Admin Dashboard',     ar: '???? ???? ??????' },
-  'Employee Dashboard':  { en: 'Employee Dashboard',  ar: '???? ???? ??????' },
-  'Welcome back':        { en: 'Welcome back',        ar: '?????? ??????' },
-  'Total Employees':     { en: 'Total Employees',     ar: '?????? ????????' },
-  'Attendance Rate':     { en: 'Attendance Rate',      ar: '???? ??????' },
-  'Pending Leaves':      { en: 'Pending Leaves',      ar: '?????? ?????' },
-  'Next Payday':         { en: 'Next Payday',         ar: '???? ??????' },
-  'Recent Leave Requests': { en: 'Recent Leave Requests', ar: '???? ????? ???????' },
-  'Leave Distribution':  { en: 'Leave Distribution',  ar: '????? ????????' },
-  'Annual':              { en: 'Annual',              ar: '?????' },
-  'Sick':                { en: 'Sick',                ar: '?????' },
-  'Emergency':           { en: 'Emergency',           ar: '?????' },
-  'Unpaid':              { en: 'Unpaid',              ar: '???? ????' },
-  'Annual Leave Balance': { en: 'Annual Leave Balance', ar: '???? ???????? ???????' },
-  'Days Remaining':      { en: 'Days Remaining',      ar: '???? ??????' },
-  'My Salary':           { en: 'My Salary',           ar: '?????' },
-  'My Pending Leaves':   { en: 'My Pending Leaves',   ar: '??????? ???????' },
-
-  // -- Leave --
-  'All Leave Requests':  { en: 'All Leave Requests',  ar: '???? ????? ???????' },
-  'My Leave Requests':   { en: 'My Leave Requests',   ar: '????? ??????' },
-  'Manage and track time-off requests effectively': 
-    { en: 'Manage and track time-off requests effectively', ar: '????? ??????? ????? ???????? ???????' },
-  'Search by name, ID, or reason...': 
-    { en: 'Search by name, ID, or reason...', ar: '???? ?????? ?? ????? ?? ?????...' },
-  'Filter Options':      { en: 'Filter Options',      ar: '?????? ???????' },
-  'Leave Type':          { en: 'Leave Type',           ar: '??? ???????' },
-  'All Types':           { en: 'All Types',            ar: '???? ???????' },
-  'Status':              { en: 'Status',               ar: '??????' },
-  'All Statuses':        { en: 'All Statuses',         ar: '???? ???????' },
-  'Pending':             { en: 'Pending',              ar: '?????' },
-  'Approved':            { en: 'Approved',             ar: '??????' },
-  'Rejected':            { en: 'Rejected',             ar: '??????' },
-  'Request Leave':       { en: 'Request Leave',        ar: '??? ?????' },
-  'Employee':            { en: 'Employee',             ar: '??????' },
-  'Duration':            { en: 'Duration',             ar: '?????' },
-  'Reason':              { en: 'Reason',               ar: '?????' },
-  'Actions':             { en: 'Actions',              ar: '?????????' },
-  'Approve':             { en: 'Approve',              ar: '????' },
-  'Reject':              { en: 'Reject',               ar: '???' },
-  'Processed':           { en: 'Processed',            ar: '??? ????????' },
-  'No Leave Requests':   { en: 'No Leave Requests',    ar: '?? ???? ????? ?????' },
-  'No leave data available matching your search criteria.':
-    { en: 'No leave data available matching your search criteria.', ar: '?? ???? ?????? ?????? ????? ?????? ?????.' },
-  'New Leave Request':   { en: 'New Leave Request',    ar: '??? ????? ????' },
-  'Start Date':          { en: 'Start Date',           ar: '????? ???????' },
-  'End Date':            { en: 'End Date',             ar: '????? ???????' },
-  'Cancel':              { en: 'Cancel',               ar: '?????' },
-  'Submit Request':      { en: 'Submit Request',       ar: '????? ?????' },
-  'Loading requests...': { en: 'Loading requests...',  ar: '???? ????? ???????...' },
-  'No reason provided':  { en: 'No reason provided',   ar: '?? ??? ????? ???' },
-
-  // -- Attendance --
-  'My Attendance':       { en: 'My Attendance',        ar: '?????' },
-  'Clock In':            { en: 'Clock In',             ar: '????? ??????' },
-  'Clock Out':           { en: 'Clock Out',            ar: '????? ??????' },
-  'Date':                { en: 'Date',                 ar: '???????' },
-  'Total Hours':         { en: 'Total Hours',          ar: '????? ?????' },
-  'Working':             { en: 'Working',              ar: '????' },
-  'Completed':           { en: 'Completed',            ar: '?????' },
-  'View All':            { en: 'View All',             ar: '??? ????' },
-  'Today':               { en: 'Today',                ar: '?????' },
-
-  // -- Salary --
-  'My Salary History':   { en: 'My Salary History',    ar: '??? ??????' },
-  'All Salaries':        { en: 'All Salaries',         ar: '???? ???????' },
-  'Month':               { en: 'Month',                ar: '?????' },
-  'Year':                { en: 'Year',                 ar: '?????' },
-  'Base Salary':         { en: 'Base Salary',          ar: '?????? ???????' },
-  'Allowances':          { en: 'Allowances',           ar: '???????' },
-  'Deductions':          { en: 'Deductions',           ar: '????????' },
-  'Net Pay':             { en: 'Net Pay',              ar: '???? ??????' },
-  'Download Payslip':    { en: 'Download Payslip',     ar: '????? ??? ??????' },
-
-  // -- Employees --
-  'All Employees':       { en: 'All Employees',        ar: '???? ????????' },
-  'Add Employee':        { en: 'Add Employee',         ar: '????? ????' },
-  'Search employees...': { en: 'Search employees...',  ar: '???? ?? ????...' },
-  'ID':                  { en: 'ID',                   ar: '?????' },
-  'Name':                { en: 'Name',                 ar: '?????' },
-  'Email':               { en: 'Email',                ar: '?????? ??????????' },
-  'Phone':               { en: 'Phone',                ar: '??????' },
-  'Department':          { en: 'Department',           ar: '?????' },
-  'Active':              { en: 'Active',               ar: '???' },
-  'Inactive':            { en: 'Inactive',             ar: '??? ???' },
-  'Edit':                { en: 'Edit',                 ar: '?????' },
-  'Delete':              { en: 'Delete',               ar: '???' },
-  'Export to Excel':     { en: 'Export to Excel',      ar: '????? ?? Excel' },
-  'Download Report':     { en: 'Download Report',      ar: '????? ???????' },
-
-  // -- Common --
-  'Showing':             { en: 'Showing',              ar: '???' },
-  'of':                  { en: 'of',                   ar: '??' },
-  'entries':             { en: 'entries',               ar: '???' },
-  'to':                  { en: 'to',                   ar: '???' },
-  'Previous':            { en: 'Previous',             ar: '??????' },
-  'Next':                { en: 'Next',                 ar: '??????' },
-  'Loading...':          { en: 'Loading...',            ar: '???? ???????...' },
-  'No Data':             { en: 'No Data',              ar: '?? ???? ??????' },
-  'Are you sure?':       { en: 'Are you sure?',        ar: '?? ??? ??????' },
-  'Success':             { en: 'Success',              ar: '????' },
-  'Error':               { en: 'Error',                ar: '???' },
-  'Save Changes':        { en: 'Save Changes',         ar: '??? ?????????' },
-  'Close':               { en: 'Close',                ar: '?????' },
-  'Role':                { en: 'Role',                 ar: '?????' },
-
-  // -- My Profile --
-  'Account Details':     { en: 'Account Details',      ar: '?????? ??????' },
-  'Permissions':         { en: 'Permissions',          ar: '?????????' },
-  'Employee Management': { en: 'Employee Management',  ar: '????? ????????' },
-  'Payroll Access':      { en: 'Payroll Access',       ar: '?????? ???????' },
-  'Personal Details':    { en: 'Personal Details',     ar: '???????? ???????' },
-  'Hire Date':           { en: 'Hire Date',            ar: '????? ???????' },
-  'Profile Not Linked':  { en: 'Profile Not Linked',   ar: '????????? ??? ?????' },
-  'Edit Profile':        { en: 'Edit Profile',         ar: '????? ?????????' },
-  'Contact Information': { en: 'Contact Information',  ar: '??????? ???????' },
-  'Change Password':     { en: 'Change Password',      ar: '????? ???? ??????' },
-  'Current Password':    { en: 'Current Password',     ar: '???? ?????? ???????' },
-  'New Password':        { en: 'New Password',         ar: '???? ?????? ???????' },
-  'Confirm New Password': { en: 'Confirm New Password', ar: '????? ???? ??????' },
-  'System Admin':        { en: 'System Admin',         ar: '???? ??????' },
-
-  // -- Additional Fields --
-  'First Name':          { en: 'First Name',           ar: '????? ?????' },
-  'Last Name':           { en: 'Last Name',            ar: '??? ???????' },
-  'Position':            { en: 'Position',             ar: '?????? ???????' },
-  'Join Date':           { en: 'Join Date',            ar: '????? ????????' },
-  'Save Employee':       { en: 'Save Employee',        ar: '??? ??????' },
-  'All Departments':     { en: 'All Departments',      ar: '???? ???????' },
-  'Add Department':      { en: 'Add Department',       ar: '????? ???' },
-  'Department Name':     { en: 'Department Name',      ar: '??? ?????' },
-  'Description':         { en: 'Description',          ar: '?????' },
-  'All Positions':       { en: 'All Positions',        ar: '???? ????????' },
-  'Add Position':        { en: 'Add Position',         ar: '????? ????' },
-  'Position Title':      { en: 'Position Title',       ar: '????? ??????' },
-  'Welcome to Kawadir':  { en: 'Welcome to Kawadir',   ar: '?????? ?? ?? ?????' },
-  'Login to your account':{ en: 'Login to your account',ar: '??? ?????? ??????' },
-  'Password':            { en: 'Password',             ar: '???? ??????' },
-  'Login':               { en: 'Login',                ar: '????' },
-  'Email Address':       { en: 'Email Address',        ar: '?????? ??????????' },
-  'No Employees Found':  { en: 'No Employees Found',   ar: '?? ??? ?????? ??? ??????' }
 };
 
 ```
@@ -1539,7 +520,7 @@ import { TRANSLATIONS } from '../i18n/translations';
 @Pipe({
   name: 't',
   standalone: true,
-  pure: false, // ???? ???? impure ??? ????? ??? ????? ?????
+  pure: false, // لازم يكون impure حتى يتحدث لما تتغير اللغة
 })
 export class TranslatePipe implements PipeTransform {
   private settings = inject(SettingsService);
@@ -1567,7 +548,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class AttendanceService {
-  // ??? ??????
+  // شغل الحضور
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/attendance`;
 
@@ -1630,7 +611,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class AuthService {
-  // ??? ???????
+  // شغل التوثيق
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/auth`;
 
@@ -1678,14 +659,14 @@ export class AuthService {
       const exp = payload.exp;
       if (!exp) return true;
 
-      // exp ????????? Date.now() ??????? ?????
+      // exp بالثواني، Date.now() بالمللي ثانية
       if (Date.now() >= exp * 1000) {
         this.logout();
         return false;
       }
       return true;
     } catch {
-      // ???? ????
+      // توكن فاسد
       this.logout();
       return false;
     }
@@ -1703,7 +684,7 @@ export class AuthService {
     return this.hasRole('hr');
   }
 
-  // admin ?? hr ????? ??? ????????? ???? ???????
+  // admin أو hr عندهم نفس الصلاحيات لبعض الأشياء
   isAdminOrHR(): boolean {
     return this.hasRole('admin') || this.hasRole('hr');
   }
@@ -1740,7 +721,7 @@ export class AuthService {
     localStorage.removeItem('user_name');
   }
 
-  // ?? ????????
+  // كل اليوزرات
   getUsers(pageNumber = 1, pageSize = 100): Observable<any> {
     return this.http
       .get<any>(
@@ -1749,7 +730,7 @@ export class AuthService {
       .pipe(map((response) => response?.data ?? response));
   }
 
-  // ?????? ???? ??? ????
+  // يوزرات بدون ملف موظف
   getUnassignedEmployeeUsers(pageNumber = 1, pageSize = 100): Observable<any> {
     return this.http
       .get<any>(
@@ -1758,7 +739,7 @@ export class AuthService {
       .pipe(map((response) => response?.data ?? response));
   }
 
-  // ???? ??? id ?? ???????
+  // نجيب الـ id من الإيميل
   getUserIdByEmail(email: string): Observable<any> {
     return this.http
       .get<any>(
@@ -1782,7 +763,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class DepartmentService {
-  // ??? ???????
+  // شغل الأقسام
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/departments`;
 
@@ -1837,7 +818,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class EmployeeService {
-  // ??? ????????
+  // شغل الموظفين
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/employees`;
 
@@ -1866,7 +847,7 @@ export class EmployeeService {
     );
   }
 
-  // ?????? ??????
+  // تفاصيل الموظف
   getEmployeeById(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
       map((response) => {
@@ -1908,7 +889,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class LeaveService {
-  // ??? ????????
+  // شغل الإجازات
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/leaves`;
 
@@ -1982,7 +963,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class NotificationService {
-  // ??? ?????????
+  // شغل التنبيهات
   private http = inject(HttpClient);
 
   private apiUrl = `${environment.apiUrl}/notifications`;
@@ -2036,7 +1017,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class PositionService {
-  // ??? ????????
+  // شغل المسميات
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/positions`;
 
@@ -2104,7 +1085,7 @@ export class PwaService {
       this.deferredPrompt = e;
     });
 
-    // ??? ?? ????? ??????? ??????
+    // إذا تم تثبيت التطبيق بالفعل
     window.addEventListener('appinstalled', () => {
       this.deferredPrompt = null;
     });
@@ -2112,7 +1093,7 @@ export class PwaService {
 
   public promptInstall(): void {
     if (this.deferredPrompt) {
-      // ??? browser ???? ??????? ???????
+      // الـ browser يدعم التثبيت المباشر
       this.deferredPrompt.prompt();
       this.deferredPrompt.userChoice.then((choiceResult: { outcome: string }) => {
         this.deferredPrompt = null;
@@ -2125,7 +1106,7 @@ export class PwaService {
         confirmButtonColor: '#0d6efd'
       });
     } else {
-      // ??????? ????? ??? ???????
+      // تعليمات يدوية حسب المتصفح
       const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
       const isChrome = /chrome/i.test(navigator.userAgent) && !/edge/i.test(navigator.userAgent);
       const isEdge = /edg/i.test(navigator.userAgent);
@@ -2138,7 +1119,7 @@ export class PwaService {
           <div style="text-align:left; line-height: 2;">
             <p>To install on iOS (Safari):</p>
             <ol style="padding-left: 1.2rem;">
-              <li>Tap the <b>Share</b> button <span style="font-size:1.2rem;">?</span> at the bottom</li>
+              <li>Tap the <b>Share</b> button <span style="font-size:1.2rem;">⎋</span> at the bottom</li>
               <li>Scroll down and tap <b>"Add to Home Screen"</b></li>
               <li>Tap <b>Add</b></li>
             </ol>
@@ -2148,7 +1129,7 @@ export class PwaService {
           <div style="text-align:left; line-height: 2;">
             <p>To install on ${isEdge ? 'Edge' : 'Chrome'}:</p>
             <ol style="padding-left: 1.2rem;">
-              <li>Click the <b>?</b> menu (top-right)</li>
+              <li>Click the <b>⋮</b> menu (top-right)</li>
               <li>Click <b>"Install Kawadir..."</b> or <b>"Add to Home Screen"</b></li>
               <li>Click <b>Install</b></li>
             </ol>
@@ -2163,7 +1144,7 @@ export class PwaService {
           <div style="text-align:left; line-height: 2;">
             <p>To install the app:</p>
             <ol style="padding-left: 1.2rem;">
-              <li>Open the browser <b>menu</b> (? or ?)</li>
+              <li>Open the browser <b>menu</b> (⋮ or ☰)</li>
               <li>Look for <b>"Install App"</b> or <b>"Add to Home Screen"</b></li>
             </ol>
           </div>`;
@@ -2171,7 +1152,7 @@ export class PwaService {
 
       Swal.fire({
         icon: 'info',
-        title: '?? Install Kawadir',
+        title: '📲 Install Kawadir',
         html: instructionsHtml,
         confirmButtonText: 'Got it!',
         confirmButtonColor: '#0d6efd',
@@ -2185,7 +1166,7 @@ export class PwaService {
            (window.navigator as any).standalone === true;
   }
 
-  // ???? ?????? ???? ????
+  // الزر دائماً يظهر الآن
   public get canInstall(): boolean {
     return true;
   }
@@ -2204,7 +1185,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class SalaryService {
-  // ??? ???????
+  // شغل الرواتب
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/salaries`;
 
@@ -2267,10 +1248,10 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class SettingsService {
-  // ??????? ????????
-  // ?????: dark ?? light
+  // إعدادات المستخدم
+  // الثيم: dark أو light
   private _isDarkMode = signal(false);
-  // ?????: en ?? ar
+  // اللغة: en أو ar
   private _language = signal<'en' | 'ar'>('en');
 
   get isDarkMode() {
@@ -2282,7 +1263,7 @@ export class SettingsService {
   }
 
   constructor() {
-    // ?????? ????????? ???????? ?? localStorage
+    // استرجع الإعدادات المحفوظة من localStorage
     const savedTheme = localStorage.getItem('hrms_theme');
     const savedLang = localStorage.getItem('hrms_language') as 'en' | 'ar';
 
@@ -2335,7 +1316,7 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class SidebarService {
-  // ???? ?????????
+  // حالة السايدبار
   isSidebarHidden = signal<boolean>(false);
   isMobileSidebarOpen = signal<boolean>(false);
 
@@ -2450,7 +1431,7 @@ export class UpdateService {
 
 ### File: src\app\core\utils\error-handler.util.ts
 ```typescript
-// ??? ?? ???? ????? ????? ?? ??? backend? ?????? ???? ?????
+// بدل ما تعرض رسائل تقنية من الـ backend، نحولها لشيء مفهوم
 export function getFriendlyErrorMessage(
   err: any,
   fallback: string = 'Something went wrong. Please try again later.',
@@ -2459,7 +1440,7 @@ export function getFriendlyErrorMessage(
   const rawMessage: string =
     err?.error?.message || err?.error?.title || err?.message || '';
 
-  // ????? ???? ?? ??? server ?? ????
+  // مشكلة شبكة أو الـ server مش شغال
   if (
     status === 0 ||
     (err?.name === 'HttpErrorResponse' && !navigator.onLine)
@@ -2467,7 +1448,7 @@ export function getFriendlyErrorMessage(
     return 'No internet connection. Please check your network and try again.';
   }
 
-  // ????? ????? ?? ??? DB � ???????? ?? ????? ??????
+  // أخطاء تقنية من الـ DB — المستخدم ما يحتاج يشوفها
   if (
     rawMessage.includes('EADDRNOTALLOWED') ||
     rawMessage.includes('allow_list') ||
@@ -2517,7 +1498,7 @@ export function getFriendlyErrorMessage(
       }
     }
 
-    // ?? ??????? ????? ??????? ?????? ??????
+    // لو الرسالة قصيرة ومفهومة نعرضها مباشرة
     if (
       rawMessage &&
       rawMessage.length < 150 &&
@@ -2544,7 +1525,7 @@ export function getFriendlyErrorMessage(
   return fallback;
 }
 
-// ????? ??? ???? ??????? ????? ??? ???? ????????
+// نتحقق إذا كانت الرسالة تقنية وما تصلح للمستخدم
 function looksLikeTechError(msg: string): boolean {
   const techPatterns = [
     'XX',
@@ -2566,220 +1547,6 @@ function looksLikeTechError(msg: string): boolean {
   ];
   return techPatterns.some((p) => msg.includes(p));
 }
-
-```
-
-### File: src\app\features\all-attendance\all-attendance.component.html
-```html
-<div class="page-container p-4">
-
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <div>
-            <h3 class="fw-bold text-dark mb-1">
-                <i class="bi bi-clock-history me-2 text-primary"></i>All Employees Attendance
-            </h3>
-            <p class="text-muted small mb-0">Overview of all employees clock-in and clock-out records</p>
-        </div>
-        <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end">
-            <div class="input-group shadow-sm" style="max-width: 350px;">
-                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                <input type="text" class="form-control border-start-0 ps-0" 
-                    placeholder="Search by name, ID, or date..." 
-                    [(ngModel)]="searchQuery" 
-                    (input)="filterRecords()">
-            </div>
-
-            <div class="dropdown">
-                <button class="btn btn-outline-secondary shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Filter Attendance">
-                    <i class="bi bi-funnel-fill"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4" style="width: 250px;">
-                    <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">Filter Options</h6>
-                    
-                    <div class="mb-2">
-                        <label class="form-label small fw-semibold text-muted mb-1">Status</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="selectedStatus" (change)="filterRecords()">
-                            <option value="">All Statuses</option>
-                            <option value="Working">Working</option>
-                            <option value="Completed">Completed</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <a routerLink="/employees" class="btn btn-outline-secondary btn-sm rounded-3 text-nowrap shadow-sm p-2 px-3">
-                <i class="bi bi-arrow-left me-1"></i> Back to Employees
-            </a>
-        </div>
-    </div>
-
-    <!-- Table -->
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-
-                <thead class="bg-light text-muted small text-uppercase" style="letter-spacing: 0.5px;">
-                    <tr>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">Employee</th>
-                        <th class="py-3 px-3 border-bottom-0 fw-semibold">Date</th>
-                        <th class="py-3 px-3 border-bottom-0 fw-semibold text-success">Clock In</th>
-                        <th class="py-3 px-3 border-bottom-0 fw-semibold text-danger">Clock Out</th>
-                        <th class="py-3 px-3 border-bottom-0 fw-semibold text-primary">Total Hours</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">Status</th>
-                    </tr>
-                </thead>
-
-                <tbody class="border-top-0">
-
-                    <!-- Loading -->
-                    <tr *ngIf="isLoading">
-                        <td colspan="6" class="text-center py-5 text-muted">
-                            <span class="spinner-border spinner-border-sm me-2"></span>
-                            Loading attendance records...
-                        </td>
-                    </tr>
-
-                    <!-- Empty -->
-                    <tr *ngIf="!isLoading && records.length === 0">
-                        <td colspan="6" class="text-center py-5">
-                            <div class="d-flex flex-column align-items-center">
-                                <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                                    <i class="bi bi-clock-history fs-1 text-secondary"></i>
-                                </div>
-                                <h5 class="fw-bold text-dark mb-1">No Attendance Records</h5>
-                                <p class="text-muted small">There are no clock-in records available yet matching your criteria.</p>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Rows -->
-                    <tr *ngFor="let rec of paginatedRecords">
-                        <td data-label="Employee" class="py-3 px-4">
-                            <div class="fw-semibold text-dark">
-                                {{ rec.employeeName || ('Employee #' + rec.employeeId) }}
-                            </div>
-                        </td>
-                        <td data-label="Date" class="py-3 px-3 text-muted">
-                            {{ rec.date | date:'dd MMM yyyy' }}
-                        </td>
-                        <td data-label="Clock In" class="py-3 px-3 text-success fw-medium">
-                            <i class="bi bi-arrow-down-right-circle me-1"></i>
-                            {{ rec.clockIn || '�' }}
-                        </td>
-                        <td data-label="Clock Out" class="py-3 px-3 text-danger fw-medium">
-                            <i class="bi bi-arrow-up-right-circle me-1"></i>
-                            {{ (!rec.clockOut || rec.clockOut === '00:00:00') ? '�' : rec.clockOut }}
-                        </td>
-                        <td data-label="Total Hours" class="py-3 px-3 fw-semibold text-primary">
-                            {{ calcHours(rec) }}
-                        </td>
-                        <td data-label="Status" class="py-3 px-4">
-                            <span class="badge rounded-pill px-3 py-2"
-                                [class.bg-success]="rec.clockOut && rec.clockOut !== '00:00:00'"
-                                [class.bg-opacity-10]="true"
-                                [class.text-success]="rec.clockOut && rec.clockOut !== '00:00:00'"
-                                [class.bg-warning]="!rec.clockOut || rec.clockOut === '00:00:00'"
-                                [class.text-warning]="!rec.clockOut || rec.clockOut === '00:00:00'"
-                                style="border: 1px solid currentColor; opacity: 0.9;">
-                                <i class="bi me-1"
-                                   [class.bi-check-circle-fill]="rec.clockOut && rec.clockOut !== '00:00:00'"
-                                   [class.bi-clock-fill]="!rec.clockOut || rec.clockOut === '00:00:00'"></i>
-                                {{ getStatusLabel(rec) }}
-                            </span>
-                        </td>
-                    </tr>
-
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Pagination Footer -->
-        <div *ngIf="records.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <small class="text-muted fw-medium">
-                Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, records.length) }} of {{ records.length }} entries
-            </small>
-            <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
-                <li class="page-item" [class.disabled]="currentPage === 1">
-                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
-                </li>
-                <li class="page-item active">
-                    <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
-                </li>
-                <li class="page-item" [class.disabled]="currentPage === totalPages">
-                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
-
-<style>
-.cursor-pointer {
-  cursor: pointer;
-}
-
-/* Mobile Responsive Cards for Table */
-@media screen and (max-width: 768px) {
-  .table-responsive table, 
-  .table-responsive thead, 
-  .table-responsive tbody, 
-  .table-responsive th, 
-  .table-responsive td, 
-  .table-responsive tr {
-    display: block;
-  }
-  
-  .table-responsive thead tr {
-    display: none; /* Hide header row */
-  }
-  
-  .table-responsive tr {
-    border: 1px solid #e8ecf0;
-    border-radius: 0.75rem;
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-    background: #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-  }
-  
-  .table-responsive td {
-    border: none;
-    border-bottom: 1px solid #f0f2f5;
-    position: relative;
-    padding-left: 45% !important;
-    text-align: right !important;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    min-height: 50px;
-  }
-  
-  .table-responsive td:last-child {
-    border-bottom: 0;
-  }
-  
-  .table-responsive td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 1rem;
-    width: 40%;
-    text-align: left;
-    font-weight: 700;
-    color: #8592a3;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  
-  .actions-cell {
-    justify-content: flex-end !important;
-    padding-top: 1rem !important;
-    padding-bottom: 1rem !important;
-  }
-}
-</style>
 
 ```
 
@@ -2832,7 +1599,7 @@ export class AllAttendanceComponent implements OnInit {
   }
 
   ngOnInit() {
-    // ????? ???????
+    // تحميل السجلات
     this.attendanceService.getAllAttendance().subscribe({
       next: (res: any) => {
         const items = Array.isArray(res)
@@ -2852,7 +1619,7 @@ export class AllAttendanceComponent implements OnInit {
   }
 
   filterRecords() {
-    // ????? ???????
+    // فلترة السجلات
     this.records = this.allRecords.filter((rec) => {
       let matchesSearch = true;
       if (this.searchQuery) {
@@ -2889,7 +1656,7 @@ export class AllAttendanceComponent implements OnInit {
   }
 
   calcHours(rec: any): string {
-    if (!rec.clockOut || rec.clockOut === '00:00:00') return '�';
+    if (!rec.clockOut || rec.clockOut === '00:00:00') return '—';
     const inn = new Date(`2000-01-01T${rec.clockIn}`);
     const out = new Date(`2000-01-01T${rec.clockOut}`);
     const hrs = (out.getTime() - inn.getTime()) / 3600000;
@@ -2897,258 +1664,6 @@ export class AllAttendanceComponent implements OnInit {
   }
 }
 
-```
-
-### File: src\app\features\attendance\attendance.component.css
-```css
-```
-
-### File: src\app\features\attendance\attendance.component.html
-```html
-<div class="page-container p-4">
-
-    <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-3">
-        <div>
-            <h3 class="fw-bold text-dark mb-1">
-                {{ isAdmin ? ('Employee Attendance Tracking' | t) : ('My Attendance Tracking' | t) }}
-            </h3>
-            <p class="text-muted small mb-0">
-                {{ isAdmin ? ('Monitor all employees daily clock-in and clock-out records' | t) : ('Monitor your daily clock-in and clock-out records' | t) }}
-            </p>
-        </div>
-
-        <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
-            <div class="input-group shadow-sm" style="max-width: 300px;">
-                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                <input type="text" class="form-control border-start-0 ps-0" 
-                    placeholder="{{ 'Search employees...' | t }}" 
-                    [(ngModel)]="searchQuery" 
-                    (input)="filterRecords()">
-            </div>
-
-            <button class="btn btn-outline-success shadow-sm px-4 py-2 rounded-3 fw-semibold text-nowrap d-flex align-items-center" (click)="exportToExcel()">
-                <i class="bi bi-file-earmark-excel-fill me-2 fs-5"></i> {{ 'Export' | t }}
-            </button>
-
-            <div class="dropdown">
-                <button class="btn btn-outline-secondary shadow-sm px-3 py-2 rounded-3 d-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-filter me-2 fs-5"></i> {{ 'Filter' | t }}
-                </button>
-                <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4" style="min-width: 250px;">
-                    <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">{{ 'Filter Options' | t }}</h6>
-                    <div class="mb-0">
-                        <label class="form-label small fw-semibold text-muted mb-1">{{ 'Status' | t }}</label>
-                        <select class="form-select form-select-sm border-light-subtle" [(ngModel)]="selectedStatus" (change)="filterRecords()">
-                            <option value="">{{ 'All Statuses' | t }}</option>
-                            <option value="Completed">{{ 'Completed' | t }}</option>
-                            <option value="Working">{{ 'Working' | t }}</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div *ngIf="!isAdmin" class="d-flex flex-column align-items-end gap-2">
-                <div *ngIf="isStaleSession"
-                     class="alert alert-warning py-2 px-3 mb-0 rounded-3 small d-flex align-items-center gap-2 w-100">
-                    <i class="bi bi-exclamation-triangle-fill"></i>
-                    <span>
-                        {{ 'Open session from' | t }} <strong>{{ activeSession?.date | date:'dd MMM yyyy' }}</strong>.
-                        {{ 'Click Clock Out to close it.' | t }}
-                    </span>
-                </div>
-
-                <div class="d-flex align-items-center gap-2">
-                    <a *ngIf="isAdminOrHR" routerLink="/all-attendance"
-                       class="btn btn-outline-primary px-4 py-2 rounded-3 shadow-sm text-nowrap">
-                        <i class="bi bi-people me-1"></i> {{ 'View All' | t }}
-                    </a>
-
-                    <button *ngIf="!isCheckedInToday"
-                        class="btn btn-success px-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
-                        (click)="onClockIn()"
-                        [disabled]="isProcessing || isLoading">
-                        <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2"></span>
-                        <i *ngIf="!isProcessing" class="bi bi-box-arrow-in-right me-2"></i> {{ 'Clock In' | t }}
-                    </button>
-
-                    <button *ngIf="isCheckedInToday && !isCheckedOutToday"
-                        class="btn btn-warning px-4 py-2 rounded-3 fw-semibold shadow-sm text-dark text-nowrap"
-                        (click)="onClockOut()"
-                        [disabled]="isProcessing || isLoading">
-                        <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2"></span>
-                        <i *ngIf="!isProcessing" class="bi bi-box-arrow-right me-2"></i> {{ 'Clock Out' | t }}
-                    </button>
-
-                    <span *ngIf="isCheckedInToday && isCheckedOutToday"
-                        class="badge bg-success bg-opacity-10 text-success px-4 py-2 rounded-3 fw-semibold border border-success border-opacity-25 text-nowrap">
-                        <i class="bi bi-check-circle-fill me-2"></i> {{ 'Shift Completed' | t }} ({{ todayWorkedHours | number:'1.1-2' }} {{ 'hrs' | t }})
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-
-                <thead class="bg-light text-muted small text-uppercase"
-                    style="letter-spacing: 0.5px;">
-                    <tr>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Date' | t }}</th>
-                        <th *ngIf="isAdminOrHR" class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Employee' | t }}</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Clock In' | t }}</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Clock Out' | t }}</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold text-center">{{ 'Status' | t }}</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold text-end">{{ 'Total Hours' | t }}</th>
-                    </tr>
-                </thead>
-
-                <tbody class="border-top-0">
-
-                    <tr *ngIf="isLoading">
-                        <td colspan="6" class="text-center py-5 text-muted">
-                            <span
-                                class="spinner-border spinner-border-sm me-2"></span>
-                            {{ 'Loading attendance data...' | t }}
-                        </td>
-                    </tr>
-
-                    <tr *ngIf="!isLoading && attendanceRecords.length === 0">
-                        <td [colSpan]="isAdmin ? 6 : 5" class="text-center py-5">
-                            <div class="d-flex flex-column align-items-center">
-                                <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                                    <i class="bi bi-clock-history text-secondary fs-1"></i>
-                                </div>
-                                <h3 class="fw-bold text-dark mb-1">{{ 'Attendance' | t }}</h3>
-                                <p class="text-muted small mb-0">{{ 'No attendance records available yet matching your criteria.' | t }}</p>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr *ngFor="let record of paginatedRecords">
-                        <td data-label="Date" class="py-3 px-4 fw-bold text-dark">
-                            {{ record.date | date:'dd MMM yyyy' }}
-                        </td>
-                        <td *ngIf="isAdminOrHR" data-label="Employee" class="py-3 px-4 fw-bold text-dark">
-                            {{ record.employeeName || ('Emp #' + record.employeeId) }}
-                        </td>
-
-                        <td data-label="Clock-in Time" class="py-3 px-3 text-success fw-medium">
-                            <i class="bi bi-arrow-down-right-circle me-1"></i>
-                            {{ record.clockIn || '--:--' }}
-                        </td>
-
-                        <td data-label="Clock-out Time" class="py-3 px-3 text-danger fw-medium">
-                            <i class="bi bi-arrow-up-right-circle me-1"></i>
-                            {{ (record.clockOut && record.clockOut !==
-                            '00:00:00') ? record.clockOut : '--:--' }}
-                        </td>
-
-                        <td data-label="Status" class="py-3 px-4 text-center">
-                            <span class="badge px-3 py-2 rounded-pill"
-                                [ngClass]="(record.clockOut && record.clockOut !== '00:00:00') ? 'bg-success bg-opacity-10 text-success' : 'bg-primary bg-opacity-10 text-primary'">
-                                {{ (record.clockOut && record.clockOut !== '00:00:00') ? ('Completed' | t) : ('Working' | t) }}
-                            </span>
-                        </td>
-
-                        <td data-label="Total Hours" class="py-3 px-3 text-end">
-                            <span class="fw-bold fs-6">{{ record.totalHours || '-' }}</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Pagination Footer -->
-        <div *ngIf="allAttendanceRecords.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <small class="text-muted fw-medium">
-                Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, attendanceRecords.length) }} of {{ attendanceRecords.length }} entries
-                <span *ngIf="attendanceRecords.length !== allAttendanceRecords.length" class="text-primary ms-1">
-                    (filtered from {{ allAttendanceRecords.length }} total)
-                </span>
-            </small>
-            <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
-                <li class="page-item" [class.disabled]="currentPage === 1">
-                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
-                </li>
-                <li class="page-item active">
-                    <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
-                </li>
-                <li class="page-item" [class.disabled]="currentPage === totalPages">
-                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
-
-<style>
-.cursor-pointer {
-  cursor: pointer;
-}
-
-/* Mobile Responsive Cards for Table */
-@media screen and (max-width: 768px) {
-  .table-responsive table, 
-  .table-responsive thead, 
-  .table-responsive tbody, 
-  .table-responsive th, 
-  .table-responsive td, 
-  .table-responsive tr {
-    display: block;
-  }
-  
-  .table-responsive thead tr {
-    display: none; /* Hide header row */
-  }
-  
-  .table-responsive tr {
-    border: 1px solid #e8ecf0;
-    border-radius: 0.75rem;
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-    background: #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-  }
-  
-  .table-responsive td {
-    border: none;
-    border-bottom: 1px solid #f0f2f5;
-    position: relative;
-    padding-left: 45% !important;
-    text-align: right !important;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    min-height: 50px;
-  }
-  
-  .table-responsive td:last-child {
-    border-bottom: 0;
-  }
-  
-  .table-responsive td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 1rem;
-    width: 40%;
-    text-align: left;
-    font-weight: 700;
-    color: #8592a3;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  
-  .actions-cell {
-    justify-content: flex-end !important;
-    padding-top: 1rem !important;
-    padding-bottom: 1rem !important;
-  }
-}
-</style>
 ```
 
 ### File: src\app\features\attendance\attendance.component.ts
@@ -3208,14 +1723,14 @@ export class AttendanceComponent implements OnInit {
     return Math.min(a, b);
   }
 
-  // ???? clock in/out ?????
+  // حالة clock in/out اليوم
   isCheckedInToday = false;
   isCheckedOutToday = false;
   todayWorkedHours = 0;
-  activeSession: any = null; // session ?????? ???? clock out
-  readonly today = new Date().toISOString().split('T')[0]; // ???????? ?? ??? template
+  activeSession: any = null; // session مفتوحة بدون clock out
+  readonly today = new Date().toISOString().split('T')[0]; // للمقارنة في الـ template
 
-  // session ?? ??? ???? ???? ???? clock out
+  // session من يوم سابق ونسي يعمل clock out
   get isStaleSession(): boolean {
     if (!this.activeSession?.date) return false;
     const sessionDate = new Date(this.activeSession.date)
@@ -3235,7 +1750,7 @@ export class AttendanceComponent implements OnInit {
   }
 
   loadAllAttendance() {
-    // ????? ?? ??????
+    // تحميل كل الحضور
     this.isLoading = true;
     this.attendanceService.getAllAttendance().subscribe({
       next: (res: any) => {
@@ -3256,7 +1771,7 @@ export class AttendanceComponent implements OnInit {
   }
 
   loadMyAttendance() {
-    // ????? ?????
+    // تحميل حضوري
     this.isLoading = true;
     this.attendanceService.getMyAttendance().subscribe({
       next: (res: any) => {
@@ -3308,7 +1823,7 @@ export class AttendanceComponent implements OnInit {
   }
 
   private analyzeSessionStatus(records: any[]) {
-    // ????? ???? ??????
+    // تحليل حالة الدوام
     const today = new Date().toDateString();
 
     const openSession = records.find(
@@ -3341,7 +1856,7 @@ export class AttendanceComponent implements OnInit {
   }
 
   onClockIn() {
-    // ????? ????
+    // تسجيل دخول
     this.isProcessing = true;
     const now = new Date();
     const dateIso = now.toISOString();
@@ -3354,7 +1869,7 @@ export class AttendanceComponent implements OnInit {
           this.isProcessing = false;
           Swal.fire({
             icon: 'success',
-            title: 'Clocked In ?',
+            title: 'Clocked In ✅',
             text: `Have a great day! Clocked in at ${timeString}`,
             timer: 2000,
             showConfirmButton: false,
@@ -3372,13 +1887,13 @@ export class AttendanceComponent implements OnInit {
       });
   }
 
-  // --- Clock Out ---
+  // ─── Clock Out ───
   onClockOut() {
     this.isProcessing = true;
     const now = new Date();
     const timeString = now.toTimeString().split(' ')[0];
 
-    // session ?? ??? ???? ?????? ?? 23:59
+    // session من يوم سابق نغلقها بـ 23:59
     const isOldSession =
       this.activeSession &&
       new Date(this.activeSession.date).toDateString() !==
@@ -3394,7 +1909,7 @@ export class AttendanceComponent implements OnInit {
           : `Great job today! Clocked out at ${clockOutTime}`;
         Swal.fire({
           icon: 'success',
-          title: 'Clocked Out ?',
+          title: 'Clocked Out ✅',
           text: msg,
           timer: 2500,
           showConfirmButton: false,
@@ -3411,9 +1926,9 @@ export class AttendanceComponent implements OnInit {
       },
     });
   }
-  // --- Export to Excel (CSV) ---
+  // ─── Export to Excel (CSV) ───
   exportToExcel() {
-    // ????? ?????
+    // تصدير الملف
     if (this.attendanceRecords.length === 0) {
       Swal.fire(
         'No Data',
@@ -3451,7 +1966,7 @@ export class AttendanceComponent implements OnInit {
         .join(',');
     });
 
-    // BOM + sep hint ???? Excel ????? ??
+    // BOM + sep hint عشان Excel يفتحه صح
     const csvContent =
       '\uFEFFsep=,\r\n' + [headers.join(','), ...csvData].join('\r\n');
 
@@ -3477,312 +1992,6 @@ export class AttendanceComponent implements OnInit {
   }
 }
 
-```
-
-### File: src\app\features\auth\login\login.component.css
-```css
-.login-page {
-    background: linear-gradient(135deg, #0f1b2d 0%, #1a2e45 40%, #0d2137 100%);
-    position: relative;
-    overflow: hidden;
-}
-
-/* -- ???? ???? -- */
-.dot-grid {
-    position: absolute;
-    inset: 0;
-    background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
-    background-size: 30px 30px;
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* -- ??????? ??????? -- */
-.bg-blobs {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.35;
-    animation: floatBlob 12s ease-in-out infinite;
-}
-
-.blob-1 {
-    width: 500px; height: 500px;
-    background: radial-gradient(circle, #c9a84c, #8B6914);
-    top: -150px; left: -150px;
-    animation-duration: 14s;
-}
-
-.blob-2 {
-    width: 400px; height: 400px;
-    background: radial-gradient(circle, #1a6ea8, #0d3d6e);
-    bottom: -100px; right: -100px;
-    animation-duration: 11s;
-    animation-delay: -4s;
-}
-
-.blob-3 {
-    width: 300px; height: 300px;
-    background: radial-gradient(circle, #8B6914, #c9a84c55);
-    top: 40%; right: 15%;
-    animation-duration: 16s;
-    animation-delay: -7s;
-}
-
-.blob-4 {
-    width: 250px; height: 250px;
-    background: radial-gradient(circle, #1e5a8a, #0a2d4d);
-    top: 20%; left: 30%;
-    animation-duration: 13s;
-    animation-delay: -2s;
-}
-
-.blob-5 {
-    width: 200px; height: 200px;
-    background: radial-gradient(circle, #c9a84c44, transparent);
-    bottom: 20%; left: 20%;
-    animation-duration: 18s;
-    animation-delay: -9s;
-}
-
-@keyframes floatBlob {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33%       { transform: translate(30px, -40px) scale(1.05); }
-    66%       { transform: translate(-20px, 25px) scale(0.97); }
-}
-
-/* ??????? ???? ??? ??????? */
-.login-card {
-    position: relative;
-    z-index: 1;
-}
-
-.login-card {
-    background-color: #ffffff;
-    background-image: 
-        radial-gradient(rgba(0, 0, 0, 0.09) 2px, transparent 2px),
-        radial-gradient(circle at bottom left, rgba(255, 248, 225, 0.4) 0%, #ffffff 60%);
-    background-size: 24px 24px, 100% 100%;
-    background-position: 0 0, 0 0;
-    border-radius: 2rem;
-    width: 1200px; /* ????? ????? */
-    max-width: 95vw;
-    min-height: 700px; /* ????? ????? ????? ????? ???? */
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-}
-
-.login-form-section {
-    flex: 1;
-    max-width: 50%;
-    z-index: 1;
-}
-
-.login-image-section {
-    flex: 1;
-    max-width: 50%;
-}
-
-.logo-text .badge {
-    border-color: #d1d5db !important;
-}
-
-.custom-input {
-    background-color: #f9fafb;
-    transition: all 0.3s;
-    font-size: 0.95rem;
-}
-
-.custom-input:focus {
-    background-color: #ffffff;
-    box-shadow: 0 0 0 4px rgba(255, 214, 107, 0.3) !important;
-    outline: none;
-}
-
-/* ???????? */
-.custom-input.is-invalid {
-    border: 1.5px solid #dc3545 !important;
-    background-color: #fff5f5;
-    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.12) !important;
-}
-
-.invalid-feedback {
-    display: none;
-    color: #dc3545;
-    font-size: 0.8rem;
-}
-
-.custom-input.is-invalid ~ .invalid-feedback,
-.is-invalid + .invalid-feedback {
-    display: block;
-}
-
-/* ???? ??? invalid-feedback ????? ?? */
-div:has(.custom-input.is-invalid) .invalid-feedback {
-    display: block;
-}
-
-.submit-btn {
-    background-color: #fed35c;
-    border: none;
-    transition: all 0.3s;
-    font-size: 1rem;
-}
-
-.submit-btn:hover {
-    background-color: #f5c43d;
-    transform: translateY(-1px);
-}
-
-.submit-btn:disabled {
-    opacity: 0.7;
-}
-
-@media (max-width: 991px) {
-    .login-form-section {
-        max-width: 100%;
-    }
-    .login-card {
-        height: auto;
-        padding-bottom: 2rem;
-        background: #ffffff;
-    }
-}
-
-```
-
-### File: src\app\features\auth\login\login.component.html
-```html
-<div class="login-page d-flex align-items-center justify-content-center vh-100" dir="ltr">
-
-    <!-- ????? ?????? -->
-    <div class="bg-blobs" aria-hidden="true">
-        <span class="blob blob-1"></span>
-        <span class="blob blob-2"></span>
-        <span class="blob blob-3"></span>
-        <span class="blob blob-4"></span>
-        <span class="blob blob-5"></span>
-    </div>
-    <!-- ???? ???? -->
-    <div class="dot-grid" aria-hidden="true"></div>
-
-    <div class="login-card shadow-lg d-flex position-relative">
-
-        <!-- Left Side: Form -->
-        <div
-            class="login-form-section p-5 d-flex flex-column position-relative">
-            <div class="logo-text mt-2 mb-4 d-flex align-items-center">
-                <div class="d-flex align-items-center justify-content-center me-3"
-                    style="width: 74px; height: 74px;">
-                    <img src="kawadir-logo.png" alt="Kawadir"
-                        style="width: 64px; height: 64px; border-radius: 14px; object-fit: contain; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
-                </div>
-                <div class="d-flex flex-column justify-content-center">
-                    <span style="font-size: 2.2rem; font-weight: 800; color: var(--bs-heading-color, #111); letter-spacing: 0.5px; line-height: 1;">Kawadir</span>
-                    <span style="font-size: 0.75rem; color: #888; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 3px;">HR Management</span>
-                </div>
-            </div>
-
-            <div class="form-content mt-4 px-lg-3">
-                <div class="text-center mb-5">
-                    <h3 class="fw-normal text-dark mb-2">Login to your account</h3>
-                    <p class="text-muted small">Access your HR dashboard</p>
-                </div>
-
-                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-
-                    <div class="mb-3">
-                        <label
-                            class="form-label text-secondary small fw-medium ms-3 mb-2">Email Address</label>
-                        <input type="email"
-                            class="form-control rounded-pill custom-input px-4 py-3 border-0"
-                            formControlName="email"
-                            placeholder="example@company.com"
-                            [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-                        <div class="invalid-feedback ms-3 mt-1">
-                            <span
-                                *ngIf="loginForm.get('email')?.errors?.['required']">
-                                <i
-                                    class="bi bi-exclamation-circle me-1"></i>Email
-                                is required
-                            </span>
-                            <span
-                                *ngIf="loginForm.get('email')?.errors?.['email']">
-                                <i
-                                    class="bi bi-exclamation-circle me-1"></i>Please
-                                enter a valid email address
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <label
-                            class="form-label text-secondary small fw-medium ms-3 mb-2">Password</label>
-                        <div class="position-relative">
-                            <input
-                                [type]="isPasswordVisible ? 'text' : 'password'"
-                                class="form-control rounded-pill custom-input px-4 py-3 border-0 pe-5"
-                                formControlName="password"
-                                placeholder="******************"
-                                [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-
-                            <button
-                                class="btn btn-link text-muted position-absolute end-0 top-50 translate-middle-y me-2 text-decoration-none shadow-none"
-                                type="button"
-                                (click)="togglePasswordVisibility()"
-                                tabindex="-1" style="z-index: 5;">
-                                <i class="bi fs-5"
-                                    [ngClass]="isPasswordVisible ? 'bi-eye-slash' : 'bi-eye'"></i>
-                            </button>
-                        </div>
-                        <div class="invalid-feedback ms-3 mt-1">
-                            <span
-                                *ngIf="loginForm.get('password')?.errors?.['required']">
-                                <i
-                                    class="bi bi-exclamation-circle me-1"></i>Password
-                                is required
-                            </span>
-                            <span
-                                *ngIf="loginForm.get('password')?.errors?.['minlength']">
-                                <i
-                                    class="bi bi-exclamation-circle me-1"></i>Password
-                                must be at least 6 characters
-                            </span>
-                        </div>
-                    </div>
-
-                    <button type="submit"
-                        class="btn btn-warning w-100 rounded-pill py-3 fw-medium shadow-sm submit-btn text-dark mb-4"
-                        [disabled]="isLoading">
-                        @if (isLoading) {
-                        <span class="spinner-border spinner-border-sm me-2"
-                            role="status" aria-hidden="true"></span>
-                        }
-                        Login
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Right Side: Image -->
-        <div class="login-image-section p-3 d-none d-lg-block">
-            <img
-                src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-                alt="Team working"
-                class="h-100 w-100 object-fit-cover rounded-4 shadow-sm"
-                style="border-radius: 1.5rem !important;">
-        </div>
-
-    </div>
-</div>
 ```
 
 ### File: src\app\features\auth\login\login.component.ts
@@ -3827,18 +2036,18 @@ export class LoginComponent implements OnInit, OnDestroy {
   });
 
   togglePasswordVisibility() {
-    // ?????/????? ???? ????
+    // إظهار/إخفاء كلمة السر
     this.isPasswordVisible = !this.isPasswordVisible;
   }
 
   ngOnInit() {
-    // ????? ???? ?????? ??? ????? ??????
+    // إجبار صفحة الدخول على الوضع الفاتح
     document.documentElement.setAttribute('data-theme', 'light');
     document.body.classList.remove('dark-mode');
   }
 
   ngOnDestroy() {
-    // ????? ????? ??? ???????? ??????? ??? ?????? ???????
+    // إعادة تطبيق ثيم المستخدم المحفوظ عند الدخول للمشروع
     if (this.settingsService.isDarkMode) {
       document.documentElement.setAttribute('data-theme', 'dark');
       document.body.classList.add('dark-mode');
@@ -3846,7 +2055,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    // ????? ??????
+    // تسجيل الدخول
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
@@ -3855,7 +2064,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.isLoading = true;
 
     const credentials = {
-      // ?????? ??????
+      // بيانات الدخول
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
     };
@@ -3880,139 +2089,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 }
 
-```
-
-### File: src\app\features\auth\register\register.component.css
-```css
-/* Animations */
-.fade-in {
-    animation: fadeIn 0.4s ease-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Header Icon */
-.header-icon {
-    flex-shrink: 0;
-}
-
-/* Minimalist Form Inputs */
-.clean-form .form-control,
-.clean-form .form-select {
-    background-color: var(--color-surface) !important;
-    border: 1px solid var(--color-border) !important;
-    color: var(--color-text);
-    transition: all 0.2s ease;
-}
-
-.clean-form .form-control:focus,
-.clean-form .form-select:focus {
-    border-color: #3b82f6 !important;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
-}
-
-body.dark-mode .clean-form .form-control:focus,
-body.dark-mode .clean-form .form-select:focus {
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
-}
-
-.clean-form .form-control::placeholder {
-    color: var(--color-text-muted);
-}
-
-/* Submit Button */
-.submit-btn {
-    transition: all 0.3s ease;
-}
-
-.submit-btn:hover:not(:disabled) {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2) !important;
-}
-
-.submit-btn:disabled {
-    background: var(--color-surface-3);
-    border-color: transparent;
-    color: var(--color-text-muted) !important;
-    box-shadow: none !important;
-}
-
-```
-
-### File: src\app\features\auth\register\register.component.html
-```html
-<div class="page-container p-4 fade-in">
-    <!-- Clean Page Header -->
-    <div class="d-flex align-items-center mb-5">
-        <div class="header-icon me-3 text-primary bg-primary bg-opacity-10 d-flex align-items-center justify-content-center rounded-3 shadow-sm" style="width: 54px; height: 54px;">
-            <i class="bi bi-person-plus fs-3"></i>
-        </div>
-        <div>
-            <h2 class="fw-bold text-dark mb-1">Register New User</h2>
-            <p class="text-muted mb-0">Create secure system credentials and assign appropriate roles for new employees.</p>
-        </div>
-    </div>
-
-    <!-- Clean Form Grid Layout -->
-    <div class="row">
-        <div class="col-12 col-xl-10">
-            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="clean-form">
-                <div class="row g-4 mb-5">
-                    
-                    <!-- Username -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold text-secondary small mb-2">Username <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control px-3 py-2 fs-6 rounded-3" formControlName="username" placeholder="e.g. johndoe">
-                    </div>
-
-                    <!-- Email -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold text-secondary small mb-2">Email Address <span class="text-danger">*</span></label>
-                        <input type="email" class="form-control px-3 py-2 fs-6 rounded-3" formControlName="email" placeholder="john@company.com">
-                    </div>
-
-                    <!-- Password -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold text-secondary small mb-2">Password <span class="text-danger">*</span></label>
-                        <input type="password" class="form-control px-3 py-2 fs-6 rounded-3" formControlName="password" placeholder="Min. 6 characters">
-                    </div>
-
-                    <!-- Role -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold text-secondary small mb-2">System Role <span class="text-danger">*</span></label>
-                        <select class="form-select px-3 py-2 fs-6 rounded-3" formControlName="role">
-                            <option value="" disabled selected>Select Role...</option>
-                            @for (role of roles; track role) {
-                                <option [value]="role">{{ role }}</option>
-                            }
-                        </select>
-                    </div>
-
-                </div>
-
-                <!-- Action Button -->
-                <div>
-                    <button type="submit" class="btn btn-primary px-5 py-2 fw-medium shadow-sm rounded-3 submit-btn" [disabled]="registerForm.invalid || isLoading">
-                        @if (isLoading) {
-                            <span class="spinner-border spinner-border-sm me-2"></span> Registering...
-                        } @else {
-                            Register User
-                        }
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 ```
 
 ### File: src\app\features\auth\register\register.component.ts
@@ -4058,12 +2134,12 @@ export class RegisterComponent {
   roles = ['Employee', 'Admin', 'HR'];
 
   onSubmit() {
-    // ????? ???? ????
+    // إنشاء حساب جديد
     if (this.registerForm.invalid) return;
 
     this.isLoading = true;
     const payload = this.registerForm.getRawValue();
-    // ?????? ???????
+    // بيانات التسجيل
 
     this.authService.register(payload).subscribe({
       next: (res: any) => {
@@ -4074,11 +2150,11 @@ export class RegisterComponent {
 
         Swal.fire({
           icon: 'success',
-          title: '?? ????? ?????? ?????',
-          text: '?? ???? ????? ??? ?????? ?????',
+          title: 'تم إنشاء الحساب بنجاح',
+          text: 'هل تريد إكمال ملف الموظف الآن؟',
           showCancelButton: true,
-          confirmButtonText: '???? ???? ????????',
-          cancelButtonText: '??????',
+          confirmButtonText: 'نعم، أكمل البيانات',
+          cancelButtonText: 'لاحقاً',
         }).then((result) => {
           if (result.isConfirmed) {
             this.router.navigate(['/employee-form'], {
@@ -4095,10 +2171,10 @@ export class RegisterComponent {
       error: (err) => {
         this.isLoading = false;
         Swal.fire(
-          '???',
+          'خطأ',
           getFriendlyErrorMessage(
             err,
-            '??? ????? ??????. ???? ???????? ??? ????.',
+            'فشل إنشاء الحساب. يرجى المحاولة مرة أخرى.',
           ),
           'error',
         );
@@ -4107,335 +2183,6 @@ export class RegisterComponent {
   }
 }
 
-```
-
-### File: src\app\features\dashboard\dashboard.component.css
-```css
-.stat-card {
-  border-radius: 16px;
-  color: white;
-  padding: 25px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
-  border: none;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
-  z-index: 1;
-}
-
-.stat-card:hover {
-  transform: translateY(-5px);
-  z-index: 2;
-}
-
-.stat-card h3 {
-  font-size: 32px;
-  font-weight: 800;
-  margin-bottom: 5px;
-  letter-spacing: -0.5px;
-}
-.stat-card p {
-  margin: 0;
-  opacity: 0.9;
-  font-size: 14.5px;
-  font-weight: 500;
-}
-.stat-card .icon {
-  position: absolute;
-  right: 20px;
-  top: 20px;
-  font-size: 44px;
-  opacity: 0.2;
-  transition: transform 0.5s ease, opacity 0.3s ease;
-}
-
-.stat-card:hover .icon {
-  transform: scale(1.15) rotate(-5deg);
-  opacity: 0.3;
-}
-
-/* Beautiful Gradients and Glows */
-.pink {
-  background: linear-gradient(135deg, #ff5e7e 0%, #ff99ac 100%);
-}
-.pink:hover { box-shadow: 0 15px 30px -5px rgba(255, 94, 126, 0.4); }
-
-.orange {
-  background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%);
-}
-.orange:hover { box-shadow: 0 15px 30px -5px rgba(243, 156, 18, 0.4); }
-
-.blue {
-  background: linear-gradient(135deg, #3498db 0%, #5dade2 100%);
-}
-.blue:hover { box-shadow: 0 15px 30px -5px rgba(52, 152, 219, 0.4); }
-
-.green {
-  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-}
-.green:hover { box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.4); }
-
-.payday {
-  background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
-}
-.payday:hover { box-shadow: 0 15px 30px -5px rgba(124, 58, 237, 0.4); }
-
-.attendance-placeholder-chart {
-  height: 300px;
-  background-color: #fcfcfc;
-  border: 2px dashed #eee;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-}
-
-```
-
-### File: src\app\features\dashboard\dashboard.component.html
-```html
-<div class="dashboard-container">
-
-
-    @if (isAdmin) {
-    <div class="d-flex justify-content-end mb-3">
-        <button class="btn btn-primary d-flex align-items-center gap-2 shadow-sm px-4" (click)="downloadSystemReport()">
-            <i class="bi bi-file-earmark-arrow-down"></i>
-            {{ 'Download Report' | t }}
-        </button>
-    </div>
-
-    <!-- Stat Cards -->
-    <div class="row g-4 mb-4">
-        <div class="col-md-3">
-            <div class="stat-card pink hover-elevate h-100">
-                <div class="card-body">
-                    <h3>{{ totalEmployees }}</h3>
-                    <p>{{ 'Total Employees' | t }}</p>
-                    <i class="bi bi-people-fill icon"></i>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card orange hover-elevate h-100">
-                <div class="card-body">
-                    <h3>{{ pendingLeaves }}</h3>
-                    <p>{{ 'Pending Leaves' | t }}</p>
-                    <i class="bi bi-calendar-x icon"></i>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card blue hover-elevate h-100">
-                <div class="card-body">
-                    <h3>{{ departmentsCount }}</h3>
-                    <p>{{ 'Departments' | t }}</p>
-                    <i class="bi bi-building icon"></i>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card green hover-elevate h-100">
-                <div class="card-body">
-                    <h3>{{ totalSalaries | number }} JD</h3>
-                    <p>{{ 'Salaries' | t }}</p>
-                    <i class="bi bi-cash-stack icon"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Row 1: Left (Attendance + Attendance Rate) | Right (Leave Distribution + Recent Leaves) -->
-    <div class="row g-4">
-        <!-- Left Column -->
-        <div class="col-lg-8 d-flex flex-column gap-4">
-            <!-- Attendance Table -->
-            <div class="chart-card card hover-elevate shadow-sm border-0 rounded-4">
-                <div class="card-header bg-white p-3 border-0">
-                    <h5 class="fw-bold m-0 text-dark">{{ 'Attendance' | t }}</h5>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="small text-muted text-uppercase bg-light">
-                                <tr>
-                                    <th class="ps-4">{{ 'Employee' | t }}</th>
-                                    <th>{{ 'Date' | t }}</th>
-                                    <th>{{ 'Clock In' | t }}</th>
-                                    <th>{{ 'Clock Out' | t }}</th>
-                                </tr>
-                            </thead>
-                            <tbody class="small">
-                                @for (att of recentAttendances; track att.id) {
-                                <tr>
-                                    <td class="fw-bold ps-4">{{ att.employeeName || 'Emp #' + att.employeeId }}</td>
-                                    <td>{{ att.date | date:'shortDate' }}</td>
-                                    <td class="text-success"><i class="bi bi-box-arrow-in-right me-1"></i>{{ att.clockIn || '--:--' }}</td>
-                                    <td class="text-danger"><i class="bi bi-box-arrow-right me-1"></i>{{ (att.clockOut && att.clockOut !== '00:00:00') ? att.clockOut : '--:--' }}</td>
-                                </tr>
-                                } @empty {
-                                <tr>
-                                    <td colspan="4" class="text-center py-4 text-muted">
-                                        <i class="bi bi-calendar-x fs-3 d-block mb-2 text-light-gray"></i>
-                                        {{ 'No Data' | t }}
-                                    </td>
-                                </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Attendance Rate Chart -->
-            <div class="chart-card card hover-elevate shadow-sm border-0 rounded-4 flex-grow-1">
-                <div class="card-header bg-white p-3 border-0 pb-0 d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold m-0 text-dark">{{ 'Attendance Rate' | t }}</h5>
-                    <span class="badge bg-light text-success border border-success border-opacity-25 px-2 py-1"><i class="bi bi-person-check-fill me-1"></i>{{ attendanceRate }}% {{ 'Overall' | t }}</span>
-                </div>
-                <div class="card-body p-3 pt-4">
-                    <div style="height: 300px; position: relative; width: 100%;">
-                        <canvas id="attendanceRateChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Right Column -->
-        <div class="col-lg-4 d-flex flex-column gap-4">
-            <!-- Leave Distribution -->
-            <div class="chart-card card hover-elevate shadow-sm border-0 rounded-4">
-                <div class="card-header bg-white p-3 border-0">
-                    <h5 class="fw-bold m-0 text-dark">{{ 'Leave Distribution' | t }}</h5>
-                </div>
-                <div class="card-body">
-                    <div style="height: 250px; position: relative;" class="d-flex justify-content-center align-items-center">
-                        <canvas id="leaveTypeChart"></canvas>
-                        <div *ngIf="annualLeavePercent === 0 && sickLeavePercent === 0 && emergencyLeavePercent === 0 && unpaidLeavePercent === 0" class="position-absolute text-center text-muted small">
-                            {{ 'No Data' | t }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Recent Leave Requests -->
-            <div class="activity-card hover-elevate bg-white rounded-4 shadow-sm p-4 flex-grow-1">
-                <h6 class="fw-bold mb-3 text-dark">{{ 'Recent Leave Requests' | t }}</h6>
-                <div class="d-flex flex-column gap-2">
-                    @for (leave of recentLeaves; track leave.id) {
-                    <div class="d-flex align-items-center justify-content-between py-2 px-3 rounded-3 bg-light">
-                        <div class="d-flex align-items-center gap-2">
-                            <div class="rounded-circle bg-primary bg-opacity-10 text-primary fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 32px; height: 32px; font-size: 12px;">
-                                {{ (leave.employeeName || 'E').charAt(0).toUpperCase() }}
-                            </div>
-                            <span class="fw-semibold text-dark small text-truncate" style="max-width: 110px;">{{ leave.employeeName || 'Emp #' + leave.employeeId }}</span>
-                        </div>
-                        <span class="status-badge px-2 py-1" style="font-size: 11px;"
-                            [ngClass]="{
-                                'status-approved': leave.status === 'Approved',
-                                'status-pending': leave.status === 'Pending',
-                                'status-rejected': leave.status === 'Rejected'
-                            }">
-                            <i class="bi me-1"
-                                [ngClass]="{
-                                    'bi-check-circle-fill': leave.status === 'Approved',
-                                    'bi-hourglass-split': leave.status === 'Pending',
-                                    'bi-x-circle-fill': leave.status === 'Rejected'
-                                }"></i>{{ leave.status | t }}
-                        </span>
-                    </div>
-                    } @empty {
-                    <div class="text-center text-muted py-4">
-                        <i class="bi bi-calendar-x fs-3 d-block mb-2"></i>
-                        {{ 'No Data' | t }}
-                    </div>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-
-    } @else {
-    <div class="row g-4 mb-4">
-        <div class="col-md-3">
-            <div class="stat-card blue hover-elevate h-100">
-                <div class="card-body">
-                    <h3>{{ employeeAnnualLeaveBalance }}</h3> <p>{{ 'Annual Leave Balance' | t }}</p>
-                    <i class="bi bi-airplane-fill icon"></i>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="stat-card orange hover-elevate h-100">
-                <div class="card-body">
-                    <h3>{{ employeePendingLeaves }}</h3> <p>{{ 'My Pending Leaves' | t }}</p>
-                    <i class="bi bi-hourglass-split icon"></i>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="stat-card pink hover-elevate h-100">
-                <div class="card-body">
-                    <h3>{{ employeeHoursWorked }} <span class="fs-6 fw-normal">hrs</span></h3>
-                    <p>{{ 'Total Hours' | t }}</p>
-                    <i class="bi bi-clock-history icon"></i>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="stat-card payday hover-elevate h-100">
-                <div class="card-body">
-                    <h3>{{ employeeNextPayday }}</h3>
-                    <p>{{ 'Next Payday' | t }}</p>
-                    <i class="bi bi-calendar-check icon"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row g-4">
-        <div class="col-12">
-            <div class="chart-card card hover-elevate shadow-sm border-0 rounded-4 h-100">
-                <div class="card-header bg-white p-3 border-0">
-                    <h5 class="fw-bold m-0 text-dark">{{ 'My Attendance' | t }}</h5>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="small text-muted text-uppercase bg-light">
-                                <tr>
-                                    <th class="ps-4">{{ 'Date' | t }}</th>
-                                    <th>{{ 'Clock In' | t }}</th>
-                                    <th>{{ 'Clock Out' | t }}</th>
-                                </tr>
-                            </thead>
-                            <tbody class="small">
-                                @for (att of myRecentAttendances; track att.id) {
-                                <tr>
-                                    <td class="ps-4 fw-bold">{{ att.date | date:'shortDate' }}</td>
-                                    <td class="text-success"><i class="bi bi-box-arrow-in-right me-1"></i>{{ att.clockIn || '--:--' }}</td>
-                                    <td class="text-danger"><i class="bi bi-box-arrow-right me-1"></i>{{ (att.clockOut && att.clockOut !== '00:00:00') ? att.clockOut : '--:--' }}</td>
-                                </tr>
-                                } @empty {
-                                <tr>
-                                    <td colspan="3" class="text-center py-4 text-muted">
-                                        <i class="bi bi-calendar-x fs-3 d-block mb-2 text-light-gray"></i>
-                                        {{ 'No Data' | t }}
-                                    </td>
-                                </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    }
-</div>
 ```
 
 ### File: src\app\features\dashboard\dashboard.component.ts
@@ -4492,7 +2239,7 @@ export class DashboardComponent implements OnInit {
   employeeHoursWorked: number = 0;
   employeeNextPayday: string = '';
 
-  // ??? 25 ?? ?? ???
+  // يوم 25 من كل شهر
   readonly PAYDAY = 25;
 
   leaveChartInstance: any;
@@ -4507,7 +2254,7 @@ export class DashboardComponent implements OnInit {
     const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     const timeStr = today.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 
-    // -- CORPORATE HEADER BANNER ---------------------------------------------
+    // ── CORPORATE HEADER BANNER ─────────────────────────────────────────────
     doc.setFillColor(67, 97, 238);
     doc.rect(0, 0, pageW, 42, 'F');
 
@@ -4527,7 +2274,7 @@ export class DashboardComponent implements OnInit {
 
     doc.setFontSize(8.5);
     doc.setTextColor(180, 195, 255);
-    doc.text(`Generated: ${todayStr}  �  ${timeStr}`, margin, 30);
+    doc.text(`Generated: ${todayStr}  ·  ${timeStr}`, margin, 30);
 
     // Right side: badge label
     doc.setFillColor(50, 75, 210);
@@ -4537,7 +2284,7 @@ export class DashboardComponent implements OnInit {
     doc.setTextColor(255, 255, 255);
     doc.text('ADMIN REPORT', pageW - 33, 16, { align: 'center' });
 
-    // -- KPI STAT CARDS ------------------------------------------------------
+    // ── KPI STAT CARDS ──────────────────────────────────────────────────────
     const cardY = 50;
     const cardH = 28;
     const cardW = (pageW - margin * 2 - 9) / 4; // 4 cards with 3 gaps of 3mm
@@ -4570,7 +2317,7 @@ export class DashboardComponent implements OnInit {
       doc.text(card.label, x + cardW / 2, cardY + 22, { align: 'center' });
     });
 
-    // -- ANALYTICS SECTION ---------------------------------------------------
+    // ── ANALYTICS SECTION ───────────────────────────────────────────────────
     let curY = cardY + cardH + 10;
 
     // Section header line
@@ -4614,16 +2361,16 @@ export class DashboardComponent implements OnInit {
 
     curY = (doc as any).lastAutoTable.finalY + 10;
 
-    // -- RECENT LEAVE REQUESTS TABLE -----------------------------------------
+    // ── RECENT LEAVE REQUESTS TABLE ─────────────────────────────────────────
     this._pdfSectionHeader(doc, 'RECENT LEAVE REQUESTS', margin, curY, pageW);
     curY += 8;
 
     const leaveRows = this.recentLeaves.map((l: any) => [
       l.employeeName || `Emp #${l.employeeId}`,
-      l.leaveType || '�',
-      l.startDate ? l.startDate.split('T')[0] : '�',
-      l.endDate   ? l.endDate.split('T')[0]   : '�',
-      l.status || '�',
+      l.leaveType || '—',
+      l.startDate ? l.startDate.split('T')[0] : '—',
+      l.endDate   ? l.endDate.split('T')[0]   : '—',
+      l.status || '—',
     ]);
 
     if (leaveRows.length === 0) {
@@ -4668,13 +2415,13 @@ export class DashboardComponent implements OnInit {
       curY = (doc as any).lastAutoTable.finalY + 10;
     }
 
-    // -- RECENT ATTENDANCE TABLE ----------------------------------------------
+    // ── RECENT ATTENDANCE TABLE ──────────────────────────────────────────────
     this._pdfSectionHeader(doc, 'RECENT ATTENDANCE RECORDS', margin, curY, pageW);
     curY += 8;
 
     const attRows = this.recentAttendances.map((a: any) => [
       a.employeeName || `Emp #${a.employeeId}`,
-      a.date ? a.date.split('T')[0] : '�',
+      a.date ? a.date.split('T')[0] : '—',
       a.clockIn  || '--:--',
       (a.clockOut && a.clockOut !== '00:00:00') ? a.clockOut : '--:--',
     ]);
@@ -4704,7 +2451,7 @@ export class DashboardComponent implements OnInit {
       });
     }
 
-    // -- FOOTERS ON ALL PAGES -------------------------------------------------
+    // ── FOOTERS ON ALL PAGES ─────────────────────────────────────────────────
     const totalPages = (doc as any).internal.getNumberOfPages();
     for (let pg = 1; pg <= totalPages; pg++) {
       doc.setPage(pg);
@@ -4716,12 +2463,12 @@ export class DashboardComponent implements OnInit {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(7.5);
       doc.setTextColor(160, 165, 180);
-      doc.text('Confidential � Kawadir HRMS Internal Report', margin, pageH - 7);
+      doc.text('Confidential — Kawadir HRMS Internal Report', margin, pageH - 7);
       // Page number right
       doc.text(`Page ${pg} of ${totalPages}`, pageW - margin, pageH - 7, { align: 'right' });
     }
 
-    // -- SAVE -----------------------------------------------------------------
+    // ── SAVE ─────────────────────────────────────────────────────────────────
     doc.save(`System_Summary_Report_${todayStr}.pdf`);
   }
 
@@ -4750,7 +2497,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadAdminStats() {
-    // ????? ?????? ??????
+    // تحميل بيانات الأدمن
     this.empService.getEmployees().subscribe({
       next: (employees: any[]) => {
         this.totalEmployees = employees.length;
@@ -4762,7 +2509,7 @@ export class DashboardComponent implements OnInit {
     this.leaveService.getAllLeaves().subscribe({
       next: (leaves: any[]) => {
         this.pendingLeaves = leaves.filter(
-          // ??? backend ????? string ?? ???
+          // الـ backend بيرجع string مش رقم
           (l: any) => l.status === 'Pending',
         ).length;
 
@@ -4779,7 +2526,7 @@ export class DashboardComponent implements OnInit {
           unpaid = 0;
 
         if (totalLeaves > 0) {
-          // ???? strings ?? ??? backend
+          // كلها strings من الـ backend
           annual = leaves.filter(
             (l: any) => l.leaveType === 'Annual',
           ).length;
@@ -4842,7 +2589,7 @@ export class DashboardComponent implements OnInit {
   }
 
   calculateAttendanceRate() {
-    // ???? ???? ??????
+    // نحسب نسبة الحضور
     if (this.totalEmployees === 0 || this.allAttendances.length === 0) return;
     const validAtt = this.allAttendances.filter((a) => a.date && a.clockIn);
     const uniqueDays = new Set(validAtt.map((a) => a.date.split('T')[0])).size;
@@ -4858,7 +2605,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadNextPayday() {
-    // ???? ???? ?????? ??????
+    // نحسب موعد الراتب القادم
     this.salaryService.getMySalaries().subscribe({
       next: (salaries: any[]) => {
         if (!salaries || salaries.length === 0) return;
@@ -4908,7 +2655,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadEmployeeStats() {
-    // ????? ?????? ??????
+    // تحميل بيانات الموظف
 
     const today = new Date();
     const currentMonth = today.toLocaleString('en-US', { month: 'short' });
@@ -4918,19 +2665,19 @@ export class DashboardComponent implements OnInit {
       1,
     ).toLocaleString('en-US', { month: 'short' });
 
-    // ???? ????? ???? ?????? ????? ??? ???? ??? API
+    // قيمة مؤقتة تظهر فوراً، تتحدث لما يرجع الـ API
     if (today.getDate() > this.PAYDAY) {
       this.employeeNextPayday = `${nextMonth} ${this.PAYDAY}`;
     } else {
       this.employeeNextPayday = `${currentMonth} ${this.PAYDAY}`;
     }
 
-    // ???? ??????? ?????? ?? ??? ????
+    // نجيب التاريخ الدقيق من آخر راتب
     this.loadNextPayday();
 
     this.leaveService.getMyLeaves().subscribe({
       next: (leaves: any[]) => {
-        // backend ???? strings ?? ?????
+        // backend يرجع strings مش أرقام
         this.employeePendingLeaves = leaves.filter(
           (l: any) => l.status === 'Pending',
         ).length;
@@ -4993,7 +2740,7 @@ export class DashboardComponent implements OnInit {
     emergency: number,
     unpaid: number,
   ) {
-    // ??? ????? ????????
+    // رسم تشارت الإجازات
     const ctx = document.getElementById('leaveTypeChart') as HTMLCanvasElement;
     if (!ctx) return;
 
@@ -5001,7 +2748,7 @@ export class DashboardComponent implements OnInit {
       this.leaveChartInstance.destroy();
     }
 
-    // ?? ???? ???? ???? ????? ?????
+    // لو مافي داتا نعرض دائرة فاضية
     if (annual === 0 && sick === 0 && emergency === 0 && unpaid === 0) {
       this.leaveChartInstance = new Chart(ctx, {
         type: 'doughnut',
@@ -5166,383 +2913,6 @@ export class DashboardComponent implements OnInit {
 
 ```
 
-### File: src\app\features\departments\departments.component.css
-```css
-```
-
-### File: src\app\features\departments\departments.component.html
-```html
-<div class="page-container p-4">
-
-    <div
-        class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <div>
-            <h3 class="fw-bold text-dark mb-1">
-                <i class="bi bi-diagram-3-fill me-2 text-primary"></i>{{
-                'Departments' | t }}
-            </h3>
-            <p class="text-muted small mb-0">{{
-                'Manage organizational departments and view their employee structures'
-                | t }}</p>
-        </div>
-        <button
-            class="btn btn-primary shadow-sm text-nowrap px-4 py-2 rounded-3 fw-semibold"
-            (click)="openAddModal()">
-            <i class="bi bi-plus-lg me-1"></i> {{ 'Add Department' | t }}
-        </button>
-    </div>
-
-    @if (isLoading) {
-    <div class="text-center my-5 py-5">
-        <div class="spinner-border text-primary mb-3" role="status"
-            style="width: 3rem; height: 3rem;"></div>
-        <p class="text-muted fw-medium fs-5">Fetching departments data...</p>
-    </div>
-    } @else {
-    <div class="row g-4">
-        @for (dept of departmentsList; track dept.id) {
-        <div class="col-md-6 col-xl-4 col-xxl-3">
-            <div
-                class="card border-0 shadow-sm h-100 rounded-4 overflow-hidden position-relative transition-hover"
-                style="transition: transform 0.2s, box-shadow 0.2s;">
-                <div class="card-header bg-white border-0 pt-4 pb-0 px-4">
-                    <div
-                        class="d-flex justify-content-between align-items-center mb-3">
-                        <div
-                            class="bg-primary bg-opacity-10 text-primary p-2 rounded-3 d-flex align-items-center justify-content-center"
-                            style="width: 48px; height: 48px;">
-                            <i class="bi bi-buildings fs-4"></i>
-                        </div>
-                        <div class="dropdown">
-                            <button
-                                class="btn btn-light btn-sm rounded-circle shadow-none text-muted d-flex align-items-center justify-content-center p-0"
-                                type="button" data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                                style="width: 32px; height: 32px;">
-                                <i class="bi bi-three-dots-vertical"></i>
-                            </button>
-                            <ul
-                                class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3">
-                                <li><a
-                                        class="dropdown-item py-2 fw-medium text-dark"
-                                        href="javascript:void(0)"
-                                        (click)="openEditModal(dept)"><i
-                                            class="bi bi-pencil-square text-primary me-2"></i>{{
-                                        'Edit' | t }}</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a
-                                        class="dropdown-item py-2 fw-medium text-danger"
-                                        href="javascript:void(0)"
-                                        (click)="deleteDepartment(dept.id)"><i
-                                            class="bi bi-trash3 me-2"></i>{{
-                                        'Delete' | t }}</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <h5 class="card-title fw-bold text-dark mb-1 text-truncate"
-                        [title]="dept.name">{{ dept.name }}</h5>
-                    <p class="text-muted small mb-0 fw-medium">{{ 'ID' | t }}:
-                        #{{ dept.id }}</p>
-                </div>
-                <div class="card-body px-4 pb-4 pt-3 mt-1">
-                    <div
-                        class="d-flex justify-content-between align-items-center bg-light rounded-3 p-3">
-                        <div class="text-center flex-fill">
-                            <h5 class="fw-bold text-primary mb-0">{{
-                                getDeptStat(dept.id, 'employees') }}</h5>
-                            <small class="text-muted fw-semibold"
-                                style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">{{
-                                'Employees' | t }}</small>
-                        </div>
-                        <div
-                            style="width: 1px; height: 35px; background-color: #dee2e6;"></div>
-                        <div class="text-center flex-fill">
-                            <h5 class="fw-bold text-dark mb-0">{{
-                                getDeptStat(dept.id, 'positions') }}</h5>
-                            <small class="text-muted fw-semibold"
-                                style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">{{
-                                'Positions' | t }}</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer bg-white border-top-0 px-4 pb-4 pt-0">
-                    <button
-                        class="btn btn-outline-primary w-100 rounded-3 fw-semibold shadow-sm py-2 d-flex align-items-center justify-content-center"
-                        (click)="viewDetails(dept)">
-                        <i class="bi bi-eye me-2 fs-5"></i> View Details
-                    </button>
-                </div>
-            </div>
-        </div>
-        } @empty {
-        <div class="col-12 text-center my-5 py-5">
-            <div
-                class="bg-light rounded-circle d-inline-flex justify-content-center align-items-center mb-4"
-                style="width: 100px; height: 100px;">
-                <i class="bi bi-diagram-2 text-secondary"
-                    style="font-size: 40px;"></i>
-            </div>
-            <h4 class="fw-bold text-dark mb-2">{{ 'No Data' | t }}</h4>
-            <p class="text-muted">There are no departments created in the system
-                yet.</p>
-            <button class="btn btn-primary mt-2 px-4 rounded-3"
-                (click)="openAddModal()"><i class="bi bi-plus-lg me-1"></i> Add
-                Your First Department</button>
-        </div>
-        }
-    </div>
-    }
-</div>
-
-<div class="modal fade" id="deptDetailsModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-            <div class="modal-header border-bottom-0 bg-white pt-4 pb-2 px-4">
-                <h4
-                    class="modal-title fw-bold text-dark d-flex align-items-center">
-                    <div
-                        class="bg-primary bg-opacity-10 text-primary p-2 rounded-3 me-3 d-flex align-items-center justify-content-center"
-                        style="width: 40px; height: 40px;">
-                        <i class="bi bi-building fs-5"></i>
-                    </div>
-                    {{ selectedDepartment?.name }} Department
-                </h4>
-                <button type="button" class="btn-close shadow-none"
-                    data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-0 bg-light">
-                @if (selectedDepartment) {
-                <div class="row g-0">
-                    <!-- Left Column: Overview Stats -->
-                    <div class="col-lg-4 border-end bg-white">
-                        <div class="p-4 h-100">
-                            <h6 class="fw-bold text-dark mb-4 text-uppercase"
-                                style="letter-spacing: 0.5px; font-size: 13px;">Department
-                                Overview</h6>
-
-                            <div
-                                class="d-flex align-items-center mb-4 p-3 bg-light rounded-4 border">
-                                <div
-                                    class="bg-primary text-white rounded-3 d-flex justify-content-center align-items-center me-3"
-                                    style="width: 48px; height: 48px;">
-                                    <i class="bi bi-people-fill fs-5"></i>
-                                </div>
-                                <div>
-                                    <p
-                                        class="text-muted small mb-0 fw-semibold">Total
-                                        Employees</p>
-                                    <h3 class="fw-bold text-primary mb-0">{{
-                                        selectedDepartment.stats?.totalEmployees
-                                        || 0 }}</h3>
-                                </div>
-                            </div>
-
-                            <div
-                                class="d-flex align-items-center mb-4 p-3 bg-light rounded-4 border">
-                                <div
-                                    class="bg-secondary text-white rounded-3 d-flex justify-content-center align-items-center me-3"
-                                    style="width: 48px; height: 48px;">
-                                    <i class="bi bi-diagram-3-fill fs-5"></i>
-                                </div>
-                                <div>
-                                    <p
-                                        class="text-muted small mb-0 fw-semibold">Total
-                                        Positions</p>
-                                    <h3 class="fw-bold text-secondary mb-0">{{
-                                        selectedDepartment.totalPositions || 0
-                                        }}</h3>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right Column: Employees Table -->
-                    <div class="col-lg-8 bg-light">
-                        <div class="p-4 h-100 d-flex flex-column">
-                            <div
-                                class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-                                <h6
-                                    class="fw-bold text-dark mb-0 text-uppercase"
-                                    style="letter-spacing: 0.5px; font-size: 13px;">Employees
-                                    Directory</h6>
-
-                                <div class="d-flex gap-2">
-                                    <div
-                                        class="input-group input-group-sm shadow-sm"
-                                        style="max-width: 200px;">
-                                        <span
-                                            class="input-group-text bg-white border-end-0 text-muted"><i
-                                                class="bi bi-search"></i></span>
-                                        <input type="text"
-                                            class="form-control border-start-0 ps-0"
-                                            placeholder="Search by name or ID..."
-                                            [(ngModel)]="searchEmpQuery"
-                                            (input)="filterDeptEmployees()">
-                                    </div>
-                                    <select
-                                        class="form-select form-select-sm shadow-sm w-auto fw-medium text-secondary"
-                                        [(ngModel)]="selectedPositionFilter"
-                                        (change)="filterDeptEmployees()">
-                                        <option value>All Positions</option>
-                                        <option
-                                            *ngFor="let p of uniquePositions"
-                                            [value]="p">{{ p }}</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div
-                                class="card border-0 shadow-sm rounded-4 flex-grow-1 overflow-hidden">
-                                <div class="table-responsive h-100"
-                                    style="max-height: 500px;">
-                                    <table
-                                        class="table table-hover align-middle mb-0">
-                                        <thead class="bg-light sticky-top"
-                                            style="z-index: 1;">
-                                            <tr>
-                                                <th
-                                                    class="py-3 px-4 text-muted small text-uppercase fw-semibold"
-                                                    style="letter-spacing: 0.5px; border-bottom: 2px solid #e9ecef;">ID</th>
-                                                <th
-                                                    class="py-3 px-3 text-muted small text-uppercase fw-semibold"
-                                                    style="letter-spacing: 0.5px; border-bottom: 2px solid #e9ecef;">Employee
-                                                    Name</th>
-                                                <th
-                                                    class="py-3 px-3 text-muted small text-uppercase fw-semibold"
-                                                    style="letter-spacing: 0.5px; border-bottom: 2px solid #e9ecef;">Position</th>
-                                                <th
-                                                    class="py-3 px-4 text-muted small text-uppercase fw-semibold text-center"
-                                                    style="letter-spacing: 0.5px; border-bottom: 2px solid #e9ecef;">Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="border-top-0">
-                                            <tr
-                                                *ngFor="let emp of filteredDeptEmployees">
-                                                <td
-                                                    class="py-3 px-4 fw-bold text-secondary">#{{
-                                                    emp.id }}</td>
-                                                <td
-                                                    class="py-3 px-3 fw-bold text-dark">
-                                                    <div
-                                                        class="d-flex align-items-center">
-                                                        <div
-                                                            class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-3 rounded-circle d-flex align-items-center justify-content-center"
-                                                            style="width: 35px; height: 35px; font-size: 13px;">
-                                                            {{
-                                                            emp.firstName?.charAt(0)
-                                                            || 'U' }}
-                                                        </div>
-                                                        {{ emp.firstName }} {{
-                                                        emp.lastName }}
-                                                    </div>
-                                                </td>
-                                                <td
-                                                    class="py-3 px-3 text-muted fw-medium">{{
-                                                    emp.positionName || 'N/A'
-                                                    }}</td>
-                                                <td
-                                                    class="py-3 px-4 text-center">
-                                                    <span
-                                                        class="badge rounded-pill px-3 py-2 fw-semibold"
-                                                        [ngClass]="emp.isActive ? 'bg-success bg-opacity-10 text-success border border-success border-opacity-25' : 'bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25'">
-                                                        {{ emp.isActive ?
-                                                        'Active' : 'Inactive' }}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                            <tr
-                                                *ngIf="filteredDeptEmployees.length === 0">
-                                                <td colspan="4"
-                                                    class="text-center py-5">
-                                                    <div
-                                                        class="text-muted d-flex flex-column align-items-center">
-                                                        <i
-                                                            class="bi bi-search fs-1 mb-3 text-black-50"></i>
-                                                        <span
-                                                            class="fw-medium fs-6">No
-                                                            employees
-                                                            found.</span>
-                                                        <small>Try adjusting
-                                                            your search or
-                                                            filter
-                                                            criteria.</small>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                }
-            </div>
-            <div class="modal-footer bg-white border-top pt-3 pb-3 px-4">
-                <button type="button"
-                    class="btn btn-secondary px-5 py-2 rounded-3 fw-semibold shadow-sm"
-                    data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="addDeptModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
-
-            <div
-                class="modal-header border-bottom border-success border-4 bg-light">
-                <h5 class="modal-title text-success fw-bold">
-                    <i class="bi" [class.bi-plus-circle]="!isEditMode"
-                        [class.bi-pencil-square]="isEditMode"></i>
-                    {{ isEditMode ? ('Edit' | t) : ('Add Department' | t) }}
-                </h5>
-                <button type="button" class="btn-close shadow-none"
-                    data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <form [formGroup]="addForm" (ngSubmit)="saveDepartment()">
-                <div class="modal-body p-4">
-                    <div class="mb-3">
-                        <label
-                            class="form-label fw-bold text-secondary">{{
-                            'Department Name' | t }} <span
-                                class="text-danger">*</span></label>
-                        <input type="text" class="form-control"
-                            formControlName="name"
-                            placeholder="e.g., Marketing, Sales..."
-                            [class.is-invalid]="addForm.get('name')?.invalid && addForm.get('name')?.touched">
-                        @if (addForm.get('name')?.invalid &&
-                        addForm.get('name')?.touched) {
-                        <div class="invalid-feedback">
-                            Department name is required.
-                        </div>
-                        }
-                    </div>
-                </div>
-
-                <div class="modal-footer bg-light border-top-0">
-                    <button type="button" class="btn btn-light px-4 border"
-                        data-bs-dismiss="modal"
-                        [disabled]="isSubmitting">{{ 'Cancel' | t }}</button>
-                    <button type="submit" class="btn btn-success px-4"
-                        [disabled]="addForm.invalid || isSubmitting">
-                        @if (isSubmitting) {
-                        <span class="spinner-border spinner-border-sm me-2"
-                            role="status" aria-hidden="true"></span>Saving...
-                        } @else {
-                        <i class="bi bi-save me-1"></i> {{ 'Save Changes' | t }}
-                        }
-                    </button>
-                </div>
-            </form>
-
-        </div>
-    </div>
-</div>
-```
-
 ### File: src\app\features\departments\departments.component.ts
 ```typescript
 import { Component, OnInit, inject } from '@angular/core';
@@ -5605,13 +2975,13 @@ export class DepartmentsComponent implements OnInit {
   }
 
   loadPositionsThenEmployees() {
-    // ??? ??? positions ????? ?? ???????? ???? join ????
+    // جلب الـ positions أولاً ثم الموظفين لعمل join صحيح
     this.positionService.getPositions().subscribe({
       next: (res: any) => {
         this.allPositions = Array.isArray(res) ? res : res?.data || [];
         this.loadEmployees();
       },
-      error: () => this.loadEmployees(), // ????? ???????? ??? ?? ??? ??? ??? positions
+      error: () => this.loadEmployees(), // تحميل الموظفين حتى لو فشل جلب الـ positions
     });
   }
 
@@ -5621,7 +2991,7 @@ export class DepartmentsComponent implements OnInit {
         const extracted: any[] = Array.isArray(res)
           ? res
           : res?.data?.items || res?.data || [];
-        // ??? ??? ??? position ??? ????
+        // ربط اسم الـ position بكل موظف
         this.allEmployees = extracted.map((emp) => {
           if (!emp.positionName && emp.positionId) {
             const pos = this.allPositions.find((p) => p.id === emp.positionId);
@@ -5645,8 +3015,8 @@ export class DepartmentsComponent implements OnInit {
       }
 
       this.departmentStats[deptId].totalEmployees++;
-      const posName = emp.positionName; // ?????? ???????? ????? ??? ????? position
-      if (!posName) continue; // ?? ??????? ?? ??? Positions Breakdown
+      const posName = emp.positionName; // نتجاهل الموظفين الذين ليس لديهم position
+      if (!posName) continue; // لا نُدرجهم في الـ Positions Breakdown
       if (!this.departmentStats[deptId].positions[posName]) {
         this.departmentStats[deptId].positions[posName] = 0;
       }
@@ -5660,14 +3030,14 @@ export class DepartmentsComponent implements OnInit {
       return stat ? stat.totalEmployees : 0;
     }
     if (type === 'positions') {
-      // ????? ??????? ?? ????? ??? positions ???????? ??????
+      // العدّ الحقيقي من قائمة الـ positions المرتبطة بالقسم
       return this.allPositions.filter((p) => p.departmentId === deptId).length;
     }
     return 0;
   }
 
   loadDepartments() {
-    // ????? ???????
+    // تحميل الأقسام
     this.isLoading = true;
     this.departmentService.getDepartments().subscribe({
       next: (res: any) => {
@@ -5689,17 +3059,17 @@ export class DepartmentsComponent implements OnInit {
   }
 
   viewDetails(dept: any) {
-    // ?????? ?????
+    // تفاصيل القسم
     this.selectedDepartment = dept;
     const stats = this.departmentStats[dept.id] || { totalEmployees: 0 };
     this.selectedDepartment.stats = stats;
-    // ??? positions ???????? ???????? ???? ????? ?? ??? API
+    // الـ positions الحقيقية المرتبطة بهذا القسم من الـ API
     const deptPositions = this.allPositions.filter(
       (p) => p.departmentId === dept.id,
     );
     this.selectedDepartment.totalPositions = deptPositions.length;
 
-    // ???? ???????? ???? ??? modal � ?? ??? ??? position
+    // جدول الموظفين داخل الـ modal — مع ربط الـ position
     this.deptEmployees = this.allEmployees
       .filter((e) => e.departmentId === dept.id)
       .map((emp) => {
@@ -5710,7 +3080,7 @@ export class DepartmentsComponent implements OnInit {
         return emp;
       });
     this.filteredDeptEmployees = [...this.deptEmployees];
-    // ???? ????? ??? positions ?? ??? API ??????? ???? ?? ????????
+    // بناء قائمة الـ positions من الـ API مباشرةً وليس من الموظفين
     this.uniquePositions = deptPositions.map((p) => p.title).filter(Boolean);
     this.searchEmpQuery = '';
     this.selectedPositionFilter = '';
@@ -5725,7 +3095,7 @@ export class DepartmentsComponent implements OnInit {
   }
 
   filterDeptEmployees() {
-    // ????? ?????? ?????
+    // فلترة موظفين القسم
     this.filteredDeptEmployees = this.deptEmployees.filter((emp) => {
       let matchesSearch = true;
       if (this.searchEmpQuery) {
@@ -5738,7 +3108,7 @@ export class DepartmentsComponent implements OnInit {
 
       let matchesPos = true;
       if (this.selectedPositionFilter) {
-        // ?????? ?? positionName ?? ?? ???? positionId
+        // مقارنة بـ positionName أو عن طريق positionId
         const pos = this.allPositions.find(
           (p) => p.title === this.selectedPositionFilter,
         );
@@ -5777,7 +3147,7 @@ export class DepartmentsComponent implements OnInit {
   }
 
   saveDepartment() {
-    // ??? ?????
+    // حفظ القسم
     if (this.addForm.invalid) {
       Swal.fire('Warning', 'Please enter a valid department name.', 'warning');
       return;
@@ -5866,890 +3236,6 @@ export class DepartmentsComponent implements OnInit {
 
 ```
 
-### File: src\app\features\employee-form\employee-form.component.css
-```css
-/*
-   PAGE WRAPPER
-*/
-.form-page-wrapper {
-  min-height: 100vh;
-  padding: 2rem 1rem 3rem;
-  background: #f5f7fb;
-}
-
-.form-container {
-  max-width: 820px;
-  margin: 0 auto;
-  animation: slideUp 0.5s ease-out;
-}
-
-/* 
-   HEADER CARD
-*/
-.form-header-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 1.5rem 1.75rem;
-  margin-bottom: 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e8ecf0;
-}
-
-.header-icon-wrap {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #4361ee, #3a0ca3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.header-icon-wrap.edit-mode {
-  background: linear-gradient(135deg, #f72585, #b5179e);
-}
-
-.header-icon-wrap i {
-  color: #fff;
-  font-size: 1.4rem;
-}
-
-.form-title {
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: #1a1d27;
-}
-
-.form-subtitle {
-  font-size: 0.85rem;
-  color: #8592a3;
-  margin-top: 2px;
-}
-
-.btn-back {
-  padding: 0.45rem 1.2rem;
-  border-radius: 30px;
-  background: #f0f2f5;
-  color: #5a6479;
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-decoration: none;
-  border: 1px solid #e2e6ea;
-  transition: all 0.2s;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.btn-back:hover {
-  background: #e2e6ea;
-  color: #333;
-}
-
-/*
-   LINKED USER BANNER (Add mode � after selecting user)
-*/
-.linked-user-banner {
-  background: linear-gradient(135deg, #d1fae5, #ecfdf5);
-  border: 1px solid #6ee7b7;
-  border-radius: 14px;
-  padding: 1rem 1.5rem;
-  margin-bottom: 1.25rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  animation: slideUp 0.3s ease;
-}
-
-.linked-user-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: #059669;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.linked-user-avatar i {
-  color: #fff;
-  font-size: 1.2rem;
-}
-
-.linked-user-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.linked-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #065f46;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.linked-email {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #047857;
-}
-
-.linked-check i {
-  color: #059669;
-  font-size: 1.5rem;
-}
-
-/*
-   LINKED ACCOUNT CARD (Edit mode)
-*/
-.linked-account-card {
-  background: linear-gradient(135deg, #eff6ff, #dbeafe);
-  border: 1px solid #93c5fd;
-  border-radius: 14px;
-  padding: 1.1rem 1.5rem;
-  margin-bottom: 1.25rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  animation: slideUp 0.3s ease;
-}
-
-.lac-icon {
-  width: 46px;
-  height: 46px;
-  border-radius: 12px;
-  background: #1d4ed8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.lac-icon i {
-  color: #fff;
-  font-size: 1.3rem;
-}
-
-.lac-body {
-  flex: 1;
-}
-
-.lac-title {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #1e40af;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 0.25rem;
-}
-
-.lac-detail {
-  font-size: 0.88rem;
-  color: #1e3a8a;
-  font-weight: 500;
-  line-height: 1.5;
-}
-
-.lac-badge {
-  background: #1d4ed8;
-  color: #fff;
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 0.3rem 0.9rem;
-  border-radius: 30px;
-  flex-shrink: 0;
-}
-
-/*
-   FORM SECTIONS
-*/
-.form-section {
-  background: #fff;
-  border-radius: 16px;
-  padding: 1.5rem 1.75rem;
-  margin-bottom: 1.25rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e8ecf0;
-}
-
-.section-header {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-bottom: 1.25rem;
-  padding-bottom: 0.85rem;
-  border-bottom: 2px solid #f0f2f5;
-}
-
-.section-header i {
-  font-size: 1rem;
-  color: #4361ee;
-  background: #eef0fd;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.section-header span:not(.required-badge) {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #1a1d27;
-  flex: 1;
-}
-
-.required-badge {
-  font-size: 0.7rem;
-  font-weight: 700;
-  background: #fff0f3;
-  color: #e63757;
-  padding: 0.2rem 0.65rem;
-  border-radius: 20px;
-  border: 1px solid #fecdd3;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
-
-/*
-   FIELD STYLES
-*/
-.field-label {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #4a5568;
-  margin-bottom: 0.45rem;
-}
-
-.field-input {
-  border-radius: 10px;
-  border: 1.5px solid #e2e8f0;
-  background: #f8fafc;
-  padding: 0.65rem 0.9rem;
-  font-size: 0.9rem;
-  color: #1a202c;
-  transition: all 0.2s ease;
-  width: 100%;
-}
-
-.field-input:focus {
-  border-color: #4361ee;
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.12);
-  outline: none;
-}
-
-.field-input.is-invalid {
-  border-color: #e63757;
-  background: #fff5f7;
-}
-
-.field-input.is-invalid:focus {
-  box-shadow: 0 0 0 3px rgba(230, 55, 87, 0.12);
-}
-
-.field-hint {
-  display: block;
-  margin-top: 0.35rem;
-  font-size: 0.78rem;
-  color: #8592a3;
-  line-height: 1.4;
-}
-
-/* Readonly field */
-.readonly-field-wrap {
-  position: relative;
-}
-
-.readonly-icon {
-  position: absolute;
-  left: 0.9rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #8592a3;
-  font-size: 0.85rem;
-  z-index: 1;
-}
-
-.readonly-field {
-  padding-left: 2.2rem;
-  background: #f0f2f5 !important;
-  color: #718096;
-  cursor: default;
-  border-color: #e2e8f0 !important;
-}
-
-.readonly-field:focus {
-  box-shadow: none !important;
-  border-color: #e2e8f0 !important;
-}
-
-/*
-   FORM ACTIONS
-*/
-.form-actions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.85rem;
-  margin-top: 0.5rem;
-}
-
-.btn-cancel {
-  padding: 0.65rem 1.5rem;
-  border-radius: 10px;
-  background: #f0f2f5;
-  color: #5a6479;
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-decoration: none;
-  border: 1.5px solid #e2e6ea;
-  transition: all 0.2s;
-}
-
-.btn-cancel:hover {
-  background: #e2e6ea;
-  color: #333;
-}
-
-.btn-submit {
-  padding: 0.7rem 2rem;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #4361ee, #3a0ca3);
-  color: #fff;
-  font-size: 0.9rem;
-  font-weight: 700;
-  border: none;
-  transition: all 0.25s;
-  box-shadow: 0 4px 14px rgba(67, 97, 238, 0.35);
-  min-width: 190px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-submit:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(67, 97, 238, 0.45);
-}
-
-.btn-submit:disabled {
-  background: #a0aec0;
-  box-shadow: none;
-  cursor: not-allowed;
-}
-
-/*
-   SKELETON LOADING
-*/
-.form-body-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e8ecf0;
-  margin-bottom: 1.25rem;
-}
-
-.skeleton-wrap {
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-.skeleton-line {
-  height: 20px;
-  background: #e2e8f0;
-  border-radius: 6px;
-  margin-bottom: 0.5rem;
-}
-
-.skeleton-line.w-40 {
-  width: 40%;
-}
-
-.skeleton-input {
-  height: 42px;
-  background: #e2e8f0;
-  border-radius: 10px;
-}
-
-/*
-   ANIMATIONS
-*/
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-/*
-   RESPONSIVE
-*/
-@media (max-width: 576px) {
-  .form-header-card {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-  .form-actions {
-    flex-direction: column-reverse;
-  }
-  .btn-cancel,
-  .btn-submit {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-/*
-   DARK MODE OVERRIDES
-*/
-:host-context(body.dark-mode) .form-page-wrapper {
-  background: var(--color-bg);
-}
-
-:host-context(body.dark-mode) .form-header-card,
-:host-context(body.dark-mode) .form-section,
-:host-context(body.dark-mode) .form-body-card {
-  background: var(--color-surface) !important;
-  border-color: var(--color-border) !important;
-  color: var(--color-text) !important;
-}
-
-:host-context(body.dark-mode) .form-title {
-  color: var(--color-text) !important;
-}
-
-:host-context(body.dark-mode) .form-subtitle {
-  color: var(--color-text-muted) !important;
-}
-
-:host-context(body.dark-mode) .section-header {
-  border-bottom-color: var(--color-border) !important;
-}
-
-:host-context(body.dark-mode) .section-header span:not(.required-badge) {
-  color: var(--color-text) !important;
-}
-
-:host-context(body.dark-mode) .section-header i {
-  background: rgba(67, 97, 238, 0.15) !important;
-  color: #7b8ef7 !important;
-}
-
-:host-context(body.dark-mode) .field-label {
-  color: var(--color-text-sub) !important;
-}
-
-:host-context(body.dark-mode) .field-label i {
-  color: var(--color-text-muted) !important;
-}
-
-:host-context(body.dark-mode) .field-input {
-  background: var(--color-input-bg) !important;
-  border-color: #444 !important;
-  color: var(--color-text) !important;
-}
-
-:host-context(body.dark-mode) .field-input::placeholder {
-  color: var(--color-text-muted) !important;
-}
-
-:host-context(body.dark-mode) .field-input:focus {
-  background: var(--color-surface-3) !important;
-  border-color: #667eea !important;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2) !important;
-}
-
-:host-context(body.dark-mode) .readonly-field {
-  background: var(--color-surface-2) !important;
-  color: var(--color-text-muted) !important;
-  border-color: var(--color-border) !important;
-}
-
-:host-context(body.dark-mode) .readonly-icon {
-  color: var(--color-text-muted) !important;
-}
-
-:host-context(body.dark-mode) .field-hint {
-  color: var(--color-text-muted) !important;
-}
-
-:host-context(body.dark-mode) .lac-title {
-  color: #93c5fd !important;
-}
-
-:host-context(body.dark-mode) .lac-detail {
-  color: #bfdbfe !important;
-}
-
-:host-context(body.dark-mode) .linked-account-card {
-  background: linear-gradient(135deg, #1e2a45, #1a2d55) !important;
-  border-color: #2d4a7a !important;
-}
-
-:host-context(body.dark-mode) .linked-label {
-  color: #6ee7b7 !important;
-}
-
-:host-context(body.dark-mode) .linked-email {
-  color: #a7f3d0 !important;
-}
-
-:host-context(body.dark-mode) .linked-user-banner {
-  background: linear-gradient(135deg, #1a3a2a, #1e3d2e) !important;
-  border-color: #2d6a4f !important;
-}
-
-:host-context(body.dark-mode) .btn-back {
-  background: var(--color-surface-2) !important;
-  color: var(--color-text-sub) !important;
-  border-color: var(--color-border) !important;
-}
-
-:host-context(body.dark-mode) .btn-back:hover {
-  background: var(--color-surface-3) !important;
-  color: var(--color-text) !important;
-}
-
-:host-context(body.dark-mode) .btn-cancel {
-  background: var(--color-surface-2) !important;
-  color: var(--color-text-sub) !important;
-  border-color: var(--color-border) !important;
-}
-
-:host-context(body.dark-mode) .btn-cancel:hover {
-  background: var(--color-surface-3) !important;
-  color: var(--color-text) !important;
-}
-
-:host-context(body.dark-mode) .skeleton-line,
-:host-context(body.dark-mode) .skeleton-input {
-  background: var(--color-surface-3) !important;
-}
-
-```
-
-### File: src\app\features\employee-form\employee-form.component.html
-```html
-<div class="form-page-wrapper">
-  <div class="form-container">
-
-    <!-- --- HEADER CARD --- -->
-    <div class="form-header-card">
-      <div class="d-flex align-items-center gap-3">
-        <div class="header-icon-wrap" [class.edit-mode]="isEditMode">
-          <i class="bi" [class.bi-person-plus-fill]="!isEditMode" [class.bi-pencil-square]="isEditMode"></i>
-        </div>
-        <div>
-          <h2 class="form-title mb-0">{{ isEditMode ? 'Edit Employee Profile' : 'Add New Employee' }}</h2>
-          <p class="form-subtitle mb-0">
-            {{ isEditMode ? 'Update employee information and employment details' : 'Link a registered user to a new
-            employee profile' }}
-          </p>
-        </div>
-      </div>
-      <a routerLink="/employees" class="btn-back">
-        <i class="bi bi-arrow-left me-1"></i> Back
-      </a>
-    </div>
-
-    <!-- --- LOADING SKELETON --- -->
-    @if (isLoading && isEditMode) {
-    <div class="form-body-card">
-      <div class="skeleton-wrap">
-        <div class="skeleton-line w-40"></div>
-        <div class="row g-3 mt-2">
-          <div class="col-6">
-            <div class="skeleton-input"></div>
-          </div>
-          <div class="col-6">
-            <div class="skeleton-input"></div>
-          </div>
-          <div class="col-6">
-            <div class="skeleton-input"></div>
-          </div>
-          <div class="col-6">
-            <div class="skeleton-input"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    }
-
-    @if (!isLoading || !isEditMode) {
-    <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
-
-      <!-- --- ADD MODE: Linked User Banner --- -->
-      @if (!isEditMode && employeeForm.get('userId')?.value) {
-      <div class="linked-user-banner">
-        <div class="linked-user-avatar">
-          <i class="bi bi-person-fill"></i>
-        </div>
-        <div class="linked-user-info">
-          <span class="linked-label">Linked Account</span>
-          <span class="linked-email">{{ displayEmail }}</span>
-        </div>
-        <div class="linked-check">
-          <i class="bi bi-check-circle-fill"></i>
-        </div>
-      </div>
-      }
-
-      <!-- --- EDIT MODE: Linked Account Info Card --- -->
-      @if (isEditMode && linkedUserInfo) {
-      <div class="linked-account-card">
-        <div class="lac-icon">
-          <i class="bi bi-person-badge-fill"></i>
-        </div>
-        <div class="lac-body">
-          <div class="lac-title">Linked User Account</div>
-          <div class="lac-detail">
-            <i class="bi bi-person me-1 text-muted"></i>{{ linkedUserInfo.username }}
-          </div>
-          <div class="lac-detail">
-            <i class="bi bi-envelope me-1 text-muted"></i>{{ linkedUserInfo.email }}
-          </div>
-        </div>
-        <span class="lac-badge">{{ linkedUserInfo.role }}</span>
-      </div>
-      }
-
-      <!-- --- SECTION: Link User (Add mode only) --- -->
-      @if (!isEditMode) {
-      <div class="form-section">
-        <div class="section-header">
-          <i class="bi bi-link-45deg"></i>
-          <span>Link User Account</span>
-          <span class="required-badge">Required</span>
-        </div>
-        <div class="row g-3">
-          <div class="col-12">
-            <label class="field-label">
-              <i class="bi bi-person-lock text-primary"></i>
-              Select Registered User <span class="text-danger">*</span>
-            </label>
-            <select class="form-select field-input" formControlName="userId"
-              [class.is-invalid]="employeeForm.get('userId')?.invalid && employeeForm.get('userId')?.touched">
-              <option value="" disabled selected>
-                {{ unassignedUsers.length === 0 ? 'No unlinked Employee accounts found...' : 'Choose a registered
-                user...' }}
-              </option>
-              @for (user of unassignedUsers; track user.id) {
-              <option [value]="user.id">{{ user.username }} � {{ user.email }}</option>
-              }
-            </select>
-            <div class="invalid-feedback">Please select a user account to link.</div>
-            <small class="field-hint">
-              <i class="bi bi-info-circle me-1"></i>
-              Only Employee accounts that are not yet linked to a profile are shown.
-              Email will be auto-filled from the selected account.
-            </small>
-          </div>
-
-          <!-- ??????? ????? ?????? ????? -->
-          <div class="col-12">
-            <label class="field-label">
-              <i class="bi bi-envelope text-primary"></i>
-              Email Address
-            </label>
-            <div class="readonly-field-wrap">
-              <i class="bi bi-envelope-fill readonly-icon"></i>
-              <input type="email" class="form-control field-input readonly-field" formControlName="email"
-                placeholder="Auto-filled when you select a user above" readonly>
-            </div>
-            <small class="field-hint">
-              <i class="bi bi-magic me-1"></i>
-              This field is auto-filled when you select a user from the dropdown above.
-            </small>
-          </div>
-        </div>
-      </div>
-      }
-
-      <!-- --- SECTION: Personal Information --- -->
-      <div class="form-section">
-        <div class="section-header">
-          <i class="bi bi-person-vcard"></i>
-          <span>Personal Information</span>
-        </div>
-        <div class="row g-3">
-          <div class="col-md-6">
-            <label class="field-label">
-              <i class="bi bi-person text-primary"></i>
-              First Name <span class="text-danger">*</span>
-            </label>
-            <input type="text" class="form-control field-input" formControlName="firstName" placeholder="e.g. Mohammad"
-              [class.is-invalid]="employeeForm.get('firstName')?.invalid && employeeForm.get('firstName')?.touched">
-            <div class="invalid-feedback">First name is required.</div>
-          </div>
-          <div class="col-md-6">
-            <label class="field-label">
-              <i class="bi bi-person text-primary"></i>
-              Last Name <span class="text-danger">*</span>
-            </label>
-            <input type="text" class="form-control field-input" formControlName="lastName" placeholder="e.g. Al-Ahmad"
-              [class.is-invalid]="employeeForm.get('lastName')?.invalid && employeeForm.get('lastName')?.touched">
-            <div class="invalid-feedback">Last name is required.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- --- SECTION: Contact Details --- -->
-      <div class="form-section">
-        <div class="section-header">
-          <i class="bi bi-telephone-fill"></i>
-          <span>Contact Details</span>
-        </div>
-        <div class="row g-3">
-          <!-- ??????? ?? ????? -->
-          @if (isEditMode) {
-          <div class="col-md-6">
-            <label class="field-label">
-              <i class="bi bi-envelope text-primary"></i>
-              Email Address
-            </label>
-            <div class="readonly-field-wrap">
-              <i class="bi bi-envelope-fill readonly-icon"></i>
-              <input type="email" class="form-control field-input readonly-field" formControlName="email" readonly>
-            </div>
-            <small class="field-hint">
-              <i class="bi bi-lock-fill me-1"></i>Email is linked to the user account and cannot be changed here.
-            </small>
-          </div>
-          }
-          <div [class]="isEditMode ? 'col-md-6' : 'col-12'">
-            <label class="field-label">
-              <i class="bi bi-telephone text-primary"></i>
-              Phone Number <span class="text-danger">*</span>
-            </label>
-            <input type="text" class="form-control field-input" formControlName="phoneNumber" placeholder="0791234567"
-              maxlength="10" inputmode="numeric"
-              [class.is-invalid]="employeeForm.get('phoneNumber')?.invalid && employeeForm.get('phoneNumber')?.touched">
-            @if (employeeForm.get('phoneNumber')?.touched) {
-            @if (employeeForm.get('phoneNumber')?.errors?.['required']) {
-            <div class="invalid-feedback d-block">
-              <i class="bi bi-exclamation-circle me-1"></i>??? ?????? ?????.
-            </div>
-            } @else if (employeeForm.get('phoneNumber')?.errors?.['pattern']) {
-            <div class="invalid-feedback d-block">
-              <i class="bi bi-exclamation-triangle me-1"></i>
-              ??? ?????? ??? ?? ????? ?? 10 ????? ??? ???? ?????? ?? ????.
-            </div>
-            }
-            }
-            <small class="field-hint">
-              <i class="bi bi-info-circle me-1"></i>
-              ???? 10 ????? ??? � ????: 0791234567
-            </small>
-          </div>
-        </div>
-      </div>
-
-      <!-- --- SECTION: Employment Information --- -->
-      <div class="form-section">
-        <div class="section-header">
-          <i class="bi bi-briefcase-fill"></i>
-          <span>Employment Details</span>
-        </div>
-        <div class="row g-3">
-          <div class="col-md-4">
-            <label class="field-label">
-              <i class="bi bi-calendar-date text-primary"></i>
-              Hire Date <span class="text-danger">*</span>
-            </label>
-            <input type="date" class="form-control field-input" formControlName="hireDate"
-              [class.is-invalid]="employeeForm.get('hireDate')?.invalid && employeeForm.get('hireDate')?.touched">
-            <div class="invalid-feedback">Hire date is required.</div>
-          </div>
-          <div class="col-md-4">
-            <label class="field-label">
-              <i class="bi bi-building text-primary"></i>
-              Department <span class="text-danger">*</span>
-            </label>
-            <select class="form-select field-input" formControlName="departmentId"
-              [class.is-invalid]="employeeForm.get('departmentId')?.invalid && employeeForm.get('departmentId')?.touched">
-              <option value="" disabled selected>Select department...</option>
-              @for (dept of departments; track dept.id) {
-              <option [value]="dept.id">{{ dept.name }}</option>
-              }
-            </select>
-            <div class="invalid-feedback">Please select a department.</div>
-          </div>
-          <div class="col-md-4">
-            <label class="field-label">
-              <i class="bi bi-person-badge text-primary"></i>
-              Job Position <span class="text-danger">*</span>
-            </label>
-            <select class="form-select field-input" formControlName="positionId"
-              [class.is-invalid]="employeeForm.get('positionId')?.invalid && employeeForm.get('positionId')?.touched">
-              <option value="" disabled selected>
-                {{ departments.length === 0 ? 'Select a department first...' : positions.length === 0 ? 'Select
-                department first...' : 'Select position...' }}
-              </option>
-              @for (pos of positions; track pos.id) {
-              <option [value]="pos.id">{{ pos.title }}</option>
-              }
-            </select>
-            <div class="invalid-feedback">Please select a job position.</div>
-            @if (positions.length > 0) {
-            <small class="field-hint">
-              <i class="bi bi-info-circle me-1"></i>
-              {{ positions.length }} position(s) available in this department.
-            </small>
-            }
-          </div>
-        </div>
-      </div>
-
-      <!-- --- SUBMIT BUTTON --- -->
-      <div class="form-actions">
-        <a routerLink="/employees" class="btn btn-cancel">
-          <i class="bi bi-x-lg me-2"></i>Cancel
-        </a>
-        <button type="submit" class="btn btn-submit" [disabled]="isLoading || employeeForm.invalid">
-          @if (isLoading) {
-          <span class="spinner-border spinner-border-sm me-2"></span>
-          {{ isEditMode ? 'Saving Changes...' : 'Creating Profile...' }}
-          } @else {
-          <i class="bi me-2" [class.bi-check2-circle]="!isEditMode" [class.bi-floppy-fill]="isEditMode"></i>
-          {{ isEditMode ? 'Save Changes' : 'Create Employee Profile' }}
-          }
-        </button>
-      </div>
-
-    </form>
-    }
-
-  </div>
-</div>
-```
-
 ### File: src\app\features\employee-form\employee-form.component.ts
 ```typescript
 import { Component, OnInit, inject } from '@angular/core';
@@ -6788,7 +3274,7 @@ export class EmployeeFormComponent implements OnInit {
   positions: any[] = [];
   unassignedUsers: any[] = [];
 
-  // ?????? ?????? ???? ????? ??????? ?? ???? ???????
+  // بيانات اليوزر اللي مربوط بالموظف في حالة التعديل
   linkedUserInfo: { username: string; email: string; role: string } | null =
     null;
 
@@ -6810,7 +3296,7 @@ export class EmployeeFormComponent implements OnInit {
   });
 
   ngOnInit() {
-    // ????? ???????
+    // تجهيز النموذج
     const state = window.history.state;
 
     if (state && state.editMode && state.employeeId) {
@@ -6818,24 +3304,24 @@ export class EmployeeFormComponent implements OnInit {
       this.isEditMode = true;
       this.currentEmployeeId = state.employeeId;
       this.loadEmployeeDetails(this.currentEmployeeId!);
-      // userId ???????? ?? ???????
+      // userId والإيميل ما يتعدلوا
       this.employeeForm.get('userId')?.disable();
       this.employeeForm.get('email')?.disable();
     } else {
       // add mode
-      // ?? ???? ???? ?? ???? ????? ?????? ??????
+      // لو جاية داتا من صفحة ثانية نعبيها مباشرة
       if (state && (state.userId || state.email)) {
         this.employeeForm.patchValue({
           userId: state.userId,
           email: state.email,
         });
       }
-      // ??????? ????? ???????? ?? ?????? ???????
+      // الإيميل يتعبى تلقائياً من اليوزر المختار
       this.employeeForm.get('email')?.disable();
 
       this.loadUnassignedUsers();
 
-      // ???? ??????? ??? ????? ???? ?? ??? dropdown
+      // نعبي الإيميل لما يختار يوزر من الـ dropdown
       this.employeeForm.get('userId')?.valueChanges.subscribe((selectedId) => {
         const user = this.unassignedUsers.find(
           (u) => String(u.id) === String(selectedId),
@@ -6856,10 +3342,10 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  // ??? ?????? ??????
+  // جلب بيانات الموظف
   loadEmployeeDetails(id: number) {
     this.isLoading = true;
-    // ????? ???? ????????
+    // بنجيب كامل التفاصيل
     this.employeeService.getEmployeeById(id).subscribe({
       next: (profile: any) => {
         this.isLoading = false;
@@ -6869,7 +3355,7 @@ export class EmployeeFormComponent implements OnInit {
           this.employeeForm.get('positionId')?.enable();
         }
 
-        // ???? ?????? ??????? ????????
+        // نعبي الفورم بالداتا الموجودة
         this.employeeForm.patchValue({
           firstName: profile.firstName || profile.fullName?.split(' ')[0] || '',
           lastName:
@@ -6886,7 +3372,7 @@ export class EmployeeFormComponent implements OnInit {
           userId: profile.userId || '',
         });
 
-        // ??????? ????? ????? ?? ??? header
+        // معلومات بسيطة للعرض في الـ header
         this.linkedUserInfo = {
           username:
             profile.fullName ||
@@ -6905,7 +3391,7 @@ export class EmployeeFormComponent implements OnInit {
   }
 
   loadDepartments() {
-    // ????? ???????
+    // تحميل الأقسام
     this.departmentService.getDepartments().subscribe({
       next: (res: any) => {
         this.departments = Array.isArray(res) ? res : res?.data || [];
@@ -6913,9 +3399,9 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  // ???????? ???? ?? ????? ????? ???
+  // اليوزرات اللي ما ربطوا بموظف بعد
   loadUnassignedUsers() {
-    // ????? ?????? ???? ????
+    // تحميل يوزرات بدون موظف
     this.authService.getUnassignedEmployeeUsers().subscribe({
       next: (res: any) => {
         this.unassignedUsers = res?.items ?? (Array.isArray(res) ? res : []);
@@ -6926,9 +3412,9 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  // positions ??? ?????
+  // positions حسب القسم
   loadPositions(deptId: number) {
-    // ????? ???????
+    // تحميل المناصب
     this.positionService.getPositionsByDepartment(deptId).subscribe({
       next: (res: any) => {
         this.positions = Array.isArray(res) ? res : res?.data || [];
@@ -6937,28 +3423,28 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  // ??????? disabled ?????? getRawValue
+  // الإيميل disabled فنحتاج getRawValue
   get displayEmail(): string {
     return this.employeeForm.getRawValue().email || '';
   }
 
-  // ????? ????? ??? backend ?????? ??????
+  // تحويل أخطاء الـ backend لرسائل مفهومة
   private parseBackendError(err: any): string {
     const body = err?.error;
 
-    if (!body) return '??? ??? ??? ?????? ???? ???????? ??? ????.';
+    if (!body) return 'حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى.';
 
-    // ASP.NET validation errors � ?? field ??? list ?? ??? errors
+    // ASP.NET validation errors — كل field فيه list من الـ errors
     if (body.errors && typeof body.errors === 'object') {
       const fieldLabels: Record<string, string> = {
-        PhoneNumber: '??? ??????',
-        FirstName: '????? ?????',
-        LastName: '??? ???????',
-        Email: '?????? ??????????',
-        HireDate: '????? ???????',
-        DepartmentId: '?????',
-        PositionId: '?????? ???????',
-        UserId: '???? ????????',
+        PhoneNumber: 'رقم الهاتف',
+        FirstName: 'الاسم الأول',
+        LastName: 'اسم العائلة',
+        Email: 'البريد الإلكتروني',
+        HireDate: 'تاريخ التعيين',
+        DepartmentId: 'القسم',
+        PositionId: 'المسمى الوظيفي',
+        UserId: 'حساب المستخدم',
       };
 
       const messages: string[] = [];
@@ -6966,33 +3452,33 @@ export class EmployeeFormComponent implements OnInit {
         const label = fieldLabels[field] || field;
         const msgs = Array.isArray(errors) ? errors : [String(errors)];
         for (const msg of msgs) {
-          // ????? ??????? ?????? ?? ????? ?????
+          // نترجم الرسالة للعربي لو عندنا ترجمة
           const translated = this.translateBackendMsg(String(msg));
-          messages.push(`� ${label}: ${translated}`);
+          messages.push(`• ${label}: ${translated}`);
         }
       }
       if (messages.length) return messages.join('\n');
     }
 
-    // ????? ?????
+    // رسالة عادية
     if (body.message) return body.message;
     if (body.title) return body.title;
     if (typeof body === 'string') return body;
 
-    return '??? ??? ????? ???????? ???? ???????? ??? ????.';
+    return 'حدث خطأ أثناء الإرسال، يرجى المحاولة مرة أخرى.';
   }
 
-  // ????? ??? ????? ??? backend ??????? ??????
+  // ترجمة بعض رسائل الـ backend الشائعة للعربي
   private translateBackendMsg(msg: string): string {
     const map: Record<string, string> = {
       'Invalid phone number format.':
-        '???? ??? ?????? ??? ????? (??? ?? ???? 10 ?????)',
+        'صيغة رقم الهاتف غير صحيحة (يجب أن يكون 10 أرقام)',
       'Phone number must be 10 digits.':
-        '??? ?? ???? ??? ?????? 10 ????? ??????',
+        'يجب أن يكون رقم الهاتف 10 أرقام بالضبط',
       'The field PhoneNumber must be a string or array type with a maximum length of 10.':
-        '??? ?????? ??? ??? ?????? 10 ?????',
-      'is required.': '??? ????? ?????',
-      'already exists': '??? ????? ????? ??????',
+        'رقم الهاتف يجب ألا يتجاوز 10 أرقام',
+      'is required.': 'هذا الحقل مطلوب',
+      'already exists': 'هذا السجل موجود مسبقاً',
     };
     for (const [en, ar] of Object.entries(map)) {
       if (msg.toLowerCase().includes(en.toLowerCase())) return ar;
@@ -7001,27 +3487,27 @@ export class EmployeeFormComponent implements OnInit {
   }
 
   onSubmit() {
-    // ????? ???????
+    // إرسال النموذج
     if (this.employeeForm.invalid) {
       this.employeeForm.markAllAsTouched();
 
-      // ??? ??? ?????? ?? ????? ?????
+      // خطأ رقم الهاتف له رسالة مخصصة
       const phone = this.employeeForm.get('phoneNumber');
       if (phone?.errors?.['pattern']) {
         Swal.fire({
           icon: 'warning',
-          title: '??? ???? ??? ????',
-          text: '??? ?????? ??? ?? ????? ?? 10 ????? ??? (????? ??? ???? ?????? ?? ????)',
-          confirmButtonText: '?????',
+          title: 'رقم هاتف غير صحيح',
+          text: 'رقم الهاتف يجب أن يتكون من 10 أرقام فقط (أرقام فقط بدون مسافات أو رموز)',
+          confirmButtonText: 'حسناً',
         });
         return;
       }
 
       Swal.fire({
         icon: 'warning',
-        title: '?????? ?????',
-        text: '???? ?????? ?? ????? ???? ?????? ???????? ???? ????',
-        confirmButtonText: '?????',
+        title: 'بيانات ناقصة',
+        text: 'يرجى التأكد من تعبئة جميع الحقول المطلوبة بشكل صحيح',
+        confirmButtonText: 'حسناً',
       });
       return;
     }
@@ -7044,7 +3530,7 @@ export class EmployeeFormComponent implements OnInit {
         .subscribe({
           next: () => {
             this.isLoading = false;
-            Swal.fire('????', '?? ????? ?????? ?????? ?????', 'success');
+            Swal.fire('نجاح', 'تم تعديل بيانات الموظف بنجاح', 'success');
             this.router.navigate(['/employees']);
           },
           error: (err) => {
@@ -7052,9 +3538,9 @@ export class EmployeeFormComponent implements OnInit {
             const msg = this.parseBackendError(err);
             Swal.fire({
               icon: 'error',
-              title: '??? ???????',
+              title: 'فشل التعديل',
               text: msg,
-              confirmButtonText: '?????',
+              confirmButtonText: 'حسناً',
             });
             console.error('Update error:', err);
           },
@@ -7063,7 +3549,7 @@ export class EmployeeFormComponent implements OnInit {
       this.employeeService.addEmployee(payload).subscribe({
         next: () => {
           this.isLoading = false;
-          Swal.fire('????', '?? ????? ?????? ?????', 'success');
+          Swal.fire('نجاح', 'تم إضافة الموظف بنجاح', 'success');
           this.router.navigate(['/employees']);
         },
         error: (err) => {
@@ -7071,9 +3557,9 @@ export class EmployeeFormComponent implements OnInit {
           const msg = this.parseBackendError(err);
           Swal.fire({
             icon: 'error',
-            title: '??? ???????',
+            title: 'فشل الإضافة',
             text: msg,
-            confirmButtonText: '?????',
+            confirmButtonText: 'حسناً',
           });
           console.error('Add error:', err);
         },
@@ -7082,534 +3568,6 @@ export class EmployeeFormComponent implements OnInit {
   }
 }
 
-```
-
-### File: src\app\features\employees\employees.component.css
-```css
-```
-
-### File: src\app\features\employees\employees.component.html
-```html
-
-
-<div
-    class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-    <h2 class="fw-bold text-secondary mb-0">
-        <i class="bi bi-people-fill me-2"></i>{{ 'Employee Management' | t }}
-    </h2>
-    <div
-        class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end">
-        <div class="input-group shadow-sm" style="max-width: 350px;">
-            <span class="input-group-text bg-white border-end-0 text-muted"><i
-                    class="bi bi-search"></i></span>
-            <input type="text" class="form-control border-start-0 ps-0"
-                placeholder="{{ 'Search employees...' | t }}"
-                [(ngModel)]="searchQuery"
-                (input)="filterEmployees()">
-        </div>
-
-        <div class="dropdown">
-            <button class="btn btn-outline-secondary shadow-sm" type="button"
-                data-bs-toggle="dropdown" aria-expanded="false"
-                title="Filter Employees">
-                <i class="bi bi-funnel-fill"></i>
-            </button>
-            <div
-                class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4"
-                style="width: 250px;">
-                <h6
-                    class="dropdown-header px-0 text-primary fw-bold mb-2">Filter
-                    Options</h6>
-
-                <div class="mb-3">
-                    <label
-                        class="form-label small fw-semibold text-muted mb-1">{{
-                        'Department' | t }}</label>
-                    <select class="form-select form-select-sm"
-                        [(ngModel)]="selectedDepartment"
-                        (change)="filterEmployees()">
-                        <option value>All Departments</option>
-                        @for (dept of uniqueDepartments; track dept) {
-                        <option [value]="dept">{{ dept }}</option>
-                        }
-                    </select>
-                </div>
-
-                <div class="mb-2">
-                    <label
-                        class="form-label small fw-semibold text-muted mb-1">{{
-                        'Status' | t }}</label>
-                    <select class="form-select form-select-sm"
-                        [(ngModel)]="selectedStatus"
-                        (change)="filterEmployees()">
-                        <option value>All Statuses</option>
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        @if (isAdmin) {
-        <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-outline-success px-4 fw-semibold me-2"
-                (click)="exportToExcel()">
-                <i class="bi bi-file-earmark-excel-fill me-2"></i> {{
-                'Export to Excel' | t }}
-            </button>
-            <button class="btn btn-primary px-4 fw-semibold"
-                routerLink="/employee-form">
-                <i class="bi bi-person-plus-fill me-2"></i> {{ 'Add Employee' |
-                t }}
-            </button>
-        </div>
-        }
-    </div>
-</div>
-
-@if (isLoading) {
-<div class="text-center my-5">
-    <div class="spinner-border text-primary" role="status"></div>
-    <p class="mt-2 text-muted">Fetching data from server...</p>
-</div>
-} @else {
-<div class="card shadow-sm border-0">
-    <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-            <thead class="table-light">
-                <tr class="text-muted small text-uppercase"
-                    style="letter-spacing: 0.5px;">
-                    <th
-                        class="py-3 px-4 fw-semibold text-muted border-bottom-0">ID</th>
-                    <th
-                        class="py-3 px-4 fw-semibold text-muted border-bottom-0">{{
-                        'Employee' | t }}</th>
-                    <th
-                        class="py-3 px-4 fw-semibold text-muted border-bottom-0">{{
-                        'Email' | t }}</th>
-                    <th
-                        class="py-3 px-4 fw-semibold text-muted border-bottom-0">{{
-                        'Department' | t }}</th>
-                    <th
-                        class="py-3 px-4 fw-semibold text-muted border-bottom-0 text-center">{{
-                        'Status' | t }}</th>
-                    @if (isAdminOrHR) { <th
-                        class="py-3 px-4 fw-semibold text-muted border-bottom-0 text-end">{{
-                        'Actions' | t }}</th> }
-                </tr>
-            </thead>
-            <tbody>
-                @for (emp of paginatedEmployees; track emp.id) {
-                <tr>
-                    <td data-label="ID" class="py-3 px-4 fw-bold text-dark">#{{
-                        emp.id }}</td>
-                    <td data-label="Full Name"
-                        class="py-3 px-4 fw-bold text-dark">
-                        <div class="d-flex align-items-center">
-                            <div
-                                class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-3 rounded-circle d-flex align-items-center justify-content-center"
-                                style="width: 35px; height: 35px; font-size: 14px;">
-                                {{ emp.firstName ?
-                                emp.firstName.charAt(0).toUpperCase() : 'U' }}
-                            </div>
-                            {{ emp.firstName }} {{ emp.lastName }}
-                        </div>
-                    </td>
-                    <td data-label="Email" class="py-3 px-4 text-muted">{{
-                        emp.email }}</td>
-                    <td data-label="Department" class="py-3 px-4">{{
-                        emp.departmentName || emp.departmentId || '�' }}</td>
-                    <td data-label="Status" class="py-3 px-4">
-                        <span class="status-badge"
-                            [ngClass]="emp.isActive ? 'status-active' : 'status-inactive'">
-                            <i class="bi"
-                                [ngClass]="emp.isActive ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
-                            {{ emp.isActive ? ('Active' | t) : ('Inactive' | t)
-                            }}
-                        </span>
-                    </td>
-                    @if (isAdminOrHR) {
-                    <td data-label="Actions"
-                        class="py-3 px-4 text-end text-nowrap actions-cell">
-                        <button class="btn btn-outline-info btn-sm me-2"
-                            title="Details"
-                            (click)="viewFullDetails(emp)">
-                            <i class="bi bi-file-earmark-person"></i>
-                        </button>
-                        @if (isAdmin) {
-                        <button class="btn btn-sm btn-outline-secondary me-2"
-                            title="Download Report"
-                            (click)="downloadEmployeeReport(emp)">
-                            <i class="bi bi-file-earmark-pdf"></i>
-                        </button>
-                        <button class="btn btn-outline-primary btn-sm"
-                            title="Edit"
-                            (click)="editEmployee(emp.id)">
-                            <i class="bi bi-pencil-square"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger ms-2"
-                            title="Delete"
-                            (click)="onDelete(emp.id)">
-                            <i class="bi bi-trash3"></i>
-                        </button>
-                        }
-                    </td>
-                    }
-                </tr>
-                } @empty {
-                <tr>
-                    <td [colSpan]="isAdminOrHR ? 6 : 5"
-                        class="text-center py-5">
-                        <div class="d-flex flex-column align-items-center">
-                            <div
-                                class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center"
-                                style="width: 80px; height: 80px;">
-                                <i class="bi bi-people text-secondary fs-1"></i>
-                            </div>
-                            <h5 class="fw-bold text-dark mb-1">{{
-                                'No Employees Found' | t }}</h5>
-                            <p class="text-muted small mb-0">Try adjusting your
-                                filters or search query.</p>
-                        </div>
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Pagination Footer -->
-    @if (employeesList.length > 0) {
-    <div
-        class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-        <small class="text-muted fw-medium">
-            Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{
-            getMathMin(currentPage * itemsPerPage, employeesList.length) }} of
-            {{ employeesList.length }} entries
-        </small>
-        <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
-            <li class="page-item" [class.disabled]="currentPage === 1">
-                <a class="page-link cursor-pointer px-3"
-                    (click)="changePage(currentPage - 1)">Previous</a>
-            </li>
-
-            <li class="page-item active">
-                <a class="page-link px-3 bg-primary border-primary">{{
-                    currentPage }} / {{ totalPages }}</a>
-            </li>
-
-            <li class="page-item" [class.disabled]="currentPage === totalPages">
-                <a class="page-link cursor-pointer px-3"
-                    (click)="changePage(currentPage + 1)">Next</a>
-            </li>
-        </ul>
-    </div>
-    }
-</div>
-}
-
-<div class="modal fade" id="employeeDetailsModal" tabindex="-1"
-    aria-labelledby="employeeDetailsModalLabel" aria-hidden="true">
-    <div
-        class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-
-            <div class="modal-header border-0 p-0">
-                <div
-                    class="emp-modal-header w-100 p-4 d-flex align-items-center gap-3">
-                    <div class="emp-modal-avatar">
-                        {{ getEmpInitials(selectedEmployeeProfile) }}
-                    </div>
-                    <div>
-                        <h4 class="fw-bold text-white mb-0">
-                            {{ selectedEmployeeProfile?.fullName ||
-                            (selectedEmployeeProfile?.firstName + ' ' +
-                            selectedEmployeeProfile?.lastName) }}
-                        </h4>
-                        <span
-                            class="badge bg-white text-primary mt-1 px-3 py-2 rounded-pill shadow-sm">
-                            {{ selectedEmployeeProfile?.positionTitle ||
-                            'Employee' }}
-                        </span>
-                    </div>
-                    <button type="button"
-                        class="btn-close btn-close-white ms-auto shadow-none"
-                        data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-            </div>
-
-            <div class="modal-body p-4">
-                @if (selectedEmployeeProfile?.isLoadingDetails) {
-                <div class="text-center py-4">
-                    <div class="spinner-border text-primary"
-                        role="status"></div>
-                    <p class="mt-2 text-muted">Loading full details...</p>
-                </div>
-                }
-                @if (selectedEmployeeProfile &&
-                !selectedEmployeeProfile?.isLoadingDetails) {
-
-                <h6 class="detail-section-title">
-                    <i
-                        class="bi bi-person-lines-fill text-primary me-2"></i>Personal
-                    Information
-                </h6>
-                <div class="row g-3 mb-4">
-                    <div class="col-md-6">
-                        <div class="detail-item">
-                            <span class="detail-label"><i
-                                    class="bi bi-envelope me-1"></i>Email</span>
-                            <span class="detail-value">{{
-                                selectedEmployeeProfile?.email || '�' }}</span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="detail-item">
-                            <span class="detail-label"><i
-                                    class="bi bi-telephone me-1"></i>Phone</span>
-                            <span class="detail-value">
-                                {{ selectedEmployeeProfile?.phone ||
-                                selectedEmployeeProfile?.phoneNumber || 'N/A' }}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="detail-item">
-                            <span class="detail-label"><i
-                                    class="bi bi-hash me-1"></i>Employee
-                                ID</span>
-                            <span class="detail-value fw-bold text-primary">#{{
-                                selectedEmployeeProfile?.id }}</span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="detail-item">
-                            <span class="detail-label"><i
-                                    class="bi bi-calendar-check me-1"></i>Hire
-                                Date</span>
-                            <span class="detail-value">{{
-                                selectedEmployeeProfile?.hireDate |
-                                date:'mediumDate' }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <h6 class="detail-section-title">
-                    <i
-                        class="bi bi-briefcase-fill text-success me-2"></i>Employment
-                    Details
-                </h6>
-                <div class="row g-3 mb-4">
-                    <div class="col-md-6">
-                        <div class="detail-item">
-                            <span class="detail-label"><i
-                                    class="bi bi-building me-1"></i>Department</span>
-                            <span class="detail-value">{{
-                                selectedEmployeeProfile?.departmentName || '�'
-                                }}</span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="detail-item">
-                            <span class="detail-label"><i
-                                    class="bi bi-person-badge me-1"></i>Position</span>
-                            <span class="detail-value">{{
-                                selectedEmployeeProfile?.positionTitle || '�'
-                                }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <h6 class="detail-section-title">
-                    <i class="bi bi-activity text-warning me-2"></i>Account
-                    Status
-                </h6>
-                <div class="d-flex gap-3 flex-wrap">
-                    <span class="status-badge"
-                        [ngClass]="selectedEmployeeProfile?.isActive !== false ? 'status-active' : 'status-inactive'">
-                        <i class="bi me-1"
-                            [class.bi-check-circle-fill]="selectedEmployeeProfile?.isActive !== false"
-                            [class.bi-x-circle-fill]="selectedEmployeeProfile?.isActive === false"></i>
-                        {{ selectedEmployeeProfile?.isActive !== false ?
-                        'Active' : 'Inactive' }}
-                    </span>
-                </div>
-
-                }
-            </div>
-
-            <div
-                class="modal-footer border-0 bg-light d-flex justify-content-between align-items-center">
-                <span class="text-muted small">
-                    <i
-                        class="bi bi-shield-lock-fill me-1 text-secondary"></i>Confidential
-                    Employee Record
-                </span>
-                <div class="d-flex gap-2">
-                    <button type="button"
-                        class="btn btn-outline-secondary rounded-pill px-4"
-                        data-bs-dismiss="modal">
-                        <i class="bi bi-x-lg me-1"></i> {{ 'Close' | t }}
-                    </button>
-                    @if (isAdmin) {
-                    <button type="button"
-                        class="btn btn-outline-danger rounded-pill px-4"
-                        [disabled]="isGeneratingReport"
-                        (click)="downloadEmployeeReport(selectedEmployeeProfile)">
-                        @if (isGeneratingReport) {
-                        <span
-                            class="spinner-border spinner-border-sm me-2"></span>
-                        {{ 'Loading...' | t }}
-                        } @else {
-                        <i class="bi bi-file-earmark-pdf-fill me-1"></i> {{
-                        'Download Report' | t }}
-                        }
-                    </button>
-                    <button type="button"
-                        class="btn btn-primary rounded-pill px-4"
-                        (click)="editEmployee(selectedEmployeeProfile?.id); detailsModal?.hide()">
-                        <i class="bi bi-pencil-square me-1"></i> Edit Employee
-                    </button>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<style>
-.emp-modal-header {
-  background: linear-gradient(135deg, #4361ee, #3a0ca3);
-}
-
-.emp-modal-avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.2);
-  border: 2px solid rgba(255,255,255,0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  font-weight: 800;
-  color: #fff;
-  flex-shrink: 0;
-  line-height: 1;
-}
-
-.detail-section-title {
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: #6c757d;
-  border-bottom: 1px solid #f0f2f5;
-  padding-bottom: 0.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.detail-item {
-  background: #f8fafc;
-  border: 1px solid #e8ecf0;
-  border-radius: 10px;
-  padding: 0.75rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
-.detail-label {
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #8592a3;
-  font-weight: 600;
-}
-
-.detail-value {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #1a202c;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-}
-
-.status-chip {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.4rem 1rem;
-  border-radius: 30px;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-
-.cursor-pointer {
-  cursor: pointer;
-}
-
-/* Mobile Responsive Cards for Table */
-@media screen and (max-width: 768px) {
-  .table-responsive table, 
-  .table-responsive thead, 
-  .table-responsive tbody, 
-  .table-responsive th, 
-  .table-responsive td, 
-  .table-responsive tr {
-    display: block;
-  }
-  
-  .table-responsive thead tr {
-    display: none; /* Hide header row */
-  }
-  
-  .table-responsive tr {
-    border: 1px solid #e8ecf0;
-    border-radius: 0.75rem;
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-    background: #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-  }
-  
-  .table-responsive td {
-    border: none;
-    border-bottom: 1px solid #f0f2f5;
-    position: relative;
-    padding-left: 40% !important;
-    text-align: right !important;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    min-height: 50px;
-  }
-  
-  .table-responsive td:last-child {
-    border-bottom: 0;
-  }
-  
-  .table-responsive td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 1rem;
-    width: 35%;
-    text-align: left;
-    font-weight: 700;
-    color: #8592a3;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  
-  .actions-cell {
-    justify-content: flex-end !important;
-    padding-top: 1rem !important;
-    padding-bottom: 1rem !important;
-  }
-}
-</style>
 ```
 
 ### File: src\app\features\employees\employees.component.ts
@@ -7696,7 +3654,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   ngOnInit() {
-    // ??? ?????
+    // أول تحميل
     this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
     this.loadEmployees();
@@ -7786,7 +3744,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   loadEmployees() {
-    // ????? ????????
+    // تحميل الموظفين
     this.isLoading = true;
     this.employeeService.getEmployees().subscribe({
       next: (data) => {
@@ -7808,7 +3766,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   filterEmployees() {
-    // ????? ???????
+    // فلترة القائمة
     this.employeesList = this.allEmployeesList.filter((emp) => {
       let matchesSearch = true;
       if (this.searchQuery) {
@@ -7879,7 +3837,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   viewFullDetails(emp: any) {
-    // ?????? ??????
+    // تفاصيل الموظف
     this.selectedEmployeeProfile = { ...emp, isLoadingDetails: true };
 
     const modalElement = document.getElementById('employeeDetailsModal');
@@ -7909,7 +3867,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   downloadEmployeeReport(emp: any) {
-    // ????? ??????
+    // تقرير الموظف
     if (!emp) return;
 
     this.isGeneratingReport = true;
@@ -7974,7 +3932,7 @@ export class EmployeesComponent implements OnInit {
     const pageW = doc.internal.pageSize.getWidth();
     const today = new Date();
     const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    // ? W3 Fix: ???? ?? ??? ?? ????? ???????? ??? ????? Backend enum
+    // ✅ W3 Fix: تأكد من صحة كل أنواع الإجازات بما يطابق Backend enum
     const leaveTypeMap: any = {
       0: 'Annual',
       1: 'Sick',
@@ -7994,7 +3952,7 @@ export class EmployeesComponent implements OnInit {
       Rejected: 'Rejected',
     };
 
-    // -- HEADER BANNER ------------------------------
+    // ── HEADER BANNER ──────────────────────────────
     doc.setFillColor(67, 97, 238);
     doc.rect(0, 0, pageW, 38, 'F');
 
@@ -8008,7 +3966,7 @@ export class EmployeesComponent implements OnInit {
     doc.text('Employee Monthly Report', 14, 22);
     doc.text(`Generated: ${todayStr}`, 14, 29);
 
-    // -- EMPLOYEE INFO CARD -------------------------
+    // ── EMPLOYEE INFO CARD ─────────────────────────
     doc.setFillColor(248, 249, 252);
     doc.roundedRect(10, 44, pageW - 20, 38, 3, 3, 'F');
     doc.setDrawColor(225, 228, 240);
@@ -8023,12 +3981,12 @@ export class EmployeesComponent implements OnInit {
     doc.setFontSize(9);
     doc.setTextColor(100, 100, 120);
     doc.text(`Employee ID: #${emp.id}`, 18, 62);
-    doc.text(`Department: ${emp.departmentName || '�'}`, 18, 68);
-    doc.text(`Position: ${emp.positionTitle || '�'}`, 18, 74);
+    doc.text(`Department: ${emp.departmentName || '—'}`, 18, 68);
+    doc.text(`Position: ${emp.positionTitle || '—'}`, 18, 74);
 
-    const hireDate = emp.hireDate ? emp.hireDate.split('T')[0] : '�';
+    const hireDate = emp.hireDate ? emp.hireDate.split('T')[0] : '—';
     doc.text(`Hire Date: ${hireDate}`, pageW / 2, 62);
-    doc.text(`Email: ${emp.email || '�'}`, pageW / 2, 68);
+    doc.text(`Email: ${emp.email || '—'}`, pageW / 2, 68);
     doc.text(
       `Status: ${emp.isActive !== false ? 'Active' : 'Inactive'}`,
       pageW / 2,
@@ -8037,7 +3995,7 @@ export class EmployeesComponent implements OnInit {
 
     let curY = 90;
 
-    // -- SALARY SECTION ----------------------------
+    // ── SALARY SECTION ────────────────────────────
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10);
     doc.setTextColor(67, 97, 238);
@@ -8070,10 +4028,10 @@ export class EmployeesComponent implements OnInit {
           .map((s: any) => [
             s.month,
             s.year,
-            `$${s.baseAmount ?? '�'}`,
+            `$${s.baseAmount ?? '—'}`,
             `+$${s.allowances ?? 0}`,
             `-$${s.deductions ?? 0}`,
-            `$${s.netAmount ?? '�'}`,
+            `$${s.netAmount ?? '—'}`,
           ]),
         theme: 'grid',
         headStyles: {
@@ -8089,7 +4047,7 @@ export class EmployeesComponent implements OnInit {
       curY = (doc as any).lastAutoTable.finalY + 10;
     }
 
-    // -- ATTENDANCE SECTION ------------------------
+    // ── ATTENDANCE SECTION ────────────────────────
     if (curY > 230) {
       doc.addPage();
       curY = 20;
@@ -8113,10 +4071,10 @@ export class EmployeesComponent implements OnInit {
         startY: curY + 6,
         head: [['Date', 'Clock In', 'Clock Out', 'Hours', 'Status']],
         body: attendance.map((a: any) => [
-          a.date ? a.date.split('T')[0] : '�',
-          a.clockIn || '�',
-          a.clockOut && a.clockOut !== '00:00:00' ? a.clockOut : '�',
-          a.totalHours || '�',
+          a.date ? a.date.split('T')[0] : '—',
+          a.clockIn || '—',
+          a.clockOut && a.clockOut !== '00:00:00' ? a.clockOut : '—',
+          a.totalHours || '—',
           a.clockOut && a.clockOut !== '00:00:00' ? 'Completed' : 'Working',
         ]),
         theme: 'grid',
@@ -8133,7 +4091,7 @@ export class EmployeesComponent implements OnInit {
       curY = (doc as any).lastAutoTable.finalY + 10;
     }
 
-    // -- LEAVE SECTION -----------------------------
+    // ── LEAVE SECTION ─────────────────────────────
     if (curY > 230) {
       doc.addPage();
       curY = 20;
@@ -8158,9 +4116,9 @@ export class EmployeesComponent implements OnInit {
         head: [['Type', 'Start Date', 'End Date', 'Days', 'Status']],
         body: leaves.map((l: any) => [
           leaveTypeMap[l.leaveType] || l.leaveType,
-          l.startDate ? l.startDate.split('T')[0] : '�',
-          l.endDate ? l.endDate.split('T')[0] : '�',
-          l.totalDays ?? '�',
+          l.startDate ? l.startDate.split('T')[0] : '—',
+          l.endDate ? l.endDate.split('T')[0] : '—',
+          l.totalDays ?? '—',
           statusMap[l.status] || l.status,
         ]),
         theme: 'grid',
@@ -8177,7 +4135,7 @@ export class EmployeesComponent implements OnInit {
       curY = (doc as any).lastAutoTable.finalY + 10;
     }
 
-    // -- SUMMARY BOX --------------------------------
+    // ── SUMMARY BOX ────────────────────────────────
     if (curY > 235) {
       doc.addPage();
       curY = 20;
@@ -8215,7 +4173,7 @@ export class EmployeesComponent implements OnInit {
       curY + 23,
     );
 
-    // -- FOOTER ------------------------------------
+    // ── FOOTER ────────────────────────────────────
     const pageCount = (doc.internal as any).getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
@@ -8223,7 +4181,7 @@ export class EmployeesComponent implements OnInit {
       doc.setFontSize(8);
       doc.setTextColor(180, 180, 180);
       doc.text(
-        'Confidential � Kawadir HRMS � System Generated Report',
+        'Confidential – Kawadir HRMS – System Generated Report',
         14,
         doc.internal.pageSize.getHeight() - 8,
       );
@@ -8238,304 +4196,6 @@ export class EmployeesComponent implements OnInit {
     doc.save(fileName);
   }
 }
-
-```
-
-### File: src\app\features\leave\leave.component.css
-```css
-```
-
-### File: src\app\features\leave\leave.component.html
-```html
-<div class="page-container p-4">
-
-
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <div>
-            <h3 class="fw-bold text-dark mb-1">{{ isAdminOrHR ? ('All Leave Requests' | t) : ('My Leave Requests' | t) }}</h3>
-            <p class="text-muted small mb-0">{{ 'Manage and track time-off requests effectively' | t }}</p>
-        </div>
-        <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end">
-            <div class="input-group shadow-sm" style="max-width: 350px;">
-                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                <input type="text" class="form-control border-start-0 ps-0" 
-                    placeholder="{{ 'Search by name, ID, or reason...' | t }}"
-                    [(ngModel)]="leaveSearchQuery" 
-                    (input)="filterLeaves()">
-            </div>
-
-            <div class="dropdown">
-                <button class="btn btn-outline-secondary shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Filter Leaves">
-                    <i class="bi bi-funnel-fill"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4" style="width: 250px;">
-                    <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">{{ 'Filter Options' | t }}</h6>
-                    
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold text-muted mb-1">{{ 'Leave Type' | t }}</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="selectedLeaveType" (change)="filterLeaves()">
-                            <option value="">{{ 'All Types' | t }}</option>
-                            <option *ngFor="let type of leaveTypes" [value]="type.name">{{ type.name }}</option>
-                        </select>
-                    </div>
-                    
-                    <div class="mb-2">
-                        <label class="form-label small fw-semibold text-muted mb-1">{{ 'Status' | t }}</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="selectedLeaveStatus" (change)="filterLeaves()">
-                            <option value="">{{ 'All Statuses' | t }}</option>
-                            <option value="Pending">{{ 'Pending' | t }}</option>
-                            <option value="Approved">{{ 'Approved' | t }}</option>
-                            <option value="Rejected">{{ 'Rejected' | t }}</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <button *ngIf="!isAdminOrHR"
-                class="btn btn-primary px-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
-                (click)="openModal()">
-                <i class="bi bi-send-plus me-2"></i> {{ 'Request Leave' | t }}
-            </button>
-        </div>
-    </div>
-
-    <!-- Annual Leave Balance Banner for Employees -->
-    <div class="row mb-4" *ngIf="!isAdminOrHR">
-        <div class="col-12">
-            <div class="card border-0 shadow-sm rounded-4 bg-primary bg-opacity-10 position-relative overflow-hidden">
-                <div class="position-absolute end-0 top-0 h-100 w-50" style="background: linear-gradient(90deg, transparent, rgba(13, 110, 253, 0.05)); z-index: 0;"></div>
-                <div class="card-body d-flex align-items-center justify-content-between p-4 position-relative" style="z-index: 1;">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 55px; height: 55px;">
-                            <i class="bi bi-airplane-engines-fill fs-4"></i>
-                        </div>
-                        <div>
-                            <p class="text-primary small mb-0 fw-bold text-uppercase" style="letter-spacing: 0.5px;">{{ 'Annual Leave Balance' | t }}</p>
-                            <h3 class="mb-0 fw-bold text-dark">{{ employeeAnnualLeaveBalance }} {{ 'Days Remaining' | t }}</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-
-                <thead class="bg-light text-muted small text-uppercase"
-                    style="letter-spacing: 0.5px;">
-                    <tr>
-                        <th *ngIf="isAdminOrHR" class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Employee' | t }}</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Leave Type' | t }}</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Duration' | t }}</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Reason' | t }}</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold text-center">{{ 'Status' | t }}</th>
-                        <th *ngIf="isAdminOrHR"
-                            class="py-3 px-4 border-bottom-0 fw-semibold text-end">{{ 'Actions' | t }}</th>
-                    </tr>
-                </thead>
-
-                <tbody class="border-top-0">
-
-                    <tr *ngIf="isLoading">
-                        <td [colSpan]="isAdminOrHR ? 6 : 5" class="text-center py-5 text-muted">
-                            <span
-                                class="spinner-border spinner-border-sm me-2"></span>
-                            {{ 'Loading requests...' | t }}
-                        </td>
-                    </tr>
-
-                    <tr *ngIf="!isLoading && leavesList.length === 0">
-                        <td [colSpan]="isAdminOrHR ? 7 : 6" class="text-center py-5">
-                            <div class="d-flex flex-column align-items-center">
-                                <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                                    <i class="bi bi-airplane-engines text-secondary fs-1"></i>
-                                </div>
-                                <h5 class="fw-bold text-dark mb-1">{{ 'No Leave Requests' | t }}</h5>
-                                <p class="text-muted small mb-0">{{ 'No leave data available matching your search criteria.' | t }}</p>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr *ngFor="let leave of paginatedLeaves">
-                        <td *ngIf="isAdminOrHR" data-label="Employee" class="py-3 px-3">
-                            <div class="d-flex align-items-center">
-                                <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center"
-                                    style="width: 32px; height: 32px; font-size: 13px;">
-                                    {{ leave.employeeName ? leave.employeeName.charAt(0).toUpperCase() : 'U' }}
-                                </div>
-                                <span class="fw-semibold text-dark">{{ leave.employeeName }}</span>
-                            </div>
-                        </td>
-                        <td data-label="Leave Type" class="py-3 px-4 fw-bold text-dark">
-                            <div class="d-flex align-items-center">
-                                <div
-                                    class="rounded-circle p-2 me-3 bg-secondary bg-opacity-10 text-secondary d-flex align-items-center justify-content-center"
-                                    style="width: 35px; height: 35px;">
-                                    <i class="bi bi-journal-text"></i>
-                                </div>
-                                {{ getLeaveTypeText(leave.leaveType) }}
-                            </div>
-                        </td>
-
-                        <td data-label="Duration" class="py-3 px-4">
-                            <div class="fw-medium text-dark">{{ leave.startDate
-                                | date:'MMM dd' }} <i
-                                    class="bi bi-arrow-right text-muted mx-1"></i>
-                                {{ leave.endDate | date:'MMM dd, yyyy' }}</div>
-                        </td>
-
-                        <td data-label="Reason" class="py-3 px-4 text-secondary">
-                            <span class="d-inline-block text-truncate"
-                                style="max-width: 180px;"
-                                [title]="leave.reason">
-                                {{ leave.reason || ('No reason provided' | t) }}
-                            </span>
-                        </td>
-
-                        <td data-label="Status" class="py-3 px-4 text-center">
-                            <span class="status-badge"
-                                [ngClass]="{
-                                  'status-approved': getStatusText(leave.status) === 'Approved',
-                                  'status-pending': getStatusText(leave.status) === 'Pending',
-                                  'status-rejected': getStatusText(leave.status) === 'Rejected'
-                                }">
-                                <i class="bi me-1"
-                                    [ngClass]="{
-         'bi-check-circle-fill': getStatusText(leave.status) === 'Approved',
-         'bi-hourglass-split': getStatusText(leave.status) === 'Pending',
-         'bi-x-circle-fill': getStatusText(leave.status) === 'Rejected'
-       }"></i>
-                                {{ getStatusText(leave.status) }}
-                            </span>
-                            <div *ngIf="getStatusText(leave.status) === 'Rejected' && leave.rejectionReason"
-                                class="mt-1">
-                                <small class="text-danger d-block" [title]="leave.rejectionReason">
-                                    <i class="bi bi-chat-left-text-fill me-1"></i>
-                                    <span class="d-inline-block text-truncate" style="max-width: 150px;">{{ leave.rejectionReason }}</span>
-                                </small>
-                            </div>
-                        </td>
-
-                        <td *ngIf="isAdminOrHR" data-label="Actions" class="py-3 px-4 text-end actions-cell">
-                            <div
-                                *ngIf="getStatusText(leave.status) === 'Pending'"
-                                class="d-flex justify-content-end gap-2">
-                                <button
-                                    class="btn btn-sm btn-success rounded-3 shadow-sm px-3"
-                                    (click)="changeStatus(leave.id, 1)">
-                                    {{ 'Approve' | t }}
-                                </button>
-                                <button
-                                    class="btn btn-sm btn-outline-danger rounded-3 px-3"
-                                    (click)="changeStatus(leave.id, 2)">
-                                    {{ 'Reject' | t }}
-                                </button>
-                            </div>
-                            <span
-                                *ngIf="getStatusText(leave.status) !== 'Pending'"
-                                class="text-muted small">{{ 'Processed' | t }}</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Pagination Footer -->
-        <div *ngIf="leavesList.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <small class="text-muted fw-medium">
-                {{ 'Showing' | t }} {{ (currentPage - 1) * itemsPerPage + 1 }} {{ 'to' | t }} {{ getMathMin(currentPage * itemsPerPage, leavesList.length) }} {{ 'of' | t }} {{ leavesList.length }} {{ 'entries' | t }}
-            </small>
-            <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
-                <li class="page-item" [class.disabled]="currentPage === 1">
-                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">{{ 'Previous' | t }}</a>
-                </li>
-                <li class="page-item active">
-                    <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
-                </li>
-                <li class="page-item" [class.disabled]="currentPage === totalPages">
-                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">{{ 'Next' | t }}</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-<div class="modal fade" id="leaveModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow rounded-4">
-            <div class="modal-header border-bottom-0 pt-4 px-4">
-                <h5 class="modal-title fw-bold text-dark"><i
-                        class="bi bi-send-plus text-primary me-2"></i>New Leave
-                    Request</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-4">
-                <form #leaveForm="ngForm">
-
-                    <div class="mb-4">
-                        <label
-                            class="form-label fw-semibold text-secondary small">Leave
-                            Type *</label>
-                        <select class="form-select bg-light border-0"
-                            name="leaveType" [(ngModel)]="leaveData.leaveType"
-                            required>
-                            <option *ngFor="let type of leaveTypes"
-                                [value]="type.id">{{ type.name }}</option>
-                        </select>
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="col-6">
-                            <label
-                                class="form-label fw-semibold text-secondary small">Start
-                                Date *</label>
-                            <input type="date"
-                                class="form-control bg-light border-0"
-                                name="startDate"
-                                [(ngModel)]="leaveData.startDate"
-                                [min]="getToday()" required>
-                        </div>
-                        <div class="col-6">
-                            <label
-                                class="form-label fw-semibold text-secondary small">End
-                                Date *</label>
-                            <input type="date"
-                                class="form-control bg-light border-0"
-                                name="endDate" [(ngModel)]="leaveData.endDate"
-                                [min]="leaveData.startDate || getToday()" required>
-                        </div>
-                    </div>
-
-                    <div class="mb-2">
-                        <label
-                            class="form-label fw-semibold text-secondary small">Reason
-                            *</label>
-                        <textarea class="form-control bg-light border-0"
-                            name="reason" [(ngModel)]="leaveData.reason"
-                            rows="3" required
-                            placeholder="Explain why you need this leave..."></textarea>
-                    </div>
-
-                </form>
-            </div>
-            <div class="modal-footer border-top-0 pb-4 px-4">
-                <button type="button"
-                    class="btn btn-light px-4 rounded-3 fw-semibold"
-                    data-bs-dismiss="modal">Cancel</button>
-                <button type="button"
-                    class="btn btn-primary px-4 rounded-3 fw-semibold"
-                    (click)="submitLeaveRequest()"
-                    [disabled]="leaveForm.invalid || isProcessing">
-                    <span *ngIf="isProcessing"
-                        class="spinner-border spinner-border-sm me-2"></span>
-                    Submit Request
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
 
 ```
 
@@ -8610,8 +4270,8 @@ export class LeaveComponent implements OnInit {
   leaveTypes = [
     { id: 0, name: 'Annual' },
     { id: 1, name: 'Sick' },
-    { id: 2, name: 'Emergency' }, // ? ????? Backend enum: Emergency=2
-    { id: 3, name: 'Unpaid' }, // ? ????? Backend enum: Unpaid=3
+    { id: 2, name: 'Emergency' }, // ✅ يطابق Backend enum: Emergency=2
+    { id: 3, name: 'Unpaid' }, // ✅ يطابق Backend enum: Unpaid=3
   ];
 
   ngOnInit() {
@@ -8620,7 +4280,7 @@ export class LeaveComponent implements OnInit {
   }
 
   loadLeaves() {
-    // ????? ????????
+    // تحميل الإجازات
     this.isLoading = true;
 
     const request = this.isAdminOrHR
@@ -8655,7 +4315,7 @@ export class LeaveComponent implements OnInit {
             );
           });
         } else if (!this.isAdminOrHR) {
-          // ? Backend ????? strings: 'Approved', 'Annual'
+          // ✅ Backend يُرجع strings: 'Approved', 'Annual'
           const approvedAnnualLeavesDays = this.allLeavesList
             .filter(
               (l: any) => l.status === 'Approved' && l.leaveType === 'Annual',
@@ -8675,7 +4335,7 @@ export class LeaveComponent implements OnInit {
   }
 
   filterLeaves() {
-    // ????? ????????
+    // فلترة الإجازات
     this.leavesList = this.allLeavesList.filter((l) => {
       let matchesSearch = true;
       if (this.leaveSearchQuery) {
@@ -8698,8 +4358,8 @@ export class LeaveComponent implements OnInit {
 
       let matchesType = true;
       if (this.selectedLeaveType) {
-        // ??? backend ???? string ??? "Annual" ?? ??? ??? 0
-        // ????? ?????? ???? ?????? ?? case-insensitive
+        // الـ backend يرجع string مثل "Annual" أو رقم مثل 0
+        // نحوّل كلاهما لاسم ونقارن بـ case-insensitive
         const leaveTypeName = this.getLeaveTypeText(l.leaveType).toLowerCase();
         matchesType = leaveTypeName === this.selectedLeaveType.toLowerCase();
       }
@@ -8724,11 +4384,11 @@ export class LeaveComponent implements OnInit {
   }
 
   getStatusText(statusCode: any): string {
-    // ? Backend ????? string ?????? ?? MappingProfile (.ToString())
+    // ✅ Backend يُرجع string مباشرة من MappingProfile (.ToString())
     if (typeof statusCode === 'string' && isNaN(Number(statusCode))) {
       return statusCode; // 'Pending' | 'Approved' | 'Rejected'
     }
-    // ??????? ?? ????? ??????? ???????
+    // توافقية مع القيم الرقمية القديمة
     if (statusCode === 0 || statusCode === '0') return 'Pending';
     if (statusCode === 1 || statusCode === '1') return 'Approved';
     if (statusCode === 2 || statusCode === '2') return 'Rejected';
@@ -8736,7 +4396,7 @@ export class LeaveComponent implements OnInit {
   }
 
   getLeaveTypeText(typeCode: any): string {
-    // ? Backend ????? string ??????: 'Annual', 'Sick', 'Emergency', 'Unpaid'
+    // ✅ Backend يُرجع string مباشرة: 'Annual', 'Sick', 'Emergency', 'Unpaid'
     if (typeof typeCode === 'string' && isNaN(Number(typeCode))) {
       const found = this.leaveTypes.find(
         (t) => t.name.toLowerCase() === typeCode.toLowerCase(),
@@ -8745,7 +4405,7 @@ export class LeaveComponent implements OnInit {
         ? found.name
         : typeCode.charAt(0).toUpperCase() + typeCode.slice(1);
     }
-    // ??????? ?? ????? ???????
+    // توافقية مع القيم الرقمية
     const type = this.leaveTypes.find((t) => t.id === Number(typeCode));
     return type ? type.name : typeCode != null ? String(typeCode) : 'Unknown';
   }
@@ -8768,7 +4428,7 @@ export class LeaveComponent implements OnInit {
   }
 
   submitLeaveRequest() {
-    // ????? ??? ???????
+    // إرسال طلب الإجازة
     if (this.leaveData.startDate < this.getToday()) {
       Swal.fire('Invalid Date', 'Start Date cannot be in the past.', 'warning');
       return;
@@ -8819,7 +4479,7 @@ export class LeaveComponent implements OnInit {
   }
 
   changeStatus(id: number, newStatusCode: number) {
-    // ????? ??????
+    // تغيير الحالة
     if (newStatusCode === 2) {
       Swal.fire({
         title: 'Reject Leave Request',
@@ -8873,68 +4533,6 @@ export class LeaveComponent implements OnInit {
   }
 }
 
-```
-
-### File: src\app\features\leave-form\leave-form.component.css
-```css
-```
-
-### File: src\app\features\leave-form\leave-form.component.html
-```html
-<div class="container mt-4" style="max-width: 600px;">
-    <div class="card shadow-sm border-0 rounded-3">
-        <div class="card-header bg-white border-0 pt-4 pb-0 px-4">
-            <h3 class="fw-bold text-secondary mb-0">Apply for Leave</h3>
-        </div>
-
-        <div class="card-body p-4">
-            <form [formGroup]="leaveForm" (ngSubmit)="onSubmit()">
-
-                <div class="mb-3">
-                    <label class="form-label fw-bold text-muted small">Leave
-                        Type</label>
-                    <select class="form-select bg-light" formControlName="leaveType">
-                        <option value="" disabled selected>Select Leave
-                            Type</option>
-                        <!-- ? ?????? ????? ????? Backend enum: Annual=0, Sick=1, Emergency=2, Unpaid=3 -->
-                        <option value="0">Annual</option>
-                        <option value="1">Sick</option>
-                        <option value="2">Emergency</option>
-                        <option value="3">Unpaid</option>
-                    </select>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold text-muted small">Start
-                            Date</label>
-                        <input type="date" class="form-control bg-light" formControlName="startDate">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold text-muted small">End
-                            Date</label>
-                        <input type="date" class="form-control bg-light" formControlName="endDate">
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label fw-bold text-muted small">Reason</label>
-                    <textarea class="form-control bg-light" formControlName="reason" rows="3"
-                        placeholder="Explain your reason..."></textarea>
-                </div>
-
-                <div class="d-flex justify-content-end gap-2">
-                    <a routerLink="/leave" class="btn btn-light px-4 fw-bold text-muted">Cancel</a>
-                    <button type="submit" class="btn btn-primary px-5 fw-bold" [disabled]="isLoading">
-                        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
-                        {{ isLoading ? loadingMessage : 'Submit Request' }}
-                    </button>
-                </div>
-
-            </form>
-        </div>
-    </div>
-</div>
 ```
 
 ### File: src\app\features\leave-form\leave-form.component.ts
@@ -8992,7 +4590,7 @@ export class LeaveFormComponent {
     const formValue = this.leaveForm.value;
 
     const newLeave = {
-      // ? ???? ???? ??? ????? Backend enum
+      // ✅ حوّل لرقم حتى يطابق Backend enum
       leaveType: Number(formValue.leaveType),
       startDate: new Date(formValue.startDate!).toISOString(),
       endDate: new Date(formValue.endDate!).toISOString(),
@@ -9020,265 +4618,6 @@ export class LeaveFormComponent {
   }
 }
 
-```
-
-### File: src\app\features\my-profile\my-profile.component.html
-```html
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <h2 class="fw-bold text-secondary">
-    <i class="bi bi-person-badge-fill me-2"></i>{{ 'My Profile' | t }}
-  </h2>
-  <button class="btn btn-primary shadow-sm rounded-pill px-4 fw-semibold" (click)="openEditModal()" *ngIf="!isLoading">
-    <i class="bi bi-pencil-square me-2"></i>{{ 'Edit Profile' | t }}
-  </button>
-</div>
-
-<!-- --- Loading --- -->
-@if (isLoading) {
-<div class="text-center my-5">
-  <div class="spinner-border text-primary" role="status"></div>
-  <p class="mt-2 text-muted">Loading your profile...</p>
-</div>
-}
-
-<!-- ??????? ?????? -->
-@else if (isAdmin) {
-<div class="row g-4">
-  <!-- Left card: Avatar -->
-  <div class="col-md-4">
-    <div class="card shadow-sm border-0 h-100 text-center p-4">
-      <div class="mb-3">
-        <div class="profile-avatar mx-auto admin-avatar-bg">{{ initials }}</div>
-      </div>
-      <h4 class="fw-bold text-dark mb-1">{{ userName }}</h4>
-      <p class="text-muted mb-1">{{ userRole }}</p>
-      <p class="text-muted small mb-3">{{ userEmail }}</p>
-      <span
-        class="badge rounded-pill px-3 py-2 bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">
-        <i class="bi bi-shield-fill-check me-1"></i> System Admin
-      </span>
-    </div>
-  </div>
-
-  <!-- Right card: Details -->
-  <div class="col-md-8">
-    <div class="card shadow-sm border-0 h-100">
-      <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
-        <h5 class="fw-bold text-secondary">
-          <i class="bi bi-person-lines-fill me-2 text-primary"></i>{{ 'Account Details' | t }}
-        </h5>
-      </div>
-      <div class="card-body p-4">
-        <div class="row g-4">
-          <div class="col-md-6">
-            <label class="text-muted small text-uppercase fw-bold">
-              <i class="bi bi-envelope me-1"></i> {{ 'Email Address' | t }}
-            </label>
-            <p class="fw-semibold text-dark fs-5 mb-0">{{ userEmail || '�' }}</p>
-          </div>
-          <div class="col-md-6">
-            <label class="text-muted small text-uppercase fw-bold">
-              <i class="bi bi-person-badge me-1"></i> {{ 'Role' | t }}
-            </label>
-            <p class="fw-semibold text-dark fs-5 mb-0">{{ userRole }}</p>
-          </div>
-        </div>
-
-        <hr class="my-4 text-muted opacity-25">
-
-        <h5 class="fw-bold text-secondary mb-3">
-          <i class="bi bi-shield-check me-2 text-primary"></i>{{ 'Permissions' | t }}
-        </h5>
-        <div class="row g-3">
-          <div class="col-md-4">
-            <div class="bg-light rounded-3 p-3 d-flex align-items-center gap-2">
-              <i class="bi bi-people-fill text-primary fs-5"></i>
-              <span class="fw-semibold small">{{ 'Employee Management' | t }}</span>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="bg-light rounded-3 p-3 d-flex align-items-center gap-2">
-              <i class="bi bi-gear-fill text-success fs-5"></i>
-              <span class="fw-semibold small">{{ 'System Control' | t }}</span>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="bg-light rounded-3 p-3 d-flex align-items-center gap-2">
-              <i class="bi bi-cash-stack text-warning fs-5"></i>
-              <span class="fw-semibold small">{{ 'Payroll Access' | t }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-}
-
-<!-- --- EMPLOYEE PROFILE --- -->
-@else if (profile) {
-<div class="row g-4">
-  <div class="col-md-4">
-    <div class="card shadow-sm border-0 h-100 text-center p-4">
-      <div class="mb-3">
-        <div class="profile-avatar mx-auto">{{ getProfileInitials() }}</div>
-      </div>
-      <h4 class="fw-bold text-dark mb-1">{{ profile.fullName }}</h4>
-      <p class="text-muted mb-3">{{ profile.positionTitle || 'Employee' }}</p>
-      <span
-        class="badge rounded-pill px-3 py-2 bg-success bg-opacity-10 text-success border border-success border-opacity-25">
-        <i class="bi bi-check-circle-fill me-1"></i> Active
-      </span>
-    </div>
-  </div>
-
-  <div class="col-md-8">
-    <div class="card shadow-sm border-0 h-100">
-      <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
-        <h5 class="fw-bold text-secondary">
-          <i class="bi bi-person-lines-fill me-2 text-primary"></i>{{ 'Personal Details' | t }}
-        </h5>
-      </div>
-      <div class="card-body p-4">
-        <div class="row g-4">
-          <div class="col-md-6">
-            <label class="text-muted small text-uppercase fw-bold">
-              <i class="bi bi-envelope me-1"></i> {{ 'Email Address' | t }}
-            </label>
-            <p class="fw-semibold text-dark fs-5 mb-0">{{ profile.email || '�' }}</p>
-          </div>
-          <div class="col-md-6">
-            <label class="text-muted small text-uppercase fw-bold">
-              <i class="bi bi-telephone me-1"></i> {{ 'Phone' | t }}
-            </label>
-            <!-- ??? ??????? -->
-            <p class="fw-semibold text-dark fs-5 mb-0">
-              {{ profile.phone || profile.phoneNumber || 'N/A' }}
-            </p>
-          </div>
-          <div class="col-md-6">
-            <label class="text-muted small text-uppercase fw-bold">
-              <i class="bi bi-building me-1"></i> {{ 'Department' | t }}
-            </label>
-            <p class="fw-semibold text-dark fs-5 mb-0">{{ profile.departmentName || 'N/A' }}</p>
-          </div>
-          <div class="col-md-6">
-            <label class="text-muted small text-uppercase fw-bold">
-              <i class="bi bi-calendar2-check me-1"></i> {{ 'Hire Date' | t }}
-            </label>
-            <p class="fw-semibold text-dark fs-5 mb-0">{{ profile.hireDate | date:'longDate' }}</p>
-          </div>
-        </div>
-
-        <hr class="my-4 text-muted opacity-25">
-
-        <h5 class="fw-bold text-secondary mb-3">
-          <i class="bi bi-clock-history me-2 text-info"></i>{{ 'Status' | t }}
-        </h5>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="bg-light rounded-3 p-3 d-flex align-items-center">
-              <i class="bi bi-person-check-fill fs-2 text-success me-3"></i>
-              <div>
-                <h6 class="text-muted text-uppercase fw-bold small mb-1">{{ 'Status' | t }}</h6>
-                <span class="fs-5 fw-bold text-success">{{ 'Active' | t }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-}
-
-<!-- --- Not linked --- -->
-@else if (!isLoading && !profile && !isAdmin) {
-<div class="alert alert-warning d-flex align-items-center rounded-3" role="alert">
-  <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
-  <div>
-    <h5 class="alert-heading fw-bold mb-1">{{ 'Profile Not Linked' | t }}</h5>
-    Your account is not yet linked to an employee profile. Please contact your administrator.
-  </div>
-</div>
-}
-
-<!-- --- Edit Profile Modal --- -->
-<div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0 shadow-lg rounded-4">
-      <div class="modal-header border-bottom-0 pt-4 pb-0 px-4">
-        <h5 class="fw-bold text-dark"><i class="bi bi-person-lines-fill text-primary me-2"></i>{{ 'Edit Profile' | t }}
-        </h5>
-        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body p-4">
-        <!-- Contact Info -->
-        <h6 class="fw-bold text-secondary mb-3 small text-uppercase">{{ 'Contact Information' | t }}</h6>
-        <div class="mb-3">
-          <label class="form-label text-muted small fw-semibold">Email Address</label>
-          <input type="email" class="form-control bg-light border-0 py-2" [(ngModel)]="editData.email"
-            placeholder="name@example.com">
-        </div>
-        <div class="mb-4" *ngIf="profile">
-          <label class="form-label text-muted small fw-semibold">{{ 'Phone' | t }}</label>
-          <input type="text" class="form-control bg-light border-0 py-2" [(ngModel)]="editData.phone"
-            placeholder="e.g. +123456789">
-        </div>
-
-        <hr class="my-4 text-muted opacity-25">
-
-        <!-- Security -->
-        <h6 class="fw-bold text-secondary mb-3 small text-uppercase">{{ 'Change Password' | t }}</h6>
-        <div class="mb-3">
-          <label class="form-label text-muted small fw-semibold">{{ 'Current Password' | t }}</label>
-          <input type="password" class="form-control bg-light border-0 py-2" [(ngModel)]="pwdData.oldPassword"
-            placeholder="��������">
-        </div>
-        <div class="mb-3">
-          <label class="form-label text-muted small fw-semibold">{{ 'New Password' | t }}</label>
-          <input type="password" class="form-control bg-light border-0 py-2" [(ngModel)]="pwdData.newPassword"
-            placeholder="Min. 6 characters">
-        </div>
-        <div class="mb-3">
-          <label class="form-label text-muted small fw-semibold">{{ 'Confirm New Password' | t }}</label>
-          <input type="password" class="form-control bg-light border-0 py-2" [(ngModel)]="pwdData.confirmNewPassword"
-            placeholder="Repeat new password">
-        </div>
-      </div>
-      <div class="modal-footer border-top-0 pb-4 px-4">
-        <button type="button" class="btn btn-light px-4 rounded-pill" data-bs-dismiss="modal">{{ 'Cancel' | t
-          }}</button>
-        <button type="button" class="btn btn-primary px-4 rounded-pill fw-semibold shadow-sm" (click)="saveProfile()"
-          [disabled]="isUpdatingProfile || isChangingPwd">
-          <span *ngIf="isUpdatingProfile || isChangingPwd" class="spinner-border spinner-border-sm me-2"></span> {{
-          'Save Changes' | t }}
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<style>
-  .profile-avatar {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #4361ee, #3a0ca3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.6rem;
-    font-weight: 800;
-    color: #fff;
-    line-height: 90px;
-    text-align: center;
-  }
-
-  .admin-avatar-bg {
-    background: linear-gradient(135deg, #1d4ed8, #7c3aed);
-  }
-</style>
 ```
 
 ### File: src\app\features\my-profile\my-profile.component.ts
@@ -9318,7 +4657,7 @@ export class MyProfileComponent implements OnInit {
   isChangingPwd = false;
 
   ngOnInit() {
-    // ????? ????????
+    // تحميل البيانات
     this.isAdmin = this.authService.isAdmin();
     this.userName = localStorage.getItem('user_name') || 'User';
     this.userRole = localStorage.getItem('user_role') || 'Employee';
@@ -9362,7 +4701,7 @@ export class MyProfileComponent implements OnInit {
   }
 
   loadMyProfile() {
-    // ??? ????????
+    // جلب بروفايلي
     this.isLoading = true;
     this.employeeService.getMyProfile().subscribe({
       next: (res: any) => {
@@ -9389,7 +4728,7 @@ export class MyProfileComponent implements OnInit {
   }
 
   saveProfile() {
-    // ??? ?????????
+    // حفظ التعديلات
     let requestsPending = 0;
     let hasError = false;
 
@@ -9512,186 +4851,6 @@ export class MyProfileComponent implements OnInit {
 
 ```
 
-### File: src\app\features\positions\positions.component.css
-```css
-.input-group:focus-within .input-group-text,
-.input-group:focus-within .form-control,
-.input-group:focus-within .form-select {
-  border-color: #0d6efd;
-  box-shadow: none;
-}
-
-.input-group:focus-within {
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
-  border-radius: 0.375rem;
-}
-
-.form-control::placeholder {
-  color: #adb5bd;
-  font-size: 0.9rem;
-}
-
-.max-w-4xl {
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-```
-
-### File: src\app\features\positions\positions.component.html
-```html
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold text-secondary">
-        <i class="bi bi-briefcase-fill me-2"></i>{{ 'Job Positions' | t }}
-    </h2>
-    <button class="btn btn-primary shadow-sm fw-bold px-4"
-        (click)="openModal()">
-        <i class="bi bi-plus-lg me-1"></i> {{ 'Add Position' | t }}
-    </button>
-</div>
-
-@if (isLoading) {
-<div class="text-center my-5">
-    <div class="spinner-border text-primary" role="status"></div>
-    <p class="mt-2 text-muted">Synchronizing with server...</p>
-</div>
-} @else {
-<div class="card shadow-sm border-0">
-    <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0 text-center">
-            <thead class="table-light text-uppercase small fw-bold">
-                <tr>
-                    <th>ID</th>
-                    <th>{{ 'Job Title' | t }}</th>
-                    <th>{{ 'Department' | t }}</th>
-                    <th>{{ 'Salary Range (Min - Max)' | t }}</th>
-                    <th>{{ 'Actions' | t }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (pos of positionsList; track pos.id) {
-                <tr>
-                    <td class="text-muted fw-bold">#{{ pos.id }}</td>
-                    <td class="fw-bold text-dark">{{ pos.title }}</td>
-                    <td>
-                        <span
-                            class="badge bg-light text-secondary border px-3 py-2 fw-semibold shadow-sm" style="font-size: 0.85rem;">
-                            {{ getDepartmentName(pos.departmentId) }}
-                        </span>
-                    </td>
-                    <td class="fw-semibold text-secondary">
-                        {{ pos.salaryMin | currency }} -
-                        <span class="text-success">{{ pos.salaryMax | currency
-                            }}</span>
-                    </td>
-                    <td>
-                        <button
-                            class="btn btn-sm btn-outline-primary me-2 border-0 shadow-none"
-                            (click)="openModal(pos)">
-                            <i class="bi bi-pencil-square"></i>
-                        </button>
-                        <button
-                            class="btn btn-sm btn-outline-danger border-0 shadow-none"
-                            (click)="onDelete(pos.id)">
-                            <i class="bi bi-trash3"></i>
-                        </button>
-                    </td>
-                </tr>
-                } @empty {
-                <tr>
-                    <td colspan="5" class="text-center py-5 text-muted">
-                        <i
-                            class="bi bi-briefcase fs-1 d-block mb-2 opacity-25"></i>
-                        {{ 'No positions defined in the system.' | t }}
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
-}
-
-<div class="modal fade" id="positionModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
-            <div
-                class="modal-header border-bottom border-primary border-4 bg-light">
-                <h5 class="modal-title text-primary fw-bold">
-                    <i class="bi" [class.bi-plus-circle]="!isEditMode"
-                        [class.bi-pencil-square]="isEditMode"></i>
-                    {{ isEditMode ? ('Modify Position' | t) : ('Create New Position' | t) }}
-                </h5>
-                <button type="button" class="btn-close shadow-none"
-                    data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <div class="modal-body p-4">
-                <form #positionForm="ngForm">
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <label
-                                class="fw-bold mb-1 small text-uppercase text-muted">Job
-                                Title</label>
-                            <input type="text" class="form-control" name="title"
-                                [(ngModel)]="positionData.title" required
-                                placeholder="e.g. Software Engineer">
-                        </div>
-
-                        <div class="col-12">
-                            <label
-                                class="fw-bold mb-1 small text-uppercase text-muted">Department
-                                Assignment</label>
-                            <select class="form-select" name="deptId"
-                                [(ngModel)]="positionData.departmentId"
-                                required>
-                                <option [ngValue]="null" disabled
-                                    selected>Select target department</option>
-                                @for (dept of departmentsList; track dept.id) {
-                                <option [ngValue]="dept.id">{{ dept.name
-                                    }}</option>
-                                }
-                            </select>
-                        </div>
-
-                        <div class="col-6 mt-4">
-                            <label
-                                class="fw-bold mb-1 small text-uppercase text-muted">Minimum
-                                Salary</label>
-                            <input type="number" class="form-control"
-                                name="sMin" [(ngModel)]="positionData.salaryMin"
-                                min="0" required>
-                        </div>
-
-                        <div class="col-6 mt-4">
-                            <label
-                                class="fw-bold mb-1 small text-uppercase text-muted">Maximum
-                                Salary</label>
-                            <input type="number" class="form-control"
-                                name="sMax" [(ngModel)]="positionData.salaryMax"
-                                min="0" required>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <div class="modal-footer bg-light border-top-0">
-                <button type="button" class="btn btn-secondary px-4 fw-bold"
-                    data-bs-dismiss="modal">Cancel</button>
-                <button type="button"
-                    class="btn btn-primary px-4 fw-bold shadow-sm"
-                    (click)="savePosition()"
-                    [disabled]="positionForm.invalid || isProcessing">
-                    @if(isProcessing) { <span
-                        class="spinner-border spinner-border-sm me-2"></span> }
-                    Confirm Action
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-```
-
 ### File: src\app\features\positions\positions.component.ts
 ```typescript
 import { Component, OnInit, inject } from '@angular/core';
@@ -9733,13 +4892,13 @@ export class PositionsComponent implements OnInit {
   };
 
   ngOnInit() {
-    // ??? ?????
+    // أول تحميل
     this.loadDepartments();
     this.loadPositions();
   }
 
   loadDepartments() {
-    // ??? ???????
+    // جلب الأقسام
     this.departmentService.getDepartments().subscribe({
       next: (res: any) => {
         const extracted = Array.isArray(res) ? res : res?.data || [];
@@ -9750,7 +4909,7 @@ export class PositionsComponent implements OnInit {
   }
 
   loadPositions() {
-    // ??? ???????
+    // جلب المناصب
     this.isLoading = true;
     this.positionService.getPositions().subscribe({
       next: (res: any) => {
@@ -9771,7 +4930,7 @@ export class PositionsComponent implements OnInit {
   }
 
   openModal(position: any = null) {
-    // ??? ???????
+    // فتح المودال
     if (position) {
       this.isEditMode = true;
       this.currentPositionId = position.id;
@@ -9800,7 +4959,7 @@ export class PositionsComponent implements OnInit {
   }
 
   savePosition() {
-    // ??? ??????
+    // حفظ المسمى
     this.isProcessing = true;
 
     if (this.isEditMode && this.currentPositionId) {
@@ -9819,7 +4978,7 @@ export class PositionsComponent implements OnInit {
   }
 
   onDelete(id: number) {
-    // ??? ??????
+    // حذف المسمى
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -9865,393 +5024,11 @@ export class PositionsComponent implements OnInit {
 
 ```
 
-### File: src\app\features\salary\salary.component.css
-```css
-.table th {
-  border-bottom: 1px solid #f3f4f6 !important;
-}
-
-.table td {
-  vertical-align: middle;
-  border-bottom: 1px solid #f8f9fa;
-}
-
-.form-control:focus {
-  box-shadow: none;
-  border-color: #0d6efd;
-  background-color: #ffffff !important;
-}
-
-.table-responsive {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.table-responsive::-webkit-scrollbar {
-  height: 6px;
-}
-.table-responsive::-webkit-scrollbar-thumb {
-  background-color: #dee2e6;
-  border-radius: 4px;
-}
-
-```
-
-### File: src\app\features\salary\salary.component.html
-```html
-<div class="page-container p-4">
-
-
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <div>
-            <h3 class="fw-bold text-dark mb-1">{{ 'Salaries' | t }}</h3>
-            <p class="text-muted small mb-0">{{ 'View and manage employee payroll records' | t }}</p>
-        </div>
-        <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end">
-            <div class="input-group shadow-sm" style="max-width: 350px;">
-                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                <input type="text" class="form-control border-start-0 ps-0"
-                    placeholder="Search by name, ID, or amount..." [(ngModel)]="salarySearchQuery"
-                    (input)="filterSalaries()">
-            </div>
-
-            <div class="dropdown">
-                <button class="btn btn-outline-secondary shadow-sm" type="button" data-bs-toggle="dropdown"
-                    aria-expanded="false" title="Filter Salaries">
-                    <i class="bi bi-funnel-fill"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4" style="width: 250px;">
-                    <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">Filter Options</h6>
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold text-muted mb-1">{{ 'Year' | t }}</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="selectedYear"
-                            (change)="filterSalaries()">
-                            <option value="">All Years</option>
-                            <option *ngFor="let yr of uniqueYears" [value]="yr">{{ yr }}</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-2">
-                        <label class="form-label small fw-semibold text-muted mb-1">{{ 'Month' | t }}</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="selectedMonth"
-                            (change)="filterSalaries()">
-                            <option value="">All Months</option>
-                            <option value="1">January</option>
-                            <option value="2">February</option>
-                            <option value="3">March</option>
-                            <option value="4">April</option>
-                            <option value="5">May</option>
-                            <option value="6">June</option>
-                            <option value="7">July</option>
-                            <option value="8">August</option>
-                            <option value="9">September</option>
-                            <option value="10">October</option>
-                            <option value="11">November</option>
-                            <option value="12">December</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <button *ngIf="isAdmin" class="btn btn-primary px-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
-                (click)="openModal()">
-                <i class="bi bi-plus-lg me-2"></i> {{ 'Add Salary' | t }}
-            </button>
-        </div>
-    </div>
-
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-
-                <thead class="bg-light text-muted small text-uppercase" style="letter-spacing: 0.5px;">
-                    <tr>
-                        <th *ngIf="isAdminOrHR" class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Employee' | t }}</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Month' | t }}/{{ 'Year' | t }}</th>
-                        <th class="py-3 px-3 border-bottom-0 fw-semibold">{{ 'Base Salary' | t }}</th>
-                        <th class="py-3 px-3 border-bottom-0 fw-semibold text-success">{{ 'Allowances' | t }}</th>
-                        <th class="py-3 px-3 border-bottom-0 fw-semibold text-danger">{{ 'Deductions' | t }}</th>
-                        <th class="py-3 px-3 border-bottom-0 fw-semibold text-primary">{{ 'Net Pay' | t }}</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold text-end text-nowrap">{{ 'Actions' | t }}</th>
-                    </tr>
-                </thead>
-
-                <tbody class="border-top-0">
-
-                    <tr *ngIf="isLoading">
-                        <td colspan="7" class="text-center py-5 text-muted">
-                            <span class="spinner-border spinner-border-sm me-2"></span>
-                            {{ 'Loading...' | t }}
-                        </td>
-                    </tr>
-
-                    <tr *ngIf="!isLoading && salariesList.length === 0">
-                        <td [colSpan]="isAdminOrHR ? 7 : 6" class="text-center py-5">
-                            <div class="d-flex flex-column align-items-center">
-                                <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center"
-                                    style="width: 80px; height: 80px;">
-                                    <i class="bi bi-wallet2 text-secondary fs-1"></i>
-                                </div>
-                                <h5 class="fw-bold text-dark mb-1">{{ 'No Data' | t }}</h5>
-                                <p class="text-muted small mb-0">{{ 'No Data' | t }}</p>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr *ngFor="let salary of paginatedSalaries">
-                        <!-- ??? ?????? ?????? ???? hr -->
-                        <td *ngIf="isAdminOrHR" data-label="Employee" class="py-3 px-4 fw-bold text-dark">
-                            {{ salary.employeeName || '#' + salary.employeeId }}
-                        </td>
-                        <td data-label="Period" class="py-3 px-4">
-                            <span class="badge bg-light text-dark border">{{
-                                salary.month | number:'2.0' }} / {{ salary.year
-                                }}</span>
-                            <div class="text-muted mt-1" style="font-size: 0.7rem;">Eff: {{
-                                salary.effectiveDate | date:'dd MMM yyyy'
-                                }}</div>
-                        </td>
-                        <td data-label="Base Salary" class="py-3 px-3 text-secondary">${{ salary.baseAmount }}</td>
-                        <td data-label="Allowances" class="py-3 px-3 text-success fw-medium">+${{ salary.allowances }}
-                        </td>
-                        <td data-label="Deductions" class="py-3 px-3 text-danger fw-medium">-${{ salary.deductions }}
-                        </td>
-                        <td data-label="Net Pay" class="py-3 px-3">
-                            <span class="fw-bold text-primary fs-6">${{ salary.netAmount }}</span>
-                            <div class="text-muted" style="font-size: 0.7rem;">Before Deductions: ${{ salary.grossAmount
-                                }}</div>
-                        </td>
-                        <!-- ??????? ???? ?? -->
-                        <td data-label="Actions" class="py-3 px-4 text-end text-nowrap actions-cell">
-                            <button class="btn btn-sm btn-outline-danger rounded-circle shadow-sm me-2"
-                                (click)="downloadPayslip(salary)" title="Download Payslip (PDF)">
-                                <i class="bi bi-file-earmark-pdf-fill"></i>
-                            </button>
-                            <button *ngIf="isAdmin" class="btn btn-sm btn-light text-primary rounded-circle shadow-sm"
-                                (click)="openModal(salary)" title="Edit Record">
-                                <i class="bi bi-pencil-square"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Pagination Footer -->
-        <div *ngIf="salariesList.length > 0"
-            class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <small class="text-muted fw-medium">
-                Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage,
-                salariesList.length) }} of {{ salariesList.length }} entries
-            </small>
-            <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
-                <li class="page-item" [class.disabled]="currentPage === 1">
-                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
-                </li>
-                <li class="page-item active">
-                    <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
-                </li>
-                <li class="page-item" [class.disabled]="currentPage === totalPages">
-                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="salaryModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow rounded-4">
-            <div class="modal-header border-bottom-0 pt-4 pb-0 px-4">
-                <h5 class="modal-title fw-bold text-dark">
-                    <i class="bi"
-                        [ngClass]="isEditMode ? 'bi-pencil-square text-primary' : 'bi-plus-circle text-primary'"></i>
-                    {{ isEditMode ? ' Edit Salary Record' : ' Add New Salary' }}
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-4">
-                <form #salaryForm="ngForm">
-
-                    <div class="mb-4 position-relative">
-                        <label class="form-label fw-semibold text-secondary small">Employee <span
-                                class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-person"></i></span>
-                            <input type="text" class="form-control bg-light border-start-0" name="employeeSearchText"
-                                [(ngModel)]="employeeSearchText" (ngModelChange)="onEmployeeSearchChange($event)"
-                                (focus)="showEmployeeDropdown = true" (blur)="hideDropdownWithDelay()"
-                                autocomplete="off" required placeholder="Search by name or ID...">
-                        </div>
-
-                        <!-- Custom Dropdown -->
-                        <div class="dropdown-menu w-100 shadow-lg border-0 rounded-4 mt-2 py-2"
-                            [class.show]="showEmployeeDropdown"
-                            style="position: absolute; top: 100%; left: 0; max-height: 250px; overflow-y: auto; z-index: 1050;">
-
-                            <ng-container *ngIf="filteredEmployeesList.length > 0; else noEmployees">
-                                <button type="button"
-                                    class="dropdown-item d-flex justify-content-between align-items-center py-2 px-3 border-bottom border-light"
-                                    *ngFor="let emp of filteredEmployeesList" (mousedown)="selectEmployee(emp)"
-                                    style="transition: background-color 0.2s;">
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold"
-                                            style="width: 36px; height: 36px; font-size: 13px;">
-                                            {{ emp.firstName[0] }}{{ emp.lastName[0] }}
-                                        </div>
-                                        <div class="d-flex flex-column">
-                                            <span class="fw-semibold text-dark" style="font-size: 14px;">{{
-                                                emp.firstName }} {{ emp.lastName }}</span>
-                                        </div>
-                                    </div>
-                                    <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3 py-2"
-                                        style="font-size: 11px;">ID: {{ emp.id }}</span>
-                                </button>
-                            </ng-container>
-
-                            <ng-template #noEmployees>
-                                <div class="text-center py-4 text-muted">
-                                    <i class="bi bi-search mb-2 fs-4 text-black-50"></i>
-                                    <p class="mb-0 small fw-semibold">No employees found.</p>
-                                </div>
-                            </ng-template>
-                        </div>
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="col-6">
-                            <label class="form-label fw-semibold text-secondary small">Month
-                                <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control bg-light border-0" name="month"
-                                [(ngModel)]="salaryData.month" required min="1" max="12">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label fw-semibold text-secondary small">Year
-                                <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control bg-light border-0" name="year"
-                                [(ngModel)]="salaryData.year" required min="2000">
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label fw-semibold text-secondary small">Base
-                            Salary ($) <span class="text-danger">*</span></label>
-                        <input type="number" class="form-control form-control-lg bg-light border-0" name="baseAmount"
-                            [(ngModel)]="salaryData.baseAmount" required min="0">
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="col-6">
-                            <label class="form-label fw-semibold text-success small">Allowances
-                                (+) <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control border-success border-opacity-25 bg-light"
-                                name="allowances" [(ngModel)]="salaryData.allowances" required min="0">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label fw-semibold text-danger small">Deductions
-                                (-) <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control border-danger border-opacity-25 bg-light"
-                                name="deductions" [(ngModel)]="salaryData.deductions" required min="0">
-                        </div>
-                    </div>
-
-                    <div class="mb-2">
-                        <label class="form-label fw-semibold text-secondary small">Effective
-                            Date <span class="text-danger">*</span></label>
-                        <input type="date" class="form-control bg-light border-0" name="effectiveDate"
-                            [(ngModel)]="salaryData.effectiveDate" required>
-                    </div>
-
-                </form>
-            </div>
-            <div class="modal-footer border-top-0 pb-4 px-4">
-                <button type="button" class="btn btn-light px-4 rounded-3 fw-semibold"
-                    data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary px-4 rounded-3 fw-semibold" (click)="saveSalary()"
-                    [disabled]="salaryForm.invalid || isProcessing || !salaryData.employeeId">
-                    <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2"></span>
-                    {{ isProcessing ? 'Saving...' : 'Save Record' }}
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<style>
-    .cursor-pointer {
-        cursor: pointer;
-    }
-
-    /* Mobile Responsive Cards for Table */
-    @media screen and (max-width: 768px) {
-
-        .table-responsive table,
-        .table-responsive thead,
-        .table-responsive tbody,
-        .table-responsive th,
-        .table-responsive td,
-        .table-responsive tr {
-            display: block;
-        }
-
-        .table-responsive thead tr {
-            display: none;
-            /* Hide header row */
-        }
-
-        .table-responsive tr {
-            border: 1px solid #e8ecf0;
-            border-radius: 0.75rem;
-            margin-bottom: 1rem;
-            padding: 0.5rem;
-            background: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-        }
-
-        .table-responsive td {
-            border: none;
-            border-bottom: 1px solid #f0f2f5;
-            position: relative;
-            padding-left: 45% !important;
-            text-align: right !important;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            min-height: 50px;
-        }
-
-        .table-responsive td:last-child {
-            border-bottom: 0;
-        }
-
-        .table-responsive td::before {
-            content: attr(data-label);
-            position: absolute;
-            left: 1rem;
-            width: 40%;
-            text-align: left;
-            font-weight: 700;
-            color: #8592a3;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .actions-cell {
-            justify-content: flex-end !important;
-            padding-top: 1rem !important;
-            padding-bottom: 1rem !important;
-        }
-    }
-</style>
-```
-
 ### File: src\app\features\salary\salary.component.ts
 ```typescript
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // ???? ??? forms
+import { FormsModule } from '@angular/forms'; // لازم للـ forms
 import { SalaryService } from '../../core/services/salary.service';
 import { EmployeeService } from '../../core/services/employee.service';
 import { AuthService } from '../../core/services/auth.service';
@@ -10277,8 +5054,8 @@ export class SalaryComponent implements OnInit {
   allSalariesList: any[] = [];
   salariesList: any[] = [];
   isLoading: boolean = true;
-  isAdmin: boolean = false; // ???? (???? ?????)
-  isAdminOrHR: boolean = false; // ???? ?? hr (???? ??)
+  isAdmin: boolean = false; // أدمن (يضيف ويعدل)
+  isAdminOrHR: boolean = false; // أدمن أو hr (يشوف بس)
   isProcessing: boolean = false;
 
   salaryModal: any;
@@ -10338,7 +5115,7 @@ export class SalaryComponent implements OnInit {
   }
 
   loadEmployees() {
-    // ????? ????????
+    // تحميل الموظفين
     this.employeeService.getEmployees().subscribe({
       next: (res: any) => {
         const extractedData = Array.isArray(res) ? res : res?.data || [];
@@ -10383,7 +5160,7 @@ export class SalaryComponent implements OnInit {
   }
 
   loadSalaries() {
-    // ????? ???????
+    // تحميل الرواتب
     this.isLoading = true;
     const request = this.isAdminOrHR
       ? this.salaryService.getAllSalaries()
@@ -10414,7 +5191,7 @@ export class SalaryComponent implements OnInit {
   }
 
   filterSalaries() {
-    // ????? ???????
+    // فلترة الرواتب
     this.salariesList = this.allSalariesList.filter((s) => {
       let matchesSearch = true;
       if (this.salarySearchQuery) {
@@ -10500,7 +5277,7 @@ export class SalaryComponent implements OnInit {
   }
 
   saveSalary() {
-    // ??? ??????
+    // حفظ الراتب
     this.isProcessing = true;
 
     const isoDate = new Date(this.salaryData.effectiveDate).toISOString();
@@ -10562,7 +5339,7 @@ export class SalaryComponent implements OnInit {
   }
 
   downloadPayslip(salary: any) {
-    // ????? ??? ??????
+    // تنزيل كشف الراتب
     const doc = new jsPDF();
 
     // Add Header
@@ -10640,333 +5417,6 @@ export class SalaryComponent implements OnInit {
 
 ```
 
-### File: src\app\shared\header\header.component.css
-```css
-/* -- Settings Button -- */
-.settings-btn {
-  transition: transform 0.3s ease;
-}
-
-.settings-btn:hover {
-  transform: rotate(90deg);
-}
-
-.settings-btn:hover i {
-  color: #0d6efd !important;
-}
-
-/* -- Settings Panel -- */
-.settings-panel {
-  animation: slideDown 0.2s ease-out;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* -- Settings Icon Circle -- */
-.settings-icon-circle {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
-  color: #f39c12;
-  transition: all 0.3s ease;
-}
-
-.settings-icon-circle.active {
-  background: linear-gradient(135deg, #2d3436, #636e72);
-  color: #ffeaa7;
-}
-
-.settings-icon-circle.lang {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  color: #fff;
-}
-
-/* -- Language Toggle Button -- */
-.lang-toggle-btn {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  color: #fff;
-  border: none;
-  font-size: 0.75rem;
-  letter-spacing: 0.5px;
-  transition: all 0.2s ease;
-}
-
-.lang-toggle-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
-  color: #fff;
-}
-
-/* -- Dark Mode Toggle Switch -- */
-.form-check-input:checked {
-  background-color: #0d6efd;
-  border-color: #0d6efd;
-}
-
-.cursor-pointer {
-  cursor: pointer;
-}
-
-/* -- Sticky Header -- */
-.header-bar {
-  position: sticky;
-  top: 0;
-  z-index: 1020;
-  background: rgba(255, 255, 255, 0.8) !important;
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
-}
-
-body.dark-mode .header-bar {
-  background: rgba(30, 41, 59, 0.75) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-}
-
-/* -- Notification Action Icons -- */
-.action-icon-btn {
-  width: 32px;
-  height: 32px;
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  background-color: transparent;
-}
-
-.action-icon-btn:hover:not(:disabled) {
-  background-color: rgba(0, 0, 0, 0.05);
-  transform: scale(1.1);
-}
-
-.action-icon-btn.text-primary:hover:not(:disabled) {
-  background-color: rgba(13, 110, 253, 0.1);
-}
-
-.action-icon-btn.text-danger:hover:not(:disabled) {
-  background-color: rgba(220, 53, 69, 0.1);
-}
-
-body.dark-mode .action-icon-btn:hover:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-body.dark-mode .action-icon-btn.text-primary:hover:not(:disabled) {
-  background-color: rgba(13, 110, 253, 0.2);
-}
-
-body.dark-mode .action-icon-btn.text-danger:hover:not(:disabled) {
-  background-color: rgba(220, 53, 69, 0.2);
-}
-
-```
-
-### File: src\app\shared\header\header.component.html
-```html
-<nav class="navbar navbar-expand bg-white border-bottom shadow-sm px-4 py-2 header-bar">
-    <div class="container-fluid px-2">
-        <div class="d-flex align-items-center gap-3 ms-2">
-            <button
-                class="btn btn-light border-0 shadow-none d-flex align-items-center justify-content-center p-2"
-                (click)="toggleSidebar()">
-                <i class="bi bi-list fs-4 text-secondary"></i>
-            </button>
-        </div>
-
-        <ul class="navbar-nav ms-auto align-items-center flex-row">
-
-            <!-- ? Install App Button (conditionally visible) -->
-            @if (pwaService.canInstall) {
-            <li class="nav-item me-3">
-                <button
-                    class="btn btn-primary btn-sm border-0 shadow-sm d-flex align-items-center gap-2 px-3 py-1"
-                    (click)="installApp()"
-                    title="Install App">
-                    <i class="bi bi-download fs-6"></i>
-                    <span class="fw-semibold d-none d-md-inline">{{ 'Install App' | t }}</span>
-                </button>
-            </li>
-            }
-
-            <!-- ? Settings Dropdown -->
-            <li class="nav-item me-3 dropdown">
-                <button
-                    class="btn btn-light btn-sm border-0 shadow-none settings-btn"
-                    id="settingsDropdown" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <i class="bi bi-gear-fill fs-5 text-secondary"></i>
-                </button>
-
-                <div class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-0 settings-panel overflow-hidden"
-                    aria-labelledby="settingsDropdown"
-                    style="width: 280px;">
-
-                    <!-- Header -->
-                    <div class="p-3 border-bottom" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-gear-wide-connected text-white fs-5"></i>
-                            <span class="fw-bold text-white">{{ 'Settings' | t }}</span>
-                        </div>
-                    </div>
-
-                    <!-- Theme Toggle -->
-                    <div class="px-3 py-3 border-bottom">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="settings-icon-circle" [class.active]="settingsService.isDarkMode">
-                                    <i class="bi" [ngClass]="settingsService.isDarkMode ? 'bi-moon-stars-fill' : 'bi-sun-fill'"></i>
-                                </div>
-                                <div>
-                                    <p class="mb-0 fw-semibold small text-dark">{{ 'Theme' | t }}</p>
-                                    <p class="mb-0 text-muted" style="font-size: 0.7rem;">
-                                        {{ settingsService.isDarkMode ? ('Dark Mode' | t) : ('Light Mode' | t) }}
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="form-check form-switch mb-0">
-                                <input class="form-check-input cursor-pointer" type="checkbox" role="switch"
-                                    id="themeToggle"
-                                    [checked]="settingsService.isDarkMode"
-                                    (change)="settingsService.toggleTheme()"
-                                    style="width: 2.5em; height: 1.25em;">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Language Toggle -->
-                    <div class="px-3 py-3">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="settings-icon-circle lang">
-                                    <i class="bi bi-translate"></i>
-                                </div>
-                                <div>
-                                    <p class="mb-0 fw-semibold small text-dark">{{ 'Language' | t }}</p>
-                                    <p class="mb-0 text-muted" style="font-size: 0.7rem;">
-                                        {{ settingsService.language === 'ar' ? '???????' : 'English' }}
-                                    </p>
-                                </div>
-                            </div>
-                            <button class="btn btn-sm px-3 py-1 rounded-pill fw-semibold lang-toggle-btn"
-                                (click)="settingsService.toggleLanguage(); $event.stopPropagation()">
-                                {{ settingsService.language === 'ar' ? 'EN' : 'AR' }}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </li>
-
-            <!-- Notifications Dropdown -->
-            <li class="nav-item me-4 dropdown">
-                <button
-                    class="btn btn-light btn-sm border-0 position-relative shadow-none"
-                    id="notificationDropdown" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <i class="bi bi-bell-fill fs-5 text-secondary"></i>
-
-                    @if (unreadCount > 0) {
-                    <span
-                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {{ unreadCount }}
-                    </span>
-                    }
-                </button>
-
-                <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-0"
-                    aria-labelledby="notificationDropdown"
-                    style="width: 450px !important; min-width: 350px; max-height: 400px; overflow-y: auto;">
-
-                    <li
-                        class="p-3 border-bottom bg-light d-flex justify-content-between align-items-center">
-                        <div>
-                            <span class="fw-bold text-dark">{{ 'Notifications' | t }}</span>
-                            @if (unreadCount > 0) {
-                            <span class="badge bg-primary rounded-pill ms-2">{{ unreadCount }} {{ 'New' | t }}</span>
-                            }
-                        </div>
-                        <div class="d-flex gap-1">
-                            <button class="btn btn-link action-icon-btn text-decoration-none p-0 text-primary" 
-                                    (click)="markAllAsRead($event)" 
-                                    [disabled]="unreadCount === 0"
-                                    [class.text-muted]="unreadCount === 0"
-                                    title="Mark all as read">
-                                <i class="bi bi-check2-all fs-6"></i>
-                            </button>
-                            <button class="btn btn-link action-icon-btn text-decoration-none p-0 text-danger" 
-                                    (click)="deleteAllNotifications($event)" 
-                                    [disabled]="notifications.length === 0"
-                                    [class.text-muted]="notifications.length === 0"
-                                    title="Delete all notifications">
-                                <i class="bi bi-trash fs-6"></i>
-                            </button>
-                        </div>
-                    </li>
-
-                    @for (note of notifications; track note.id) {
-                    <li>
-                        <a class="dropdown-item py-3 border-bottom"
-                            href="javascript:void(0)"
-                            [class.bg-light]="!note.isRead"
-                            (click)="markAsRead(note)">
-
-                            <div
-                                class="d-flex w-100 justify-content-between align-items-start mb-1">
-                                <div>
-                                    <h6 class="mb-0 text-truncate fw-bold text-dark"
-                                        style="max-width: 200px;">
-                                        {{ note.title || ('System Alert' | t) }}
-                                    </h6>
-                                    <small class="text-muted"
-                                        style="font-size: 0.75rem;">{{
-                                        note.createdAt | date:'shortTime' }}</small>
-                                </div>
-                                <button class="btn btn-link action-icon-btn text-danger p-0 ms-2" (click)="deleteNotification($event, note.id)" title="Delete">
-                                    <i class="bi bi-x-circle fs-6"></i>
-                                </button>
-                            </div>
-
-                            <p class="mb-0 text-secondary text-wrap pe-4"
-                                style="font-size: 0.85rem;">
-                                {{ note.message }}
-                            </p>
-                        </a>
-                    </li>
-                    } @empty {
-                    <li class="p-4 text-center text-muted">
-                        <i
-                            class="bi bi-bell-slash fs-3 d-block mb-2 text-light-gray"></i>
-                        {{ 'No new notifications' | t }}
-                    </li>
-                    }
-                </ul>
-            </li>
-
-            <li class="nav-item">
-                <div class="d-flex align-items-center">
-
-                </div>
-            </li>
-
-        </ul>
-    </div>
-</nav>
-```
-
 ### File: src\app\shared\header\header.component.ts
 ```typescript
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
@@ -10991,7 +5441,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private sidebarService = inject(SidebarService);
   
-  // ? public ??? ??????? ?? ??? template
+  // ✅ public حتى نستخدمه في الـ template
   pwaService = inject(PwaService);
   settingsService = inject(SettingsService);
 
@@ -11052,7 +5502,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   markAllAsRead(event: Event) {
-    event.stopPropagation(); // ???? ????? ??????? ????????
+    event.stopPropagation(); // لمنع إغلاق القائمة المنسدلة
     if (this.unreadCount === 0) return;
 
     this.notificationService.markAllAsRead().subscribe({
@@ -11095,20 +5545,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (
       type.includes('Leave') ||
       msg.includes('leave') ||
-      msg.includes('??????') ||
-      msg.includes('?????')
+      msg.includes('مغادرة') ||
+      msg.includes('إجازة')
     ) {
       this.router.navigate(['/leave']);
     } else if (
       type.includes('Salary') ||
       msg.includes('salary') ||
-      msg.includes('????')
+      msg.includes('راتب')
     ) {
       this.router.navigate(['/salary']);
     } else if (
       type.includes('Clock') ||
       msg.includes('attendance') ||
-      msg.includes('????')
+      msg.includes('حضور')
     ) {
       this.router.navigate(['/attendance']);
     }
@@ -11116,356 +5566,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 }
 
 
-```
-
-### File: src\app\shared\sidebar\sidebar.component.css
-```css
-.sidebar {
-  width: var(--sidebar-width, 260px);
-  min-width: 200px;
-  max-width: 400px;
-  background-color: var(--color-surface-2, #f2f3f5);
-  border-right: 1px solid var(--color-border, #e5e7eb);
-  color: var(--color-text, #333);
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  position: relative;
-  font-family:
-    "Inter",
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    sans-serif;
-  --sidebar-scale: 1;
-  transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease;
-}
-
-.sidebar-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: calc(30px * var(--sidebar-scale)) calc(20px * var(--sidebar-scale))
-    calc(20px * var(--sidebar-scale));
-}
-
-.sidebar-logo-wrap {
-  width: calc(50px * var(--sidebar-scale));
-  height: calc(50px * var(--sidebar-scale));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  background-color: var(--color-surface, #fff);
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-  transition: background-color 0.3s ease;
-}
-
-.sidebar-logo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.sidebar-brand-text {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.sidebar-brand-name {
-  font-size: calc(1.3rem * var(--sidebar-scale));
-  font-weight: 600;
-  color: var(--color-text, #111);
-
-  letter-spacing: 1.5px;
-  line-height: 1;
-  font-family: "Roboto", sans-serif;
-
-  display: inline-block;
-  transition: all 0.3s ease;
-}
-
-.sidebar-brand-sub {
-  font-size: calc(0.65rem * var(--sidebar-scale));
-  color: var(--color-text-label, #888);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-top: 4px;
-  transition: color 0.3s ease;
-}
-
-.sidebar-nav {
-  flex-grow: 1;
-  overflow-y: auto;
-  padding: 0 calc(14px * var(--sidebar-scale));
-}
-
-.sidebar-nav::-webkit-scrollbar {
-  width: 4px;
-}
-.sidebar-nav::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-}
-
-.sidebar-nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  padding-bottom: 20px;
-}
-
-.sidebar-nav li {
-  margin-bottom: 4px;
-}
-
-.sidebar-nav a {
-  display: flex;
-  align-items: center;
-  gap: calc(12px * var(--sidebar-scale));
-  padding: calc(10px * var(--sidebar-scale)) calc(12px * var(--sidebar-scale));
-  font-size: calc(0.95rem * var(--sidebar-scale));
-  color: var(--color-link, #5f6368);
-  font-weight: 500;
-  text-decoration: none;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.sidebar-nav a i {
-  font-size: calc(1.1rem * var(--sidebar-scale));
-  color: var(--color-link-icon, #7f838a);
-  transition: color 0.2s;
-}
-
-.sidebar-nav a:hover {
-  background-color: var(--color-link-hover-bg, #e5e7eb);
-  color: var(--color-link-hover, #111);
-}
-
-.sidebar-nav a:hover i {
-  color: var(--color-link-hover, #333);
-}
-
-.sidebar-nav a.active {
-  background-color: var(--color-link-hover-bg, #e5e7eb);
-  color: var(--color-link-hover, #111);
-  font-weight: 600;
-}
-
-.sidebar-nav a.active i {
-  color: var(--color-link-hover, #111);
-}
-
-.section-title {
-  padding: calc(20px * var(--sidebar-scale)) calc(12px * var(--sidebar-scale))
-    calc(8px * var(--sidebar-scale));
-  font-size: calc(0.75rem * var(--sidebar-scale));
-  text-transform: uppercase;
-  color: var(--color-text-label, #9ca3af);
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.sidebar-footer {
-  margin-top: auto;
-  padding: calc(16px * var(--sidebar-scale));
-  border-top: 1px solid var(--color-border, #e5e7eb);
-  transition: border-color 0.3s ease;
-}
-
-.user-profile {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: calc(10px * var(--sidebar-scale));
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.2s;
-  margin-bottom: 10px;
-}
-
-.user-profile:hover {
-  background-color: var(--color-surface-3, #e5e7eb);
-}
-
-.avatar-initials {
-  width: calc(38px * var(--sidebar-scale));
-  height: calc(38px * var(--sidebar-scale));
-  border-radius: 50%;
-  background: var(--color-avatar-bg, #d1d5db);
-  color: var(--color-avatar-text, #111);
-  font-weight: 600;
-  font-size: calc(14px * var(--sidebar-scale));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
-}
-
-.user-info {
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.user-info .name {
-  margin: 0;
-  font-weight: 600;
-  color: var(--color-text, #111);
-  font-size: calc(0.9rem * var(--sidebar-scale));
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  transition: color 0.3s ease;
-}
-
-.user-info .status {
-  margin: 0;
-  font-size: calc(0.75rem * var(--sidebar-scale));
-  color: var(--color-text-muted, #6b7280);
-  transition: color 0.3s ease;
-}
-
-.btn-logout {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: calc(10px * var(--sidebar-scale));
-  background: transparent;
-  border: 1px solid var(--color-logout-border, #d1d5db);
-  color: var(--color-logout-text, #4b5563);
-  border-radius: 8px;
-  font-weight: 500;
-  font-size: calc(0.9rem * var(--sidebar-scale));
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-logout:hover {
-  background-color: #fef2f2;
-  color: #dc2626;
-  border-color: #fecaca;
-}
-
-.sidebar-resizer {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 4px;
-  height: 100%;
-  cursor: ew-resize;
-  z-index: 10;
-  background-color: transparent;
-  transition: background-color 0.2s;
-}
-
-.sidebar-resizer:hover,
-.sidebar-resizer.active {
-  background-color: var(--color-border, #d1d5db);
-}
-
-```
-
-### File: src\app\shared\sidebar\sidebar.component.html
-```html
-<div class="sidebar" #sidebar>
-
-    <!-- -- Brand -- -->
-    <div class="sidebar-brand" style="cursor: pointer;" routerLink="/dashboard"
-        (click)="closeMobileSidebar()">
-        <div class="sidebar-logo-wrap" style="background: transparent; box-shadow: none; width: 52px; height: 52px;">
-            <img src="kawadir-logo.png" alt="Kawadir" class="sidebar-logo" style="border-radius: 12px; object-fit: contain;">
-        </div>
-        <div class="sidebar-brand-text d-flex flex-column justify-content-center mt-1">
-            <span class="sidebar-brand-name" style="line-height: 1; font-size: 1.55rem;">Kawadir</span>
-            <span class="sidebar-brand-sub" style="margin-top: 3px; font-size: 0.6rem;">HR Management</span>
-        </div>
-    </div>
-
-    <!-- -- Navigation -- -->
-    <nav class="sidebar-nav">
-        <ul>
-            <li><a routerLink="/dashboard" routerLinkActive="active"
-                    (click)="closeMobileSidebar()"><i
-                        class="bi bi-house"></i> {{ 'Dashboard' | t }}</a></li>
-            <li><a routerLink="/my-profile" routerLinkActive="active"
-                    (click)="closeMobileSidebar()"><i
-                        class="bi bi-person"></i> {{ 'My Profile' | t
-                    }}</a></li>
-            @if (isAdminOrHR) {
-            <li><a routerLink="/employees" routerLinkActive="active"
-                    (click)="closeMobileSidebar()"><i
-                        class="bi bi-people"></i> {{ 'Employees' | t }}</a></li>
-            }
-            <li><a routerLink="/leave" routerLinkActive="active"
-                    (click)="closeMobileSidebar()"><i
-                        class="bi bi-calendar2-check"></i> {{ 'Leave Requests' |
-                    t }}</a></li>
-            <li><a routerLink="/attendance" routerLinkActive="active"
-                    (click)="closeMobileSidebar()"><i
-                        class="bi bi-clock-history"></i> {{ 'Attendance' | t
-                    }}</a></li>
-            <li><a routerLink="/salary" routerLinkActive="active"
-                    (click)="closeMobileSidebar()"><i
-                        class="bi bi-cash-stack"></i> {{ 'Salaries' | t
-                    }}</a></li>
-
-            @if (isAdmin) {
-            <li class="section-title">{{ 'System Control' | t }}</li>
-            <li><a routerLink="/departments" routerLinkActive="active"
-                    (click)="closeMobileSidebar()"><i
-                        class="bi bi-diagram-3"></i> {{ 'Departments' | t
-                    }}</a></li>
-            <li><a routerLink="/positions" routerLinkActive="active"
-                    (click)="closeMobileSidebar()"><i
-                        class="bi bi-briefcase"></i> {{ 'Positions' | t
-                    }}</a></li>
-            <li><a routerLink="/register" routerLinkActive="active"
-                    (click)="closeMobileSidebar()"><i
-                        class="bi bi-person-plus"></i> {{ 'Register User' | t }}
-                </a></li>
-            }
-        </ul>
-    </nav>
-
-    <!-- -- Footer (Profile + Logout) -- -->
-    <div class="sidebar-footer">
-        <div class="user-profile" routerLink="/my-profile"
-            (click)="closeMobileSidebar()">
-            <div class="avatar-initials">{{ initials }}</div>
-            <div class="user-info">
-                <p class="name">{{ userName }}</p>
-                <p class="status">{{ userRole }}</p>
-            </div>
-        </div>
-        <button class="btn-logout" (click)="onLogout()">
-            <i class="bi bi-box-arrow-right"></i> <span>{{ 'Logout' | t
-                }}</span>
-        </button>
-    </div>
-
-    <!-- Resizer Handle -->
-    <div class="sidebar-resizer" [class.active]="isResizing"
-        (mousedown)="startResize($event)"></div>
-</div>
 ```
 
 ### File: src\app\shared\sidebar\sidebar.component.ts
@@ -11508,24 +5608,24 @@ export class SidebarComponent implements OnInit {
 
   startResize(event: MouseEvent) {
     this.isResizing = true;
-    event.preventDefault(); // ?? ???? ??
+    event.preventDefault(); // ما نحدد نص
   }
 
   @HostListener('document:mousemove', ['$event'])
   onMouseMove(event: MouseEvent) {
     if (!this.isResizing) return;
     const newWidth = event.clientX;
-    // ???? ?????
+    // نحصر العرض
     if (newWidth >= 200 && newWidth <= 400) {
       this.sidebarRef.nativeElement.style.width = `${newWidth}px`;
 
-      // ????? ??????? ?????
+      // نحدّث المتغير العام
       document.documentElement.style.setProperty(
         '--sidebar-width',
         `${newWidth}px`,
       );
 
-      // ???? ??? 260
+      // سكيل على 260
       const scale = newWidth / 260;
       this.sidebarRef.nativeElement.style.setProperty(
         '--sidebar-scale',
@@ -11545,7 +5645,7 @@ export class SidebarComponent implements OnInit {
     this.userName = localStorage.getItem('user_name') || 'User';
     this.userRole = localStorage.getItem('user_role') || 'Employee';
 
-    // ?????? ??? ?? Employee profile � ????? ??? ??? API ??????
+    // الأدمن ليس له Employee profile — نتجنب طلب الـ API الزائد
     if (!this.isAdmin) {
       this.employeeService.getMyProfile().subscribe({
         next: (profile) => {
@@ -11553,7 +5653,7 @@ export class SidebarComponent implements OnInit {
             this.userRole = profile.positionTitle;
           }
         },
-        error: () => {}, // ???? ???????
+        error: () => {}, // طنّش الأخطاء
       });
     }
   }
@@ -11576,24 +5676,5 @@ export class SidebarComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 }
-
-```
-
-### File: src\environments\environment.prod.ts
-```typescript
-export const environment = {
-  production: true,
-  // TODO: Replace with your actual Render URL later
-  apiUrl: 'https://kawadir-hrms.onrender.com/api'
-};
-
-```
-
-### File: src\environments\environment.ts
-```typescript
-export const environment = {
-  production: false,
-  apiUrl: 'https://kawadir-hrms.onrender.com/api'
-};
 
 ```
