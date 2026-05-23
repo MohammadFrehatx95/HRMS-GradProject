@@ -17,7 +17,7 @@ built with **.NET 8 Clean Architecture** · **PostgreSQL** · **Angular**
 <br/>
 
 > 🎓 Graduation Project — Computer Science · 2026  
-> 👨‍💻 Abedalqader Alfaqeeh · Mohammad · Saad · Mohammad
+> 👨‍💻 Abedalqader Alfaqeeh · Mohammad Frehat · Saad Rabadi · Mohammad Alghazo
 
 <br/>
 
@@ -254,38 +254,56 @@ HRMS-GradProject/
 | `PUT` | `/api/positions/{id}` | Admin | Update position |
 | `DELETE` | `/api/positions/{id}` | Admin | Delete position |
 
-### 📅 Leave *(coming soon)*
+### 📅 Leave
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| `GET` | `/api/leaves` | HR · Admin | All leave requests |
+| `GET` | `/api/leaves` | HR · Admin | All leave requests (paginated) |
+| `GET` | `/api/leaves/{id}` | Auth | Get leave request by ID |
 | `GET` | `/api/leaves/my` | Employee | My leave requests |
 | `POST` | `/api/leaves` | Employee | Submit leave request |
 | `PUT` | `/api/leaves/{id}/approve` | HR · Admin | Approve request |
 | `PUT` | `/api/leaves/{id}/reject` | HR · Admin | Reject request |
+| `DELETE` | `/api/leaves/{id}` | Employee | Cancel pending request |
 
-### ⏰ Attendance *(coming soon)*
+### ⏰ Attendance
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| `GET` | `/api/attendance` | HR · Admin | All records |
-| `GET` | `/api/attendance/my` | Employee | My attendance |
+| `GET` | `/api/attendance` | HR · Admin | All records (paginated) |
+| `GET` | `/api/attendance/{id}` | Auth | Get record by ID |
+| `GET` | `/api/attendance/my` | Employee | My attendance history |
+| `GET` | `/api/attendance/employee/{id}` | HR · Admin | Specific employee attendance |
 | `POST` | `/api/attendance/check-in` | Employee | Check in |
 | `POST` | `/api/attendance/check-out` | Employee | Check out |
 
-### 💰 Salary *(coming soon)*
+### 💰 Salary
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| `GET` | `/api/salaries` | Admin | All salary records |
+| `GET` | `/api/salaries` | Admin | All salary records (paginated) |
+| `GET` | `/api/salaries/{id}` | HR · Admin | Get salary record by ID |
 | `GET` | `/api/salaries/employee/{id}` | HR · Admin | Employee salary history |
 | `GET` | `/api/salaries/my` | Employee | My salary records |
 | `POST` | `/api/salaries` | Admin | Add salary record |
+| `PUT` | `/api/salaries/{id}` | Admin | Update salary record |
+| `DELETE` | `/api/salaries/{id}` | Admin | Delete salary record |
 
-### 📊 Dashboard *(coming soon)*
+### 🔔 Notifications
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| `GET` | `/api/dashboard/stats` | Admin | General statistics |
-| `GET` | `/api/dashboard/users` | Admin | All users |
+| `GET` | `/api/notifications` | Auth | My notifications |
+| `GET` | `/api/notifications/unread-count` | Auth | Count of unread notifications |
+| `PUT` | `/api/notifications/{id}/read` | Auth | Mark as read |
+| `PUT` | `/api/notifications/read-all` | Auth | Mark all as read |
+| `DELETE` | `/api/notifications/{id}` | Auth | Delete notification |
+
+### 📊 Dashboard
+| Method | Endpoint | Access | Description |
+|---|---|---|---|
+| `GET` | `/api/dashboard/stats` | Admin | General statistics (employees, leaves, attendance) |
+| `GET` | `/api/dashboard/users` | Admin | All users with status |
 | `PUT` | `/api/dashboard/users/{id}/toggle-active` | Admin | Activate / deactivate user |
 | `GET` | `/api/dashboard/recent-activity` | Admin | Latest activity feed |
+| `GET` | `/api/dashboard/leave-summary` | Admin | Leave requests summary by status |
+| `GET` | `/api/dashboard/attendance-today` | Admin | Today's attendance summary |
 
 ---
 
@@ -400,11 +418,15 @@ dotnet ef migrations remove --project Infrastructure --startup-project HRMS_API
 | Update employee | ❌ | ✅ | ✅ |
 | Submit leave request | ✅ | ✅ | ✅ |
 | Approve / Reject leave | ❌ | ✅ | ✅ |
+| Check in / Check out | ✅ | ✅ | ✅ |
+| View all attendance | ❌ | ✅ | ✅ |
 | Manage departments | ❌ | ❌ | ✅ |
 | Manage positions | ❌ | ❌ | ✅ |
 | Register new users | ❌ | ❌ | ✅ |
-| View salary records | ❌ | ✅ | ✅ |
+| View own salary | ✅ | ✅ | ✅ |
+| View all salary records | ❌ | ✅ | ✅ |
 | Manage salaries | ❌ | ❌ | ✅ |
+| View notifications | ✅ | ✅ | ✅ |
 | View dashboard | ❌ | ❌ | ✅ |
 
 ---
@@ -456,20 +478,51 @@ dotnet ef migrations remove --project Infrastructure --startup-project HRMS_API
 | Position CRUD | ✅ Done |
 | Global Exception Middleware | ✅ Done |
 | Unified ApiResponse + PagedResult | ✅ Done |
-| Leave Management | ⏳ Next |
-| Attendance Tracking | ⏳ Upcoming |
-| Salary Management | ⏳ Upcoming |
-| Notification System | ⏳ Upcoming |
-| Email Service | ⏳ Upcoming |
-| Admin Dashboard | ⏳ Upcoming |
+| Leave Management | ✅ Done |
+| Attendance Tracking | ✅ Done |
+| Salary Management | ✅ Done |
+| Notification System | ✅ Done |
+| Email Service | ✅ Done |
+| Admin Dashboard | ✅ Done |
 
 ### Frontend (Angular)
 | Module | Status |
 |---|---|
-| Auth · Dashboard · Employees | ⏳ |
-| Departments · Positions | ⏳ |
-| Leave · Attendance · Salary | ⏳ |
-| Notifications | ⏳ |
+| Auth (Login · Logout · Change Password) | ✅ Done |
+| Admin Dashboard | ✅ Done |
+| Employees (List · Profile · Add · Edit) | ✅ Done |
+| Departments & Positions | ✅ Done |
+| Leave Management | ✅ Done |
+| Attendance Tracking | ✅ Done |
+| Salary Records | ✅ Done |
+| Notifications | ✅ Done |
+
+---
+
+## 🤝 Contributing
+
+This is a graduation project. Contributions from team members are welcome.
+
+```bash
+# 1. Create a feature branch
+git checkout -b feature/your-feature-name
+
+# 2. Commit your changes
+git commit -m "feat: add leave approval logic"
+
+# 3. Push and open a pull request
+git push origin feature/your-feature-name
+```
+
+### Commit Convention
+| Prefix | When to use |
+|---|---|
+| `feat:` | New feature |
+| `fix:` | Bug fix |
+| `refactor:` | Code refactor without behavior change |
+| `docs:` | README or documentation update |
+| `style:` | Formatting, missing semicolons, etc. |
+| `chore:` | Build process, dependency updates |
 
 ---
 
@@ -477,10 +530,17 @@ dotnet ef migrations remove --project Infrastructure --startup-project HRMS_API
 
 | Name | Role |
 |---|---|
-| **Abedalqader Alfaqeeh** | Backend Lead · Architecture |
+| **Abedalqader Alfaqeeh** | Backend Lead · Clean Architecture |
 | **Mohammad Frehat** | Frontend Developer |
-| **Saad Rabadi** | UI/UX |
+| **Saad Rabadi** | UI/UX Designer |
 | **Mohammad Alghazo** | Frontend Developer |
+
+---
+
+## 📄 License
+
+This project is developed as a graduation project for academic purposes.  
+© 2026 HRMS Team — Computer Science Department.
 
 ---
 
