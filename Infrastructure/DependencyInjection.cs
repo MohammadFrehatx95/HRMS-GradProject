@@ -6,6 +6,7 @@ using Domain.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
 using Infrastructure.Repositories;
+using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,7 +52,12 @@ public static class DependencyInjection
 
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<IEmailService, EmailService>();
-       
+
+        // Ai 
+        services.Configure<GroqSettings>(configuration.GetSection("GroqSettings"));
+        services.AddHttpClient(); 
+        services.AddScoped<IHrAiService, HrAiService>();
+
         // obtain IConfiguration from the service collection to avoid missing 'configuration' variable
 
         services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
