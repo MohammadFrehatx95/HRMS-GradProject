@@ -162,7 +162,7 @@ namespace Application.Services.Implementations
                     "Rejection reason is required when rejecting a leave");
 
             leave.Status = dto.Status;
-            leave.ReviewedByUserId = reviewerUserId;
+            leave.ReviewedById = reviewerUserId;
             leave.ReviewedAt = DateTime.UtcNow;
 
             

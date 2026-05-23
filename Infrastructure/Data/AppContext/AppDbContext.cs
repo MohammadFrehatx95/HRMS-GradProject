@@ -61,7 +61,13 @@ public class AppDbContext : DbContext
             .HasForeignKey(l => l.EmployeeId)
             .OnDelete(DeleteBehavior.Cascade);
 
-    
+        modelBuilder.Entity<Leave>()
+            .HasOne(l => l.ReviewedBy)
+            .WithMany()
+            .HasForeignKey(l => l.ReviewedById)
+            .OnDelete(DeleteBehavior.NoAction);
+
+
 
 
         modelBuilder.Entity<Attendance>()
