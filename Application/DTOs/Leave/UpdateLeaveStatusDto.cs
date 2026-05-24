@@ -1,11 +1,8 @@
-﻿
-
-using Domain.Enums;
+﻿using Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.DTOs.Leave
 {
-  
     public class UpdateLeaveStatusDto
     {
         [Required]

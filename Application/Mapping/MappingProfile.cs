@@ -80,7 +80,9 @@ public class MappingProfile : Profile
             .ForMember(d => d.LeaveType, o => o.MapFrom(s => s.LeaveType.ToString()))
             .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()))
             .ForMember(d => d.Reason, o => o.MapFrom(s => s.Reason))
-            .ForMember(d => d.RejectionReason, o => o.MapFrom(s => s.RejectionReason));
+            .ForMember(d => d.RejectionReason, o => o.MapFrom(s => s.RejectionReason))
+            .ForMember(d => d.ReviewedById, o => o.MapFrom(s => s.ReviewedById))
+            .ForMember(d => d.ReviewedAt, o => o.MapFrom(s => s.ReviewedAt));
 
 
 

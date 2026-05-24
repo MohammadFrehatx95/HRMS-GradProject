@@ -64,6 +64,19 @@ namespace Application.Services.Implementations
             return leave is null ? null : mapper.Map<LeaveDto>(leave);
         }
 
+        // FIX #1: method خاصة للموظف تتحقق أن الطلب يخصه
+        public async Task<LeaveDto?> GetMyByIdAsync(int leaveId, int employeeId)
+        {
+            var leave = await uow.Repository<Leave>()
+                                 .GetAllQueryable()
+                                 .Include(l => l.Employee)
+                                 .FirstOrDefaultAsync(l =>
+                                     l.Id == leaveId &&
+                                     l.EmployeeId == employeeId);
+
+            return leave is null ? null : mapper.Map<LeaveDto>(leave);
+        }
+
         public async Task<LeaveDto> CreateAsync(int employeeId, CreateLeaveDto dto)
         {
             var startDate = DateTime.SpecifyKind(dto.StartDate.Date, DateTimeKind.Utc);
@@ -76,7 +89,6 @@ namespace Application.Services.Implementations
             if (endDate < startDate)
                 throw new ArgumentException("End date cannot be before start date");
 
-            // ✅ Bug #8 Fix: Pending و Approved كلاهما يمنع التكرار — Rejected فقط مستثنى
             var hasOverlap = await uow.Repository<Leave>()
                               .GetAllQueryable()
                               .AnyAsync(l =>
@@ -117,6 +129,7 @@ namespace Application.Services.Implementations
                                         u.Role == UserRole.Admin.ToString())
                             .ToListAsync();
 
+            // FIX #2: Notification و Email في try-catch منفصلين
             foreach (var user in hrAdmins)
             {
                 try
@@ -127,7 +140,15 @@ namespace Application.Services.Implementations
                         message: $"{employeeName} submitted a {dto.LeaveType} leave request " +
                                  $"from {startDate:yyyy-MM-dd} to {endDate:yyyy-MM-dd}",
                         type: NotificationType.LeaveRequested);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex,
+                        "Failed to send leave notification to user {UserId}", user.Id);
+                }
 
+                try
+                {
                     await emailService.SendLeaveRequestedAsync(
                         user.Email, employeeName,
                         dto.LeaveType.ToString(),
@@ -136,7 +157,7 @@ namespace Application.Services.Implementations
                 catch (Exception ex)
                 {
                     logger.LogError(ex,
-                        "Error sending leave notification to user {UserId}", user.Id);
+                        "Failed to send leave email to user {UserId}", user.Id);
                 }
             }
 
@@ -165,7 +186,6 @@ namespace Application.Services.Implementations
             leave.ReviewedById = reviewerUserId;
             leave.ReviewedAt = DateTime.UtcNow;
 
-            
             leave.RejectionReason = dto.Status == LeaveStatus.Rejected
                 ? dto.RejectionReason
                 : null;
@@ -184,6 +204,7 @@ namespace Application.Services.Implementations
                 var isApproved = dto.Status == LeaveStatus.Approved;
                 var employeeName = $"{employee.FirstName} {employee.LastName}";
 
+                // FIX #2: Notification و Email في try-catch منفصلين
                 try
                 {
                     await notificationService.CreateAsync(
@@ -196,7 +217,16 @@ namespace Application.Services.Implementations
                         type: isApproved
                             ? NotificationType.LeaveApproved
                             : NotificationType.LeaveRejected);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex,
+                        "Failed to send leave status notification to employee {EmployeeId}",
+                        leave.EmployeeId);
+                }
 
+                try
+                {
                     await emailService.SendLeaveStatusAsync(
                         employeeUser.Email,
                         employeeName,
@@ -207,12 +237,13 @@ namespace Application.Services.Implementations
                 catch (Exception ex)
                 {
                     logger.LogError(ex,
-                        "Error sending leave status notification to employee {EmployeeId}",
+                        "Failed to send leave status email to employee {EmployeeId}",
                         leave.EmployeeId);
                 }
             }
 
-            return mapper.Map<LeaveDto>(leave);
+            // FIX #1: GetByIdAsync لضمان رجوع بيانات كاملة مع EmployeeName
+            return (await GetByIdAsync(leaveId))!;
         }
 
         public async Task DeleteAsync(int leaveId, int employeeId)
@@ -230,6 +261,9 @@ namespace Application.Services.Implementations
                 throw new InvalidOperationException(
                     "Only Pending leave requests can be deleted");
 
+            // احفظ بيانات الـ leave قبل الحذف
+            var leaveType = leave.LeaveType;
+
             uow.Repository<Leave>().Delete(leave);
             await uow.SaveChangesAsync();
 
@@ -246,6 +280,7 @@ namespace Application.Services.Implementations
                                                 u.Role == UserRole.Admin.ToString())
                                     .ToListAsync();
 
+            // FIX #2: Notification و Email في try-catch منفصلين
             foreach (var user in hrAdmins)
             {
                 try
@@ -253,16 +288,25 @@ namespace Application.Services.Implementations
                     await notificationService.CreateAsync(
                         userId: user.Id,
                         title: "Leave Request Cancelled",
-                        message: $"{employeeName} cancelled their {leave.LeaveType} leave request",
+                        message: $"{employeeName} cancelled their {leaveType} leave request",
                         type: NotificationType.LeaveCancelled);
-
-                    await emailService.SendLeaveCancelledAsync(
-                        user.Email, employeeName, leave.LeaveType.ToString());
                 }
                 catch (Exception ex)
                 {
                     logger.LogError(ex,
-                        "Error sending leave cancellation notification to user {UserId}",
+                        "Failed to send leave cancellation notification to user {UserId}",
+                        user.Id);
+                }
+
+                try
+                {
+                    await emailService.SendLeaveCancelledAsync(
+                        user.Email, employeeName, leaveType.ToString());
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex,
+                        "Failed to send leave cancellation email to user {UserId}",
                         user.Id);
                 }
             }

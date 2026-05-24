@@ -1,6 +1,4 @@
-﻿
-
-namespace Application.DTOs.Leave
+﻿namespace Application.DTOs.Leave
 {
     public class LeaveDto
     {
@@ -15,5 +13,9 @@ namespace Application.DTOs.Leave
         public string Reason { get; set; } = string.Empty;
         public DateTime RequestedAt { get; set; }
         public string? RejectionReason { get; set; }
+
+        // FIX: إضافة حقول الـ reviewer
+        public int? ReviewedById { get; set; }
+        public DateTime? ReviewedAt { get; set; }
     }
 }
