@@ -90,6 +90,14 @@ builder.Services.AddApplication(builder.Configuration);
 
 var app = builder.Build();
 
+// ─── Startup Diagnostic ───────────────────────────────────────────────────
+var groqKey = builder.Configuration["GroqSettings:ApiKey"];
+var keyStatus = string.IsNullOrWhiteSpace(groqKey)
+    ? "⛔ EMPTY / NOT FOUND"
+    : $"✅ Found — starts with: {groqKey[..Math.Min(8, groqKey.Length)]}...";
+app.Logger.LogWarning("=== GROQ API KEY STATUS: {Status} ===", keyStatus);
+// ─────────────────────────────────────────────────────────────────────────
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

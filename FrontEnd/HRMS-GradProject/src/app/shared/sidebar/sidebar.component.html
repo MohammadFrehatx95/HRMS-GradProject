@@ -39,6 +39,10 @@
                     (click)="closeMobileSidebar()"><i
                         class="bi bi-cash-stack"></i> {{ 'Salaries' | t
                     }}</a></li>
+            <li><a routerLink="/ai-assistant" routerLinkActive="active"
+                    (click)="closeMobileSidebar()" class="ai-nav-link"><i
+                        class="bi bi-stars"></i> {{ 'AI Assistant' | t
+                    }}<span class="ai-badge">AI</span></a></li>
 
             @if (isAdmin) {
             <li class="section-title">{{ 'System Control' | t }}</li>

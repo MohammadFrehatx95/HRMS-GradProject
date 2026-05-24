@@ -259,3 +259,45 @@
 .sidebar-resizer.active {
   background-color: var(--color-border, #d1d5db);
 }
+
+/* ── AI Assistant Nav Link ── */
+.sidebar-nav a.ai-nav-link {
+  background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1));
+  border: 1px solid rgba(99,102,241,0.2);
+  color: #6366f1;
+  font-weight: 600;
+}
+
+.sidebar-nav a.ai-nav-link i {
+  color: #6366f1;
+}
+
+.sidebar-nav a.ai-nav-link:hover,
+.sidebar-nav a.ai-nav-link.active {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+}
+
+.sidebar-nav a.ai-nav-link:hover i,
+.sidebar-nav a.ai-nav-link.active i {
+  color: white;
+}
+
+.ai-badge {
+  margin-left: auto;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.sidebar-nav a.ai-nav-link:hover .ai-badge,
+.sidebar-nav a.ai-nav-link.active .ai-badge {
+  background: rgba(255,255,255,0.25);
+}

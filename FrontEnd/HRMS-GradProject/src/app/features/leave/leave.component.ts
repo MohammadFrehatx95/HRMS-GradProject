@@ -112,13 +112,13 @@ export class LeaveComponent implements OnInit {
             );
           });
         } else if (!this.isAdminOrHR) {
-          // ✅ Backend يُرجع strings: 'Approved', 'Annual'
-          const approvedAnnualLeavesDays = this.allLeavesList
+          // ✅ Include both 'Approved' and 'Pending' to correctly decrease available balance
+          const usedAnnualLeavesDays = this.allLeavesList
             .filter(
-              (l: any) => l.status === 'Approved' && l.leaveType === 'Annual',
+              (l: any) => (this.getStatusText(l.status) === 'Approved' || this.getStatusText(l.status) === 'Pending') && this.getLeaveTypeText(l.leaveType) === 'Annual',
             )
             .reduce((acc: number, l: any) => acc + (l.totalDays || 0), 0);
-          this.employeeAnnualLeaveBalance = 14 - approvedAnnualLeavesDays;
+          this.employeeAnnualLeaveBalance = 14 - usedAnnualLeavesDays;
         }
 
         this.isLoading = false;
@@ -238,6 +238,19 @@ export class LeaveComponent implements OnInit {
         'warning',
       );
       return;
+    }
+
+    // Calculate requested days
+    const start = new Date(this.leaveData.startDate);
+    const end = new Date(this.leaveData.endDate);
+    const diffTime = Math.abs(end.getTime() - start.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // inclusive
+
+    if (Number(this.leaveData.leaveType) === 0) { // Annual
+      if (diffDays > Number(this.employeeAnnualLeaveBalance)) {
+        Swal.fire('Insufficient Balance', `You are requesting ${diffDays} days, but you only have ${this.employeeAnnualLeaveBalance} annual leave days remaining.`, 'warning');
+        return;
+      }
     }
 
     this.isProcessing = true;

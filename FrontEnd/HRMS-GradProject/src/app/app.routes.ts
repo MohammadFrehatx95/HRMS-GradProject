@@ -80,5 +80,13 @@ export const routes: Routes = [
       ),
     canActivate: [authGuard],
   },
+  {
+    path: 'ai-assistant',
+    loadComponent: () =>
+      import('./features/ai-assistant/ai-assistant.component').then(
+        (m) => m.AiAssistantComponent,
+      ),
+    canActivate: [authGuard],
+  },
   { path: '**', redirectTo: 'login' },
 ];

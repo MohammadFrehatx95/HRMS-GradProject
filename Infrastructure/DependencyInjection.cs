@@ -1,4 +1,4 @@
-﻿using Application.Mappings;
+using Application.Mappings;
 using Application.Services.Implementations;
 using Application.Services.Interfaces;
 using Application.Settings;

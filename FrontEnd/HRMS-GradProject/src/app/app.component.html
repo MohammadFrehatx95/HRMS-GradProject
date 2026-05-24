@@ -9,7 +9,7 @@
     <div class="main-panel" [class.expanded]="isSidebarHidden">
         <app-header></app-header>
 
-        <main class="content">
+        <main class="content" [class.ai-route]="isAiRoute">
             <router-outlet></router-outlet>
         </main>
     </div>

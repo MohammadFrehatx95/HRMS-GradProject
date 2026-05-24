@@ -101,9 +101,9 @@ export class DashboardComponent implements OnInit {
     const cardW = (pageW - margin * 2 - 9) / 4; // 4 cards with 3 gaps of 3mm
     const cards = [
       { label: 'Total Employees', value: String(this.totalEmployees), accentColor: [239, 71, 111] as [number, number, number] },
-      { label: 'Pending Leaves',  value: String(this.pendingLeaves),  accentColor: [255, 165, 2] as [number, number, number] },
-      { label: 'Departments',     value: String(this.departmentsCount), accentColor: [67, 97, 238] as [number, number, number] },
-      { label: 'Total Payroll',   value: `${Number(this.totalSalaries).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} JD`, accentColor: [6, 214, 160] as [number, number, number] },
+      { label: 'Pending Leaves', value: String(this.pendingLeaves), accentColor: [255, 165, 2] as [number, number, number] },
+      { label: 'Departments', value: String(this.departmentsCount), accentColor: [67, 97, 238] as [number, number, number] },
+      { label: 'Total Payroll', value: `${Number(this.totalSalaries).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} JD`, accentColor: [6, 214, 160] as [number, number, number] },
     ];
 
     cards.forEach((card, i) => {
@@ -137,10 +137,10 @@ export class DashboardComponent implements OnInit {
 
     // Two-column analytics table (leave distribution + attendance)
     const analyticsData = [
-      ['Annual Leave',    `${this.annualLeavePercent}%`],
-      ['Sick Leave',      `${this.sickLeavePercent}%`],
+      ['Annual Leave', `${this.annualLeavePercent}%`],
+      ['Sick Leave', `${this.sickLeavePercent}%`],
       ['Emergency Leave', `${this.emergencyLeavePercent}%`],
-      ['Unpaid Leave',    `${this.unpaidLeavePercent}%`],
+      ['Unpaid Leave', `${this.unpaidLeavePercent}%`],
       ['Overall Attendance Rate', `${this.attendanceRate}%`],
     ];
 
@@ -180,7 +180,7 @@ export class DashboardComponent implements OnInit {
       l.employeeName || `Emp #${l.employeeId}`,
       l.leaveType || '—',
       l.startDate ? l.startDate.split('T')[0] : '—',
-      l.endDate   ? l.endDate.split('T')[0]   : '—',
+      l.endDate ? l.endDate.split('T')[0] : '—',
       l.status || '—',
     ]);
 
@@ -210,8 +210,8 @@ export class DashboardComponent implements OnInit {
         didDrawCell: (data: any) => {
           if (data.section === 'body' && data.column.index === 4) {
             const status = data.cell.raw as string;
-            if (status === 'Approved')  { doc.setTextColor(6, 150, 80); }
-            else if (status === 'Pending')  { doc.setTextColor(200, 120, 0); }
+            if (status === 'Approved') { doc.setTextColor(6, 150, 80); }
+            else if (status === 'Pending') { doc.setTextColor(200, 120, 0); }
             else if (status === 'Rejected') { doc.setTextColor(180, 30, 50); }
             doc.setFont('helvetica', 'bold');
             doc.text(
@@ -233,7 +233,7 @@ export class DashboardComponent implements OnInit {
     const attRows = this.recentAttendances.map((a: any) => [
       a.employeeName || `Emp #${a.employeeId}`,
       a.date ? a.date.split('T')[0] : '—',
-      a.clockIn  || '--:--',
+      a.clockIn || '--:--',
       (a.clockOut && a.clockOut !== '00:00:00') ? a.clockOut : '--:--',
     ]);
 
@@ -461,7 +461,7 @@ export class DashboardComponent implements OnInit {
           this.employeeNextPayday = `${monthNames[nextPayMonth - 1]} ${this.PAYDAY}`;
         }
       },
-      error: () => {},
+      error: () => { },
     });
   }
 
@@ -635,7 +635,7 @@ export class DashboardComponent implements OnInit {
     const labels = [];
     const data = [];
     let startDateStr = '';
-    
+
     for (let i = 6; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
@@ -644,10 +644,10 @@ export class DashboardComponent implements OnInit {
       if (i === 6) {
         startDateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
       }
-      
+
       const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
       labels.push(dayName);
-      
+
       const dayAtts = this.allAttendances.filter(a => a.date && a.date.startsWith(dateString) && a.clockIn);
       let rate = Math.round((dayAtts.length / this.totalEmployees) * 100);
       if (rate > 100) rate = 100;
@@ -692,7 +692,7 @@ export class DashboardComponent implements OnInit {
           legend: { display: false },
           tooltip: {
             callbacks: {
-              label: function(context: any) {
+              label: function (context: any) {
                 return context.parsed.y + '%';
               }
             }
@@ -706,7 +706,7 @@ export class DashboardComponent implements OnInit {
               color: 'rgba(0, 0, 0, 0.05)',
             },
             ticks: {
-              callback: function(value: any) {
+              callback: function (value: any) {
                 return value + '%';
               }
             }

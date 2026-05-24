@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Headers;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using Application.DTOs.AI;
@@ -234,9 +234,15 @@ public class HrAiService(
     // ════════════════════════════════════════════════════════════════════════
     private async Task<AiResponseDto> CallGroqAsync(List<object> messages)
     {
+        // Validate key is present before making HTTP request
+        if (string.IsNullOrWhiteSpace(_cfg.ApiKey))
+            throw new InvalidOperationException(
+                "GroqSettings:ApiKey is missing. Please add it to appsettings.Development.json or User Secrets.");
+
         using var http = httpFactory.CreateClient();
         http.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", _cfg.ApiKey);
+
 
         var payload = JsonSerializer.Serialize(new
         {

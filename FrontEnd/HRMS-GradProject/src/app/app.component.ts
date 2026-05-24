@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from './core/services/auth.service';
 import { SidebarService } from './core/services/sidebar.service';
 import { SidebarComponent } from './shared/sidebar/sidebar.component';
@@ -20,6 +20,11 @@ export class AppComponent {
   sidebarService = inject(SidebarService);
   updateService = inject(UpdateService);
   pwaService = inject(PwaService);
+  router = inject(Router);
+
+  get isAiRoute(): boolean {
+    return this.router.url.includes('/ai-assistant');
+  }
 
   get isSidebarHidden() {
     // حالة السايدبار

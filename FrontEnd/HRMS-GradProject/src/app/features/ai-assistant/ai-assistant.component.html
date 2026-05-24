@@ -1,0 +1,117 @@
+<div class="ai-page">
+  <!-- Animated Background -->
+  <div class="bg-mesh">
+    <div class="mesh-blob blob-1"></div>
+    <div class="mesh-blob blob-2"></div>
+    <div class="mesh-blob blob-3"></div>
+  </div>
+
+  <!-- ── Header ── -->
+  <div class="ai-header">
+    <div class="header-content">
+      <div class="ai-header-left">
+        <div class="ai-avatar-wrap">
+          <div class="ai-avatar">
+            <img src="/kawadir-logo.png" alt="KawadirAi">
+          </div>
+          <div class="ai-status-dot"></div>
+        </div>
+        <div>
+          <h2 class="ai-title">KawadirAi</h2>
+          <p class="ai-subtitle">Your intelligent HR companion</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Messages ── -->
+  <div class="messages-area" #messagesContainer>
+    <div class="messages-content">
+      <div
+        *ngFor="let msg of messages"
+        class="message-row"
+        [class.user-row]="msg.role === 'user'"
+        [class.ai-row]="msg.role === 'assistant'">
+        <!-- AI avatar -->
+        <div class="msg-avatar" *ngIf="msg.role === 'assistant'">
+          <img src="/kawadir-logo.png" alt="KawadirAi">
+        </div>
+        <!-- User avatar -->
+        <div class="msg-avatar user-avatar-icon" *ngIf="msg.role === 'user'">
+          <i class="bi bi-person-fill"></i>
+        </div>
+
+        <!-- Bubble -->
+        <div class="bubble-wrap">
+          <!-- Loading -->
+          <div class="bubble ai-bubble loading-bubble" *ngIf="msg.loading">
+            <div class="typing-indicator">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+
+          <!-- Normal bubble -->
+          <div
+            class="bubble"
+            *ngIf="!msg.loading"
+            [class.user-bubble]="msg.role === 'user'"
+            [class.ai-bubble]="msg.role === 'assistant'"
+            [innerHTML]="formatContent(msg.content)"></div>
+
+          <!-- Metadata -->
+          <div class="msg-meta" *ngIf="!msg.loading">
+            <span>{{ msg.timestamp | date : 'HH:mm' }}</span>
+            <span *ngIf="msg.tokens && msg.tokens > 0" class="token-tag">
+              <i class="bi bi-lightning-charge"></i> {{ msg.tokens }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Input Bar ── -->
+  <div class="input-area">
+    <div class="input-container">
+
+      <!-- ── Quick Actions (Docked) ── -->
+      <div class="quick-actions-docked" *ngIf="messages.length <= 2">
+        <button
+          *ngFor="let action of quickActions"
+          class="quick-btn"
+          (click)="triggerQuickAction(action)"
+          [disabled]="isLoading || cooldown">
+          <i class="{{ action.icon }}"></i> {{ action.label }}
+        </button>
+      </div>
+
+      <div class="input-content">
+        <div class="input-wrap">
+          <textarea
+            class="chat-input"
+            [(ngModel)]="userInput"
+            (keydown)="onKeydown($event)"
+            [placeholder]="cooldown ? 'Please wait ' + cooldownSeconds + 's...' : 'Ask me anything about HR, leave, attendance or salary...'"
+            [maxlength]="MAX_CHARS"
+            [disabled]="isLoading || cooldown"
+            rows="1"></textarea>
+          <div class="input-footer">
+            <span class="char-counter"
+              [class.danger]="charCount > MAX_CHARS - 20">
+              {{ charCount }}/{{ MAX_CHARS }}
+            </span>
+          </div>
+        </div>
+        <button
+          class="send-btn"
+          [disabled]="!canSend"
+          (click)="sendMessage()">
+          <span *ngIf="!isLoading"><i class="bi bi-send-fill"></i></span>
+          <span *ngIf="isLoading"
+            class="spinner-border spinner-border-sm"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
