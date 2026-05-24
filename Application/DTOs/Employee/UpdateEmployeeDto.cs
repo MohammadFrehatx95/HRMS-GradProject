@@ -1,4 +1,4 @@
-﻿
+
 namespace Application.DTOs.Employee
 {
     public class UpdateEmployeeDto
@@ -8,5 +8,6 @@ namespace Application.DTOs.Employee
         public string? PhoneNumber { get; set; }
         public bool? IsActive { get; set; }
         public int? DepartmentId { get; set; }
+        public int? PositionId { get; set; }
     }
 }

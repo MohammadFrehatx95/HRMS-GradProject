@@ -11,22 +11,34 @@ public class EmailService(IOptions<EmailSettings> options) : IEmailService
 {
     private readonly EmailSettings _settings = options.Value;
 
-    // ── Core Send ─────────────────────────────────────────
-    private async Task SendAsync(
+    private Task SendAsync(
         string toEmail, string toName, string subject, string htmlBody)
     {
-        var message = new MimeMessage();
-        message.From.Add(new MailboxAddress(_settings.FromName, _settings.FromEmail));
-        message.To.Add(new MailboxAddress(toName, toEmail));
-        message.Subject = subject;
-        message.Body = new BodyBuilder { HtmlBody = htmlBody }.ToMessageBody();
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress(_settings.FromName, _settings.FromEmail));
+                message.To.Add(new MailboxAddress(toName, toEmail));
+                message.Subject = subject;
+                message.Body = new BodyBuilder { HtmlBody = htmlBody }.ToMessageBody();
 
-        using var client = new SmtpClient();
-        await client.ConnectAsync(
-            _settings.Host, _settings.Port, SecureSocketOptions.StartTls);
-        await client.AuthenticateAsync(_settings.Username, _settings.Password);
-        await client.SendAsync(message);
-        await client.DisconnectAsync(true);
+                using var client = new SmtpClient();
+                client.Timeout = 10000; // 10 seconds timeout
+                await client.ConnectAsync(
+                    _settings.Host, _settings.Port, SecureSocketOptions.StartTls);
+                await client.AuthenticateAsync(_settings.Username, _settings.Password);
+                await client.SendAsync(message);
+                await client.DisconnectAsync(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EmailService] Failed to send email to {toEmail}: {ex.Message}");
+            }
+        });
+
+        return Task.CompletedTask;
     }
 
     // ── Template Builder ──────────────────────────────────

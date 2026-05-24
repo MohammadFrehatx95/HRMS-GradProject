@@ -207,6 +207,16 @@ export class LeaveComponent implements OnInit {
     return type ? type.name : typeCode != null ? String(typeCode) : 'Unknown';
   }
 
+  showRejectionReason(reason: string) {
+    Swal.fire({
+      icon: 'info',
+      title: 'Rejection Reason',
+      text: reason || 'No additional reason provided.',
+      confirmButtonText: 'Close',
+      confirmButtonColor: '#3085d6'
+    });
+  }
+
   openModal() {
     this.leaveData = { leaveType: 0, startDate: '', endDate: '', reason: '' };
     const modalEl = document.getElementById('leaveModal');

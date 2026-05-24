@@ -38,6 +38,8 @@ export class DashboardComponent implements OnInit {
   myRecentAttendances: any[] = [];
   allAttendances: any[] = [];
   isAdmin: boolean = false;
+  isAdminOrHR: boolean = false;
+
 
   annualLeavePercent: number = 0;
   sickLeavePercent: number = 0;
@@ -299,8 +301,9 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
+    this.isAdminOrHR = this.authService.isAdminOrHR();
 
-    if (this.isAdmin) {
+    if (this.isAdminOrHR) {
       this.loadAdminStats();
     } else {
       this.loadEmployeeStats();

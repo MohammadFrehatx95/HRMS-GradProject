@@ -29,6 +29,8 @@ export class SalaryComponent implements OnInit {
   isAdmin: boolean = false; // أدمن (يضيف ويعدل)
   isAdminOrHR: boolean = false; // أدمن أو hr (يشوف بس)
   isProcessing: boolean = false;
+  isViewingAll: boolean = false; // Add toggle state
+
 
   salaryModal: any;
   isEditMode: boolean = false;
@@ -134,7 +136,7 @@ export class SalaryComponent implements OnInit {
   loadSalaries() {
     // تحميل الرواتب
     this.isLoading = true;
-    const request = this.isAdminOrHR
+    const request = (this.isAdminOrHR && this.isViewingAll)
       ? this.salaryService.getAllSalaries()
       : this.salaryService.getMySalaries();
 
@@ -201,6 +203,15 @@ export class SalaryComponent implements OnInit {
 
     this.currentPage = 1; // Reset to first page
   }
+
+  toggleViewAll() {
+    this.isViewingAll = !this.isViewingAll;
+    this.salarySearchQuery = '';
+    this.selectedYear = '';
+    this.selectedMonth = '';
+    this.loadSalaries();
+  }
+
 
   openModal(salary: any = null) {
     if (salary) {

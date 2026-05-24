@@ -290,7 +290,7 @@ export class EmployeeFormComponent implements OnInit {
         .subscribe({
           next: () => {
             this.isLoading = false;
-            Swal.fire('نجاح', 'تم تعديل بيانات الموظف بنجاح', 'success');
+            Swal.fire('Success', 'Employee details updated successfully', 'success');
             this.router.navigate(['/employees']);
           },
           error: (err) => {
@@ -309,7 +309,7 @@ export class EmployeeFormComponent implements OnInit {
       this.employeeService.addEmployee(payload).subscribe({
         next: () => {
           this.isLoading = false;
-          Swal.fire('نجاح', 'تم إضافة الموظف بنجاح', 'success');
+          Swal.fire('Success', 'Employee added successfully', 'success');
           this.router.navigate(['/employees']);
         },
         error: (err) => {

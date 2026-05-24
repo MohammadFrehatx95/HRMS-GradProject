@@ -3,9 +3,14 @@
 
 
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <div>
-            <h3 class="fw-bold text-dark mb-1">{{ 'Salaries' | t }}</h3>
-            <p class="text-muted small mb-0">{{ 'View and manage employee payroll records' | t }}</p>
+        <div class="d-flex align-items-center">
+            <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+                <i class="bi bi-cash-stack fs-4"></i>
+            </div>
+            <div>
+                <h2 class="fw-bold text-dark mb-1">{{ 'Salaries' | t }}</h2>
+                <p class="text-muted small mb-0">{{ 'View and manage employee payroll records' | t }}</p>
+            </div>
         </div>
         <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end">
             <div class="input-group shadow-sm" style="max-width: 350px;">
@@ -54,6 +59,12 @@
                 </div>
             </div>
 
+            <button *ngIf="isAdminOrHR" class="btn btn-outline-primary px-4 py-2 rounded-3 shadow-sm text-nowrap me-2"
+                (click)="toggleViewAll()">
+                <i class="bi" [ngClass]="isViewingAll ? 'bi-person' : 'bi-people'"></i> 
+                {{ isViewingAll ? ('My Salaries' | t) : ('View All' | t) }}
+            </button>
+
             <button *ngIf="isAdmin" class="btn btn-primary px-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
                 (click)="openModal()">
                 <i class="bi bi-plus-lg me-2"></i> {{ 'Add Salary' | t }}
@@ -63,11 +74,11 @@
 
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
+            <table class="table table-hover align-middle mb-0 text-nowrap">
 
                 <thead class="bg-light text-muted small text-uppercase" style="letter-spacing: 0.5px;">
                     <tr>
-                        <th *ngIf="isAdminOrHR" class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Employee' | t }}</th>
+                        <th *ngIf="isAdminOrHR && isViewingAll" class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Employee' | t }}</th>
                         <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Month' | t }}/{{ 'Year' | t }}</th>
                         <th class="py-3 px-3 border-bottom-0 fw-semibold">{{ 'Base Salary' | t }}</th>
                         <th class="py-3 px-3 border-bottom-0 fw-semibold text-success">{{ 'Allowances' | t }}</th>
@@ -87,7 +98,7 @@
                     </tr>
 
                     <tr *ngIf="!isLoading && salariesList.length === 0">
-                        <td [colSpan]="isAdminOrHR ? 7 : 6" class="text-center py-5">
+                        <td [colSpan]="(isAdminOrHR && isViewingAll) ? 7 : 6" class="text-center py-5">
                             <div class="d-flex flex-column align-items-center">
                                 <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center"
                                     style="width: 80px; height: 80px;">
@@ -101,7 +112,7 @@
 
                     <tr *ngFor="let salary of paginatedSalaries">
                         <!-- اسم الموظف للأدمن والـ hr -->
-                        <td *ngIf="isAdminOrHR" data-label="Employee" class="py-3 px-4 fw-bold text-dark">
+                        <td *ngIf="isAdminOrHR && isViewingAll" data-label="Employee" class="py-3 px-4 fw-bold text-dark">
                             {{ salary.employeeName || '#' + salary.employeeId }}
                         </td>
                         <td data-label="Period" class="py-3 px-4">
