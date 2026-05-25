@@ -64,7 +64,7 @@
 
                     <!-- Loading -->
                     <tr *ngIf="isLoading">
-                        <td colspan="6" class="text-center py-5 text-muted">
+                        <td colspan="6" class="text-center py-5 text-muted no-data-td">
                             <span class="spinner-border spinner-border-sm me-2"></span>
                             Loading attendance records...
                         </td>
@@ -72,7 +72,7 @@
 
                     <!-- Empty -->
                     <tr *ngIf="!isLoading && records.length === 0">
-                        <td colspan="6" class="text-center py-5">
+                        <td colspan="6" class="text-center py-5 no-data-td">
                             <div class="d-flex flex-column align-items-center">
                                 <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
                                     <i class="bi bi-clock-history fs-1 text-secondary"></i>
@@ -183,6 +183,12 @@
     justify-content: flex-end;
     align-items: center;
     min-height: 50px;
+    word-break: break-word;
+  }
+  
+  .table-responsive td > .d-flex {
+    justify-content: flex-end;
+    width: 100%;
   }
   
   .table-responsive td:last-child {
@@ -208,5 +214,17 @@
     padding-top: 1rem !important;
     padding-bottom: 1rem !important;
   }
+
+  .table-responsive td.no-data-td {
+    padding-left: 0 !important;
+    justify-content: center !important;
+    text-align: center !important;
+    display: block;
+  }
+
+  .table-responsive td.no-data-td::before {
+    display: none;
+  }
 }
 </style>
+

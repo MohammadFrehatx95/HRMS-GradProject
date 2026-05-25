@@ -82,6 +82,11 @@ export class SalaryComponent implements OnInit {
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
+    
+    if (this.isAdmin) {
+        this.isViewingAll = true;
+    }
+
     this.loadSalaries();
     if (this.isAdmin) {
       this.loadEmployees();

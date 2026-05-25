@@ -362,4 +362,80 @@ public class EmailService(IOptions<EmailSettings> options) : IEmailService
             $"Salary Updated — {month}/{year}",
             BuildTemplate("Salary Updated", "#f59e0b", body));
     }
+
+    public async Task SendAnnouncementAsync(string toEmail, string employeeName, string title, string priority)
+    {
+        string color = priority == "Urgent" ? "#ef4444" : priority == "High" ? "#f59e0b" : "#3b82f6";
+        
+        var body = $$"""
+            <p>Dear {{employeeName}},</p>
+            <p>A new <strong>{{priority}}</strong> priority company announcement has been posted.</p>
+            <br/>
+            <div class="row">
+              <span class="label">Title</span>
+              <span class="value">{{title}}</span>
+            </div>
+            <p>Please log in to the HRMS dashboard to read the full details.</p>
+        """;
+
+        await SendAsync(
+            toEmail, employeeName,
+            $"New Announcement: {title}",
+            BuildTemplate("Company Announcement", color, body));
+    }
+
+    public async Task SendMeetingInvitationAsync(string toEmail, string employeeName, string title, DateTime meetingDate, string organizerName)
+    {
+        var body = $$"""
+            <p>Dear {{employeeName}},</p>
+            <p>You have been invited to a new meeting.</p>
+            <br/>
+            <div class="row">
+              <span class="label">Meeting</span>
+              <span class="value">{{title}}</span>
+            </div>
+            <div class="row">
+              <span class="label">Date & Time</span>
+              <span class="value">{{meetingDate:f}}</span>
+            </div>
+            <div class="row">
+              <span class="label">Organizer</span>
+              <span class="value">{{organizerName}}</span>
+            </div>
+            <p>Please check your HRMS portal for more details.</p>
+        """;
+
+        await SendAsync(
+            toEmail, employeeName,
+            $"Meeting Invitation: {title}",
+            BuildTemplate("Meeting Invitation", "#8b5cf6", body));
+    }
+
+    public async Task SendPayrollAdjustmentAsync(string toEmail, string employeeName, string type, decimal amount, string reason)
+    {
+        string color = type.ToLower() == "bonus" ? "#10b981" : "#ef4444";
+        
+        var body = $$"""
+            <p>Dear {{employeeName}},</p>
+            <p>A new payroll adjustment has been applied to your account.</p>
+            <br/>
+            <div class="row">
+              <span class="label">Type</span>
+              <span class="value">{{type}}</span>
+            </div>
+            <div class="row">
+              <span class="label">Amount</span>
+              <span class="value" style="color:{{color}}; font-weight:bold;">{{amount:N2}} JD</span>
+            </div>
+            <div class="row">
+              <span class="label">Reason</span>
+              <span class="value">{{reason}}</span>
+            </div>
+        """;
+
+        await SendAsync(
+            toEmail, employeeName,
+            $"Payroll Adjustment: {type}",
+            BuildTemplate("Payroll Adjustment", color, body));
+    }
 }

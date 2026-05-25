@@ -1,0 +1,169 @@
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="h3 mb-0 text-gray-800 fw-bold">{{ 'Meetings & Interviews' | t }}</h2>
+            <p class="text-muted mb-0">{{ 'Manage schedules and appointments' | t }}</p>
+        </div>
+        <button *ngIf="isHrOrAdmin" class="btn btn-dark shadow-sm rounded-pill px-4" (click)="openAddModal()">
+            <i class="bi bi-plus-lg me-2"></i> {{ 'Schedule Meeting' | t }}
+        </button>
+    </div>
+
+    <!-- Meetings Table -->
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light text-muted small text-uppercase">
+                        <tr>
+                            <th class="ps-4">{{ 'Title' | t }}</th>
+                            <th>{{ isHrOrAdmin ? ('Employee' | t) : ('Organizer' | t) }}</th>
+                            <th>{{ 'Date & Time' | t }}</th>
+                            <th>{{ 'Status' | t }}</th>
+                            <th class="text-end pe-4">{{ 'Actions' | t }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (isLoading) {
+                        <tr>
+                            <td colspan="5" class="text-center py-5">
+                                <div class="spinner-border text-dark" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </td>
+                        </tr>
+                        } @else {
+                        @for (meeting of meetings; track meeting.id) {
+                        <tr>
+                            <td class="ps-4">
+                                <div class="fw-bold text-dark">{{ meeting.title }}</div>
+                                <div class="small text-muted text-truncate" style="max-width: 250px;">{{ meeting.description }}</div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-circle bg-light text-dark fw-bold me-2">
+                                        {{ isHrOrAdmin ? meeting.employeeName.charAt(0) : meeting.organizerName.charAt(0) }}
+                                    </div>
+                                    <span class="fw-medium">{{ isHrOrAdmin ? meeting.employeeName : meeting.organizerName }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div><i class="bi bi-calendar-event text-muted me-2"></i>{{ meeting.meetingDate | date:'mediumDate' }}</div>
+                                <div class="small text-muted"><i class="bi bi-clock me-2"></i>{{ meeting.meetingDate | date:'shortTime' }}</div>
+                            </td>
+                            <td>
+                                <span class="badge rounded-pill px-3 py-2" [ngClass]="getStatusBadgeClass(meeting.status)">
+                                    {{ getStatusLabel(meeting.status) | t }}
+                                </span>
+                            </td>
+                            <td class="text-end pe-4">
+                                <!-- Actions for HR/Admin -->
+                                <ng-container *ngIf="isHrOrAdmin">
+                                    <div class="dropdown">
+                                        <button class="btn btn-light btn-sm rounded-circle" type="button" data-bs-toggle="dropdown">
+                                            <i class="bi bi-three-dots-vertical"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                                            <li>
+                                                <button class="dropdown-item" (click)="updateStatus(meeting.id, MeetingStatus.Confirmed)">
+                                                    <i class="bi bi-check-circle text-primary me-2"></i> Confirm
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button class="dropdown-item" (click)="updateStatus(meeting.id, MeetingStatus.Completed)">
+                                                    <i class="bi bi-check-all text-success me-2"></i> Mark Completed
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button class="dropdown-item" (click)="updateStatus(meeting.id, MeetingStatus.Cancelled)">
+                                                    <i class="bi bi-x-circle text-danger me-2"></i> Cancel
+                                                </button>
+                                            </li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li>
+                                                <button class="dropdown-item text-danger" (click)="deleteMeeting(meeting.id)">
+                                                    <i class="bi bi-trash me-2"></i> Delete
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </ng-container>
+
+                                <!-- Actions for Employee -->
+                                <ng-container *ngIf="!isHrOrAdmin">
+                                    <button *ngIf="meeting.status === MeetingStatus.Pending" class="btn btn-sm btn-outline-primary rounded-pill me-2" (click)="updateStatus(meeting.id, MeetingStatus.Confirmed)">
+                                        {{ 'Acknowledge' | t }}
+                                    </button>
+                                </ng-container>
+                            </td>
+                        </tr>
+                        } @empty {
+                        <tr>
+                            <td colspan="5" class="text-center py-5 text-muted">
+                                <i class="bi bi-calendar2-x fs-1 d-block mb-3 text-light-gray"></i>
+                                {{ 'No meetings found.' | t }}
+                            </td>
+                        </tr>
+                        }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Meeting Modal -->
+<div class="modal fade" id="addMeetingModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow rounded-4">
+            <div class="modal-header bg-light border-0 rounded-top-4">
+                <h5 class="modal-title fw-bold text-dark">{{ 'Schedule Meeting' | t }}</h5>
+                <button type="button" class="btn-close" (click)="closeModal('addMeetingModal')"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-medium text-dark">{{ 'Title / Subject' | t }} <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control bg-light border-0" formControlName="title" placeholder="e.g., Performance Review">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium text-dark">{{ 'Employee' | t }} <span class="text-danger">*</span></label>
+                        <select class="form-select bg-light border-0" formControlName="employeeId">
+                            <option value="">{{ 'Select Employee' | t }}</option>
+                            <option *ngFor="let emp of employees" [value]="emp.id">
+                                {{ emp.firstName }} {{ emp.lastName }} ({{ emp.position?.title }})
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium text-dark">{{ 'Date' | t }} <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control bg-light border-0" formControlName="meetingDate">
+                        </div>
+                        <div class="col-md-6 mt-3 mt-md-0">
+                            <label class="form-label fw-medium text-dark">{{ 'Time' | t }} <span class="text-danger">*</span></label>
+                            <input type="time" class="form-control bg-light border-0" formControlName="meetingTime">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-medium text-dark">{{ 'Description / Notes' | t }}</label>
+                        <textarea class="form-control bg-light border-0" rows="3" formControlName="description" placeholder="Optional details..."></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-light rounded-pill px-4" (click)="closeModal('addMeetingModal')">{{ 'Cancel' | t }}</button>
+                        <button type="submit" class="btn btn-dark rounded-pill px-4" [disabled]="addForm.invalid || isSubmitting">
+                            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+                            {{ 'Schedule' | t }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

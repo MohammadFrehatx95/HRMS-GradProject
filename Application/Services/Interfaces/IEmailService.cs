@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,5 +22,10 @@ namespace Application.Services.Interfaces
             int month, int year, decimal netAmount);
         Task SendSalaryUpdatedAsync(string toEmail, string employeeName,
             int month, int year, decimal netAmount);
+            
+        // New Features
+        Task SendAnnouncementAsync(string toEmail, string employeeName, string title, string priority);
+        Task SendMeetingInvitationAsync(string toEmail, string employeeName, string title, DateTime meetingDate, string organizerName);
+        Task SendPayrollAdjustmentAsync(string toEmail, string employeeName, string type, decimal amount, string reason);
     }
 }

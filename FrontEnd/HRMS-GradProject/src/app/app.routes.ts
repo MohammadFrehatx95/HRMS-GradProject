@@ -31,6 +31,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'meetings',
+    loadComponent: () => import('./features/meetings/meetings.component').then(c => c.MeetingsComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'leave-form',
     loadComponent: () =>
       import('./features/leave-form/leave-form.component').then(
@@ -87,6 +92,14 @@ export const routes: Routes = [
         (m) => m.AiAssistantComponent,
       ),
     canActivate: [authGuard],
+  },
+  {
+    path: 'payroll-adjustments',
+    loadComponent: () =>
+      import('./features/payroll-adjustments/payroll-adjustments.component').then(
+        (m) => m.PayrollAdjustmentsComponent,
+      ),
+    canActivate: [authGuard, hrGuard],
   },
   { path: '**', redirectTo: 'login' },
 ];

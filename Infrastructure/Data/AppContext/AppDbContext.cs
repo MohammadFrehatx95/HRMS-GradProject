@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+using Domain.Entities;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,12 +19,21 @@ public class AppDbContext : DbContext
     public DbSet<Leave> Leaves => Set<Leave>();
     public DbSet<Attendance> Attendances { get; set; } 
     public DbSet<Salary> Salaries { get; set; }
+    public DbSet<PayrollAdjustment> PayrollAdjustments { get; set; }
     
     public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<Meeting> Meetings { get; set; }
+    public DbSet<Announcement> Announcements { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Announcement>()
+            .HasOne(a => a.Author)
+            .WithMany()
+            .HasForeignKey(a => a.AuthorId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Employee>()
             .HasOne(e => e.Department)
@@ -87,6 +96,18 @@ public class AppDbContext : DbContext
             .WithMany(u => u.Notifications)
             .HasForeignKey(n => n.UserId)
             .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<Meeting>()
+            .HasOne(m => m.Employee)
+            .WithMany()
+            .HasForeignKey(m => m.EmployeeId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Meeting>()
+            .HasOne(m => m.Organizer)
+            .WithMany()
+            .HasForeignKey(m => m.OrganizerId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Leave>()
             .Property(l => l.RejectionReason)

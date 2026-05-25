@@ -24,13 +24,13 @@
                     (input)="filterRecords()">
             </div>
 
-            <button class="btn btn-outline-success shadow-sm px-4 py-2 rounded-3 fw-semibold text-nowrap d-flex align-items-center" (click)="exportToExcel()">
-                <i class="bi bi-file-earmark-excel-fill me-2 fs-5"></i> {{ 'Export' | t }}
+            <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap d-flex align-items-center" (click)="exportToExcel()">
+                <i class="bi bi-file-earmark-excel-fill fs-5" [class.me-md-2]="true"></i> <span class="d-none d-md-inline">{{ 'Export' | t }}</span>
             </button>
 
             <div class="dropdown">
                 <button class="btn btn-outline-secondary shadow-sm px-3 py-2 rounded-3 d-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-filter me-2 fs-5"></i> {{ 'Filter' | t }}
+                    <i class="bi bi-filter fs-5" [class.me-md-2]="true"></i> <span class="d-none d-md-inline">{{ 'Filter' | t }}</span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4" style="min-width: 250px;">
                     <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">{{ 'Filter Options' | t }}</h6>
@@ -57,8 +57,8 @@
 
                 <div class="d-flex align-items-center gap-2">
                     <a *ngIf="isAdminOrHR" routerLink="/all-attendance"
-                       class="btn btn-outline-primary px-4 py-2 rounded-3 shadow-sm text-nowrap">
-                        <i class="bi bi-people me-1"></i> {{ 'View All' | t }}
+                       class="btn btn-outline-primary px-3 px-md-4 py-2 rounded-3 shadow-sm text-nowrap">
+                        <i class="bi bi-people" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'View All' | t }}</span>
                     </a>
 
                     <button *ngIf="!isCheckedInToday"
@@ -105,7 +105,7 @@
                 <tbody class="border-top-0">
 
                     <tr *ngIf="isLoading">
-                        <td colspan="6" class="text-center py-5 text-muted">
+                        <td colspan="6" class="text-center py-5 text-muted no-data-td">
                             <span
                                 class="spinner-border spinner-border-sm me-2"></span>
                             {{ 'Loading attendance data...' | t }}
@@ -113,7 +113,7 @@
                     </tr>
 
                     <tr *ngIf="!isLoading && attendanceRecords.length === 0">
-                        <td [colSpan]="isAdmin ? 6 : 5" class="text-center py-5">
+                        <td [colSpan]="isAdmin ? 6 : 5" class="text-center py-5 no-data-td">
                             <div class="d-flex flex-column align-items-center">
                                 <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
                                     <i class="bi bi-clock-history text-secondary fs-1"></i>
@@ -220,6 +220,12 @@
     justify-content: flex-end;
     align-items: center;
     min-height: 50px;
+    word-break: break-word;
+  }
+  
+  .table-responsive td > .d-flex {
+    justify-content: flex-end;
+    width: 100%;
   }
   
   .table-responsive td:last-child {
@@ -244,6 +250,17 @@
     justify-content: flex-end !important;
     padding-top: 1rem !important;
     padding-bottom: 1rem !important;
+  }
+
+  .table-responsive td.no-data-td {
+    padding-left: 0 !important;
+    justify-content: center !important;
+    text-align: center !important;
+    display: block;
+  }
+
+  .table-responsive td.no-data-td::before {
+    display: none;
   }
 }
 </style>

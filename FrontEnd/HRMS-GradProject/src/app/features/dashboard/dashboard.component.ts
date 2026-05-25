@@ -13,12 +13,16 @@ import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
+import { AnnouncementService } from '../../core/services/announcement.service';
+import { Announcement } from '../../core/models/announcement.model';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+
 Chart.register(...registerables);
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, TranslatePipe, RouterLink],
+  imports: [CommonModule, TranslatePipe, RouterLink, ReactiveFormsModule, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
@@ -29,6 +33,12 @@ export class DashboardComponent implements OnInit {
   private authService = inject(AuthService);
   private attendanceService = inject(AttendanceService);
   private salaryService = inject(SalaryService);
+  private announcementService = inject(AnnouncementService);
+  private fb = inject(FormBuilder);
+
+  announcements: Announcement[] = [];
+  announcementForm: FormGroup;
+  showAnnouncementModal = false;
 
   totalEmployees = 0;
   pendingLeaves = 0;
@@ -300,15 +310,107 @@ export class DashboardComponent implements OnInit {
     doc.line(x, y + 2.5, pageW - x, y + 2.5);
   }
 
+  allEmployeesList: any[] = []; // for targeted announcements
+
+  constructor() {
+    this.announcementForm = this.fb.group({
+      title: ['', Validators.required],
+      content: ['', Validators.required],
+      priority: ['Normal', Validators.required],
+      isGeneral: [true],
+      targetEmployeeIds: [[]],
+      expiryDate: ['']
+    });
+  }
+
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
 
     if (this.isAdminOrHR) {
       this.loadAdminStats();
+      this.loadEmployeesForSelect();
     } else {
       this.loadEmployeeStats();
     }
+
+    this.loadAnnouncements();
+  }
+
+  loadEmployeesForSelect() {
+    this.empService.getEmployees().subscribe({
+      next: (res) => {
+        this.allEmployeesList = res;
+      },
+      error: (err) => console.error('Failed to load employees for announcements', err)
+    });
+  }
+
+  loadAnnouncements() {
+    this.announcementService.getAnnouncements(1, 10).subscribe({
+      next: (res) => {
+        this.announcements = res.items;
+      },
+      error: (err) => console.error('Failed to load announcements', err)
+    });
+  }
+
+  openAnnouncementModal() {
+    this.announcementForm.reset({ priority: 'Normal', isGeneral: true, targetEmployeeIds: [] });
+    this.showAnnouncementModal = true;
+  }
+
+  closeAnnouncementModal() {
+    this.showAnnouncementModal = false;
+  }
+
+  submitAnnouncement() {
+    if (this.announcementForm.invalid) return;
+
+    let formValue = { ...this.announcementForm.value };
+    if (formValue.isGeneral) {
+      formValue.targetEmployeeIds = null;
+    }
+    if (!formValue.expiryDate) {
+      formValue.expiryDate = null;
+    }
+
+    this.announcementService.createAnnouncement(formValue).subscribe({
+      next: () => {
+        this.closeAnnouncementModal();
+        this.loadAnnouncements();
+        Swal.fire('Success', 'Announcement posted successfully', 'success');
+      },
+      error: (err) => {
+        Swal.fire('Error', 'Failed to post announcement', 'error');
+      }
+    });
+  }
+
+  deleteAnnouncement(id: number) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.announcementService.deleteAnnouncement(id).subscribe({
+          next: () => {
+            this.loadAnnouncements();
+            Swal.fire('Deleted!', 'Announcement has been deleted.', 'success');
+          },
+          error: (err) => Swal.fire('Error', 'Failed to delete', 'error')
+        });
+      }
+    });
+  }
+
+  trackByAttId(index: number, att: any): number {
+    return att.id;
   }
 
   loadAdminStats() {

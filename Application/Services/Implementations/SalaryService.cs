@@ -1,4 +1,4 @@
-﻿using Application.Common;
+using Application.Common;
 using Application.DTOs.Salary;
 using Application.Services.Interfaces;
 using AutoMapper;
@@ -87,31 +87,50 @@ namespace Application.Services.Implementations
                     $"Salary for employee {dto.EmployeeId} in {dto.Month}/{dto.Year} already exists. " +
                     $"Use the update endpoint to modify it.");
 
-           
-            var gross = dto.BaseAmount + dto.Allowances;
-            var net = gross - dto.Deductions;
+            var unappliedAdjustments = await uow.Repository<PayrollAdjustment>()
+                                                .GetAllQueryable()
+                                                .Where(p => p.EmployeeId == dto.EmployeeId && !p.IsApplied)
+                                                .ToListAsync();
+
+            var totalBonuses = unappliedAdjustments.Where(p => p.Type == AdjustmentType.Bonus).Sum(p => p.Amount);
+            var totalPenalties = unappliedAdjustments.Where(p => p.Type == AdjustmentType.Penalty).Sum(p => p.Amount);
+
+            var finalAllowances = dto.Allowances + totalBonuses;
+            var finalDeductions = dto.Deductions + totalPenalties;
+
+            var gross = dto.BaseAmount + finalAllowances;
+            var net = gross - finalDeductions;
 
             if (net < 0)
-                throw new ArgumentException(
-                    "Deductions cannot exceed the gross amount");
+                throw new ArgumentException("Deductions cannot exceed the gross amount");
 
             var salary = new Salary
             {
                 EmployeeId = dto.EmployeeId,
                 BaseAmount = dto.BaseAmount,
-                Allowances = dto.Allowances,
-                Deductions = dto.Deductions,
+                Allowances = finalAllowances,
+                Deductions = finalDeductions,
                 GrossAmount = gross,
                 NetAmount = net,
                 Month = dto.Month,
                 Year = dto.Year,
-                // ✅ Fix DateTime Kind
-                EffectiveDate = DateTime.SpecifyKind(
-                                    dto.EffectiveDate, DateTimeKind.Utc)
+                EffectiveDate = DateTime.SpecifyKind(dto.EffectiveDate, DateTimeKind.Utc)
             };
 
             await uow.Repository<Salary>().AddAsync(salary);
-            await uow.SaveChangesAsync();
+            await uow.SaveChangesAsync(); // Save to get the generated Salary Id
+
+            // Mark adjustments as applied
+            foreach(var adj in unappliedAdjustments)
+            {
+                adj.IsApplied = true;
+                adj.AppliedToSalaryId = salary.Id;
+                uow.Repository<PayrollAdjustment>().Update(adj);
+            }
+            if (unappliedAdjustments.Any())
+            {
+                await uow.SaveChangesAsync();
+            }
 
             // جيب الـ User المرتبط بالموظف
             var user = await uow.Repository<User>()

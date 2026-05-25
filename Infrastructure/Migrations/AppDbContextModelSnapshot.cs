@@ -22,6 +22,41 @@ namespace Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Domain.Entities.Announcement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Priority")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.ToTable("Announcements");
+                });
+
             modelBuilder.Entity("Domain.Entities.Attendance", b =>
                 {
                     b.Property<int>("Id")
@@ -199,6 +234,47 @@ namespace Infrastructure.Migrations
                     b.ToTable("Leaves");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Meeting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("MeetingDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("OrganizerId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("OrganizerId");
+
+                    b.ToTable("Meetings");
+                });
+
             modelBuilder.Entity("Domain.Entities.Notification", b =>
                 {
                     b.Property<int>("Id")
@@ -232,6 +308,45 @@ namespace Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("Domain.Entities.PayrollAdjustment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<int?>("AppliedToSalaryId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsApplied")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppliedToSalaryId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("PayrollAdjustments");
                 });
 
             modelBuilder.Entity("Domain.Entities.Position", b =>
@@ -408,6 +523,17 @@ namespace Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Domain.Entities.Announcement", b =>
+                {
+                    b.HasOne("Domain.Entities.Employee", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+                });
+
             modelBuilder.Entity("Domain.Entities.Attendance", b =>
                 {
                     b.HasOne("Domain.Entities.Employee", "Employee")
@@ -464,6 +590,25 @@ namespace Infrastructure.Migrations
                     b.Navigation("ReviewedBy");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Meeting", b =>
+                {
+                    b.HasOne("Domain.Entities.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Employee", "Organizer")
+                        .WithMany()
+                        .HasForeignKey("OrganizerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Organizer");
+                });
+
             modelBuilder.Entity("Domain.Entities.Notification", b =>
                 {
                     b.HasOne("Domain.Entities.User", "User")
@@ -473,6 +618,23 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.PayrollAdjustment", b =>
+                {
+                    b.HasOne("Domain.Entities.Salary", "AppliedToSalary")
+                        .WithMany()
+                        .HasForeignKey("AppliedToSalaryId");
+
+                    b.HasOne("Domain.Entities.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppliedToSalary");
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("Domain.Entities.Position", b =>

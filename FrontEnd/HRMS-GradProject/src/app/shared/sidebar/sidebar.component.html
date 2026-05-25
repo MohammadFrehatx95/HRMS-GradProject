@@ -4,14 +4,18 @@
     <div class="sidebar-brand" style="cursor: pointer;" routerLink="/dashboard"
         (click)="closeMobileSidebar()">
         <div class="sidebar-logo-wrap"
-             style="background: url('kawadir-logo.png') center center / 125% no-repeat #0d0d0d;
-                    width: 58px; height: 58px; border-radius: 18px;
-                    box-shadow: 0 4px 14px rgba(0,0,0,0.35);
-                    flex-shrink: 0;">
+            style="width: 58px; height: 58px; border-radius: 14px;
+                    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+                    flex-shrink: 0; background: transparent; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 2px;">
+            <img src="kawadir-logo.png" alt="Kawadir" class="brand-logo"
+                style="width: 100%; height: 100%; object-fit: contain;">
         </div>
-        <div class="sidebar-brand-text d-flex flex-column justify-content-center mt-1">
-            <span class="sidebar-brand-name" style="line-height: 1; font-size: 1.55rem;">Kawadir</span>
-            <span class="sidebar-brand-sub" style="margin-top: 3px; font-size: 0.6rem;">HR Management</span>
+        <div
+            class="sidebar-brand-text d-flex flex-column justify-content-center mt-1">
+            <span class="sidebar-brand-name"
+                style="line-height: 1; font-size: 1.55rem;">Kawadir</span>
+            <span class="sidebar-brand-sub"
+                style="margin-top: 3px; font-size: 0.6rem;">HR Management</span>
         </div>
     </div>
 
@@ -29,6 +33,9 @@
             <li><a routerLink="/employees" routerLinkActive="active"
                     (click)="closeMobileSidebar()"><i
                         class="bi bi-people"></i> {{ 'Employees' | t }}</a></li>
+            <li><a routerLink="/payroll-adjustments" routerLinkActive="active"
+                    (click)="closeMobileSidebar()"><i
+                        class="bi bi-wallet2"></i> {{ 'Bonus & Penalty' | t }}</a></li>
             }
             <li><a routerLink="/leave" routerLinkActive="active"
                     (click)="closeMobileSidebar()"><i
@@ -41,6 +48,10 @@
             <li><a routerLink="/salary" routerLinkActive="active"
                     (click)="closeMobileSidebar()"><i
                         class="bi bi-cash-stack"></i> {{ 'Salaries' | t
+                    }}</a></li>
+            <li><a routerLink="/meetings" routerLinkActive="active"
+                    (click)="closeMobileSidebar()"><i
+                        class="bi bi-calendar-event"></i> {{ 'Meetings' | t
                     }}</a></li>
             <li><a routerLink="/ai-assistant" routerLinkActive="active"
                     (click)="closeMobileSidebar()" class="ai-nav-link"><i

@@ -1,6 +1,47 @@
 <div class="dashboard-container">
 
-
+    <!-- Announcements Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-white p-3 border-0 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold m-0 text-dark">
+                        <i class="bi bi-megaphone-fill text-primary me-2"></i> {{ 'Company Announcements' | t }}
+                    </h5>
+                    <button *ngIf="isAdminOrHR" class="btn btn-sm btn-primary shadow-sm" (click)="openAnnouncementModal()">
+                        <i class="bi bi-plus-lg"></i> {{ 'Post Announcement' | t }}
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    <div *ngIf="announcements.length === 0" class="text-center p-4 text-muted">
+                        <i class="bi bi-info-circle fs-3 d-block mb-2"></i>
+                        {{ 'No announcements at this time.' | t }}
+                    </div>
+                    <div class="list-group list-group-flush rounded-bottom-4" style="max-height: 400px; overflow-y: auto;">
+                        <div class="list-group-item p-3 border-bottom-0 border-top hover-bg-light transition-all" *ngFor="let ann of announcements">
+                            <div class="d-flex w-100 justify-content-between align-items-center mb-1">
+                                <h6 class="mb-0 fw-bold d-flex align-items-center gap-2">
+                                    <span class="badge rounded-pill" 
+                                          [ngClass]="{'bg-danger': ann.priority === 'Urgent', 'bg-warning text-dark': ann.priority === 'High', 'bg-info text-dark': ann.priority === 'Normal'}">
+                                        {{ ann.priority | t }}
+                                    </span>
+                                    {{ ann.title }}
+                                </h6>
+                                <div class="d-flex align-items-center gap-3">
+                                    <small class="text-muted"><i class="bi bi-clock"></i> {{ ann.createdAt | date:'short' }}</small>
+                                    <button *ngIf="isAdminOrHR" class="btn btn-sm btn-outline-danger border-0 p-1" (click)="deleteAnnouncement(ann.id)" [title]="'Delete' | t">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="mb-1 text-secondary mt-2 ms-1" style="font-size: 0.95rem;">{{ ann.content }}</p>
+                            <small class="text-muted fst-italic ms-1">{{ 'Posted by:' | t }} {{ ann.authorName }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     @if (isAdminOrHR) {
     <div class="d-flex justify-content-end mb-3" *ngIf="isAdmin">
@@ -244,4 +285,67 @@
         </div>
     </div>
     }
+</div>
+
+<!-- Announcement Modal -->
+<div class="modal fade show" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0,0,0,0.5);" *ngIf="showAnnouncementModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+      <div class="modal-header bg-light border-0 py-3">
+        <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2">
+          <i class="bi bi-megaphone-fill text-primary"></i> {{ 'Post Announcement' | t }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeAnnouncementModal()"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form [formGroup]="announcementForm" (ngSubmit)="submitAnnouncement()">
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-dark">{{ 'Title' | t }}</label>
+            <input type="text" class="form-control" formControlName="title" placeholder="{{ 'e.g., Company Holiday' | t }}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-dark">{{ 'Content' | t }}</label>
+            <textarea class="form-control" formControlName="content" rows="4" placeholder="{{ 'Write your announcement here...' | t }}" required></textarea>
+          </div>
+          
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold text-dark">{{ 'Priority' | t }}</label>
+              <select class="form-select" formControlName="priority">
+                <option value="Normal">{{ 'Normal' | t }}</option>
+                <option value="High">{{ 'High' | t }}</option>
+                <option value="Urgent">{{ 'Urgent' | t }}</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold text-dark">{{ 'Expiry Date (Optional)' | t }}</label>
+              <input type="datetime-local" class="form-control" formControlName="expiryDate">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" id="isGeneralSwitch" formControlName="isGeneral">
+              <label class="form-check-label fw-semibold text-dark" for="isGeneralSwitch">{{ 'General Announcement (All Employees)' | t }}</label>
+            </div>
+          </div>
+
+          <div class="mb-4" *ngIf="!announcementForm.get('isGeneral')?.value">
+            <label class="form-label fw-semibold text-dark">{{ 'Select Target Employees' | t }}</label>
+            <select class="form-select" formControlName="targetEmployeeIds" multiple style="height: 120px;">
+              <option *ngFor="let emp of allEmployeesList" [value]="emp.id">
+                {{ emp.firstName }} {{ emp.lastName }} ({{ emp.departmentName }})
+              </option>
+            </select>
+            <small class="text-muted">{{ 'Hold Ctrl to select multiple employees' | t }}</small>
+          </div>
+
+          <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+            <button type="button" class="btn btn-light px-4" (click)="closeAnnouncementModal()">{{ 'Cancel' | t }}</button>
+            <button type="submit" class="btn btn-primary px-4" [disabled]="announcementForm.invalid">{{ 'Post' | t }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>

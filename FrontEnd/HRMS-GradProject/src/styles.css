@@ -1,4 +1,4 @@
-﻿@import "bootstrap/dist/css/bootstrap.min.css";
+@import "bootstrap/dist/css/bootstrap.min.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
 /*Light Mode Defaults*/
@@ -549,4 +549,22 @@ td, .detail-value, .info-value, .card-text, .text-break-all {
   overflow-wrap: anywhere !important;
   word-break: break-word !important;
   hyphens: auto;
+}
+
+/* ------------------------------------------
+   GLOBAL COMPONENT FIXES
+   ------------------------------------------ */
+.icon-box {
+  flex-shrink: 0;
+}
+
+/* Make white backgrounds transparent for the AI-generated black and white logo */
+.brand-logo {
+  mix-blend-mode: multiply;
+  object-fit: contain;
+}
+
+body.dark-mode .brand-logo {
+  filter: invert(1);
+  mix-blend-mode: screen;
 }

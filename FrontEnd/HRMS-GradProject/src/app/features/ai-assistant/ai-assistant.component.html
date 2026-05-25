@@ -12,7 +12,7 @@
       <div class="ai-header-left">
         <div class="ai-avatar-wrap">
           <div class="ai-avatar">
-            <img src="/kawadir-logo.png" alt="KawadirAi">
+            <img src="/kawadir-logo.png" alt="KawadirAi" class="brand-logo">
           </div>
           <div class="ai-status-dot"></div>
         </div>
@@ -54,7 +54,7 @@
         [class.ai-row]="msg.role === 'assistant'">
         <!-- AI avatar -->
         <div class="msg-avatar" *ngIf="msg.role === 'assistant'">
-          <img src="/kawadir-logo.png" alt="KawadirAi">
+          <img src="/kawadir-logo.png" alt="KawadirAi" class="brand-logo">
         </div>
         <!-- User avatar -->
         <div class="msg-avatar user-avatar-icon" *ngIf="msg.role === 'user'">
@@ -95,8 +95,8 @@
     <div class="input-container">
 
       <!-- ── Quick Actions (Docked) ── -->
-      <div class="d-flex justify-content-between align-items-center mb-2">
-        <div class="quick-actions-docked m-0" *ngIf="messages.length <= 2">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-3">
+        <div class="quick-actions-docked m-0 flex-grow-1" *ngIf="messages.length <= 2">
           <button
             *ngFor="let action of quickActions"
             class="quick-btn"
@@ -107,19 +107,23 @@
         </div>
         <div class="ms-auto" *ngIf="messages.length > 2"></div>
 
-        <div class="ai-mode-selector ms-2">
+        <div class="ai-mode-selector d-flex align-items-center gap-1">
+          <button class="mode-btn danger-btn text-danger border-danger" *ngIf="messages.length > 1"
+            (click)="clearChat()" title="Clear Chat History">
+            <i class="bi bi-trash"></i>
+          </button>
           <button class="mode-btn normal" [class.active]="aiMode === 0"
             (click)="setAiMode(0)" title="Normal Mode (Fast)">
-            <i class="bi bi-lightning"></i> Normal
+            <i class="bi bi-lightning"></i> <span class="d-none d-sm-inline">Normal</span>
           </button>
           <button class="mode-btn deep-think" [class.active]="aiMode === 1"
             (click)="setAiMode(1)" title="Deep Think (Read-Only Search)">
-            <i class="bi bi-brain"></i> Deep Think
+            <i class="bi bi-cpu"></i> <span class="d-none d-sm-inline">Deep Think</span>
           </button>
           <button class="mode-btn executive" *ngIf="isAdminOrHR"
             [class.active]="aiMode === 2" (click)="setAiMode(2)"
             title="Executive Mode (Actions & Updates)">
-            <i class="bi bi-shield-lock"></i> Executive
+            <i class="bi bi-shield-lock"></i> <span class="d-none d-sm-inline">Executive</span>
           </button>
         </div>
       </div>

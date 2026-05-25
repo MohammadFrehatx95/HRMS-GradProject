@@ -99,14 +99,24 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
     }
   }
 
+  private getChatStorageKey(): string {
+    const keyId = this.authService.getCurrentUserEmail() || this.authService.getCurrentUserName() || 'guest';
+    return `hrms_ai_chat_${keyId}`;
+  }
+
+  private getTokenStorageKey(): string {
+    const keyId = this.authService.getCurrentUserEmail() || this.authService.getCurrentUserName() || 'guest';
+    return `hrms_ai_tokens_${keyId}`;
+  }
+
   private saveChat(): void {
-    localStorage.setItem('hrms_ai_chat', JSON.stringify(this.messages));
-    localStorage.setItem('hrms_ai_tokens', this.totalTokensUsed.toString());
+    localStorage.setItem(this.getChatStorageKey(), JSON.stringify(this.messages));
+    localStorage.setItem(this.getTokenStorageKey(), this.totalTokensUsed.toString());
   }
 
   private loadChat(): void {
-    const saved = localStorage.getItem('hrms_ai_chat');
-    const tokens = localStorage.getItem('hrms_ai_tokens');
+    const saved = localStorage.getItem(this.getChatStorageKey());
+    const tokens = localStorage.getItem(this.getTokenStorageKey());
     if (saved) {
       try {
         this.messages = JSON.parse(saved);
@@ -310,8 +320,8 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   clearChat(): void {
     this.messages = [];
     this.totalTokensUsed = 0;
-    localStorage.removeItem('hrms_ai_chat');
-    localStorage.removeItem('hrms_ai_tokens');
+    localStorage.removeItem(this.getChatStorageKey());
+    localStorage.removeItem(this.getTokenStorageKey());
     this.ngOnInit();
   }
 

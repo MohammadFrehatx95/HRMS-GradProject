@@ -22,6 +22,8 @@ export class AuthService {
             localStorage.setItem('user_role', response.data.role);
           if (response.data.username)
             localStorage.setItem('user_name', response.data.username);
+          if (response.data.email)
+            localStorage.setItem('user_email', response.data.email);
         }
       }),
     );
@@ -116,6 +118,15 @@ export class AuthService {
     localStorage.removeItem('jwt_token');
     localStorage.removeItem('user_role');
     localStorage.removeItem('user_name');
+    localStorage.removeItem('user_email');
+  }
+
+  getCurrentUserName(): string | null {
+    return typeof window !== 'undefined' ? localStorage.getItem('user_name') : null;
+  }
+
+  getCurrentUserEmail(): string | null {
+    return typeof window !== 'undefined' ? localStorage.getItem('user_email') : null;
   }
 
   // كل اليوزرات

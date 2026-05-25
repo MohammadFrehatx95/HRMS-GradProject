@@ -12,11 +12,11 @@
                 <p class="text-muted small mb-0">{{ 'View and manage employee payroll records' | t }}</p>
             </div>
         </div>
-        <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end">
-            <div class="input-group shadow-sm" style="max-width: 350px;">
+        <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
+            <div class="input-group shadow-sm" style="max-width: 350px; min-width: 200px; flex: 1;">
                 <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
                 <input type="text" class="form-control border-start-0 ps-0"
-                    placeholder="Search by name, ID, or amount..." [(ngModel)]="salarySearchQuery"
+                    placeholder="{{ 'Search by name, ID, or amount...' | t }}" [(ngModel)]="salarySearchQuery"
                     (input)="filterSalaries()">
             </div>
 
@@ -26,13 +26,13 @@
                     <i class="bi bi-funnel-fill"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4" style="width: 250px;">
-                    <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">Filter Options</h6>
+                    <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">{{ 'Filter Options' | t }}</h6>
 
                     <div class="mb-3">
                         <label class="form-label small fw-semibold text-muted mb-1">{{ 'Year' | t }}</label>
                         <select class="form-select form-select-sm" [(ngModel)]="selectedYear"
                             (change)="filterSalaries()">
-                            <option value="">All Years</option>
+                            <option value="">{{ 'All Years' | t }}</option>
                             <option *ngFor="let yr of uniqueYears" [value]="yr">{{ yr }}</option>
                         </select>
                     </div>
@@ -41,33 +41,34 @@
                         <label class="form-label small fw-semibold text-muted mb-1">{{ 'Month' | t }}</label>
                         <select class="form-select form-select-sm" [(ngModel)]="selectedMonth"
                             (change)="filterSalaries()">
-                            <option value="">All Months</option>
-                            <option value="1">January</option>
-                            <option value="2">February</option>
-                            <option value="3">March</option>
-                            <option value="4">April</option>
-                            <option value="5">May</option>
-                            <option value="6">June</option>
-                            <option value="7">July</option>
-                            <option value="8">August</option>
-                            <option value="9">September</option>
-                            <option value="10">October</option>
-                            <option value="11">November</option>
-                            <option value="12">December</option>
+                            <option value="">{{ 'All Months' | t }}</option>
+                            <option value="1">{{ 'January' | t }}</option>
+                            <option value="2">{{ 'February' | t }}</option>
+                            <option value="3">{{ 'March' | t }}</option>
+                            <option value="4">{{ 'April' | t }}</option>
+                            <option value="5">{{ 'May' | t }}</option>
+                            <option value="6">{{ 'June' | t }}</option>
+                            <option value="7">{{ 'July' | t }}</option>
+                            <option value="8">{{ 'August' | t }}</option>
+                            <option value="9">{{ 'September' | t }}</option>
+                            <option value="10">{{ 'October' | t }}</option>
+                            <option value="11">{{ 'November' | t }}</option>
+                            <option value="12">{{ 'December' | t }}</option>
                         </select>
                     </div>
                 </div>
             </div>
 
-            <button *ngIf="isAdminOrHR" class="btn btn-outline-primary px-4 py-2 rounded-3 shadow-sm text-nowrap me-2"
-                (click)="toggleViewAll()">
-                <i class="bi" [ngClass]="isViewingAll ? 'bi-person' : 'bi-people'"></i> 
-                {{ isViewingAll ? ('My Salaries' | t) : ('View All' | t) }}
+            <button *ngIf="isAdminOrHR && !isAdmin" class="btn btn-outline-primary px-3 px-md-4 py-2 rounded-3 shadow-sm text-nowrap"
+                (click)="toggleViewAll()" [title]="isViewingAll ? ('My Salaries' | t) : ('View All' | t)">
+                <i class="bi" [ngClass]="isViewingAll ? 'bi-person' : 'bi-people'" [class.me-md-1]="true"></i> 
+                <span class="d-none d-md-inline">{{ isViewingAll ? ('My Salaries' | t) : ('View All' | t) }}</span>
             </button>
 
-            <button *ngIf="isAdmin" class="btn btn-primary px-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
-                (click)="openModal()">
-                <i class="bi bi-plus-lg me-2"></i> {{ 'Add Salary' | t }}
+            <button *ngIf="isAdmin" class="btn btn-primary px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
+                (click)="openModal()" [title]="'Add Salary' | t">
+                <i class="bi bi-plus-lg" [class.me-md-1]="true"></i> 
+                <span class="d-none d-md-inline">{{ 'Add Salary' | t }}</span>
             </button>
         </div>
     </div>
@@ -91,14 +92,14 @@
                 <tbody class="border-top-0">
 
                     <tr *ngIf="isLoading">
-                        <td colspan="7" class="text-center py-5 text-muted">
+                        <td colspan="7" class="text-center py-5 text-muted no-data-td">
                             <span class="spinner-border spinner-border-sm me-2"></span>
                             {{ 'Loading...' | t }}
                         </td>
                     </tr>
 
                     <tr *ngIf="!isLoading && salariesList.length === 0">
-                        <td [colSpan]="(isAdminOrHR && isViewingAll) ? 7 : 6" class="text-center py-5">
+                        <td [colSpan]="(isAdminOrHR && isViewingAll) ? 7 : 6" class="text-center py-5 no-data-td">
                             <div class="d-flex flex-column align-items-center">
                                 <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center"
                                     style="width: 80px; height: 80px;">
@@ -330,6 +331,12 @@
             justify-content: flex-end;
             align-items: center;
             min-height: 50px;
+    word-break: break-word;
+  }
+  
+  .table-responsive td > .d-flex {
+    justify-content: flex-end;
+    width: 100%;
         }
 
         .table-responsive td:last-child {
@@ -354,6 +361,17 @@
             justify-content: flex-end !important;
             padding-top: 1rem !important;
             padding-bottom: 1rem !important;
+        }
+
+        .table-responsive td.no-data-td {
+            padding-left: 0 !important;
+            justify-content: center !important;
+            text-align: center !important;
+            display: block;
+        }
+
+        .table-responsive td.no-data-td::before {
+            display: none;
         }
     }
 </style>
