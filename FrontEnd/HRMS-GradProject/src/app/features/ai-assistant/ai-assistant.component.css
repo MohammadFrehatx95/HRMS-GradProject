@@ -17,7 +17,12 @@
   padding: 0;
   font-family: 'Inter', 'Segoe UI', sans-serif;
   overflow: hidden;
-  background-color: #f8fafc;
+  background-color: #f0f4ff;
+  background-image: 
+    radial-gradient(rgba(148, 163, 184, 0.15) 1px, transparent 1px),
+    linear-gradient(135deg, rgba(239, 246, 255, 0.8) 0%, rgba(255, 255, 255, 1) 100%);
+  background-position: 0 0, 0 0;
+  background-size: 24px 24px, 100% 100%;
 }
 
 /* ── ANIMATED MESH BACKGROUND ── */
@@ -493,6 +498,7 @@
 /* ── DARK MODE ───────────────────────────────────────────────────────────── */
 
 :host-context(body.dark-mode) .ai-page {
+  background-image: none;
   background-color: #1a1d23;
 }
 
