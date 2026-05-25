@@ -98,16 +98,16 @@ public class AppDbContext : DbContext
             .OnDelete(DeleteBehavior.NoAction);
 
         modelBuilder.Entity<Meeting>()
-            .HasOne(m => m.Employee)
-            .WithMany()
-            .HasForeignKey(m => m.EmployeeId)
-            .OnDelete(DeleteBehavior.Cascade);
+    .HasOne(m => m.Employee)
+    .WithMany()
+    .HasForeignKey(m => m.EmployeeId)
+    .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Meeting>()
-            .HasOne(m => m.Organizer)
-            .WithMany()
-            .HasForeignKey(m => m.OrganizerId)
-            .OnDelete(DeleteBehavior.Restrict);
+     .HasOne(m => m.Organizer)
+     .WithMany()
+     .HasForeignKey(m => m.OrganizerId)
+     .OnDelete(DeleteBehavior.NoAction);
 
         modelBuilder.Entity<Leave>()
             .Property(l => l.RejectionReason)

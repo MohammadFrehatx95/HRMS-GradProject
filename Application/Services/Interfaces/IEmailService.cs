@@ -25,7 +25,25 @@ namespace Application.Services.Interfaces
             
         // New Features
         Task SendAnnouncementAsync(string toEmail, string employeeName, string title, string priority);
-        Task SendMeetingInvitationAsync(string toEmail, string employeeName, string title, DateTime meetingDate, string organizerName);
+        // في Application/Services/Interfaces/IEmailService.cs أضف:
+        Task SendMeetingScheduledAsync( string toEmail, string employeeName, string organizerName,string title,string reason,
+            DateTime scheduledAt,
+            int durationMinutes,
+            string meetLink,
+            string? notes);
+
+        Task SendMeetingCancelledAsync(
+            string toEmail,
+            string employeeName,
+            string title,
+            DateTime scheduledAt);
+
+        Task SendMeetingUpdatedAsync(
+            string toEmail,
+            string employeeName,
+            string title,
+            DateTime scheduledAt,
+            string meetLink);
         Task SendPayrollAdjustmentAsync(string toEmail, string employeeName, string type, decimal amount, string reason);
     }
 }

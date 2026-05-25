@@ -384,31 +384,131 @@ public class EmailService(IOptions<EmailSettings> options) : IEmailService
             BuildTemplate("Company Announcement", color, body));
     }
 
-    public async Task SendMeetingInvitationAsync(string toEmail, string employeeName, string title, DateTime meetingDate, string organizerName)
+   
+
+    public async Task SendMeetingScheduledAsync(
+        string toEmail,
+        string employeeName,
+        string organizerName,
+        string title,
+        string reason,
+        DateTime scheduledAt,
+        int durationMinutes,
+        string meetLink,
+        string? notes)
     {
         var body = $$"""
-            <p>Dear {{employeeName}},</p>
-            <p>You have been invited to a new meeting.</p>
-            <br/>
-            <div class="row">
-              <span class="label">Meeting</span>
-              <span class="value">{{title}}</span>
-            </div>
-            <div class="row">
-              <span class="label">Date & Time</span>
-              <span class="value">{{meetingDate:f}}</span>
-            </div>
-            <div class="row">
-              <span class="label">Organizer</span>
-              <span class="value">{{organizerName}}</span>
-            </div>
-            <p>Please check your HRMS portal for more details.</p>
+        <p>Hello <strong>{{employeeName}}</strong>,</p>
+        <p>A meeting has been scheduled for you by <strong>{{organizerName}}</strong>.</p>
+        <br/>
+        <div class="row">
+          <span class="label">Meeting Title</span>
+          <span class="value">{{title}}</span>
+        </div>
+        <div class="row">
+          <span class="label">Reason / Agenda</span>
+          <span class="value">{{reason}}</span>
+        </div>
+        <div class="row">
+          <span class="label">Date & Time</span>
+          <span class="value">{{scheduledAt:dddd, MMMM dd, yyyy}} at {{scheduledAt:HH:mm}} UTC</span>
+        </div>
+        <div class="row">
+          <span class="label">Duration</span>
+          <span class="value">{{durationMinutes}} minutes</span>
+        </div>
+        {{(notes is not null ? $"""
+        <div class="row">
+          <span class="label">Notes</span>
+          <span class="value">{notes}</span>
+        </div>
+        """ : "")}}
+        <br/>
+        <div style="text-align:center; margin: 24px 0;">
+          <a href="{{meetLink}}"
+             style="background:#1a73e8; color:#ffffff; padding:14px 32px;
+                    border-radius:8px; text-decoration:none;
+                    font-weight:600; font-size:15px; display:inline-block;">
+            🎥 Join Google Meet
+          </a>
+        </div>
+        <p style="color:#64748b; font-size:12px; text-align:center;">
+          Or copy this link: <a href="{{meetLink}}">{{meetLink}}</a>
+        </p>
         """;
 
         await SendAsync(
             toEmail, employeeName,
-            $"Meeting Invitation: {title}",
-            BuildTemplate("Meeting Invitation", "#8b5cf6", body));
+            $"📅 Meeting Scheduled: {title}",
+            BuildTemplate("Meeting Scheduled", "#1a73e8", body));
+    }
+
+
+    public async Task SendMeetingCancelledAsync(
+        string toEmail,
+        string employeeName,
+        string title,
+        DateTime scheduledAt)
+    {
+        var body = $$"""
+        <p>Hello <strong>{{employeeName}}</strong>,</p>
+        <p>The following meeting has been <strong style="color:#ef4444">cancelled</strong>.</p>
+        <br/>
+        <div class="row">
+          <span class="label">Meeting Title</span>
+          <span class="value">{{title}}</span>
+        </div>
+        <div class="row">
+          <span class="label">Was Scheduled For</span>
+          <span class="value">{{scheduledAt:dddd, MMMM dd, yyyy}} at {{scheduledAt:HH:mm}} UTC</span>
+        </div>
+        <br/>
+        <p style="color:#64748b; font-size:13px;">
+          Please contact HR if you have any questions.
+        </p>
+        """;
+
+        await SendAsync(
+            toEmail, employeeName,
+            $"❌ Meeting Cancelled: {title}",
+            BuildTemplate("Meeting Cancelled", "#ef4444", body));
+    }
+
+
+    public async Task SendMeetingUpdatedAsync(
+        string toEmail,
+        string employeeName,
+        string title,
+        DateTime scheduledAt,
+        string meetLink)
+    {
+        var body = $$"""
+        <p>Hello <strong>{{employeeName}}</strong>,</p>
+        <p>Your meeting details have been <strong>updated</strong>. Please review the new information below.</p>
+        <br/>
+        <div class="row">
+          <span class="label">Meeting Title</span>
+          <span class="value">{{title}}</span>
+        </div>
+        <div class="row">
+          <span class="label">New Date & Time</span>
+          <span class="value">{{scheduledAt:dddd, MMMM dd, yyyy}} at {{scheduledAt:HH:mm}} UTC</span>
+        </div>
+        <br/>
+        <div style="text-align:center; margin: 24px 0;">
+          <a href="{{meetLink}}"
+             style="background:#1a73e8; color:#ffffff; padding:14px 32px;
+                    border-radius:8px; text-decoration:none;
+                    font-weight:600; font-size:15px; display:inline-block;">
+            🎥 Join Google Meet
+          </a>
+        </div>
+        """;
+
+        await SendAsync(
+            toEmail, employeeName,
+            $"📅 Meeting Updated: {title}",
+            BuildTemplate("Meeting Updated", "#f59e0b", body));
     }
 
     public async Task SendPayrollAdjustmentAsync(string toEmail, string employeeName, string type, decimal amount, string reason)

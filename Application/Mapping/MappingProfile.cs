@@ -8,6 +8,7 @@ using Application.DTOs.Attendance;
 using Application.DTOs.Department;
 using Application.DTOs.Employee;
 using Application.DTOs.Leave;
+using Application.DTOs.Meeting;
 using Application.DTOs.Notification;
 using Application.DTOs.Position;
 using Application.DTOs.Salary;
@@ -84,6 +85,17 @@ public class MappingProfile : Profile
             .ForMember(d => d.ReviewedById, o => o.MapFrom(s => s.ReviewedById))
             .ForMember(d => d.ReviewedAt, o => o.MapFrom(s => s.ReviewedAt));
 
+       
+        CreateMap<Meeting, MeetingDto>()
+            .ForMember(d => d.Status,
+                o => o.MapFrom(s => s.Status.ToString()))
+            .ForMember(d => d.OrganizerName,
+                o => o.MapFrom(s => s.Organizer != null
+                    ? s.Organizer.Username : string.Empty))
+            .ForMember(d => d.EmployeeName,
+                o => o.MapFrom(s => s.Employee != null
+                    ? $"{s.Employee.FirstName} {s.Employee.LastName}"
+                    : string.Empty));
 
 
 

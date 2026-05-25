@@ -1,37 +1,24 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Domain.Enums;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+public class Meeting
 {
-    public class Meeting
-    {
-        [Key]
-        public int Id { get; set; }
+    public int Id { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public string Reason { get; set; } = string.Empty;
+    public DateTime ScheduledAt { get; set; }          // التاريخ + الوقت
+    public int DurationMinutes { get; set; } = 30;
+    public string MeetLink { get; set; } = string.Empty;
+    public MeetingStatus Status { get; set; } = MeetingStatus.Scheduled;
+    public string? Notes { get; set; }          // ملاحظات اختيارية
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        [Required]
-        [StringLength(200)]
-        public string Title { get; set; } = string.Empty;
+    // من رتّب الميتنج (HR أو Admin)
+    public int OrganizerId { get; set; }
+    public User Organizer { get; set; } = null!;
 
-        public string Description { get; set; } = string.Empty;
-
-        [Required]
-        public DateTime MeetingDate { get; set; }
-
-        [Required]
-        public int EmployeeId { get; set; }
-
-        [ForeignKey("EmployeeId")]
-        public Employee Employee { get; set; } = null!;
-
-        public int? OrganizerId { get; set; }
-
-        [ForeignKey("OrganizerId")]
-        public Employee? Organizer { get; set; }
-
-        public MeetingStatus Status { get; set; } = MeetingStatus.Pending;
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    }
+    // الموظف المدعو
+    public int EmployeeId { get; set; }
+    public Employee Employee { get; set; } = null!;
 }
