@@ -15,7 +15,8 @@ namespace Infrastructure.Services;
 public class HrAiService(
     IHttpClientFactory httpFactory,
     IUnitOfWork uow,
-    IOptions<GroqSettings> options) : IHrAiService
+    IOptions<GroqSettings> options,
+    ITokenTrackerService tokenTracker) : IHrAiService
 {
 
     private readonly GroqSettings _cfg = options.Value;
@@ -276,6 +277,8 @@ public class HrAiService(
                          .GetProperty("total_tokens")
                          .GetInt32();
 
+        await tokenTracker.AddTokensAsync(tokens);
+
         return new AiResponseDto
         {
             Reply = reply.Trim(),
@@ -292,7 +295,8 @@ public class HrAiService(
     public async Task<AiResponseDto> ChatAsync(
         string message,
         int? employeeId = null,
-        string userRole = "Employee")
+        string userRole = "Employee",
+        Domain.Enums.AiMode mode = Domain.Enums.AiMode.Normal)
     {
         var context = employeeId.HasValue
             ? await BuildEmployeeContextAsync(employeeId.Value)
@@ -304,6 +308,11 @@ public class HrAiService(
             new { role = "system", content = $"Current user role: {userRole}" },
             new { role = "user",   content = message }
         };
+
+        if (mode == Domain.Enums.AiMode.DeepThink || mode == Domain.Enums.AiMode.Executive)
+        {
+            return await CallGroqWithToolsAsync(messages, mode, userRole);
+        }
 
         return await CallGroqAsync(messages);
     }
@@ -398,5 +407,428 @@ public class HrAiService(
         };
 
         return await CallGroqAsync(messages);
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    //  DEEP THINK & EXECUTIVE (FUNCTION CALLING)
+    // ════════════════════════════════════════════════════════════════════════
+    private async Task<AiResponseDto> CallGroqWithToolsAsync(List<object> messages, Domain.Enums.AiMode mode, string userRole)
+    {
+        if (string.IsNullOrWhiteSpace(_cfg.ApiKey))
+            throw new InvalidOperationException("GroqSettings:ApiKey is missing.");
+
+        var toolsList = new List<object>
+        {
+            new
+            {
+                type = "function",
+                function = new
+                {
+                    name = "SearchEmployeeByName",
+                    description = "Search for an employee by name (first or last name) to get their basic details and ID.",
+                    parameters = new
+                    {
+                        type = "object",
+                        properties = new
+                        {
+                            name = new { type = "string", description = "The name of the employee to search for." }
+                        },
+                        required = new[] { "name" }
+                    }
+                }
+            },
+            new
+            {
+                type = "function",
+                function = new
+                {
+                    name = "GetEmployeeLeaves",
+                    description = "Get detailed leave statistics and records for an employee by their ID.",
+                    parameters = new
+                    {
+                        type = "object",
+                        properties = new
+                        {
+                            employeeId = new { type = "integer", description = "The ID of the employee." }
+                        },
+                        required = new[] { "employeeId" }
+                    }
+                }
+            },
+            new
+            {
+                type = "function",
+                function = new
+                {
+                    name = "GetDepartmentsOverview",
+                    description = "Get a list of all departments, their employee counts, and positions.",
+                    parameters = new { type = "object", properties = new { } }
+                }
+            },
+            new
+            {
+                type = "function",
+                function = new
+                {
+                    name = "GetAttendanceRecords",
+                    description = "Get attendance records. You can filter by employee ID or the number of recent days.",
+                    parameters = new
+                    {
+                        type = "object",
+                        properties = new
+                        {
+                            employeeId = new { type = "integer", description = "Optional. Filter by employee ID." },
+                            days = new { type = "integer", description = "Optional. Number of recent days to look back (default 2)." }
+                        }
+                    }
+                }
+            },
+            new
+            {
+                type = "function",
+                function = new
+                {
+                    name = "GetSalaries",
+                    description = "Get salary records. Filter by employee ID, month, or year.",
+                    parameters = new
+                    {
+                        type = "object",
+                        properties = new
+                        {
+                            employeeId = new { type = "integer", description = "Optional. Filter by employee ID." },
+                            month = new { type = "integer", description = "Optional. Filter by month (1-12)." },
+                            year = new { type = "integer", description = "Optional. Filter by year (e.g., 2026)." }
+                        }
+                    }
+                }
+            },
+            new
+            {
+                type = "function",
+                function = new
+                {
+                    name = "GetSystemOverview",
+                    description = "Get high-level system statistics (total employees, active employees, etc.).",
+                    parameters = new { type = "object", properties = new { } }
+                }
+            }
+        };
+
+        if (mode == Domain.Enums.AiMode.Executive)
+        {
+            toolsList.Add(new
+            {
+                type = "function",
+                function = new
+                {
+                    name = "ApproveOrRejectLeave",
+                    description = "Approve or reject a leave request. ONLY available if the user has HR or Admin permissions. Requires leaveId, isApproved (true for approve, false for reject), and an optional reason.",
+                    parameters = new
+                    {
+                        type = "object",
+                        properties = new
+                        {
+                            leaveId = new { type = "integer", description = "The ID of the leave request." },
+                            isApproved = new { type = "boolean", description = "True to approve, false to reject." },
+                            reason = new { type = "string", description = "Reason for rejection (if applicable)." }
+                        },
+                        required = new[] { "leaveId", "isApproved" }
+                    }
+                }
+            });
+        }
+        
+        var tools = toolsList.ToArray();
+
+        using var http = httpFactory.CreateClient();
+        http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _cfg.ApiKey);
+
+        int totalTokens = 0;
+        int maxIterations = 3;
+        
+        for (int i = 0; i < maxIterations; i++)
+        {
+            var payload = JsonSerializer.Serialize(new
+            {
+                model = _cfg.Model,
+                max_tokens = _cfg.MaxTokens,
+                temperature = 0.2, // Lower temp for tool calling
+                messages,
+                tools,
+                tool_choice = "auto"
+            });
+
+            var response = await http.PostAsync(
+                $"{_cfg.BaseUrl}/chat/completions",
+                new StringContent(payload, Encoding.UTF8, "application/json"));
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new InvalidOperationException($"Groq API error {(int)response.StatusCode}: {error}");
+            }
+
+            using var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+            var root = doc.RootElement;
+            
+            if (root.TryGetProperty("usage", out var usageProp) && 
+                usageProp.TryGetProperty("total_tokens", out var tokensProp))
+            {
+                totalTokens = tokensProp.GetInt32();
+            }
+
+            var messageElement = root.GetProperty("choices")[0].GetProperty("message");
+            
+            // Add the assistant's message to the conversation
+            var assistantMsg = new Dictionary<string, object> { { "role", "assistant" } };
+            if (messageElement.TryGetProperty("content", out var contentProp) && contentProp.ValueKind == JsonValueKind.String)
+            {
+                assistantMsg["content"] = contentProp.GetString()!;
+            }
+
+            if (messageElement.TryGetProperty("tool_calls", out var toolCallsArray) && toolCallsArray.GetArrayLength() > 0)
+            {
+                // Has tool calls
+                assistantMsg["tool_calls"] = toolCallsArray.Clone();
+                messages.Add(assistantMsg);
+
+                // Execute each tool call
+                foreach (var toolCall in toolCallsArray.EnumerateArray())
+                {
+                    var toolCallId = toolCall.GetProperty("id").GetString()!;
+                    var functionName = toolCall.GetProperty("function").GetProperty("name").GetString()!;
+                    var functionArgs = toolCall.GetProperty("function").GetProperty("arguments").GetString()!;
+                    
+                    string toolResult = "";
+                    try
+                    {
+                        var argsDoc = JsonDocument.Parse(functionArgs);
+                        if (functionName == "SearchEmployeeByName")
+                        {
+                            var name = argsDoc.RootElement.GetProperty("name").GetString()!;
+                            toolResult = await SearchEmployeeByNameAsync(name);
+                        }
+                        else if (functionName == "GetEmployeeLeaves")
+                        {
+                            var empId = argsDoc.RootElement.GetProperty("employeeId").GetInt32();
+                            toolResult = await GetEmployeeLeavesAsync(empId);
+                        }
+                        else if (functionName == "GetDepartmentsOverview")
+                        {
+                            toolResult = await GetDepartmentsOverviewAsync();
+                        }
+                        else if (functionName == "GetAttendanceRecords")
+                        {
+                            int? empId = argsDoc.RootElement.TryGetProperty("employeeId", out var eProp) ? eProp.GetInt32() : null;
+                            int? days = argsDoc.RootElement.TryGetProperty("days", out var dProp) ? dProp.GetInt32() : null;
+                            toolResult = await GetAttendanceRecordsAsync(empId, days);
+                        }
+                        else if (functionName == "GetSalaries")
+                        {
+                            int? empId = argsDoc.RootElement.TryGetProperty("employeeId", out var eProp) ? eProp.GetInt32() : null;
+                            int? month = argsDoc.RootElement.TryGetProperty("month", out var mProp) ? mProp.GetInt32() : null;
+                            int? year = argsDoc.RootElement.TryGetProperty("year", out var yProp) ? yProp.GetInt32() : null;
+                            toolResult = await GetSalariesAsync(empId, month, year);
+                        }
+                        else if (functionName == "GetSystemOverview")
+                        {
+                            toolResult = await GetSystemOverviewAsync();
+                        }
+                        else if (functionName == "ApproveOrRejectLeave")
+                        {
+                            var leaveId = argsDoc.RootElement.GetProperty("leaveId").GetInt32();
+                            var isApproved = argsDoc.RootElement.GetProperty("isApproved").GetBoolean();
+                            var reason = argsDoc.RootElement.TryGetProperty("reason", out var rProp) && rProp.ValueKind == JsonValueKind.String ? rProp.GetString() : null;
+                            toolResult = await ApproveLeaveRequestAsync(leaveId, isApproved, reason, userRole);
+                        }
+                        else
+                        {
+                            toolResult = $"Error: Tool {functionName} not found.";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        toolResult = $"Error executing tool: {ex.Message}";
+                    }
+
+                    messages.Add(new
+                    {
+                        role = "tool",
+                        tool_call_id = toolCallId,
+                        content = toolResult
+                    });
+                }
+            }
+            else
+            {
+                // No tool calls, we have the final answer
+                var reply = contentProp.ValueKind == JsonValueKind.String ? contentProp.GetString() : string.Empty;
+                
+                await tokenTracker.AddTokensAsync(totalTokens);
+                
+                return new AiResponseDto
+                {
+                    Reply = reply?.Trim() ?? string.Empty,
+                    Model = _cfg.Model,
+                    Tokens = totalTokens
+                };
+            }
+        }
+
+        await tokenTracker.AddTokensAsync(totalTokens);
+
+        return new AiResponseDto
+        {
+            Reply = "I needed to think for too long and reached the execution limit.",
+            Model = _cfg.Model,
+            Tokens = totalTokens
+        };
+    }
+
+    private async Task<string> SearchEmployeeByNameAsync(string name)
+    {
+        name = name.ToLower();
+        var employees = await uow.Repository<Employee>()
+            .GetAllQueryable()
+            .Include(e => e.Department)
+            .Include(e => e.Position)
+            .Where(e => e.FirstName.ToLower().Contains(name) || e.LastName.ToLower().Contains(name))
+            .Take(5)
+            .ToListAsync();
+
+        if (employees.Count == 0) return "No employees found with that name.";
+
+        var sb = new StringBuilder();
+        sb.AppendLine($"Found {employees.Count} employees:");
+        foreach (var emp in employees)
+        {
+            sb.AppendLine($"- ID: {emp.Id}, Name: {emp.FirstName} {emp.LastName}, Department: {emp.Department?.Name ?? "None"}, Position: {emp.Position?.Title ?? "None"}, Status: {(emp.IsActive ? "Active" : "Inactive")}");
+        }
+        return sb.ToString();
+    }
+
+    private async Task<string> GetEmployeeLeavesAsync(int employeeId)
+    {
+        var leaves = await uow.Repository<Leave>()
+            .GetAllQueryable()
+            .Where(l => l.EmployeeId == employeeId)
+            .OrderByDescending(l => l.StartDate)
+            .Take(20)
+            .ToListAsync();
+
+        if (leaves.Count == 0) return "No leave records found for this employee ID.";
+
+        var sb = new StringBuilder();
+        sb.AppendLine($"Leave records for Employee ID {employeeId}:");
+        var currentYear = DateTime.UtcNow.Year;
+        var annualUsed = leaves.Where(l => l.LeaveType == LeaveType.Annual && l.Status == LeaveStatus.Approved && l.StartDate.Year == currentYear).Sum(l => l.TotalDays);
+        
+        sb.AppendLine($"Total Annual Leaves Used in {currentYear}: {annualUsed} days");
+        sb.AppendLine("Recent leaves:");
+        
+        foreach (var l in leaves)
+        {
+            sb.AppendLine($"- {l.StartDate:yyyy-MM-dd} to {l.EndDate:yyyy-MM-dd} | {l.LeaveType} | {l.TotalDays} days | Status: {l.Status} {(!string.IsNullOrEmpty(l.RejectionReason) ? $"(Reason: {l.RejectionReason})" : "")}");
+        }
+        return sb.ToString();
+    }
+
+    private async Task<string> GetDepartmentsOverviewAsync()
+    {
+        var depts = await uow.Repository<Department>()
+            .GetAllQueryable()
+            .Include(d => d.Employees)
+            .ToListAsync();
+        
+        var sb = new StringBuilder();
+        sb.AppendLine("Departments Overview:");
+        foreach (var d in depts)
+        {
+            sb.AppendLine($"- {d.Name}: {d.Employees.Count} employees");
+        }
+        return sb.ToString();
+    }
+
+    private async Task<string> GetAttendanceRecordsAsync(int? employeeId, int? days)
+    {
+        var lookback = days ?? 2;
+        var dateThreshold = DateTime.UtcNow.Date.AddDays(-lookback);
+        
+        var query = uow.Repository<Attendance>().GetAllQueryable()
+            .Include(a => a.Employee)
+            .Where(a => a.Date >= dateThreshold);
+            
+        if (employeeId.HasValue)
+            query = query.Where(a => a.EmployeeId == employeeId.Value);
+            
+        var records = await query.OrderByDescending(a => a.Date).Take(50).ToListAsync();
+        
+        if (records.Count == 0) return "No attendance records found for this criteria.";
+        
+        var sb = new StringBuilder();
+        sb.AppendLine($"Attendance Records (Last {lookback} days):");
+        foreach(var a in records)
+        {
+            sb.AppendLine($"- {a.Date:yyyy-MM-dd} | {a.Employee?.FirstName} {a.Employee?.LastName} | In: {a.ClockIn:HH:mm} | Out: {(a.ClockOut.HasValue ? a.ClockOut.Value.ToString("HH:mm") : "N/A")} | Hours: {a.TotalHours}");
+        }
+        return sb.ToString();
+    }
+
+    private async Task<string> GetSalariesAsync(int? employeeId, int? month, int? year)
+    {
+        var query = uow.Repository<Salary>().GetAllQueryable().Include(s => s.Employee).AsQueryable();
+        
+        if (employeeId.HasValue) query = query.Where(s => s.EmployeeId == employeeId.Value);
+        if (month.HasValue) query = query.Where(s => s.Month == month.Value);
+        if (year.HasValue) query = query.Where(s => s.Year == year.Value);
+        
+        var records = await query.OrderByDescending(s => s.Year).ThenByDescending(s => s.Month).Take(20).ToListAsync();
+        
+        if (records.Count == 0) return "No salary records found for this criteria.";
+        
+        var sb = new StringBuilder();
+        sb.AppendLine("Salary Records:");
+        foreach(var s in records)
+        {
+            sb.AppendLine($"- Period: {s.Month}/{s.Year} | Emp: {s.Employee?.FirstName} {s.Employee?.LastName} | Base: {s.BaseAmount} | Net: {s.NetAmount}");
+        }
+        return sb.ToString();
+    }
+
+    private async Task<string> GetSystemOverviewAsync()
+    {
+        var empCount = await uow.Repository<Employee>().GetAllQueryable().CountAsync();
+        var activeCount = await uow.Repository<Employee>().GetAllQueryable().Where(e => e.IsActive).CountAsync();
+        var deptCount = await uow.Repository<Department>().GetAllQueryable().CountAsync();
+        
+        var sb = new StringBuilder();
+        sb.AppendLine("System Overview:");
+        sb.AppendLine($"- Total Employees: {empCount}");
+        sb.AppendLine($"- Active Employees: {activeCount}");
+        sb.AppendLine($"- Total Departments: {deptCount}");
+        return sb.ToString();
+    }
+
+    private async Task<string> ApproveLeaveRequestAsync(int leaveId, bool isApproved, string? reason, string userRole)
+    {
+        if (userRole != "Admin" && userRole != "HR")
+        {
+            return "Error: You do not have permission to approve or reject leave requests. Only HR and Admins can perform this action.";
+        }
+
+        var leave = await uow.Repository<Leave>().GetByIdAsync(leaveId);
+        if (leave == null) return $"Error: Leave request with ID {leaveId} not found.";
+
+        if (leave.Status != LeaveStatus.Pending)
+        {
+            return $"Error: Leave request is already {leave.Status}. Only Pending requests can be approved or rejected.";
+        }
+
+        leave.Status = isApproved ? LeaveStatus.Approved : LeaveStatus.Rejected;
+        leave.RejectionReason = isApproved ? null : reason;
+
+        await uow.SaveChangesAsync();
+        
+        return $"Success: Leave request {leaveId} has been successfully {(isApproved ? "Approved" : "Rejected")}.";
     }
 }

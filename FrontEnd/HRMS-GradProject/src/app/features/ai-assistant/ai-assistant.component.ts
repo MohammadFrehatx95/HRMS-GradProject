@@ -4,11 +4,12 @@ import {
   inject,
   ViewChild,
   ElementRef,
-  AfterViewChecked,
+  OnDestroy
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AiService, AiResponseDto } from '../../core/services/ai.service';
+import { AiService, AiResponseDto, TokenStatsDto } from '../../core/services/ai.service';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 
 interface ChatMessage {
@@ -26,7 +27,7 @@ interface ChatMessage {
   templateUrl: './ai-assistant.component.html',
   styleUrls: ['./ai-assistant.component.css'],
 })
-export class AiAssistantComponent implements OnInit, AfterViewChecked {
+export class AiAssistantComponent implements OnInit, OnDestroy {
   private aiService = inject(AiService);
   private authService = inject(AuthService);
 
@@ -35,10 +36,15 @@ export class AiAssistantComponent implements OnInit, AfterViewChecked {
   messages: ChatMessage[] = [];
   userInput: string = '';
   isLoading: boolean = false;
+  aiMode: number = 0; // 0 = Normal, 1 = DeepThink, 2 = Executive
   cooldown: boolean = false;
   cooldownSeconds: number = 0;
   totalTokensUsed: number = 0;
   isAdminOrHR: boolean = false;
+  
+  tokenStats: TokenStatsDto = { usedTokens: 0, maxTokensPerMinute: 14400, secondsUntilReset: 60 };
+  private tokenSub: Subscription | undefined;
+  private timerInterval: any;
 
   readonly MAX_CHARS = 250;
   readonly COOLDOWN_DURATION = 4; // seconds
@@ -72,6 +78,16 @@ export class AiAssistantComponent implements OnInit, AfterViewChecked {
     this.isAdminOrHR = this.authService.isAdminOrHR();
     this.loadChat();
 
+    this.tokenSub = this.aiService.tokenStats$.subscribe(stats => {
+      this.tokenStats = stats;
+    });
+
+    this.timerInterval = setInterval(() => {
+      if (this.tokenStats.secondsUntilReset > 0) {
+        this.tokenStats.secondsUntilReset--;
+      }
+    }, 1000);
+
     // Greeting if no chat history
     if (this.messages.length === 0) {
       this.messages.push({
@@ -103,8 +119,9 @@ export class AiAssistantComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  ngAfterViewChecked(): void {
-    this.scrollToBottom();
+  ngOnDestroy(): void {
+    if (this.tokenSub) this.tokenSub.unsubscribe();
+    if (this.timerInterval) clearInterval(this.timerInterval);
   }
 
   scrollToBottom(): void {
@@ -160,7 +177,7 @@ export class AiAssistantComponent implements OnInit, AfterViewChecked {
 
   private callChat(text: string): void {
     this.addLoadingMessage();
-    this.aiService.chat(text).subscribe({
+    this.aiService.chat(text, this.aiMode).subscribe({
       next: (res) => this.handleResponse(res),
       error: (err) => this.handleError(err),
     });
@@ -170,6 +187,7 @@ export class AiAssistantComponent implements OnInit, AfterViewChecked {
     this.messages.push({ role: 'user', content: text, timestamp: new Date() });
     this.isLoading = true;
     this.saveChat();
+    setTimeout(() => this.scrollToBottom(), 50);
   }
 
   private addLoadingMessage(): void {
@@ -179,6 +197,7 @@ export class AiAssistantComponent implements OnInit, AfterViewChecked {
       timestamp: new Date(),
       loading: true,
     });
+    setTimeout(() => this.scrollToBottom(), 50);
   }
 
   private handleResponse(res: AiResponseDto): void {
@@ -196,6 +215,7 @@ export class AiAssistantComponent implements OnInit, AfterViewChecked {
     this.isLoading = false;
     this.saveChat();
     this.startCooldown();
+    setTimeout(() => this.scrollToBottom(), 50);
   }
 
   private handleError(err: any): void {
@@ -243,9 +263,11 @@ export class AiAssistantComponent implements OnInit, AfterViewChecked {
         loading: false,
       };
     }
+
     this.isLoading = false;
     this.saveChat();
     this.startCooldown();
+    setTimeout(() => this.scrollToBottom(), 50);
   }
 
   private findLastLoadingIndex(): number {
@@ -291,5 +313,10 @@ export class AiAssistantComponent implements OnInit, AfterViewChecked {
     localStorage.removeItem('hrms_ai_chat');
     localStorage.removeItem('hrms_ai_tokens');
     this.ngOnInit();
+  }
+
+  setAiMode(mode: number): void {
+    if (mode === 2 && !this.isAdminOrHR) return;
+    this.aiMode = mode;
   }
 }

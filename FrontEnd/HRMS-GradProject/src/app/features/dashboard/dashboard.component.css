@@ -10,6 +10,15 @@
   z-index: 1;
 }
 
+.stat-card-link {
+  cursor: pointer;
+  user-select: none;
+}
+
+.stat-card-link:active {
+  transform: scale(0.97) translateY(-3px);
+}
+
 .stat-card:hover {
   transform: translateY(-5px);
   z-index: 2;

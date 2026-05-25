@@ -1,4 +1,4 @@
-﻿using Application.Common;
+using Application.Common;
 using Application.DTOs.AI;
 using Application.Services.Interfaces;
 using HRMS_API.Filters;
@@ -30,7 +30,8 @@ public class HrAiController(IHrAiService aiService) : ControllerBase
         var result = await aiService.ChatAsync(
             dto.Message,
             GetEmployeeId(),
-            GetRole());
+            GetRole(),
+            dto.Mode);
 
         return Ok(ApiResponse<AiResponseDto>.Ok(result));
     }

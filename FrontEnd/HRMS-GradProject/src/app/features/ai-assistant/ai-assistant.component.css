@@ -612,3 +612,148 @@
   background: #334155;
   color: #94a3b8;
 }
+
+.ai-mode-selector {
+  display: flex;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  padding: 4px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  gap: 4px;
+}
+
+:host-context(body.dark-mode) .ai-mode-selector {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.mode-btn {
+  background: transparent;
+  color: #64748b;
+  border: none;
+  border-radius: 16px;
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.mode-btn:hover {
+  background: rgba(255, 255, 255, 0.5);
+  color: #334155;
+}
+
+:host-context(body.dark-mode) .mode-btn {
+  color: #94a3b8;
+}
+
+:host-context(body.dark-mode) .mode-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+}
+
+.mode-btn.normal.active {
+  background: white;
+  color: #1e293b;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+:host-context(body.dark-mode) .mode-btn.normal.active {
+  background: #334155;
+  color: white;
+}
+
+.mode-btn.deep-think.active {
+  background: rgba(251, 191, 36, 0.15);
+  color: #d97706;
+}
+
+:host-context(body.dark-mode) .mode-btn.deep-think.active {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+}
+
+.mode-btn.executive.active {
+  background: rgba(239, 68, 68, 0.15);
+  color: #b91c1c;
+}
+
+:host-context(body.dark-mode) .mode-btn.executive.active {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.ai-header-right {
+  display: flex;
+  align-items: center;
+}
+
+.token-monitor {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #f8fafc;
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  min-width: 220px;
+}
+
+:host-context(body.dark-mode) .token-monitor {
+  background: #2d3139;
+  border-color: #3a3f4b;
+}
+
+.token-stats-text {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+:host-context(body.dark-mode) .token-stats-text {
+  color: #94a3b8;
+}
+
+.token-count i, .token-timer i {
+  color: #8b5cf6;
+  margin-right: 4px;
+}
+
+.token-timer.danger {
+  color: #ef4444;
+}
+
+.token-progress-bg {
+  width: 100%;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+:host-context(body.dark-mode) .token-progress-bg {
+  background: #334155;
+}
+
+.token-progress-fill {
+  height: 100%;
+  background: #22c55e;
+  border-radius: 99px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.token-progress-fill.warning {
+  background: #f59e0b;
+}
+
+.token-progress-fill.danger {
+  background: #ef4444;
+}

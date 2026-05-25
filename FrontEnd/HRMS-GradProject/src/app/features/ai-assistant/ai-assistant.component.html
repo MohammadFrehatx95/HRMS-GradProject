@@ -17,8 +17,28 @@
           <div class="ai-status-dot"></div>
         </div>
         <div>
-          <h2 class="ai-title">KawadirAi</h2>
+          <h2 class="ai-title">Kawadir Ai</h2>
           <p class="ai-subtitle">Your Ai assistant</p>
+        </div>
+      </div>
+      <div class="ai-header-right">
+        <div class="token-monitor" *ngIf="tokenStats">
+          <div class="token-stats-text">
+            <span class="token-count"><i class="bi bi-cpu"></i> {{
+              tokenStats.usedTokens | number }} / {{
+              tokenStats.maxTokensPerMinute | number }} TPM</span>
+            <span class="token-timer"
+              [class.danger]="tokenStats.secondsUntilReset < 10"><i
+                class="bi bi-clock-history"></i> Resets in {{
+              tokenStats.secondsUntilReset }}s</span>
+          </div>
+          <div class="token-progress-bg">
+            <div class="token-progress-fill"
+              [style.width.%]="(tokenStats.usedTokens / tokenStats.maxTokensPerMinute) * 100"
+              [class.warning]="(tokenStats.usedTokens / tokenStats.maxTokensPerMinute) > 0.7"
+              [class.danger]="(tokenStats.usedTokens / tokenStats.maxTokensPerMinute) > 0.9">
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -75,14 +95,33 @@
     <div class="input-container">
 
       <!-- ── Quick Actions (Docked) ── -->
-      <div class="quick-actions-docked" *ngIf="messages.length <= 2">
-        <button
-          *ngFor="let action of quickActions"
-          class="quick-btn"
-          (click)="triggerQuickAction(action)"
-          [disabled]="isLoading || cooldown">
-          <i class="{{ action.icon }}"></i> {{ action.label }}
-        </button>
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <div class="quick-actions-docked m-0" *ngIf="messages.length <= 2">
+          <button
+            *ngFor="let action of quickActions"
+            class="quick-btn"
+            (click)="triggerQuickAction(action)"
+            [disabled]="isLoading || cooldown">
+            <i class="{{ action.icon }}"></i> {{ action.label }}
+          </button>
+        </div>
+        <div class="ms-auto" *ngIf="messages.length > 2"></div>
+
+        <div class="ai-mode-selector ms-2">
+          <button class="mode-btn normal" [class.active]="aiMode === 0"
+            (click)="setAiMode(0)" title="Normal Mode (Fast)">
+            <i class="bi bi-lightning"></i> Normal
+          </button>
+          <button class="mode-btn deep-think" [class.active]="aiMode === 1"
+            (click)="setAiMode(1)" title="Deep Think (Read-Only Search)">
+            <i class="bi bi-brain"></i> Deep Think
+          </button>
+          <button class="mode-btn executive" *ngIf="isAdminOrHR"
+            [class.active]="aiMode === 2" (click)="setAiMode(2)"
+            title="Executive Mode (Actions & Updates)">
+            <i class="bi bi-shield-lock"></i> Executive
+          </button>
+        </div>
       </div>
 
       <div class="input-content">

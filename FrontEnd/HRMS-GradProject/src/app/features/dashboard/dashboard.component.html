@@ -13,7 +13,8 @@
     <!-- Stat Cards -->
     <div class="row g-4 mb-4">
         <div class="col-md-3">
-            <div class="stat-card pink hover-elevate h-100">
+            <div class="stat-card pink hover-elevate h-100 stat-card-link"
+                 [routerLink]="isAdminOrHR ? '/employees' : '/my-profile'">
                 <div class="card-body">
                     <h3>{{ totalEmployees }}</h3>
                     <p>{{ 'Total Employees' | t }}</p>
@@ -22,7 +23,8 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-card orange hover-elevate h-100">
+            <div class="stat-card orange hover-elevate h-100 stat-card-link"
+                 routerLink="/leave">
                 <div class="card-body">
                     <h3>{{ pendingLeaves }}</h3>
                     <p>{{ 'Pending Leaves' | t }}</p>
@@ -31,7 +33,8 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-card blue hover-elevate h-100">
+            <div class="stat-card blue hover-elevate h-100 stat-card-link"
+                 [routerLink]="isAdminOrHR ? '/departments' : '/attendance'">
                 <div class="card-body">
                     <h3>{{ departmentsCount }}</h3>
                     <p>{{ 'Departments' | t }}</p>
@@ -40,7 +43,8 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-card green hover-elevate h-100">
+            <div class="stat-card green hover-elevate h-100 stat-card-link"
+                 routerLink="/salary">
                 <div class="card-body">
                     <h3>{{ totalSalaries | number }} JD</h3>
                     <p>{{ 'Salaries' | t }}</p>
@@ -128,14 +132,14 @@
                 <h6 class="fw-bold mb-3 text-dark">{{ 'Recent Leave Requests' | t }}</h6>
                 <div class="d-flex flex-column gap-2">
                     @for (leave of recentLeaves; track leave.id) {
-                    <div class="d-flex align-items-center justify-content-between py-2 px-3 rounded-3 bg-light">
-                        <div class="d-flex align-items-center gap-2">
+                    <div class="d-flex align-items-center justify-content-between py-2 px-3 rounded-3 bg-light gap-2">
+                        <div class="d-flex align-items-center gap-2" style="min-width: 0;">
                             <div class="rounded-circle bg-primary bg-opacity-10 text-primary fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 32px; height: 32px; font-size: 12px;">
                                 {{ (leave.employeeName || 'E').charAt(0).toUpperCase() }}
                             </div>
-                            <span class="fw-semibold text-dark small text-truncate" style="max-width: 110px;">{{ leave.employeeName || 'Emp #' + leave.employeeId }}</span>
+                            <span class="fw-semibold text-dark small text-truncate">{{ leave.employeeName || 'Emp #' + leave.employeeId }}</span>
                         </div>
-                        <span class="status-badge px-2 py-1" style="font-size: 11px;"
+                        <span class="status-badge px-2 py-1 flex-shrink-0" style="font-size: 11px;"
                             [ngClass]="{
                                 'status-approved': leave.status === 'Approved',
                                 'status-pending': leave.status === 'Pending',

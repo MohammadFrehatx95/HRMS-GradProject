@@ -129,3 +129,23 @@ body.dark-mode .action-icon-btn.text-primary:hover:not(:disabled) {
 body.dark-mode .action-icon-btn.text-danger:hover:not(:disabled) {
   background-color: rgba(220, 53, 69, 0.2);
 }
+
+/* ── Notification Dropdown Responsive ── */
+.notification-dropdown {
+  width: 380px;
+  min-width: 280px;
+}
+
+@media (max-width: 576px) {
+  .notification-dropdown {
+    /* on mobile: stretch from near-left edge to right edge of screen */
+    position: fixed !important;
+    left: 8px !important;
+    right: 8px !important;
+    width: auto !important;
+    min-width: unset !important;
+    transform: none !important;
+    top: 60px !important;
+  }
+}
+

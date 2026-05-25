@@ -1,11 +1,19 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import * as signalR from '@microsoft/signalr';
+
+export interface TokenStatsDto {
+  usedTokens: number;
+  maxTokensPerMinute: number;
+  secondsUntilReset: number;
+}
 
 export interface AiChatDto {
   message: string;
+  mode?: number;
 }
 
 export interface AiResponseDto {
@@ -19,8 +27,36 @@ export class AiService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/ai`;
 
-  chat(message: string): Observable<AiResponseDto> {
-    return this.http.post<any>(`${this.apiUrl}/chat`, { message }).pipe(
+  private hubConnection: signalR.HubConnection | undefined;
+  private tokenStatsSubject = new Subject<TokenStatsDto>();
+  public tokenStats$ = this.tokenStatsSubject.asObservable();
+
+  constructor() {
+    this.startSignalRConnection();
+  }
+
+  private startSignalRConnection() {
+    // apiUrl is usually like https://localhost:7198/api
+    // Hub URL should be https://localhost:7198/hubs/ai
+    const baseUrl = environment.apiUrl.replace(/\/api$/, '');
+    
+    this.hubConnection = new signalR.HubConnectionBuilder()
+      .withUrl(`${baseUrl}/hubs/ai`)
+      .withAutomaticReconnect()
+      .build();
+
+    this.hubConnection
+      .start()
+      .then(() => console.log('SignalR Hub Connection Started'))
+      .catch(err => console.log('Error while starting connection: ' + err));
+
+    this.hubConnection.on('ReceiveTokenUpdate', (stats: TokenStatsDto) => {
+      this.tokenStatsSubject.next(stats);
+    });
+  }
+
+  chat(message: string, mode: number = 0): Observable<AiResponseDto> {
+    return this.http.post<any>(`${this.apiUrl}/chat`, { message, mode }).pipe(
       map((res) => res?.data ?? res)
     );
   }
