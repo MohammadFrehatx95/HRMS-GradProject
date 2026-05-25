@@ -373,6 +373,9 @@ export class DashboardComponent implements OnInit {
     }
     if (!formValue.expiryDate) {
       formValue.expiryDate = null;
+    } else {
+      // Ensure it's sent as an ISO string so the backend parses it as UTC
+      formValue.expiryDate = new Date(formValue.expiryDate).toISOString();
     }
 
     this.announcementService.createAnnouncement(formValue).subscribe({
