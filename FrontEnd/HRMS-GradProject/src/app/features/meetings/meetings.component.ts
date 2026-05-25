@@ -191,22 +191,32 @@ export class MeetingsComponent implements OnInit {
     });
   }
 
-  getStatusBadgeClass(status: MeetingStatus): string {
-    switch (status) {
-      case MeetingStatus.Pending: return 'bg-warning text-dark';
-      case MeetingStatus.Confirmed: return 'bg-primary';
-      case MeetingStatus.Completed: return 'bg-success';
-      case MeetingStatus.Cancelled: return 'bg-danger';
+  getStatusBadgeClass(status: any): string {
+    const s = String(status);
+    switch (s) {
+      case '0':
+      case 'Pending': return 'bg-warning text-dark';
+      case '1':
+      case 'Confirmed': return 'bg-primary';
+      case '3':
+      case 'Completed': return 'bg-success';
+      case '2':
+      case 'Cancelled': return 'bg-danger';
       default: return 'bg-secondary';
     }
   }
 
-  getStatusLabel(status: MeetingStatus): string {
-    switch (status) {
-      case MeetingStatus.Pending: return 'Pending';
-      case MeetingStatus.Confirmed: return 'Confirmed';
-      case MeetingStatus.Completed: return 'Completed';
-      case MeetingStatus.Cancelled: return 'Cancelled';
+  getStatusLabel(status: any): string {
+    const s = String(status);
+    switch (s) {
+      case '0':
+      case 'Pending': return 'Pending';
+      case '1':
+      case 'Confirmed': return 'Confirmed';
+      case '3':
+      case 'Completed': return 'Completed';
+      case '2':
+      case 'Cancelled': return 'Cancelled';
       default: return 'Unknown';
     }
   }

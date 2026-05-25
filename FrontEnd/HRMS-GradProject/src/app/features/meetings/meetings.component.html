@@ -17,7 +17,7 @@
                     <thead class="bg-light text-muted small text-uppercase">
                         <tr>
                             <th class="ps-4">{{ 'Title' | t }}</th>
-                            <th>{{ isHrOrAdmin ? ('Employee' | t) : ('Organizer' | t) }}</th>
+                            <th>{{ 'Participants' | t }}</th>
                             <th>{{ 'Date & Time' | t }}</th>
                             <th>{{ 'Status' | t }}</th>
                             <th class="text-end pe-4">{{ 'Actions' | t }}</th>
@@ -40,11 +40,15 @@
                                 <div class="small text-muted text-truncate" style="max-width: 250px;">{{ meeting.description }}</div>
                             </td>
                             <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="avatar-circle bg-light text-dark fw-bold me-2">
-                                        {{ isHrOrAdmin ? meeting.employeeName.charAt(0) : meeting.organizerName.charAt(0) }}
+                                <div class="d-flex flex-column gap-1">
+                                    <div class="d-flex align-items-center small">
+                                        <span class="text-muted me-2" style="width: 70px;">{{ 'Organizer' | t }}:</span>
+                                        <span class="fw-medium text-dark">{{ meeting.organizerName || 'System' }}</span>
                                     </div>
-                                    <span class="fw-medium">{{ isHrOrAdmin ? meeting.employeeName : meeting.organizerName }}</span>
+                                    <div class="d-flex align-items-center small">
+                                        <span class="text-muted me-2" style="width: 70px;">{{ 'Employee' | t }}:</span>
+                                        <span class="fw-medium text-dark">{{ meeting.employeeName }}</span>
+                                    </div>
                                 </div>
                             </td>
                             <td>
@@ -91,9 +95,14 @@
 
                                 <!-- Actions for Employee -->
                                 <ng-container *ngIf="!isHrOrAdmin">
-                                    <button *ngIf="meeting.status === MeetingStatus.Pending" class="btn btn-sm btn-outline-primary rounded-pill me-2" (click)="updateStatus(meeting.id, MeetingStatus.Confirmed)">
-                                        {{ 'Acknowledge' | t }}
-                                    </button>
+                                    <div class="d-flex justify-content-end gap-2" *ngIf="meeting.status.toString() === '0' || meeting.status.toString() === 'Pending'">
+                                        <button class="btn btn-sm btn-outline-success rounded-pill px-3" (click)="updateStatus(meeting.id, MeetingStatus.Confirmed)">
+                                            <i class="bi bi-check-lg me-1"></i> {{ 'Accept' | t }}
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger rounded-pill px-3" (click)="updateStatus(meeting.id, MeetingStatus.Cancelled)">
+                                            <i class="bi bi-x-lg me-1"></i> {{ 'Decline' | t }}
+                                        </button>
+                                    </div>
                                 </ng-container>
                             </td>
                         </tr>

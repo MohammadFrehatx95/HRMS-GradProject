@@ -309,7 +309,7 @@
           </div>
           
           <div class="row mb-3">
-            <div class="col-md-6">
+            <div class="col-md-6 d-flex flex-column justify-content-end">
               <label class="form-label fw-semibold text-dark">{{ 'Priority' | t }}</label>
               <select class="form-select" formControlName="priority">
                 <option value="Normal">{{ 'Normal' | t }}</option>
@@ -317,9 +317,9 @@
                 <option value="Urgent">{{ 'Urgent' | t }}</option>
               </select>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 d-flex flex-column justify-content-end">
               <label class="form-label fw-semibold text-dark">{{ 'Expiry Date' | t }} <small class="text-muted fw-normal">({{ 'Optional' | t }})</small></label>
-              <input type="date" class="form-control" formControlName="expiryDate">
+              <input type="datetime-local" class="form-control" formControlName="expiryDate">
             </div>
           </div>
 
