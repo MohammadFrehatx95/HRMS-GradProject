@@ -55,7 +55,7 @@ namespace Application.Services.Implementations
             return PagedResult<AnnouncementDto>.Create(dtos, totalCount, pageNumber, pageSize);
         }
 
-        public async Task<AnnouncementDto> CreateAsync(CreateAnnouncementDto dto, int authorId)
+        public async Task<AnnouncementDto> CreateAsync(CreateAnnouncementDto dto, int? authorId)
         {
             var announcement = new Announcement
             {
@@ -66,7 +66,7 @@ namespace Application.Services.Implementations
                 TargetEmployeeIds = dto.TargetEmployeeIds,
                 ExpiryDate = dto.ExpiryDate,
                 CreatedAt = DateTime.UtcNow,
-                AuthorId = authorId
+                AuthorId = authorId  // nullable - OK for pure admins without employee records
             };
 
             await _uow.Repository<Announcement>().AddAsync(announcement);

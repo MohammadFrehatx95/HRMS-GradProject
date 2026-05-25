@@ -2,7 +2,7 @@
   "name": "Kawadir HRMS",
   "short_name": "Kawadir",
   "theme_color": "#0d6efd",
-  "background_color": "#1a1f2e",
+  "background_color": "#ffffff",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
@@ -57,3 +57,4 @@
     }
   ]
 }
+

@@ -12,9 +12,9 @@ namespace Domain.Entities
 
         [Required]
         [StringLength(200)]
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         [Required]
         public DateTime MeetingDate { get; set; }
@@ -23,13 +23,12 @@ namespace Domain.Entities
         public int EmployeeId { get; set; }
 
         [ForeignKey("EmployeeId")]
-        public Employee Employee { get; set; }
+        public Employee Employee { get; set; } = null!;
 
-        [Required]
-        public int OrganizerId { get; set; }
+        public int? OrganizerId { get; set; }
 
         [ForeignKey("OrganizerId")]
-        public Employee Organizer { get; set; }
+        public Employee? Organizer { get; set; }
 
         public MeetingStatus Status { get; set; } = MeetingStatus.Pending;
 

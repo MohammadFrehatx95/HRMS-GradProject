@@ -10,6 +10,6 @@ namespace Application.DTOs.Announcement
         public DateTime CreatedAt { get; set; }
         public string Priority { get; set; } = string.Empty;
         public string AuthorName { get; set; } = string.Empty;
-        public int AuthorId { get; set; }
+        public int? AuthorId { get; set; }
     }
 }

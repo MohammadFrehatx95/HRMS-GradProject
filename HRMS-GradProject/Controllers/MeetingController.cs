@@ -45,8 +45,7 @@ namespace HRMS_GradProject.Controllers
         public async Task<IActionResult> Create([FromBody] CreateMeetingDto dto)
         {
             var employeeIdClaim = User.FindFirstValue("employeeId");
-            if (!int.TryParse(employeeIdClaim, out var organizerId))
-                return BadRequest("Your account is not linked to an employee profile");
+            int? organizerId = int.TryParse(employeeIdClaim, out var oid) && oid > 0 ? oid : null;
 
             var result = await _meetingService.CreateAsync(dto, organizerId);
             return Ok(result);

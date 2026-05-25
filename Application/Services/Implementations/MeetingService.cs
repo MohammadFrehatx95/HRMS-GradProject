@@ -49,7 +49,7 @@ namespace Application.Services.Implementations
                     EmployeeId = m.EmployeeId,
                     EmployeeName = m.Employee.FirstName + " " + m.Employee.LastName,
                     OrganizerId = m.OrganizerId,
-                    OrganizerName = m.Organizer.FirstName + " " + m.Organizer.LastName,
+                    OrganizerName = m.Organizer != null ? m.Organizer.FirstName + " " + m.Organizer.LastName : "System",
                     Status = m.Status,
                     CreatedAt = m.CreatedAt
                 })
@@ -81,7 +81,7 @@ namespace Application.Services.Implementations
                     EmployeeId = m.EmployeeId,
                     EmployeeName = m.Employee.FirstName + " " + m.Employee.LastName,
                     OrganizerId = m.OrganizerId,
-                    OrganizerName = m.Organizer.FirstName + " " + m.Organizer.LastName,
+                    OrganizerName = m.Organizer != null ? m.Organizer.FirstName + " " + m.Organizer.LastName : "System",
                     Status = m.Status,
                     CreatedAt = m.CreatedAt
                 })
@@ -110,13 +110,13 @@ namespace Application.Services.Implementations
                 EmployeeId = meeting.EmployeeId,
                 EmployeeName = meeting.Employee.FirstName + " " + meeting.Employee.LastName,
                 OrganizerId = meeting.OrganizerId,
-                OrganizerName = meeting.Organizer.FirstName + " " + meeting.Organizer.LastName,
+                OrganizerName = meeting.Organizer != null ? meeting.Organizer.FirstName + " " + meeting.Organizer.LastName : "System",
                 Status = meeting.Status,
                 CreatedAt = meeting.CreatedAt
             };
         }
 
-        public async Task<MeetingDto> CreateAsync(CreateMeetingDto dto, int organizerId)
+        public async Task<MeetingDto> CreateAsync(CreateMeetingDto dto, int? organizerId)
         {
             var meeting = new Meeting
             {
@@ -135,7 +135,7 @@ namespace Application.Services.Implementations
             try
             {
                 var employee = await _uow.Repository<Employee>().GetByIdAsync(dto.EmployeeId);
-                var organizer = await _uow.Repository<Employee>().GetByIdAsync(organizerId);
+                var organizer = organizerId.HasValue ? await _uow.Repository<Employee>().GetByIdAsync(organizerId.Value) : null;
                 
                 if (employee != null && employee.UserId != 0)
                 {

@@ -40,11 +40,7 @@ namespace HRMS_GradProject.Controllers
         public async Task<IActionResult> Create([FromBody] CreateAnnouncementDto dto)
         {
             var employeeIdClaim = User.FindFirstValue("employeeId");
-            if (!int.TryParse(employeeIdClaim, out var employeeId))
-            {
-                // Fallback to 0 if not an employee (e.g. pure admin)
-                employeeId = 0; 
-            }
+            int? employeeId = int.TryParse(employeeIdClaim, out var empId) && empId > 0 ? empId : null;
 
             var result = await _announcementService.CreateAsync(dto, employeeId);
             return Ok(result);

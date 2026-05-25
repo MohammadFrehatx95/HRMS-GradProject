@@ -26,8 +26,8 @@ namespace Domain.Entities
         
         public DateTime? ExpiryDate { get; set; }
 
-        // The HR/Admin who posted it
-        public int AuthorId { get; set; }
+        // The HR/Admin who posted it (nullable - admin may not have employee record)
+        public int? AuthorId { get; set; }
         public Employee? Author { get; set; }
     }
 }
