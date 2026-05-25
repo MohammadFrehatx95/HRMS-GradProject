@@ -17,7 +17,8 @@
                     <thead class="bg-light text-muted small text-uppercase">
                         <tr>
                             <th class="ps-4">{{ 'Title' | t }}</th>
-                            <th>{{ 'Participants' | t }}</th>
+                            <th>{{ 'Organizer' | t }}</th>
+                            <th>{{ 'Employee' | t }}</th>
                             <th>{{ 'Date & Time' | t }}</th>
                             <th>{{ 'Status' | t }}</th>
                             <th class="text-end pe-4">{{ 'Actions' | t }}</th>
@@ -26,7 +27,7 @@
                     <tbody>
                         @if (isLoading) {
                         <tr>
-                            <td colspan="5" class="text-center py-5">
+                            <td colspan="6" class="text-center py-5">
                                 <div class="spinner-border text-dark" role="status">
                                     <span class="visually-hidden">Loading...</span>
                                 </div>
@@ -37,23 +38,17 @@
                         <tr>
                             <td class="ps-4">
                                 <div class="fw-bold text-dark">{{ meeting.title }}</div>
-                                <div class="small text-muted text-truncate" style="max-width: 250px;">{{ meeting.description }}</div>
+                                <div class="small text-muted text-truncate" style="max-width: 250px;">{{ meeting.reason || meeting.notes }}</div>
                             </td>
                             <td>
-                                <div class="d-flex flex-column gap-1">
-                                    <div class="d-flex align-items-center small">
-                                        <span class="text-muted me-2" style="width: 70px;">{{ 'Organizer' | t }}:</span>
-                                        <span class="fw-medium text-dark">{{ meeting.organizerName || 'System' }}</span>
-                                    </div>
-                                    <div class="d-flex align-items-center small">
-                                        <span class="text-muted me-2" style="width: 70px;">{{ 'Employee' | t }}:</span>
-                                        <span class="fw-medium text-dark">{{ meeting.employeeName }}</span>
-                                    </div>
-                                </div>
+                                <span class="fw-medium text-dark">{{ meeting.organizerName || 'System' }}</span>
                             </td>
                             <td>
-                                <div><i class="bi bi-calendar-event text-muted me-2"></i>{{ meeting.meetingDate | date:'mediumDate' }}</div>
-                                <div class="small text-muted"><i class="bi bi-clock me-2"></i>{{ meeting.meetingDate | date:'shortTime' }}</div>
+                                <span class="fw-medium text-dark">{{ meeting.employeeName }}</span>
+                            </td>
+                            <td>
+                                <div><i class="bi bi-calendar-event text-muted me-2"></i>{{ meeting.scheduledAt | date:'mediumDate' }}</div>
+                                <div class="small text-muted"><i class="bi bi-clock me-2"></i>{{ meeting.scheduledAt | date:'shortTime' }} <span *ngIf="meeting.durationMinutes">({{ meeting.durationMinutes }} min)</span></div>
                             </td>
                             <td>
                                 <span class="badge rounded-pill px-3 py-2" [ngClass]="getStatusBadgeClass(meeting.status)">
@@ -61,54 +56,40 @@
                                 </span>
                             </td>
                             <td class="text-end pe-4">
-                                <!-- Actions for HR/Admin -->
-                                <ng-container *ngIf="isHrOrAdmin">
-                                    <div class="dropdown">
-                                        <button class="btn btn-light btn-sm rounded-circle" type="button" data-bs-toggle="dropdown">
-                                            <i class="bi bi-three-dots-vertical"></i>
+                                <div class="d-flex align-items-center justify-content-end gap-2">
+                                    <!-- Mark Completed & Cancel (HR/Admin only, only when Scheduled) -->
+                                    <ng-container *ngIf="isHrOrAdmin && meeting.status === 'Scheduled'">
+                                        <button
+                                            class="btn btn-success btn-sm rounded-pill d-inline-flex align-items-center gap-1 px-3"
+                                            (click)="updateStatus(meeting.id, MeetingStatus.Completed)"
+                                            title="Mark Completed">
+                                            <i class="bi bi-check2-circle"></i>
+                                            <span class="small">Done</span>
                                         </button>
-                                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-                                            <li>
-                                                <button class="dropdown-item" (click)="updateStatus(meeting.id, MeetingStatus.Confirmed)">
-                                                    <i class="bi bi-check-circle text-primary me-2"></i> Confirm
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button class="dropdown-item" (click)="updateStatus(meeting.id, MeetingStatus.Completed)">
-                                                    <i class="bi bi-check-all text-success me-2"></i> Mark Completed
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button class="dropdown-item" (click)="updateStatus(meeting.id, MeetingStatus.Cancelled)">
-                                                    <i class="bi bi-x-circle text-danger me-2"></i> Cancel
-                                                </button>
-                                            </li>
-                                            <li><hr class="dropdown-divider"></li>
-                                            <li>
-                                                <button class="dropdown-item text-danger" (click)="deleteMeeting(meeting.id)">
-                                                    <i class="bi bi-trash me-2"></i> Delete
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </ng-container>
-
-                                <!-- Actions for Employee -->
-                                <ng-container *ngIf="!isHrOrAdmin">
-                                    <div class="d-flex justify-content-end gap-2" *ngIf="meeting.status.toString() === '0' || meeting.status.toString() === 'Pending'">
-                                        <button class="btn btn-sm btn-outline-success rounded-pill px-3" (click)="updateStatus(meeting.id, MeetingStatus.Confirmed)">
-                                            <i class="bi bi-check-lg me-1"></i> {{ 'Accept' | t }}
+                                        <button
+                                            class="btn btn-danger btn-sm rounded-pill d-inline-flex align-items-center gap-1 px-3"
+                                            (click)="updateStatus(meeting.id, MeetingStatus.Cancelled)"
+                                            title="Cancel Meeting">
+                                            <i class="bi bi-slash-circle"></i>
+                                            <span class="small">Cancel</span>
                                         </button>
-                                        <button class="btn btn-sm btn-outline-danger rounded-pill px-3" (click)="updateStatus(meeting.id, MeetingStatus.Cancelled)">
-                                            <i class="bi bi-x-lg me-1"></i> {{ 'Decline' | t }}
-                                        </button>
-                                    </div>
-                                </ng-container>
+                                    </ng-container>
+                                    <!-- Join Meet (visible to everyone when link exists) -->
+                                    <a *ngIf="meeting.meetLink && meeting.status === 'Scheduled'"
+                                        [href]="meeting.meetLink" target="_blank"
+                                        class="btn btn-outline-primary btn-sm rounded-pill d-inline-flex align-items-center gap-1 px-3"
+                                        title="Join Meeting">
+                                        <i class="bi bi-camera-video"></i>
+                                        <span class="small">Join</span>
+                                    </a>
+                                    <!-- No actions when Completed or Cancelled -->
+                                    <span *ngIf="meeting.status !== 'Scheduled'" class="text-muted small fst-italic">—</span>
+                                </div>
                             </td>
                         </tr>
                         } @empty {
                         <tr>
-                            <td colspan="5" class="text-center py-5 text-muted">
+                            <td colspan="6" class="text-center py-5 text-muted">
                                 <i class="bi bi-calendar2-x fs-1 d-block mb-3 text-light-gray"></i>
                                 {{ 'No meetings found.' | t }}
                             </td>
@@ -134,13 +115,13 @@
                 <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
                     
                     <div class="mb-3">
-                        <label class="form-label fw-medium text-dark">{{ 'Title / Subject' | t }} <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control bg-light border-0" formControlName="title" placeholder="e.g., Performance Review">
+                        <label class="form-label fw-bold text-secondary">{{ 'Title / Subject' | t }} <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" formControlName="title" placeholder="e.g., Performance Review">
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-medium text-dark">{{ 'Employee' | t }} <span class="text-danger">*</span></label>
-                        <select class="form-select bg-light border-0" formControlName="employeeId">
+                        <label class="form-label fw-bold text-secondary">{{ 'Employee' | t }} <span class="text-danger">*</span></label>
+                        <select class="form-select" formControlName="employeeId">
                             <option value="">{{ 'Select Employee' | t }}</option>
                             <option *ngFor="let emp of employees" [value]="emp.id">
                                 {{ emp.firstName }} {{ emp.lastName }} ({{ emp.position?.title }})
@@ -148,20 +129,47 @@
                         </select>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label fw-medium text-dark">{{ 'Date' | t }} <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control bg-light border-0" formControlName="meetingDate">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold text-secondary">{{ 'Date' | t }} <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-calendar-event text-primary"></i></span>
+                                <input type="date" class="form-control border-start-0" formControlName="meetingDate" style="color-scheme: light;">
+                            </div>
                         </div>
-                        <div class="col-md-6 mt-3 mt-md-0">
-                            <label class="form-label fw-medium text-dark">{{ 'Time' | t }} <span class="text-danger">*</span></label>
-                            <input type="time" class="form-control bg-light border-0" formControlName="meetingTime">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold text-secondary">{{ 'Time' | t }} <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-clock text-primary"></i></span>
+                                <input type="time" class="form-control border-start-0" formControlName="meetingTime" style="color-scheme: light;">
+                            </div>
                         </div>
                     </div>
 
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-secondary">{{ 'Duration' | t }} <span class="text-danger">*</span></label>
+                        <select class="form-select" formControlName="durationMinutes">
+                            <option value="15">15 Minutes</option>
+                            <option value="30">30 Minutes</option>
+                            <option value="45">45 Minutes</option>
+                            <option value="60">1 Hour</option>
+                            <option value="90">1.5 Hours</option>
+                            <option value="120">2 Hours</option>
+                        </select>
+                    </div>
+
                     <div class="mb-4">
-                        <label class="form-label fw-medium text-dark">{{ 'Description / Notes' | t }}</label>
-                        <textarea class="form-control bg-light border-0" rows="3" formControlName="description" placeholder="Optional details..."></textarea>
+                        <label class="form-label fw-bold text-secondary">{{ 'Reason / Notes' | t }} <span class="text-danger">*</span></label>
+                        <textarea class="form-control" rows="3" formControlName="reason"
+                            placeholder="Describe the reason for the meeting (min. 10 characters)..."
+                            [class.is-invalid]="addForm.get('reason')?.invalid && addForm.get('reason')?.touched"></textarea>
+                        <div class="invalid-feedback">
+                            @if (addForm.get('reason')?.errors?.['required']) {
+                                Reason is required.
+                            } @else if (addForm.get('reason')?.errors?.['minlength']) {
+                                Reason must be at least 10 characters.
+                            }
+                        </div>
                     </div>
 
                     <div class="d-flex justify-content-end gap-2">

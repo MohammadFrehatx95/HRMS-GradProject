@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities;
 
@@ -12,6 +12,7 @@ public class Employee
     public string PhoneNumber { get; set; } = string.Empty;
     public DateTime HireDate { get; set; }
     public bool IsActive { get; set; } = true;
+    public int AnnualLeaveBalance { get; set; } = 14;
 
     // Foreign Keys
     public int DepartmentId { get; set; }

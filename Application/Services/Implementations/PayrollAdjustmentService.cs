@@ -2,16 +2,17 @@ using Application.Common;
 using Application.DTOs.PayrollAdjustment;
 using Application.Services.Interfaces;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Implementations;
 
-public class PayrollAdjustmentService(IUnitOfWork uow, IEmailService emailService) : IPayrollAdjustmentService
+public class PayrollAdjustmentService(IUnitOfWork uow, IEmailService emailService, INotificationService notificationService) : IPayrollAdjustmentService
 {
     public async Task<PagedResult<PayrollAdjustmentDto>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
     {
-        var query = uow.Repository<PayrollAdjustment>().GetAllQueryable().Include(p => p.Employee).ThenInclude(e => e.User);
+        var query = uow.Repository<PayrollAdjustment>().GetAllQueryable().Include(p => p.Employee);
         var total = await query.CountAsync();
         var items = await query.OrderByDescending(p => p.Date)
             .Skip((pageNumber - 1) * pageSize)
@@ -20,7 +21,7 @@ public class PayrollAdjustmentService(IUnitOfWork uow, IEmailService emailServic
             {
                 Id = p.Id,
                 EmployeeId = p.EmployeeId,
-                EmployeeName = p.Employee.User.Username,
+                EmployeeName = p.Employee.FirstName + " " + p.Employee.LastName,
                 Type = p.Type,
                 Amount = p.Amount,
                 Reason = p.Reason,
@@ -32,7 +33,7 @@ public class PayrollAdjustmentService(IUnitOfWork uow, IEmailService emailServic
 
     public async Task<PagedResult<PayrollAdjustmentDto>> GetByEmployeeIdAsync(int employeeId, int pageNumber = 1, int pageSize = 10)
     {
-        var query = uow.Repository<PayrollAdjustment>().GetAllQueryable().Where(p => p.EmployeeId == employeeId);
+        var query = uow.Repository<PayrollAdjustment>().GetAllQueryable().Include(p => p.Employee).Where(p => p.EmployeeId == employeeId);
         var total = await query.CountAsync();
         var items = await query.OrderByDescending(p => p.Date)
             .Skip((pageNumber - 1) * pageSize)
@@ -41,7 +42,7 @@ public class PayrollAdjustmentService(IUnitOfWork uow, IEmailService emailServic
             {
                 Id = p.Id,
                 EmployeeId = p.EmployeeId,
-                EmployeeName = "",
+                EmployeeName = p.Employee.FirstName + " " + p.Employee.LastName,
                 Type = p.Type,
                 Amount = p.Amount,
                 Reason = p.Reason,
@@ -77,6 +78,16 @@ public class PayrollAdjustmentService(IUnitOfWork uow, IEmailService emailServic
                 dto.Type.ToString(),
                 dto.Amount,
                 dto.Reason
+            );
+        }
+
+        if (employee.UserId != 0)
+        {
+            await notificationService.CreateAsync(
+                employee.UserId,
+                dto.Type == AdjustmentType.Bonus ? "Bonus Received" : "Penalty Applied",
+                $"A {(dto.Type == AdjustmentType.Bonus ? "Bonus" : "Penalty")} of {dto.Amount} JD has been added. Reason: {dto.Reason}",
+                NotificationType.General
             );
         }
         

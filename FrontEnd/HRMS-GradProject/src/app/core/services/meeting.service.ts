@@ -9,7 +9,7 @@ import { PagedResult } from '../models/paged-result.model';
   providedIn: 'root'
 })
 export class MeetingService {
-  private apiUrl = `${environment.apiUrl}/Meeting`;
+  private apiUrl = `${environment.apiUrl}/meetings`; // using /meetings as in backend route
 
   constructor(private http: HttpClient) { }
 
@@ -24,24 +24,22 @@ export class MeetingService {
     const params = new HttpParams()
       .set('pageNumber', pageNumber.toString())
       .set('pageSize', pageSize.toString());
-    return this.http.get<PagedResult<Meeting>>(`${this.apiUrl}/my-meetings`, { params });
+    return this.http.get<PagedResult<Meeting>>(`${this.apiUrl}/my`, { params });
   }
 
   create(dto: CreateMeetingDto): Observable<Meeting> {
     return this.http.post<Meeting>(this.apiUrl, dto);
   }
 
-  updateStatus(id: number, status: MeetingStatus): Observable<void> {
-    const dto: UpdateMeetingDto = {
-        status: status,
-        title: '',
-        description: '',
-        meetingDate: new Date().toISOString()
-    };
-    return this.http.put<void>(`${this.apiUrl}/${id}/status`, dto);
+  cancel(id: number): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}/cancel`, {});
   }
 
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  complete(id: number): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}/complete`, {});
+  }
+
+  update(id: number, dto: UpdateMeetingDto): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}`, dto);
   }
 }

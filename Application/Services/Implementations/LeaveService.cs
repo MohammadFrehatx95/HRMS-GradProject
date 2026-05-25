@@ -1,4 +1,4 @@
-﻿using Application.Common;
+using Application.Common;
 using Application.DTOs.Leave;
 using Application.Services.Interfaces;
 using AutoMapper;
@@ -191,12 +191,20 @@ namespace Application.Services.Implementations
                 : null;
 
             uow.Repository<Leave>().Update(leave);
-            await uow.SaveChangesAsync();
 
             var employee = await uow.Repository<Employee>()
                             .GetAllQueryable()
                             .Include(e => e.User)
                             .FirstOrDefaultAsync(e => e.Id == leave.EmployeeId);
+
+            if (dto.Status == LeaveStatus.Approved && leave.LeaveType == LeaveType.Annual && employee != null)
+            {
+                employee.AnnualLeaveBalance -= leave.TotalDays;
+                uow.Repository<Employee>().Update(employee);
+            }
+
+            await uow.SaveChangesAsync();
+
 
             if (employee?.User is not null)
             {

@@ -49,7 +49,7 @@ namespace Application.Services.Implementations
                 CreatedAt = a.CreatedAt,
                 Priority = a.Priority,
                 AuthorId = a.AuthorId,
-                AuthorName = a.Author != null ? $"{a.Author.FirstName} {a.Author.LastName}" : "System"
+                AuthorName = a.Author != null ? $"{a.Author.FirstName} {a.Author.LastName}" : "HR Department"
             }).ToList();
 
             return PagedResult<AnnouncementDto>.Create(dtos, totalCount, pageNumber, pageSize);

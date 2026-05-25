@@ -208,7 +208,7 @@
     } @else {
     <div class="row g-4 mb-4">
         <div class="col-md-3">
-            <div class="stat-card blue hover-elevate h-100">
+            <div class="stat-card blue hover-elevate h-100 stat-card-link" routerLink="/leave">
                 <div class="card-body">
                     <h3>{{ employeeAnnualLeaveBalance }}</h3> <p>{{ 'Annual Leave Balance' | t }}</p>
                     <i class="bi bi-airplane-fill icon"></i>
@@ -217,7 +217,7 @@
         </div>
 
         <div class="col-md-3">
-            <div class="stat-card orange hover-elevate h-100">
+            <div class="stat-card orange hover-elevate h-100 stat-card-link" routerLink="/leave">
                 <div class="card-body">
                     <h3>{{ employeePendingLeaves }}</h3> <p>{{ 'My Pending Leaves' | t }}</p>
                     <i class="bi bi-hourglass-split icon"></i>
@@ -226,7 +226,7 @@
         </div>
 
         <div class="col-md-3">
-            <div class="stat-card pink hover-elevate h-100">
+            <div class="stat-card pink hover-elevate h-100 stat-card-link" routerLink="/attendance">
                 <div class="card-body">
                     <h3>{{ employeeHoursWorked }} <span class="fs-6 fw-normal">hrs</span></h3>
                     <p>{{ 'Total Hours' | t }}</p>
@@ -236,7 +236,7 @@
         </div>
 
         <div class="col-md-3">
-            <div class="stat-card payday hover-elevate h-100">
+            <div class="stat-card payday hover-elevate h-100 stat-card-link" routerLink="/salary">
                 <div class="card-body">
                     <h3>{{ employeeNextPayday }}</h3>
                     <p>{{ 'Next Payday' | t }}</p>

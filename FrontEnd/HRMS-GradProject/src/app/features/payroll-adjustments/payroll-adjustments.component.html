@@ -15,11 +15,13 @@
                     t }}</p>
             </div>
         </div>
+        @if (isAdminOrHR) {
         <button
             class="btn btn-primary shadow-sm text-nowrap px-4 py-2 rounded-3 fw-semibold"
             (click)="openAddModal()">
             <i class="bi bi-plus-lg me-1"></i> {{ 'Add Adjustment' | t }}
         </button>
+        }
     </div>
 
     @if (isLoading) {
@@ -46,8 +48,10 @@
                             class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0">Date</th>
                         <th
                             class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0">Reason</th>
+                        @if (isAdminOrHR) {
                         <th
                             class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0 text-end">Actions</th>
+                        }
                     </tr>
                 </thead>
                 <tbody class="border-top-0">
@@ -85,11 +89,10 @@
                         </td>
                         <td class="py-3 px-4 text-muted">{{ adj.date |
                             date:'mediumDate' }}</td>
-                        <td class="py-3 px-4 text-muted"
-                            style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
-                            [title]="adj.reason">
+                        <td class="py-3 px-4 text-muted text-wrap">
                             {{ adj.reason }}
                         </td>
+                        @if (isAdminOrHR) {
                         <td class="py-3 px-4 text-end">
                             <button
                                 class="btn btn-light btn-sm rounded-circle shadow-none text-danger d-inline-flex align-items-center justify-content-center p-0"
@@ -100,6 +103,7 @@
                                 <i class="bi bi-trash3"></i>
                             </button>
                         </td>
+                        }
                     </tr>
                     } @empty {
                     <tr>

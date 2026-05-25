@@ -1,11 +1,8 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import Swal from 'sweetalert2';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const router = inject(Router);
 
   if (req.url.includes('/login')) {
     return next(req);
@@ -25,10 +22,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(clonedReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      if ((error.status === 401 || error.status === 403) && !req.url.includes('/login')) {
+      if (error.status === 401 && !req.url.includes('/login')) {
+        // Clear all auth data
         localStorage.removeItem('jwt_token');
         localStorage.removeItem('user_role');
         localStorage.removeItem('user_name');
+        localStorage.removeItem('user_email');
+
         Swal.fire({
           icon: 'warning',
           title: 'Session Expired',
@@ -36,10 +36,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           confirmButtonText: 'OK',
           confirmButtonColor: '#0d6efd'
         }).then(() => {
-          router.navigate(['/login']);
+          // Full page reload so sidebar/layout resets cleanly
+          window.location.href = '/login';
         });
       }
       return throwError(() => error);
     })
   );
 };
+

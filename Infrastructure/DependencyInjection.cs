@@ -31,6 +31,8 @@ public static class DependencyInjection
         // UnitOfWork
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+        services.AddHostedService<LeaveResetBackgroundService>();
+
         return services;
     }
 

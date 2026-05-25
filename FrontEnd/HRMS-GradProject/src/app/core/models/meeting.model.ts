@@ -1,33 +1,38 @@
 export enum MeetingStatus {
-    Pending = 0,
-    Confirmed = 1,
-    Cancelled = 2,
-    Completed = 3
+    Scheduled = 'Scheduled',
+    Completed = 'Completed',
+    Cancelled = 'Cancelled'
 }
 
 export interface Meeting {
     id: number;
     title: string;
-    description: string;
-    meetingDate: string; // ISO date string
+    reason: string;
+    scheduledAt: string; // ISO date string
+    durationMinutes: number;
+    meetLink: string;
     employeeId: number;
     employeeName: string;
     organizerId: number;
     organizerName: string;
-    status: MeetingStatus;
+    status: MeetingStatus | string;
+    notes?: string;
     createdAt: string;
 }
 
 export interface CreateMeetingDto {
     title: string;
-    description: string;
-    meetingDate: string;
+    reason: string;
+    scheduledAt: string;
+    durationMinutes: number;
     employeeId: number;
+    notes?: string;
 }
 
 export interface UpdateMeetingDto {
-    title: string;
-    description: string;
-    meetingDate: string;
-    status: MeetingStatus;
+    title?: string;
+    reason?: string;
+    scheduledAt?: string;
+    durationMinutes?: number;
+    notes?: string;
 }

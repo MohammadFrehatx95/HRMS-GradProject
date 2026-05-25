@@ -3,9 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { PayrollAdjustmentService } from '../../core/services/payroll-adjustments.service';
 import { EmployeeService } from '../../core/services/employee.service';
+import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
 import { AdjustmentType, PayrollAdjustmentDto } from '../../core/models/payroll-adjustment.model';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { Router } from '@angular/router';
 
 declare var bootstrap: any;
 
@@ -20,11 +22,14 @@ export class PayrollAdjustmentsComponent implements OnInit {
   private fb = inject(FormBuilder);
   private adjustmentService = inject(PayrollAdjustmentService);
   private employeeService = inject(EmployeeService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   adjustments: PayrollAdjustmentDto[] = [];
   employees: any[] = [];
   isLoading = false;
   isSubmitting = false;
+  isAdminOrHR = false;
 
   addForm: FormGroup;
   adjustmentTypes = [
@@ -46,13 +51,22 @@ export class PayrollAdjustmentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isAdminOrHR = this.authService.isAdminOrHR();
+    
     this.loadAdjustments();
-    this.loadEmployees();
+    if (this.isAdminOrHR) {
+      this.loadEmployees();
+    }
   }
 
   loadAdjustments() {
     this.isLoading = true;
-    this.adjustmentService.getAll(this.pageNumber, this.pageSize).subscribe({
+    
+    const request = this.isAdminOrHR 
+      ? this.adjustmentService.getAll(this.pageNumber, this.pageSize)
+      : this.adjustmentService.getMyAdjustments(this.pageNumber, this.pageSize);
+
+    request.subscribe({
       next: (res: any) => {
         let extracted: any[] = [];
         if (Array.isArray(res)) extracted = res;
@@ -66,7 +80,9 @@ export class PayrollAdjustmentsComponent implements OnInit {
       },
       error: (err: any) => {
         console.error(err);
-        Swal.fire('Error', 'Failed to load adjustments', 'error');
+        if (err.status !== 401 && err.status !== 403) {
+          Swal.fire('Error', 'Failed to load adjustments', 'error');
+        }
         this.isLoading = false;
       }
     });

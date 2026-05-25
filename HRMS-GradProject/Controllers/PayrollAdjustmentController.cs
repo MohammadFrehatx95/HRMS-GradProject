@@ -3,6 +3,7 @@ using Application.DTOs.PayrollAdjustment;
 using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace HRMS_API.Controllers;
 
@@ -23,6 +24,20 @@ public class PayrollAdjustmentController(IPayrollAdjustmentService service) : Co
     public async Task<IActionResult> GetByEmployeeId(int employeeId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
         var result = await service.GetByEmployeeIdAsync(employeeId, pageNumber, pageSize);
+        return Ok(ApiResponse<PagedResult<PayrollAdjustmentDto>>.Ok(result));
+    }
+
+    [HttpGet("my")]
+    [Authorize]
+    public async Task<IActionResult> GetMyAdjustments([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+    {
+        var employeeIdClaim = User.FindFirstValue("employeeId");
+        if (!int.TryParse(employeeIdClaim, out var empId))
+        {
+            return Unauthorized(ApiResponse.Fail("Invalid employee ID claim."));
+        }
+
+        var result = await service.GetByEmployeeIdAsync(empId, pageNumber, pageSize);
         return Ok(ApiResponse<PagedResult<PayrollAdjustmentDto>>.Ok(result));
     }
 

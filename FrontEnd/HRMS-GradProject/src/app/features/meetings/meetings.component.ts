@@ -7,6 +7,7 @@ import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
 import { Meeting, MeetingStatus, CreateMeetingDto } from '../../core/models/meeting.model';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { Observable } from 'rxjs';
 
 declare var bootstrap: any;
 
@@ -39,9 +40,10 @@ export class MeetingsComponent implements OnInit {
     this.addForm = this.fb.group({
       employeeId: ['', Validators.required],
       title: ['', [Validators.required, Validators.maxLength(200)]],
-      description: [''],
+      reason: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]],
       meetingDate: ['', Validators.required],
-      meetingTime: ['', Validators.required]
+      meetingTime: ['', Validators.required],
+      durationMinutes: [30, [Validators.required, Validators.min(15)]]
     });
   }
 
@@ -93,7 +95,7 @@ export class MeetingsComponent implements OnInit {
   }
 
   openAddModal() {
-    this.addForm.reset();
+    this.addForm.reset({ durationMinutes: 30 });
     const modalEl = document.getElementById('addMeetingModal');
     if (modalEl) {
       const modal = new bootstrap.Modal(modalEl);
@@ -122,9 +124,11 @@ export class MeetingsComponent implements OnInit {
     
     const dto: CreateMeetingDto = {
       title: formValues.title,
-      description: formValues.description,
+      reason: formValues.reason,
       employeeId: Number(formValues.employeeId),
-      meetingDate: combinedDateTime.toISOString()
+      scheduledAt: combinedDateTime.toISOString(),
+      durationMinutes: formValues.durationMinutes,
+      notes: formValues.reason
     };
 
     this.meetingService.create(dto).subscribe({
@@ -132,7 +136,11 @@ export class MeetingsComponent implements OnInit {
         this.isSubmitting = false;
         this.closeModal('addMeetingModal');
         Swal.fire('Success', 'Meeting scheduled successfully', 'success');
-        this.loadAllMeetings();
+        if (this.isHrOrAdmin) {
+          this.loadAllMeetings();
+        } else {
+          this.loadMyMeetings();
+        }
       },
       error: (err) => {
         this.isSubmitting = false;
@@ -151,7 +159,16 @@ export class MeetingsComponent implements OnInit {
       cancelButtonText: 'No'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.meetingService.updateStatus(id, status).subscribe({
+        let updateObservable: Observable<void>;
+        if (status === MeetingStatus.Cancelled) {
+          updateObservable = this.meetingService.cancel(id);
+        } else if (status === MeetingStatus.Completed) {
+          updateObservable = this.meetingService.complete(id);
+        } else {
+          return;
+        }
+
+        updateObservable.subscribe({
           next: () => {
             Swal.fire('Updated!', 'Meeting status updated.', 'success');
             if (this.isHrOrAdmin) {
@@ -168,37 +185,12 @@ export class MeetingsComponent implements OnInit {
     });
   }
 
-  deleteMeeting(id: number) {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'You will not be able to recover this meeting!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, keep it'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.meetingService.delete(id).subscribe({
-          next: () => {
-            Swal.fire('Deleted!', 'Meeting has been deleted.', 'success');
-            this.loadAllMeetings();
-          },
-          error: () => {
-            Swal.fire('Error', 'Failed to delete meeting', 'error');
-          }
-        });
-      }
-    });
-  }
-
   getStatusBadgeClass(status: any): string {
     const s = String(status);
     switch (s) {
       case '0':
-      case 'Pending': return 'bg-warning text-dark';
+      case 'Scheduled': return 'bg-primary';
       case '1':
-      case 'Confirmed': return 'bg-primary';
-      case '3':
       case 'Completed': return 'bg-success';
       case '2':
       case 'Cancelled': return 'bg-danger';
@@ -210,10 +202,8 @@ export class MeetingsComponent implements OnInit {
     const s = String(status);
     switch (s) {
       case '0':
-      case 'Pending': return 'Pending';
+      case 'Scheduled': return 'Scheduled';
       case '1':
-      case 'Confirmed': return 'Confirmed';
-      case '3':
       case 'Completed': return 'Completed';
       case '2':
       case 'Cancelled': return 'Cancelled';

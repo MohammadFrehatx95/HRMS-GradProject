@@ -17,6 +17,10 @@ export class PayrollAdjustmentService {
     return this.http.get<any>(`${this.apiUrl}/employee/${employeeId}?pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(map(res => res?.data ?? res));
   }
 
+  getMyAdjustments(pageNumber = 1, pageSize = 10): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/my?pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(map(res => res?.data ?? res));
+  }
+
   create(adjustment: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, adjustment);
   }

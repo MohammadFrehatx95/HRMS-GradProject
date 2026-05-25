@@ -99,7 +99,7 @@ export const routes: Routes = [
       import('./features/payroll-adjustments/payroll-adjustments.component').then(
         (m) => m.PayrollAdjustmentsComponent,
       ),
-    canActivate: [authGuard, hrGuard],
+    canActivate: [authGuard],
   },
   { path: '**', redirectTo: 'login' },
 ];
