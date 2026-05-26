@@ -30,16 +30,26 @@ D:\PROJECTS\HRMS-TEAM\FRONTEND\HRMS-GRADPROJECT\SRC
 |   |   +---interceptors
 |   |   |       auth.interceptor.ts
 |   |   |       
+|   |   +---models
+|   |   |       announcement.model.ts
+|   |   |       meeting.model.ts
+|   |   |       paged-result.model.ts
+|   |   |       payroll-adjustment.model.ts
+|   |   |       
 |   |   +---pipes
 |   |   |       translate.pipe.ts
 |   |   |       
 |   |   +---services
+|   |   |       ai.service.ts
+|   |   |       announcement.service.ts
 |   |   |       attendance.service.ts
 |   |   |       auth.service.ts
 |   |   |       department.service.ts
 |   |   |       employee.service.ts
 |   |   |       leave.service.ts
+|   |   |       meeting.service.ts
 |   |   |       notification.service.ts
+|   |   |       payroll-adjustments.service.ts
 |   |   |       position.service.ts
 |   |   |       pwa.service.ts
 |   |   |       salary.service.ts
@@ -51,6 +61,12 @@ D:\PROJECTS\HRMS-TEAM\FRONTEND\HRMS-GRADPROJECT\SRC
 |   |           error-handler.util.ts
 |   |           
 |   +---features
+|   |   +---ai-assistant
+|   |   |       ai-assistant.component.css
+|   |   |       ai-assistant.component.html
+|   |   |       ai-assistant.component.spec.ts
+|   |   |       ai-assistant.component.ts
+|   |   |       
 |   |   +---all-attendance
 |   |   |       all-attendance.component.html
 |   |   |       all-attendance.component.ts
@@ -101,9 +117,20 @@ D:\PROJECTS\HRMS-TEAM\FRONTEND\HRMS-GRADPROJECT\SRC
 |   |   |       leave-form.component.html
 |   |   |       leave-form.component.ts
 |   |   |       
+|   |   +---meetings
+|   |   |       meetings.component.css
+|   |   |       meetings.component.html
+|   |   |       meetings.component.ts
+|   |   |       
 |   |   +---my-profile
 |   |   |       my-profile.component.html
 |   |   |       my-profile.component.ts
+|   |   |       
+|   |   +---payroll-adjustments
+|   |   |       payroll-adjustments.component.css
+|   |   |       payroll-adjustments.component.html
+|   |   |       payroll-adjustments.component.spec.ts
+|   |   |       payroll-adjustments.component.ts
 |   |   |       
 |   |   +---positions
 |   |   |       positions.component.css
@@ -160,6 +187,7 @@ D:\PROJECTS\HRMS-TEAM\FRONTEND\HRMS-GRADPROJECT\SRC
     "@angular/platform-browser-dynamic": "^19.2.0",
     "@angular/router": "^19.2.0",
     "@angular/service-worker": "^19.2.0",
+    "@microsoft/signalr": "^10.0.0",
     "@ngx-translate/core": "^17.0.0",
     "@ngx-translate/http-loader": "^17.0.0",
     "bootstrap": "^5.3.8",
@@ -186,18 +214,6 @@ D:\PROJECTS\HRMS-TEAM\FRONTEND\HRMS-GRADPROJECT\SRC
     "typescript": "~5.7.2"
   }
 }
-```
-
-### File: src\main.ts
-```typescript
-import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
-import { AppComponent } from './app/app.component';
-
-// تشغيل التطبيق
-bootstrapApplication(AppComponent, appConfig).catch((err) =>
-  console.error(err),
-);
 
 ```
 
@@ -205,7 +221,7 @@ bootstrapApplication(AppComponent, appConfig).catch((err) =>
 ```typescript
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from './core/services/auth.service';
 import { SidebarService } from './core/services/sidebar.service';
 import { SidebarComponent } from './shared/sidebar/sidebar.component';
@@ -225,6 +241,11 @@ export class AppComponent {
   sidebarService = inject(SidebarService);
   updateService = inject(UpdateService);
   pwaService = inject(PwaService);
+  router = inject(Router);
+
+  get isAiRoute(): boolean {
+    return this.router.url.includes('/ai-assistant');
+  }
 
   get isSidebarHidden() {
     // حالة السايدبار
@@ -325,6 +346,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'meetings',
+    loadComponent: () => import('./features/meetings/meetings.component').then(c => c.MeetingsComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'leave-form',
     loadComponent: () =>
       import('./features/leave-form/leave-form.component').then(
@@ -371,6 +397,22 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/my-profile/my-profile.component').then(
         (m) => m.MyProfileComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'ai-assistant',
+    loadComponent: () =>
+      import('./features/ai-assistant/ai-assistant.component').then(
+        (m) => m.AiAssistantComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'payroll-adjustments',
+    loadComponent: () =>
+      import('./features/payroll-adjustments/payroll-adjustments.component').then(
+        (m) => m.PayrollAdjustmentsComponent,
       ),
     canActivate: [authGuard],
   },
@@ -464,13 +506,10 @@ export const hrGuard: CanActivateFn = () => {
 ### File: src\app\core\interceptors\auth.interceptor.ts
 ```typescript
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import Swal from 'sweetalert2';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const router = inject(Router);
 
   if (req.url.includes('/login')) {
     return next(req);
@@ -490,10 +529,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(clonedReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      if ((error.status === 401 || error.status === 403) && !req.url.includes('/login')) {
+      if (error.status === 401 && !req.url.includes('/login')) {
+        // Clear all auth data
         localStorage.removeItem('jwt_token');
         localStorage.removeItem('user_role');
         localStorage.removeItem('user_name');
+        localStorage.removeItem('user_email');
+
         Swal.fire({
           icon: 'warning',
           title: 'Session Expired',
@@ -501,13 +543,125 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           confirmButtonText: 'OK',
           confirmButtonColor: '#0d6efd'
         }).then(() => {
-          router.navigate(['/login']);
+          // Full page reload so sidebar/layout resets cleanly
+          window.location.href = '/login';
         });
       }
       return throwError(() => error);
     })
   );
 };
+
+
+```
+
+### File: src\app\core\models\announcement.model.ts
+```typescript
+export interface Announcement {
+    id: number;
+    title: string;
+    content: string;
+    createdAt: string;
+    priority: string; // "Normal", "High", "Urgent"
+    isGeneral: boolean;
+    targetEmployeeIds?: number[];
+    expiryDate?: string;
+    authorName: string;
+    authorId: number;
+}
+
+export interface CreateAnnouncementDto {
+    title: string;
+    content: string;
+    priority: string;
+    isGeneral: boolean;
+    targetEmployeeIds?: number[];
+    expiryDate?: string;
+}
+
+```
+
+### File: src\app\core\models\meeting.model.ts
+```typescript
+export enum MeetingStatus {
+    Scheduled = 'Scheduled',
+    Completed = 'Completed',
+    Cancelled = 'Cancelled'
+}
+
+export interface Meeting {
+    id: number;
+    title: string;
+    reason: string;
+    scheduledAt: string; // ISO date string
+    durationMinutes: number;
+    meetLink: string;
+    employeeId: number;
+    employeeName: string;
+    organizerId: number;
+    organizerName: string;
+    status: MeetingStatus | string;
+    notes?: string;
+    createdAt: string;
+}
+
+export interface CreateMeetingDto {
+    title: string;
+    reason: string;
+    scheduledAt: string;
+    durationMinutes: number;
+    employeeId: number;
+    notes?: string;
+}
+
+export interface UpdateMeetingDto {
+    title?: string;
+    reason?: string;
+    scheduledAt?: string;
+    durationMinutes?: number;
+    notes?: string;
+}
+
+```
+
+### File: src\app\core\models\paged-result.model.ts
+```typescript
+export interface PagedResult<T> {
+    items: T[];
+    totalCount: number;
+    pageNumber: number;
+    pageSize: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+}
+
+```
+
+### File: src\app\core\models\payroll-adjustment.model.ts
+```typescript
+export enum AdjustmentType {
+  Penalty = 0,
+  Bonus = 1
+}
+
+export interface PayrollAdjustmentDto {
+  id: number;
+  employeeId: number;
+  employeeName: string;
+  type: AdjustmentType;
+  amount: number;
+  reason: string;
+  date: string;
+  isApplied: boolean;
+}
+
+export interface CreatePayrollAdjustmentDto {
+  employeeId: number;
+  type: AdjustmentType;
+  amount: number;
+  reason: string;
+}
 
 ```
 
@@ -532,6 +686,129 @@ export class TranslatePipe implements PipeTransform {
       return entry[lang] || entry['en'] || key;
     }
     return key;
+  }
+}
+
+```
+
+### File: src\app\core\services\ai.service.ts
+```typescript
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
+import * as signalR from '@microsoft/signalr';
+
+export interface TokenStatsDto {
+  usedTokens: number;
+  maxTokensPerMinute: number;
+  secondsUntilReset: number;
+}
+
+export interface AiChatDto {
+  message: string;
+  mode?: number;
+}
+
+export interface AiResponseDto {
+  reply: string;
+  model: string;
+  tokens: number;
+}
+
+@Injectable({ providedIn: 'root' })
+export class AiService {
+  private http = inject(HttpClient);
+  private apiUrl = `${environment.apiUrl}/ai`;
+
+  private hubConnection: signalR.HubConnection | undefined;
+  private tokenStatsSubject = new Subject<TokenStatsDto>();
+  public tokenStats$ = this.tokenStatsSubject.asObservable();
+
+  constructor() {
+    this.startSignalRConnection();
+  }
+
+  private startSignalRConnection() {
+    // apiUrl is usually like https://localhost:7198/api
+    // Hub URL should be https://localhost:7198/hubs/ai
+    const baseUrl = environment.apiUrl.replace(/\/api$/, '');
+    
+    this.hubConnection = new signalR.HubConnectionBuilder()
+      .withUrl(`${baseUrl}/hubs/ai`)
+      .withAutomaticReconnect()
+      .build();
+
+    this.hubConnection
+      .start()
+      .then(() => console.log('SignalR Hub Connection Started'))
+      .catch(err => console.log('Error while starting connection: ' + err));
+
+    this.hubConnection.on('ReceiveTokenUpdate', (stats: TokenStatsDto) => {
+      this.tokenStatsSubject.next(stats);
+    });
+  }
+
+  chat(message: string, mode: number = 0): Observable<AiResponseDto> {
+    return this.http.post<any>(`${this.apiUrl}/chat`, { message, mode }).pipe(
+      map((res) => res?.data ?? res)
+    );
+  }
+
+  analyzeLeave(): Observable<AiResponseDto> {
+    return this.http.get<any>(`${this.apiUrl}/analyze-leave`).pipe(
+      map((res) => res?.data ?? res)
+    );
+  }
+
+  salaryInsight(): Observable<AiResponseDto> {
+    return this.http.get<any>(`${this.apiUrl}/salary-insight`).pipe(
+      map((res) => res?.data ?? res)
+    );
+  }
+}
+
+```
+
+### File: src\app\core\services\announcement.service.ts
+```typescript
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Announcement, CreateAnnouncementDto } from '../models/announcement.model';
+import { environment } from '../../../environments/environment';
+
+export interface PaginatedResult<T> {
+  items: T[];
+  totalCount: number;
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AnnouncementService {
+  private apiUrl = `${environment.apiUrl}/Announcement`;
+
+  constructor(private http: HttpClient) { }
+
+  getAnnouncements(pageNumber: number = 1, pageSize: number = 10): Observable<PaginatedResult<Announcement>> {
+    let params = new HttpParams()
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
+    
+    return this.http.get<PaginatedResult<Announcement>>(this.apiUrl, { params });
+  }
+
+  createAnnouncement(dto: CreateAnnouncementDto): Observable<Announcement> {
+    return this.http.post<Announcement>(this.apiUrl, dto);
+  }
+
+  deleteAnnouncement(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }
 
@@ -625,6 +902,8 @@ export class AuthService {
             localStorage.setItem('user_role', response.data.role);
           if (response.data.username)
             localStorage.setItem('user_name', response.data.username);
+          if (response.data.email)
+            localStorage.setItem('user_email', response.data.email);
         }
       }),
     );
@@ -719,6 +998,15 @@ export class AuthService {
     localStorage.removeItem('jwt_token');
     localStorage.removeItem('user_role');
     localStorage.removeItem('user_name');
+    localStorage.removeItem('user_email');
+  }
+
+  getCurrentUserName(): string | null {
+    return typeof window !== 'undefined' ? localStorage.getItem('user_name') : null;
+  }
+
+  getCurrentUserEmail(): string | null {
+    return typeof window !== 'undefined' ? localStorage.getItem('user_email') : null;
   }
 
   // كل اليوزرات
@@ -952,6 +1240,56 @@ export class LeaveService {
 
 ```
 
+### File: src\app\core\services\meeting.service.ts
+```typescript
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Meeting, CreateMeetingDto, UpdateMeetingDto, MeetingStatus } from '../models/meeting.model';
+import { environment } from '../../../environments/environment';
+import { PagedResult } from '../models/paged-result.model';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class MeetingService {
+  private apiUrl = `${environment.apiUrl}/meetings`; // using /meetings as in backend route
+
+  constructor(private http: HttpClient) { }
+
+  getAll(pageNumber: number = 1, pageSize: number = 10): Observable<PagedResult<Meeting>> {
+    const params = new HttpParams()
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
+    return this.http.get<PagedResult<Meeting>>(this.apiUrl, { params });
+  }
+
+  getMyMeetings(pageNumber: number = 1, pageSize: number = 10): Observable<PagedResult<Meeting>> {
+    const params = new HttpParams()
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
+    return this.http.get<PagedResult<Meeting>>(`${this.apiUrl}/my`, { params });
+  }
+
+  create(dto: CreateMeetingDto): Observable<Meeting> {
+    return this.http.post<Meeting>(this.apiUrl, dto);
+  }
+
+  cancel(id: number): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}/cancel`, {});
+  }
+
+  complete(id: number): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}/complete`, {});
+  }
+
+  update(id: number, dto: UpdateMeetingDto): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}`, dto);
+  }
+}
+
+```
+
 ### File: src\app\core\services\notification.service.ts
 ```typescript
 import { Injectable, inject } from '@angular/core';
@@ -1003,6 +1341,42 @@ export class NotificationService {
   }
 }
 
+
+```
+
+### File: src\app\core\services\payroll-adjustments.service.ts
+```typescript
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
+
+@Injectable({ providedIn: 'root' })
+export class PayrollAdjustmentService {
+  private http = inject(HttpClient);
+  private apiUrl = `${environment.apiUrl}/payroll-adjustments`;
+
+  getAll(pageNumber = 1, pageSize = 10): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(map(res => res?.data ?? res));
+  }
+
+  getByEmployeeId(employeeId: number, pageNumber = 1, pageSize = 10): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/employee/${employeeId}?pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(map(res => res?.data ?? res));
+  }
+
+  getMyAdjustments(pageNumber = 1, pageSize = 10): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/my?pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(map(res => res?.data ?? res));
+  }
+
+  create(adjustment: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, adjustment);
+  }
+
+  delete(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+  }
+}
 
 ```
 
@@ -1550,6 +1924,343 @@ function looksLikeTechError(msg: string): boolean {
 
 ```
 
+### File: src\app\features\ai-assistant\ai-assistant.component.ts
+```typescript
+import {
+  Component,
+  OnInit,
+  inject,
+  ViewChild,
+  ElementRef,
+  OnDestroy
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { AiService, AiResponseDto, TokenStatsDto } from '../../core/services/ai.service';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../../core/services/auth.service';
+
+interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+  tokens?: number;
+  loading?: boolean;
+}
+
+@Component({
+  selector: 'app-ai-assistant',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './ai-assistant.component.html',
+  styleUrls: ['./ai-assistant.component.css'],
+})
+export class AiAssistantComponent implements OnInit, OnDestroy {
+  private aiService = inject(AiService);
+  private authService = inject(AuthService);
+
+  @ViewChild('messagesContainer') messagesContainer!: ElementRef;
+
+  messages: ChatMessage[] = [];
+  userInput: string = '';
+  isLoading: boolean = false;
+  aiMode: number = 0; // 0 = Normal, 1 = DeepThink, 2 = Executive
+  cooldown: boolean = false;
+  cooldownSeconds: number = 0;
+  totalTokensUsed: number = 0;
+  isAdminOrHR: boolean = false;
+  
+  tokenStats: TokenStatsDto = { usedTokens: 0, maxTokensPerMinute: 14400, secondsUntilReset: 60 };
+  private tokenSub: Subscription | undefined;
+  private timerInterval: any;
+
+  readonly MAX_CHARS = 250;
+  readonly COOLDOWN_DURATION = 4; // seconds
+
+  quickActions = [
+    {
+      label: '📊 Analyze My Leaves',
+      icon: 'bi-bar-chart-line',
+      action: 'analyze-leave',
+    },
+    {
+      label: '💰 Salary Insights',
+      icon: 'bi-graph-up-arrow',
+      action: 'salary-insight',
+    },
+    {
+      label: '📋 Leave Policy',
+      icon: 'bi-journal-text',
+      action: 'chat',
+      prompt: 'What is the company leave policy?',
+    },
+    {
+      label: '🕐 How to Clock In',
+      icon: 'bi-clock',
+      action: 'chat',
+      prompt: 'How do I clock in and out for attendance?',
+    },
+  ];
+
+  ngOnInit(): void {
+    this.isAdminOrHR = this.authService.isAdminOrHR();
+    this.loadChat();
+
+    this.tokenSub = this.aiService.tokenStats$.subscribe(stats => {
+      this.tokenStats = stats;
+    });
+
+    this.timerInterval = setInterval(() => {
+      if (this.tokenStats.secondsUntilReset > 0) {
+        this.tokenStats.secondsUntilReset--;
+      }
+    }, 1000);
+
+    // Greeting if no chat history
+    if (this.messages.length === 0) {
+      this.messages.push({
+        role: 'assistant',
+        content: "👋 **Hello! I'm HRMS-AI**. How can I help you today?",
+        timestamp: new Date(),
+      });
+      this.saveChat();
+    }
+  }
+
+  private getChatStorageKey(): string {
+    const keyId = this.authService.getCurrentUserEmail() || this.authService.getCurrentUserName() || 'guest';
+    return `hrms_ai_chat_${keyId}`;
+  }
+
+  private getTokenStorageKey(): string {
+    const keyId = this.authService.getCurrentUserEmail() || this.authService.getCurrentUserName() || 'guest';
+    return `hrms_ai_tokens_${keyId}`;
+  }
+
+  private saveChat(): void {
+    localStorage.setItem(this.getChatStorageKey(), JSON.stringify(this.messages));
+    localStorage.setItem(this.getTokenStorageKey(), this.totalTokensUsed.toString());
+  }
+
+  private loadChat(): void {
+    const saved = localStorage.getItem(this.getChatStorageKey());
+    const tokens = localStorage.getItem(this.getTokenStorageKey());
+    if (saved) {
+      try {
+        this.messages = JSON.parse(saved);
+      } catch (e) {
+        this.messages = [];
+      }
+    }
+    if (tokens) {
+      this.totalTokensUsed = parseInt(tokens, 10) || 0;
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.tokenSub) this.tokenSub.unsubscribe();
+    if (this.timerInterval) clearInterval(this.timerInterval);
+  }
+
+  scrollToBottom(): void {
+    try {
+      const el = this.messagesContainer?.nativeElement;
+      if (el) el.scrollTop = el.scrollHeight;
+    } catch {}
+  }
+
+  get charCount(): number {
+    return this.userInput.length;
+  }
+
+  get canSend(): boolean {
+    return (
+      this.userInput.trim().length > 0 &&
+      this.userInput.length <= this.MAX_CHARS &&
+      !this.isLoading &&
+      !this.cooldown
+    );
+  }
+
+  sendMessage(): void {
+    if (!this.canSend) return;
+    const text = this.userInput.trim();
+    this.userInput = '';
+    this.addUserMessage(text);
+    this.callChat(text);
+  }
+
+  triggerQuickAction(action: any): void {
+    if (this.isLoading || this.cooldown) return;
+
+    if (action.action === 'analyze-leave') {
+      this.addUserMessage('📊 Analyze my leave history');
+      this.addLoadingMessage();
+      this.aiService.analyzeLeave().subscribe({
+        next: (res) => this.handleResponse(res),
+        error: (err) => this.handleError(err),
+      });
+    } else if (action.action === 'salary-insight') {
+      this.addUserMessage('💰 Give me salary insights');
+      this.addLoadingMessage();
+      this.aiService.salaryInsight().subscribe({
+        next: (res) => this.handleResponse(res),
+        error: (err) => this.handleError(err),
+      });
+    } else if (action.action === 'chat' && action.prompt) {
+      this.addUserMessage(action.prompt);
+      this.callChat(action.prompt);
+    }
+  }
+
+  private callChat(text: string): void {
+    this.addLoadingMessage();
+    this.aiService.chat(text, this.aiMode).subscribe({
+      next: (res) => this.handleResponse(res),
+      error: (err) => this.handleError(err),
+    });
+  }
+
+  private addUserMessage(text: string): void {
+    this.messages.push({ role: 'user', content: text, timestamp: new Date() });
+    this.isLoading = true;
+    this.saveChat();
+    setTimeout(() => this.scrollToBottom(), 50);
+  }
+
+  private addLoadingMessage(): void {
+    this.messages.push({
+      role: 'assistant',
+      content: '',
+      timestamp: new Date(),
+      loading: true,
+    });
+    setTimeout(() => this.scrollToBottom(), 50);
+  }
+
+  private handleResponse(res: AiResponseDto): void {
+    const idx = this.findLastLoadingIndex();
+    if (idx !== -1) {
+      this.messages[idx] = {
+        role: 'assistant',
+        content: res.reply,
+        timestamp: new Date(),
+        tokens: res.tokens,
+        loading: false,
+      };
+    }
+    this.totalTokensUsed += res.tokens || 0;
+    this.isLoading = false;
+    this.saveChat();
+    this.startCooldown();
+    setTimeout(() => this.scrollToBottom(), 50);
+  }
+
+  private handleError(err: any): void {
+    const idx = this.findLastLoadingIndex();
+    let errMsg = 'Something went wrong. Please try again.';
+
+    if (err?.error?.message) {
+      const rawMessage = err.error.message as string;
+      
+      if (rawMessage.includes('Invalid API Key') || rawMessage.includes('invalid_api_key')) {
+        errMsg = 'The AI service is not properly configured (Invalid API Key). Please contact the system administrator.';
+      } else if (rawMessage.includes('rate_limit_exceeded')) {
+        errMsg = 'The AI service is currently busy (Rate Limit Exceeded). Please try again later.';
+      } else if (rawMessage.includes('insufficient_quota')) {
+        errMsg = 'The AI service quota has been exceeded. Please contact the system administrator.';
+      } else if (rawMessage.includes('Groq API error')) {
+         try {
+           const jsonStart = rawMessage.indexOf('{');
+           if (jsonStart !== -1) {
+             const jsonPart = rawMessage.substring(jsonStart);
+             const parsed = JSON.parse(jsonPart);
+             if (parsed?.error?.message) {
+               errMsg = `AI Error: ${parsed.error.message}`;
+             } else {
+               errMsg = 'The AI service encountered an error processing your request.';
+             }
+           } else {
+             errMsg = 'The AI service encountered a connection error. Please try again.';
+           }
+         } catch(e) {
+           errMsg = 'The AI service encountered an unexpected error. Please try again later.';
+         }
+      } else {
+        errMsg = rawMessage;
+      }
+    } else if (err?.error?.title) {
+      errMsg = err.error.title;
+    }
+
+    if (idx !== -1) {
+      this.messages[idx] = {
+        role: 'assistant',
+        content: `❌ **Error:** ${errMsg}`,
+        timestamp: new Date(),
+        loading: false,
+      };
+    }
+
+    this.isLoading = false;
+    this.saveChat();
+    this.startCooldown();
+    setTimeout(() => this.scrollToBottom(), 50);
+  }
+
+  private findLastLoadingIndex(): number {
+    for (let i = this.messages.length - 1; i >= 0; i--) {
+      if (this.messages[i].loading) return i;
+    }
+    return -1;
+  }
+
+
+  private startCooldown(): void {
+    this.cooldown = true;
+    this.cooldownSeconds = this.COOLDOWN_DURATION;
+    const interval = setInterval(() => {
+      this.cooldownSeconds--;
+      if (this.cooldownSeconds <= 0) {
+        this.cooldown = false;
+        clearInterval(interval);
+      }
+    }, 1000);
+  }
+
+  formatContent(content: string): string {
+    // Simple markdown-like formatting
+    return content
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/^• (.+)/gm, '<span class="bullet">• $1</span>')
+      .replace(/^\d+\. (.+)/gm, '<span class="numbered">$&</span>')
+      .replace(/\n/g, '<br>');
+  }
+
+  onKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      this.sendMessage();
+    }
+  }
+
+  clearChat(): void {
+    this.messages = [];
+    this.totalTokensUsed = 0;
+    localStorage.removeItem(this.getChatStorageKey());
+    localStorage.removeItem(this.getTokenStorageKey());
+    this.ngOnInit();
+  }
+
+  setAiMode(mode: number): void {
+    if (mode === 2 && !this.isAdminOrHR) return;
+    this.aiMode = mode;
+  }
+}
+
+```
+
 ### File: src\app\features\all-attendance\all-attendance.component.ts
 ```typescript
 import { Component, OnInit, inject } from '@angular/core';
@@ -1558,10 +2269,12 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AttendanceService } from '../../core/services/attendance.service';
 
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
+
 @Component({
   selector: 'app-all-attendance',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslatePipe],
   templateUrl: './all-attendance.component.html',
 })
 export class AllAttendanceComponent implements OnInit {
@@ -1671,6 +2384,7 @@ export class AllAttendanceComponent implements OnInit {
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { AttendanceService } from '../../core/services/attendance.service';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
@@ -1679,7 +2393,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 @Component({
   selector: 'app-attendance',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, TranslatePipe, RouterLink],
   templateUrl: './attendance.component.html',
 })
 export class AttendanceComponent implements OnInit {
@@ -2105,11 +2819,12 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import Swal from 'sweetalert2';
 import { getFriendlyErrorMessage } from '../../../core/utils/error-handler.util';
+import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './register.component.html',
 })
 export class RegisterComponent {
@@ -2189,6 +2904,7 @@ export class RegisterComponent {
 ```typescript
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { EmployeeService } from '../../core/services/employee.service';
 import { LeaveService } from '../../core/services/leave.service';
 import { DepartmentService } from '../../core/services/department.service';
@@ -2201,12 +2917,16 @@ import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
+import { AnnouncementService } from '../../core/services/announcement.service';
+import { Announcement } from '../../core/models/announcement.model';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+
 Chart.register(...registerables);
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, TranslatePipe],
+  imports: [CommonModule, TranslatePipe, RouterLink, ReactiveFormsModule, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
@@ -2217,6 +2937,12 @@ export class DashboardComponent implements OnInit {
   private authService = inject(AuthService);
   private attendanceService = inject(AttendanceService);
   private salaryService = inject(SalaryService);
+  private announcementService = inject(AnnouncementService);
+  private fb = inject(FormBuilder);
+
+  announcements: Announcement[] = [];
+  announcementForm: FormGroup;
+  showAnnouncementModal = false;
 
   totalEmployees = 0;
   pendingLeaves = 0;
@@ -2227,6 +2953,7 @@ export class DashboardComponent implements OnInit {
   myRecentAttendances: any[] = [];
   allAttendances: any[] = [];
   isAdmin: boolean = false;
+  isAdminOrHR: boolean = false;
 
   annualLeavePercent: number = 0;
   sickLeavePercent: number = 0;
@@ -2290,9 +3017,9 @@ export class DashboardComponent implements OnInit {
     const cardW = (pageW - margin * 2 - 9) / 4; // 4 cards with 3 gaps of 3mm
     const cards = [
       { label: 'Total Employees', value: String(this.totalEmployees), accentColor: [239, 71, 111] as [number, number, number] },
-      { label: 'Pending Leaves',  value: String(this.pendingLeaves),  accentColor: [255, 165, 2] as [number, number, number] },
-      { label: 'Departments',     value: String(this.departmentsCount), accentColor: [67, 97, 238] as [number, number, number] },
-      { label: 'Total Payroll',   value: `${Number(this.totalSalaries).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} JD`, accentColor: [6, 214, 160] as [number, number, number] },
+      { label: 'Pending Leaves', value: String(this.pendingLeaves), accentColor: [255, 165, 2] as [number, number, number] },
+      { label: 'Departments', value: String(this.departmentsCount), accentColor: [67, 97, 238] as [number, number, number] },
+      { label: 'Total Payroll', value: `${Number(this.totalSalaries).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} JD`, accentColor: [6, 214, 160] as [number, number, number] },
     ];
 
     cards.forEach((card, i) => {
@@ -2326,10 +3053,10 @@ export class DashboardComponent implements OnInit {
 
     // Two-column analytics table (leave distribution + attendance)
     const analyticsData = [
-      ['Annual Leave',    `${this.annualLeavePercent}%`],
-      ['Sick Leave',      `${this.sickLeavePercent}%`],
+      ['Annual Leave', `${this.annualLeavePercent}%`],
+      ['Sick Leave', `${this.sickLeavePercent}%`],
       ['Emergency Leave', `${this.emergencyLeavePercent}%`],
-      ['Unpaid Leave',    `${this.unpaidLeavePercent}%`],
+      ['Unpaid Leave', `${this.unpaidLeavePercent}%`],
       ['Overall Attendance Rate', `${this.attendanceRate}%`],
     ];
 
@@ -2369,7 +3096,7 @@ export class DashboardComponent implements OnInit {
       l.employeeName || `Emp #${l.employeeId}`,
       l.leaveType || '—',
       l.startDate ? l.startDate.split('T')[0] : '—',
-      l.endDate   ? l.endDate.split('T')[0]   : '—',
+      l.endDate ? l.endDate.split('T')[0] : '—',
       l.status || '—',
     ]);
 
@@ -2399,8 +3126,8 @@ export class DashboardComponent implements OnInit {
         didDrawCell: (data: any) => {
           if (data.section === 'body' && data.column.index === 4) {
             const status = data.cell.raw as string;
-            if (status === 'Approved')  { doc.setTextColor(6, 150, 80); }
-            else if (status === 'Pending')  { doc.setTextColor(200, 120, 0); }
+            if (status === 'Approved') { doc.setTextColor(6, 150, 80); }
+            else if (status === 'Pending') { doc.setTextColor(200, 120, 0); }
             else if (status === 'Rejected') { doc.setTextColor(180, 30, 50); }
             doc.setFont('helvetica', 'bold');
             doc.text(
@@ -2422,7 +3149,7 @@ export class DashboardComponent implements OnInit {
     const attRows = this.recentAttendances.map((a: any) => [
       a.employeeName || `Emp #${a.employeeId}`,
       a.date ? a.date.split('T')[0] : '—',
-      a.clockIn  || '--:--',
+      a.clockIn || '--:--',
       (a.clockOut && a.clockOut !== '00:00:00') ? a.clockOut : '--:--',
     ]);
 
@@ -2486,14 +3213,110 @@ export class DashboardComponent implements OnInit {
     doc.line(x, y + 2.5, pageW - x, y + 2.5);
   }
 
+  allEmployeesList: any[] = []; // for targeted announcements
+
+  constructor() {
+    this.announcementForm = this.fb.group({
+      title: ['', Validators.required],
+      content: ['', Validators.required],
+      priority: ['Normal', Validators.required],
+      isGeneral: [true],
+      targetEmployeeIds: [[]],
+      expiryDate: ['']
+    });
+  }
+
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
+    this.isAdminOrHR = this.authService.isAdminOrHR();
 
-    if (this.isAdmin) {
+    if (this.isAdminOrHR) {
       this.loadAdminStats();
+      this.loadEmployeesForSelect();
     } else {
       this.loadEmployeeStats();
     }
+
+    this.loadAnnouncements();
+  }
+
+  loadEmployeesForSelect() {
+    this.empService.getEmployees().subscribe({
+      next: (res) => {
+        this.allEmployeesList = res;
+      },
+      error: (err) => console.error('Failed to load employees for announcements', err)
+    });
+  }
+
+  loadAnnouncements() {
+    this.announcementService.getAnnouncements(1, 10).subscribe({
+      next: (res) => {
+        this.announcements = res.items;
+      },
+      error: (err) => console.error('Failed to load announcements', err)
+    });
+  }
+
+  openAnnouncementModal() {
+    this.announcementForm.reset({ priority: 'Normal', isGeneral: true, targetEmployeeIds: [] });
+    this.showAnnouncementModal = true;
+  }
+
+  closeAnnouncementModal() {
+    this.showAnnouncementModal = false;
+  }
+
+  submitAnnouncement() {
+    if (this.announcementForm.invalid) return;
+
+    let formValue = { ...this.announcementForm.value };
+    if (formValue.isGeneral) {
+      formValue.targetEmployeeIds = null;
+    }
+    if (!formValue.expiryDate) {
+      formValue.expiryDate = null;
+    } else {
+      // Ensure it's sent as an ISO string so the backend parses it as UTC
+      formValue.expiryDate = new Date(formValue.expiryDate).toISOString();
+    }
+
+    this.announcementService.createAnnouncement(formValue).subscribe({
+      next: () => {
+        this.closeAnnouncementModal();
+        this.loadAnnouncements();
+        Swal.fire('Success', 'Announcement posted successfully', 'success');
+      },
+      error: (err) => {
+        Swal.fire('Error', 'Failed to post announcement', 'error');
+      }
+    });
+  }
+
+  deleteAnnouncement(id: number) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.announcementService.deleteAnnouncement(id).subscribe({
+          next: () => {
+            this.loadAnnouncements();
+            Swal.fire('Deleted!', 'Announcement has been deleted.', 'success');
+          },
+          error: (err) => Swal.fire('Error', 'Failed to delete', 'error')
+        });
+      }
+    });
+  }
+
+  trackByAttId(index: number, att: any): number {
+    return att.id;
   }
 
   loadAdminStats() {
@@ -2650,7 +3473,7 @@ export class DashboardComponent implements OnInit {
           this.employeeNextPayday = `${monthNames[nextPayMonth - 1]} ${this.PAYDAY}`;
         }
       },
-      error: () => {},
+      error: () => { },
     });
   }
 
@@ -2824,7 +3647,7 @@ export class DashboardComponent implements OnInit {
     const labels = [];
     const data = [];
     let startDateStr = '';
-    
+
     for (let i = 6; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
@@ -2833,10 +3656,10 @@ export class DashboardComponent implements OnInit {
       if (i === 6) {
         startDateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
       }
-      
+
       const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
       labels.push(dayName);
-      
+
       const dayAtts = this.allAttendances.filter(a => a.date && a.date.startsWith(dateString) && a.clockIn);
       let rate = Math.round((dayAtts.length / this.totalEmployees) * 100);
       if (rate > 100) rate = 100;
@@ -2881,7 +3704,7 @@ export class DashboardComponent implements OnInit {
           legend: { display: false },
           tooltip: {
             callbacks: {
-              label: function(context: any) {
+              label: function (context: any) {
                 return context.parsed.y + '%';
               }
             }
@@ -2895,7 +3718,7 @@ export class DashboardComponent implements OnInit {
               color: 'rgba(0, 0, 0, 0.05)',
             },
             ticks: {
-              callback: function(value: any) {
+              callback: function (value: any) {
                 return value + '%';
               }
             }
@@ -3530,7 +4353,7 @@ export class EmployeeFormComponent implements OnInit {
         .subscribe({
           next: () => {
             this.isLoading = false;
-            Swal.fire('نجاح', 'تم تعديل بيانات الموظف بنجاح', 'success');
+            Swal.fire('Success', 'Employee details updated successfully', 'success');
             this.router.navigate(['/employees']);
           },
           error: (err) => {
@@ -3549,7 +4372,7 @@ export class EmployeeFormComponent implements OnInit {
       this.employeeService.addEmployee(payload).subscribe({
         next: () => {
           this.isLoading = false;
-          Swal.fire('نجاح', 'تم إضافة الموظف بنجاح', 'success');
+          Swal.fire('Success', 'Employee added successfully', 'success');
           this.router.navigate(['/employees']);
         },
         error: (err) => {
@@ -4315,13 +5138,13 @@ export class LeaveComponent implements OnInit {
             );
           });
         } else if (!this.isAdminOrHR) {
-          // ✅ Backend يُرجع strings: 'Approved', 'Annual'
-          const approvedAnnualLeavesDays = this.allLeavesList
+          // ✅ Include both 'Approved' and 'Pending' to correctly decrease available balance
+          const usedAnnualLeavesDays = this.allLeavesList
             .filter(
-              (l: any) => l.status === 'Approved' && l.leaveType === 'Annual',
+              (l: any) => (this.getStatusText(l.status) === 'Approved' || this.getStatusText(l.status) === 'Pending') && this.getLeaveTypeText(l.leaveType) === 'Annual',
             )
             .reduce((acc: number, l: any) => acc + (l.totalDays || 0), 0);
-          this.employeeAnnualLeaveBalance = 14 - approvedAnnualLeavesDays;
+          this.employeeAnnualLeaveBalance = 14 - usedAnnualLeavesDays;
         }
 
         this.isLoading = false;
@@ -4410,6 +5233,16 @@ export class LeaveComponent implements OnInit {
     return type ? type.name : typeCode != null ? String(typeCode) : 'Unknown';
   }
 
+  showRejectionReason(reason: string) {
+    Swal.fire({
+      icon: 'info',
+      title: 'Rejection Reason',
+      text: reason || 'No additional reason provided.',
+      confirmButtonText: 'Close',
+      confirmButtonColor: '#3085d6'
+    });
+  }
+
   openModal() {
     this.leaveData = { leaveType: 0, startDate: '', endDate: '', reason: '' };
     const modalEl = document.getElementById('leaveModal');
@@ -4441,6 +5274,19 @@ export class LeaveComponent implements OnInit {
         'warning',
       );
       return;
+    }
+
+    // Calculate requested days
+    const start = new Date(this.leaveData.startDate);
+    const end = new Date(this.leaveData.endDate);
+    const diffTime = Math.abs(end.getTime() - start.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // inclusive
+
+    if (Number(this.leaveData.leaveType) === 0) { // Annual
+      if (diffDays > Number(this.employeeAnnualLeaveBalance)) {
+        Swal.fire('Insufficient Balance', `You are requesting ${diffDays} days, but you only have ${this.employeeAnnualLeaveBalance} annual leave days remaining.`, 'warning');
+        return;
+      }
     }
 
     this.isProcessing = true;
@@ -4615,6 +5461,224 @@ export class LeaveFormComponent {
         Swal.fire('Error', 'Could not submit leave request. Please try again.', 'error');
       },
     });
+  }
+}
+
+```
+
+### File: src\app\features\meetings\meetings.component.ts
+```typescript
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { MeetingService } from '../../core/services/meeting.service';
+import { EmployeeService } from '../../core/services/employee.service';
+import { AuthService } from '../../core/services/auth.service';
+import Swal from 'sweetalert2';
+import { Meeting, MeetingStatus, CreateMeetingDto } from '../../core/models/meeting.model';
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { Observable } from 'rxjs';
+
+declare var bootstrap: any;
+
+@Component({
+  selector: 'app-meetings',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe],
+  templateUrl: './meetings.component.html',
+  styleUrls: ['./meetings.component.css']
+})
+export class MeetingsComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private meetingService = inject(MeetingService);
+  private employeeService = inject(EmployeeService);
+  private authService = inject(AuthService);
+
+  meetings: Meeting[] = [];
+  employees: any[] = [];
+  isLoading = false;
+  isSubmitting = false;
+
+  addForm: FormGroup;
+  MeetingStatus = MeetingStatus;
+  userRole = this.authService.getUserRole();
+
+  pageNumber = 1;
+  pageSize = 100;
+
+  constructor() {
+    this.addForm = this.fb.group({
+      employeeId: ['', Validators.required],
+      title: ['', [Validators.required, Validators.maxLength(200)]],
+      reason: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]],
+      meetingDate: ['', Validators.required],
+      meetingTime: ['', Validators.required],
+      durationMinutes: [30, [Validators.required, Validators.min(15)]]
+    });
+  }
+
+  ngOnInit(): void {
+    if (this.userRole === 'Admin' || this.userRole === 'HR') {
+      this.loadAllMeetings();
+      this.loadEmployees();
+    } else {
+      this.loadMyMeetings();
+    }
+  }
+
+  get isHrOrAdmin(): boolean {
+    return this.userRole === 'Admin' || this.userRole === 'HR';
+  }
+
+  loadAllMeetings() {
+    this.isLoading = true;
+    this.meetingService.getAll(this.pageNumber, this.pageSize).subscribe({
+      next: (res: any) => {
+        this.meetings = res.data?.items || res.items || [];
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+        Swal.fire('Error', 'Failed to load meetings', 'error');
+      }
+    });
+  }
+
+  loadMyMeetings() {
+    this.isLoading = true;
+    this.meetingService.getMyMeetings(this.pageNumber, this.pageSize).subscribe({
+      next: (res: any) => {
+        this.meetings = res.data?.items || res.items || [];
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+        Swal.fire('Error', 'Failed to load your meetings', 'error');
+      }
+    });
+  }
+
+  loadEmployees() {
+    this.employeeService.getEmployees().subscribe(res => {
+      this.employees = res;
+    });
+  }
+
+  openAddModal() {
+    this.addForm.reset({ durationMinutes: 30 });
+    const modalEl = document.getElementById('addMeetingModal');
+    if (modalEl) {
+      const modal = new bootstrap.Modal(modalEl);
+      modal.show();
+    }
+  }
+
+  closeModal(modalId: string) {
+    const modalEl = document.getElementById(modalId);
+    if (modalEl) {
+      const modal = bootstrap.Modal.getInstance(modalEl);
+      if (modal) {
+        modal.hide();
+      }
+    }
+  }
+
+  onSubmit() {
+    if (this.addForm.invalid) return;
+
+    this.isSubmitting = true;
+    const formValues = this.addForm.value;
+    
+    // Combine Date and Time
+    const combinedDateTime = new Date(`${formValues.meetingDate}T${formValues.meetingTime}`);
+    
+    const dto: CreateMeetingDto = {
+      title: formValues.title,
+      reason: formValues.reason,
+      employeeId: Number(formValues.employeeId),
+      scheduledAt: combinedDateTime.toISOString(),
+      durationMinutes: formValues.durationMinutes,
+      notes: formValues.reason
+    };
+
+    this.meetingService.create(dto).subscribe({
+      next: () => {
+        this.isSubmitting = false;
+        this.closeModal('addMeetingModal');
+        Swal.fire('Success', 'Meeting scheduled successfully', 'success');
+        if (this.isHrOrAdmin) {
+          this.loadAllMeetings();
+        } else {
+          this.loadMyMeetings();
+        }
+      },
+      error: (err) => {
+        this.isSubmitting = false;
+        Swal.fire('Error', err.error?.message || 'Failed to schedule meeting', 'error');
+      }
+    });
+  }
+
+  updateStatus(id: number, status: MeetingStatus) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to update the status of this meeting?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        let updateObservable: Observable<void>;
+        if (status === MeetingStatus.Cancelled) {
+          updateObservable = this.meetingService.cancel(id);
+        } else if (status === MeetingStatus.Completed) {
+          updateObservable = this.meetingService.complete(id);
+        } else {
+          return;
+        }
+
+        updateObservable.subscribe({
+          next: () => {
+            Swal.fire('Updated!', 'Meeting status updated.', 'success');
+            if (this.isHrOrAdmin) {
+              this.loadAllMeetings();
+            } else {
+              this.loadMyMeetings();
+            }
+          },
+          error: () => {
+            Swal.fire('Error', 'Failed to update status', 'error');
+          }
+        });
+      }
+    });
+  }
+
+  getStatusBadgeClass(status: any): string {
+    const s = String(status);
+    switch (s) {
+      case '0':
+      case 'Scheduled': return 'bg-primary';
+      case '1':
+      case 'Completed': return 'bg-success';
+      case '2':
+      case 'Cancelled': return 'bg-danger';
+      default: return 'bg-secondary';
+    }
+  }
+
+  getStatusLabel(status: any): string {
+    const s = String(status);
+    switch (s) {
+      case '0':
+      case 'Scheduled': return 'Scheduled';
+      case '1':
+      case 'Completed': return 'Completed';
+      case '2':
+      case 'Cancelled': return 'Cancelled';
+      default: return 'Unknown';
+    }
   }
 }
 
@@ -4851,6 +5915,183 @@ export class MyProfileComponent implements OnInit {
 
 ```
 
+### File: src\app\features\payroll-adjustments\payroll-adjustments.component.ts
+```typescript
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { PayrollAdjustmentService } from '../../core/services/payroll-adjustments.service';
+import { EmployeeService } from '../../core/services/employee.service';
+import { AuthService } from '../../core/services/auth.service';
+import Swal from 'sweetalert2';
+import { AdjustmentType, PayrollAdjustmentDto } from '../../core/models/payroll-adjustment.model';
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { Router } from '@angular/router';
+
+declare var bootstrap: any;
+
+@Component({
+  selector: 'app-payroll-adjustments',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe],
+  templateUrl: './payroll-adjustments.component.html',
+  styleUrls: ['./payroll-adjustments.component.css']
+})
+export class PayrollAdjustmentsComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private adjustmentService = inject(PayrollAdjustmentService);
+  private employeeService = inject(EmployeeService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  adjustments: PayrollAdjustmentDto[] = [];
+  employees: any[] = [];
+  isLoading = false;
+  isSubmitting = false;
+  isAdminOrHR = false;
+
+  addForm: FormGroup;
+  adjustmentTypes = [
+    { value: AdjustmentType.Penalty, label: 'Penalty (Deduction)' },
+    { value: AdjustmentType.Bonus, label: 'Bonus (Allowance)' }
+  ];
+
+  pageNumber = 1;
+  pageSize = 100;
+  totalItems = 0;
+
+  constructor() {
+    this.addForm = this.fb.group({
+      employeeId: ['', Validators.required],
+      type: [AdjustmentType.Penalty, Validators.required],
+      amount: ['', [Validators.required, Validators.min(0.01)]],
+      reason: ['', [Validators.required, Validators.maxLength(250)]]
+    });
+  }
+
+  ngOnInit(): void {
+    this.isAdminOrHR = this.authService.isAdminOrHR();
+    
+    this.loadAdjustments();
+    if (this.isAdminOrHR) {
+      this.loadEmployees();
+    }
+  }
+
+  loadAdjustments() {
+    this.isLoading = true;
+    
+    const request = this.isAdminOrHR 
+      ? this.adjustmentService.getAll(this.pageNumber, this.pageSize)
+      : this.adjustmentService.getMyAdjustments(this.pageNumber, this.pageSize);
+
+    request.subscribe({
+      next: (res: any) => {
+        let extracted: any[] = [];
+        if (Array.isArray(res)) extracted = res;
+        else if (res?.items && Array.isArray(res.items)) extracted = res.items;
+        else if (res?.data?.items && Array.isArray(res.data.items)) extracted = res.data.items;
+        else if (res?.data && Array.isArray(res.data)) extracted = res.data;
+        
+        this.adjustments = extracted;
+        this.totalItems = res?.totalCount || res?.data?.totalCount || 0;
+        this.isLoading = false;
+      },
+      error: (err: any) => {
+        console.error(err);
+        if (err.status !== 401 && err.status !== 403) {
+          Swal.fire('Error', 'Failed to load adjustments', 'error');
+        }
+        this.isLoading = false;
+      }
+    });
+  }
+
+  loadEmployees() {
+    this.employeeService.getEmployees().subscribe({
+      next: (res: any) => {
+        let extracted: any[] = [];
+        if (Array.isArray(res)) extracted = res;
+        else if (res?.data?.items && Array.isArray(res.data.items)) extracted = res.data.items;
+        else if (res?.data && Array.isArray(res.data)) extracted = res.data;
+        this.employees = extracted;
+      },
+      error: (err: any) => {
+        console.error(err);
+      }
+    });
+  }
+
+  openAddModal() {
+    this.addForm.reset({ type: AdjustmentType.Penalty });
+    const modalElement = document.getElementById('addAdjustmentModal');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    }
+  }
+
+  saveAdjustment() {
+    if (this.addForm.invalid) {
+      this.addForm.markAllAsTouched();
+      return;
+    }
+
+    this.isSubmitting = true;
+    const dto = this.addForm.value;
+
+    this.adjustmentService.create(dto).subscribe({
+      next: () => {
+        Swal.fire('Success', 'Adjustment created successfully', 'success');
+        this.loadAdjustments();
+        this.isSubmitting = false;
+        const modalElement = document.getElementById('addAdjustmentModal');
+        if (modalElement) {
+          const modal = bootstrap.Modal.getInstance(modalElement);
+          modal?.hide();
+        }
+      },
+      error: (err: any) => {
+        console.error(err);
+        Swal.fire('Error', 'Failed to create adjustment', 'error');
+        this.isSubmitting = false;
+      }
+    });
+  }
+
+  deleteAdjustment(id: number) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.adjustmentService.delete(id).subscribe({
+          next: () => {
+            Swal.fire('Deleted!', 'Adjustment has been deleted.', 'success');
+            this.loadAdjustments();
+          },
+          error: (err: any) => {
+            console.error(err);
+            Swal.fire('Error!', 'Failed to delete adjustment. It may have already been applied.', 'error');
+          }
+        });
+      }
+    });
+  }
+
+  getEmployeeName(id: number): string {
+    const emp = this.employees.find(e => e.id === id);
+    return emp ? `${emp.firstName} ${emp.lastName}` : `Unknown (#${id})`;
+  }
+}
+
+```
+
 ### File: src\app\features\positions\positions.component.ts
 ```typescript
 import { Component, OnInit, inject } from '@angular/core';
@@ -5057,6 +6298,7 @@ export class SalaryComponent implements OnInit {
   isAdmin: boolean = false; // أدمن (يضيف ويعدل)
   isAdminOrHR: boolean = false; // أدمن أو hr (يشوف بس)
   isProcessing: boolean = false;
+  isViewingAll: boolean = false; // Add toggle state
 
   salaryModal: any;
   isEditMode: boolean = false;
@@ -5108,6 +6350,11 @@ export class SalaryComponent implements OnInit {
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
+    
+    if (this.isAdmin) {
+        this.isViewingAll = true;
+    }
+
     this.loadSalaries();
     if (this.isAdmin) {
       this.loadEmployees();
@@ -5162,7 +6409,7 @@ export class SalaryComponent implements OnInit {
   loadSalaries() {
     // تحميل الرواتب
     this.isLoading = true;
-    const request = this.isAdminOrHR
+    const request = (this.isAdminOrHR && this.isViewingAll)
       ? this.salaryService.getAllSalaries()
       : this.salaryService.getMySalaries();
 
@@ -5228,6 +6475,14 @@ export class SalaryComponent implements OnInit {
     }
 
     this.currentPage = 1; // Reset to first page
+  }
+
+  toggleViewAll() {
+    this.isViewingAll = !this.isViewingAll;
+    this.salarySearchQuery = '';
+    this.selectedYear = '';
+    this.selectedMonth = '';
+    this.loadSalaries();
   }
 
   openModal(salary: any = null) {
@@ -5561,6 +6816,34 @@ export class HeaderComponent implements OnInit, OnDestroy {
       msg.includes('حضور')
     ) {
       this.router.navigate(['/attendance']);
+    } else if (
+      type.includes('Meeting') ||
+      msg.includes('meeting') ||
+      msg.includes('اجتماع') ||
+      msg.includes('مقابلة') ||
+      msg.includes('interview')
+    ) {
+      this.router.navigate(['/meetings']);
+    } else if (
+      type.includes('Adjustment') ||
+      type.includes('Bonus') ||
+      type.includes('Penalty') ||
+      msg.includes('bonus') ||
+      msg.includes('penalty') ||
+      msg.includes('مكافأة') ||
+      msg.includes('بونص') ||
+      msg.includes('خصم') ||
+      msg.includes('عقوبة')
+    ) {
+      this.router.navigate(['/payroll-adjustments']);
+    } else if (
+      type.includes('Announcement') ||
+      msg.includes('announcement') ||
+      msg.includes('إعلان')
+    ) {
+      this.router.navigate(['/dashboard']);
+    } else {
+      this.router.navigate(['/dashboard']);
     }
   }
 }
@@ -5676,5 +6959,18 @@ export class SidebarComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 }
+
+```
+
+### File: src\main.ts
+```typescript
+import { bootstrapApplication } from '@angular/platform-browser';
+import { appConfig } from './app/app.config';
+import { AppComponent } from './app/app.component';
+
+// تشغيل التطبيق
+bootstrapApplication(AppComponent, appConfig).catch((err) =>
+  console.error(err),
+);
 
 ```

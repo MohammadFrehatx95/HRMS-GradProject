@@ -140,6 +140,34 @@ export class HeaderComponent implements OnInit, OnDestroy {
       msg.includes('حضور')
     ) {
       this.router.navigate(['/attendance']);
+    } else if (
+      type.includes('Meeting') ||
+      msg.includes('meeting') ||
+      msg.includes('اجتماع') ||
+      msg.includes('مقابلة') ||
+      msg.includes('interview')
+    ) {
+      this.router.navigate(['/meetings']);
+    } else if (
+      type.includes('Adjustment') ||
+      type.includes('Bonus') ||
+      type.includes('Penalty') ||
+      msg.includes('bonus') ||
+      msg.includes('penalty') ||
+      msg.includes('مكافأة') ||
+      msg.includes('بونص') ||
+      msg.includes('خصم') ||
+      msg.includes('عقوبة')
+    ) {
+      this.router.navigate(['/payroll-adjustments']);
+    } else if (
+      type.includes('Announcement') ||
+      msg.includes('announcement') ||
+      msg.includes('إعلان')
+    ) {
+      this.router.navigate(['/dashboard']);
+    } else {
+      this.router.navigate(['/dashboard']);
     }
   }
 }

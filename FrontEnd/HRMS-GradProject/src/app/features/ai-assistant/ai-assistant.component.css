@@ -336,10 +336,17 @@
 
 .quick-actions-docked {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.75rem;
   padding-bottom: 0.75rem;
   width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.quick-actions-docked::-webkit-scrollbar {
+  display: none;
 }
 
 .quick-btn {
@@ -356,6 +363,8 @@
   align-items: center;
   gap: 0.4rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .quick-btn i {

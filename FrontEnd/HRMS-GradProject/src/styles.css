@@ -568,3 +568,24 @@ body.dark-mode .brand-logo {
   filter: invert(1);
   mix-blend-mode: screen;
 }
+
+/* ------------------------------------------
+   LIST GROUP (ANNOUNCEMENTS FIX)
+   ------------------------------------------ */
+body.dark-mode .list-group-item {
+  background-color: var(--color-surface) !important;
+  color: var(--color-text) !important;
+  border-color: var(--color-border) !important;
+}
+
+body.dark-mode .list-group-item.hover-bg-light:hover {
+  background-color: var(--color-surface-2) !important;
+}
+
+/* ------------------------------------------
+   RESPONSIVE TABLES FIX
+   ------------------------------------------ */
+.table-responsive .table th,
+.table-responsive .table td {
+  white-space: nowrap !important;
+}
