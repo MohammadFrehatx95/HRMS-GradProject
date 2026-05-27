@@ -4,7 +4,7 @@
             <button
                 class="btn btn-light border-0 shadow-none d-flex align-items-center justify-content-center p-2"
                 (click)="toggleSidebar()">
-                <i class="bi bi-list fs-4 text-secondary"></i>
+                <i class="bi bi-list fs-4 text-primary"></i>
             </button>
         </div>
 
@@ -29,7 +29,7 @@
                     class="btn btn-light btn-sm border-0 shadow-none settings-btn"
                     id="settingsDropdown" data-bs-toggle="dropdown"
                     aria-expanded="false">
-                    <i class="bi bi-gear-fill fs-5 text-secondary"></i>
+                    <i class="bi bi-gear-fill fs-5" style="color: #8b5cf6;"></i>
                 </button>
 
                 <div class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-0 settings-panel overflow-hidden"
@@ -97,7 +97,7 @@
                     class="btn btn-light btn-sm border-0 position-relative shadow-none"
                     id="notificationDropdown" data-bs-toggle="dropdown"
                     aria-expanded="false">
-                    <i class="bi bi-bell-fill fs-5 text-secondary"></i>
+                    <i class="bi bi-bell-fill fs-5" style="color: #f59e0b;"></i>
 
                     @if (unreadCount > 0) {
                     <span

@@ -1,4 +1,4 @@
-﻿namespace Application.DTOs.Auth;
+namespace Application.DTOs.Auth;
 
 public class MeDto
 {
@@ -6,4 +6,6 @@ public class MeDto
     public string Email { get; set; } = string.Empty;
     public string Role { get; set; } = string.Empty;
     public string? EmployeeId { get; set; }
+    public string? ProfilePictureUrl { get; set; }
+    public string? PendingProfilePictureUrl { get; set; }
 }

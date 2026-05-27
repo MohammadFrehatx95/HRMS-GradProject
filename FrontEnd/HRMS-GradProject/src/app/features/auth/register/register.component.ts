@@ -56,11 +56,11 @@ export class RegisterComponent {
 
         Swal.fire({
           icon: 'success',
-          title: 'تم إنشاء الحساب بنجاح',
-          text: 'هل تريد إكمال ملف الموظف الآن؟',
+          title: 'Account Created Successfully',
+          text: 'Do you want to complete the employee profile now?',
           showCancelButton: true,
-          confirmButtonText: 'نعم، أكمل البيانات',
-          cancelButtonText: 'لاحقاً',
+          confirmButtonText: 'Yes, Complete Profile',
+          cancelButtonText: 'Later',
         }).then((result) => {
           if (result.isConfirmed) {
             this.router.navigate(['/employee-form'], {
@@ -77,10 +77,10 @@ export class RegisterComponent {
       error: (err) => {
         this.isLoading = false;
         Swal.fire(
-          'خطأ',
+          'Error',
           getFriendlyErrorMessage(
             err,
-            'فشل إنشاء الحساب. يرجى المحاولة مرة أخرى.',
+            'Failed to create account. Please try again.',
           ),
           'error',
         );

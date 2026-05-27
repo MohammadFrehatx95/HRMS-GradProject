@@ -30,6 +30,7 @@ namespace Application.Services.Implementations
                 Username = user.Username,
                 Email = user.Email,
                 Role = user.Role.ToString(),
+                ProfilePictureUrl = user.ProfilePictureUrl,
                 ExpiresAt = jwtService.GetExpiration()
             };
         }

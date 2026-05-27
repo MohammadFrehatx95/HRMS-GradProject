@@ -24,53 +24,64 @@
         <ul>
             <li><a routerLink="/dashboard" routerLinkActive="active"
                     (click)="closeMobileSidebar()"><i
-                        class="bi bi-house"></i> {{ 'Dashboard' | t }}</a></li>
+                        class="bi bi-house icon-blue"></i> {{ 'Dashboard' | t
+                    }}</a></li>
             <li><a routerLink="/my-profile" routerLinkActive="active"
                     (click)="closeMobileSidebar()"><i
-                        class="bi bi-person"></i> {{ 'My Profile' | t
+                        class="bi bi-person icon-blue-dark"></i> {{ 'My Profile'
+                    | t
                     }}</a></li>
             @if (isAdminOrHR) {
             <li><a routerLink="/employees" routerLinkActive="active"
                     (click)="closeMobileSidebar()"><i
-                        class="bi bi-people"></i> {{ 'Employees' | t }}</a></li>
+                        class="bi bi-people icon-pink"></i> {{ 'Employees' | t
+                    }}</a></li>
             }
             <li><a routerLink="/payroll-adjustments" routerLinkActive="active"
                     (click)="closeMobileSidebar()"><i
-                        class="bi bi-wallet2"></i> {{ 'Bonus & Penalty' | t }}</a></li>
+                        class="bi bi-wallet2 icon-brown"></i> {{
+                    'Bonus & Penalty' | t }}</a></li>
             <li><a routerLink="/leave" routerLinkActive="active"
                     (click)="closeMobileSidebar()"><i
-                        class="bi bi-calendar2-check"></i> {{ 'Leave Requests' |
+                        class="bi bi-calendar2-check icon-yellow"></i> {{
+                    'Leave Requests' |
                     t }}</a></li>
             <li><a routerLink="/attendance" routerLinkActive="active"
                     (click)="closeMobileSidebar()"><i
-                        class="bi bi-clock-history"></i> {{ 'Attendance' | t
+                        class="bi bi-clock-history icon-orange"></i> {{
+                    'Attendance' | t
                     }}</a></li>
             <li><a routerLink="/salary" routerLinkActive="active"
                     (click)="closeMobileSidebar()"><i
-                        class="bi bi-cash-stack"></i> {{ 'Salaries' | t
+                        class="bi bi-cash-stack icon-green"></i> {{ 'Salaries' |
+                    t
                     }}</a></li>
             <li><a routerLink="/meetings" routerLinkActive="active"
                     (click)="closeMobileSidebar()"><i
-                        class="bi bi-calendar-event"></i> {{ 'Meetings' | t
+                        class="bi bi-calendar-event icon-gray"></i> {{
+                    'Meetings' | t
                     }}</a></li>
             <li><a routerLink="/ai-assistant" routerLinkActive="active"
                     (click)="closeMobileSidebar()" class="ai-nav-link"><i
                         class="bi bi-stars"></i> {{ 'AI Assistant' | t
-                    }}<span class="ai-badge">AI</span></a></li>
+                    }}</a></li>
 
             @if (isAdmin) {
             <li class="section-title">{{ 'System Control' | t }}</li>
             <li><a routerLink="/departments" routerLinkActive="active"
                     (click)="closeMobileSidebar()"><i
-                        class="bi bi-diagram-3"></i> {{ 'Departments' | t
+                        class="bi bi-diagram-3 icon-indigo"></i> {{
+                    'Departments' | t
                     }}</a></li>
             <li><a routerLink="/positions" routerLinkActive="active"
                     (click)="closeMobileSidebar()"><i
-                        class="bi bi-briefcase"></i> {{ 'Positions' | t
+                        class="bi bi-briefcase icon-teal"></i> {{ 'Positions' |
+                    t
                     }}</a></li>
             <li><a routerLink="/register" routerLinkActive="active"
                     (click)="closeMobileSidebar()"><i
-                        class="bi bi-person-plus"></i> {{ 'Register User' | t }}
+                        class="bi bi-person-plus icon-cyan"></i> {{
+                    'Register User' | t }}
                 </a></li>
             }
         </ul>
@@ -80,7 +91,10 @@
     <div class="sidebar-footer">
         <div class="user-profile" routerLink="/my-profile"
             (click)="closeMobileSidebar()">
-            <div class="avatar-initials">{{ initials }}</div>
+            <div class="avatar-initials" [class.p-0]="profilePicUrl" style="overflow: hidden;">
+                <img *ngIf="profilePicUrl" [src]="profilePicUrl" alt="User" class="w-100 h-100 object-fit-cover">
+                <span *ngIf="!profilePicUrl">{{ initials }}</span>
+            </div>
             <div class="user-info">
                 <p class="name">{{ userName }}</p>
                 <p class="status">{{ userRole }}</p>

@@ -483,29 +483,6 @@ html[dir="rtl"] .me-auto {
 html[dir="rtl"] .dropdown-menu-end {
   right: auto !important;
   left: 0 !important;
-}
-
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   SCROLLBAR
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-body.dark-mode ::-webkit-scrollbar {
-  width: 8px;
-}
-body.dark-mode ::-webkit-scrollbar-track {
-  background: #1a1d23;
-}
-body.dark-mode ::-webkit-scrollbar-thumb {
-  background: #444;
-  border-radius: 4px;
-}
-body.dark-mode ::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   SWEETALERT2
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-body.dark-mode .swal2-popup {
   background-color: var(--color-surface) !important;
   color: var(--color-text) !important;
 }
@@ -588,4 +565,190 @@ body.dark-mode .list-group-item.hover-bg-light:hover {
 .table-responsive .table th,
 .table-responsive .table td {
   white-space: nowrap !important;
+}
+
+/* ------------------------------------------
+   GLOBAL AESTHETIC ENHANCEMENTS
+   ------------------------------------------ */
+/* Card Enhancements */
+.card {
+  border: none !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  border-radius: 12px !important;
+}
+
+.card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04) !important;
+}
+
+body.dark-mode .card {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+body.dark-mode .card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Button Enhancements */
+.btn {
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #0d6efd, #0a58ca) !important;
+  border: none !important;
+  box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3) !important;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #0b5ed7, #084298) !important;
+  box-shadow: 0 6px 14px rgba(13, 110, 253, 0.4) !important;
+  transform: translateY(-1px);
+}
+
+body.dark-mode .btn-primary {
+  background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3) !important;
+}
+
+body.dark-mode .btn-primary:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+  box-shadow: 0 6px 14px rgba(59, 130, 246, 0.4) !important;
+}
+
+/* Subtle Table Row Hover Animation */
+.table-hover tbody tr {
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+.table-hover tbody tr:hover {
+  background-color: var(--color-table-hover) !important;
+}
+
+/* ------------------------------------------
+   PROFESSIONAL UI/UX POLISH
+   ------------------------------------------ */
+
+/* 1. Custom Scrollbars Global */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+}
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* 2. Inputs & Forms Polish */
+.form-control, .form-select {
+  background-color: #f9fafb !important;
+  border: 1px solid #e5e7eb !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  font-size: 0.95rem;
+  padding: 0.6rem 1rem;
+}
+.form-control:focus, .form-select:focus {
+  background-color: #ffffff !important;
+  border-color: #8b5cf6 !important;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15) !important;
+  outline: none;
+}
+body.dark-mode .form-control, body.dark-mode .form-select {
+  background-color: var(--color-input-bg) !important;
+  border-color: #333 !important;
+}
+body.dark-mode .form-control:focus, body.dark-mode .form-select:focus {
+  border-color: #8b5cf6 !important;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.25) !important;
+}
+
+/* 3. Animations & Transitions */
+/* Fade in animation for main content */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.page-container, .card, .modal-content {
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 4. Modals Polish */
+.modal-backdrop {
+  backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.modal-content {
+  border-radius: 16px !important;
+  border: none !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  overflow: hidden;
+}
+.modal-header {
+  border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+  padding: 1.25rem 1.5rem !important;
+}
+.modal-footer {
+  border-top: 1px solid rgba(0,0,0,0.05) !important;
+  padding: 1rem 1.5rem !important;
+  background-color: #f8fafc;
+}
+body.dark-mode .modal-header, body.dark-mode .modal-footer {
+  border-color: rgba(255,255,255,0.05) !important;
+}
+body.dark-mode .modal-footer {
+  background-color: var(--color-surface-2) !important;
+}
+
+/* 5. Tables Polish */
+.table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+.table thead th {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  color: var(--color-text-label) !important;
+  border-bottom: 1px solid var(--color-border) !important;
+  padding: 1rem;
+}
+.table tbody td {
+  padding: 1rem;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--color-border) !important;
+  font-size: 0.9rem;
+}
+.table tbody tr:last-child td {
+  border-bottom: none !important;
+}
+
+/* 6. Typography & Spacing tweaks */
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+p {
+  line-height: 1.6;
 }

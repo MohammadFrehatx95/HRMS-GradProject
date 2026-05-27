@@ -57,6 +57,7 @@ public static class DependencyInjection
 
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IImageService, CloudinaryService>();
 
         // Ai 
         services.Configure<GroqSettings>(configuration.GetSection("GroqSettings"));

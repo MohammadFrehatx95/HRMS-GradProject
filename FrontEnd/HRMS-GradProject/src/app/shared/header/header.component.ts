@@ -7,6 +7,8 @@ import { SidebarService } from '../../core/services/sidebar.service';
 import { SettingsService } from '../../core/services/settings.service';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { PwaService } from '../../core/services/pwa.service';
+import { AuthService } from '../../core/services/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-header',
@@ -23,9 +25,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   // ✅ public حتى نستخدمه في الـ template
   pwaService = inject(PwaService);
   settingsService = inject(SettingsService);
+  authService = inject(AuthService);
 
   notifications: any[] = [];
   unreadCount: number = 0;
+  profilePicUrl: string | null = null;
   private pollingSub?: Subscription;
 
   toggleSidebar() {
@@ -41,6 +45,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.pollingSub = interval(5000).subscribe(() => {
       this.loadNotifications();
     });
+
+    this.profilePicUrl = this.authService.getCurrentUserProfilePic();
+    if (typeof window !== 'undefined') {
+      window.addEventListener('profile_pic_updated', () => {
+        this.profilePicUrl = this.authService.getCurrentUserProfilePic();
+      });
+    }
   }
 
   ngOnDestroy() {
@@ -95,12 +106,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   deleteNotification(event: Event, id: number) {
     event.stopPropagation();
-    this.notificationService.deleteNotification(id).subscribe({
-      next: () => {
-        this.notifications = this.notifications.filter(n => n.id !== id);
-        this.unreadCount = this.notifications.filter((n) => !n.isRead).length;
-      },
-      error: (err) => console.error('Error deleting notification:', err)
+    Swal.fire({
+      title: 'Delete Notification?',
+      text: 'Are you sure you want to delete this notification?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.notificationService.deleteNotification(id).subscribe({
+          next: () => {
+            this.notifications = this.notifications.filter(n => n.id !== id);
+            this.unreadCount = this.notifications.filter((n) => !n.isRead).length;
+          },
+          error: (err) => console.error('Error deleting notification:', err)
+        });
+      }
     });
   }
 
@@ -108,12 +132,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     if (this.notifications.length === 0) return;
 
-    this.notificationService.deleteAllNotifications().subscribe({
-      next: () => {
-        this.notifications = [];
-        this.unreadCount = 0;
-      },
-      error: (err) => console.error('Error deleting all notifications:', err)
+    Swal.fire({
+      title: 'Clear All Notifications?',
+      text: 'Are you sure you want to delete all notifications?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete all',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.notificationService.deleteAllNotifications().subscribe({
+          next: () => {
+            this.notifications = [];
+            this.unreadCount = 0;
+          },
+          error: (err) => console.error('Error deleting all notifications:', err)
+        });
+      }
     });
   }
 

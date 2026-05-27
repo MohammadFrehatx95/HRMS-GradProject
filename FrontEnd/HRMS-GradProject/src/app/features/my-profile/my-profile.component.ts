@@ -31,6 +31,9 @@ export class MyProfileComponent implements OnInit {
   pwdData = { oldPassword: '', newPassword: '', confirmNewPassword: '' };
   isUpdatingProfile = false;
   isChangingPwd = false;
+  isUploadingPic = false;
+  profilePicUrl: string | null = null;
+  pendingProfilePicUrl: string | null = null;
 
   ngOnInit() {
     // تحميل البيانات
@@ -55,6 +58,21 @@ export class MyProfileComponent implements OnInit {
     } else {
       this.loadMyProfile();
     }
+
+    this.profilePicUrl = this.authService.getCurrentUserProfilePic();
+    window.addEventListener('profile_pic_updated', () => {
+      this.profilePicUrl = this.authService.getCurrentUserProfilePic();
+    });
+
+    // Load pending picture status from /me
+    this.authService.getMe().subscribe({
+      next: (me: any) => {
+        if (me?.pendingProfilePictureUrl) {
+          this.pendingProfilePicUrl = me.pendingProfilePictureUrl;
+        }
+      },
+      error: () => {}
+    });
   }
 
   get initials(): string {
@@ -89,6 +107,46 @@ export class MyProfileComponent implements OnInit {
         this.isLoading = false;
       },
     });
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      // Validate file type and size
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+      if (!allowedTypes.includes(file.type)) {
+        Swal.fire('Invalid File', 'Please upload a JPG, PNG, WebP or GIF image.', 'error');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        Swal.fire('File Too Large', 'Image must be smaller than 5MB.', 'error');
+        return;
+      }
+
+      this.isUploadingPic = true;
+      this.authService.uploadProfilePicture(file).subscribe({
+        next: (res) => {
+          this.isUploadingPic = false;
+          this.pendingProfilePicUrl = res?.data ?? null;
+          Swal.fire({
+            icon: 'info',
+            title: 'Picture Submitted!',
+            html: `<p>Your profile picture has been submitted for review.</p>
+                   <p class="text-muted small mt-2">An HR manager will review and approve it shortly. You will be notified once it\'s approved.</p>`,
+            confirmButtonText: 'Got it!',
+            confirmButtonColor: '#4361ee',
+          });
+        },
+        error: (err) => {
+          this.isUploadingPic = false;
+          Swal.fire(
+            'Error',
+            getFriendlyErrorMessage(err, 'Failed to upload profile picture.'),
+            'error'
+          );
+        }
+      });
+    }
   }
 
   openEditModal() {

@@ -30,6 +30,7 @@ export class SidebarComponent implements OnInit {
   isAdminOrHR: boolean = false;
   userName: string = 'User';
   userRole: string = 'Employee';
+  profilePicUrl: string | null = null;
 
   @ViewChild('sidebar') sidebarRef!: ElementRef;
   isResizing = false;
@@ -82,6 +83,13 @@ export class SidebarComponent implements OnInit {
           }
         },
         error: () => {}, // طنّش الأخطاء
+      });
+    }
+
+    this.profilePicUrl = this.authService.getCurrentUserProfilePic();
+    if (typeof window !== 'undefined') {
+      window.addEventListener('profile_pic_updated', () => {
+        this.profilePicUrl = this.authService.getCurrentUserProfilePic();
       });
     }
   }

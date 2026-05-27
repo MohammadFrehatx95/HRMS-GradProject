@@ -192,19 +192,19 @@ export class EmployeeFormComponent implements OnInit {
   private parseBackendError(err: any): string {
     const body = err?.error;
 
-    if (!body) return 'حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى.';
+    if (!body) return 'An unexpected error occurred. Please try again.';
 
-    // ASP.NET validation errors — كل field فيه list من الـ errors
+    // ASP.NET validation errors
     if (body.errors && typeof body.errors === 'object') {
       const fieldLabels: Record<string, string> = {
-        PhoneNumber: 'رقم الهاتف',
-        FirstName: 'الاسم الأول',
-        LastName: 'اسم العائلة',
-        Email: 'البريد الإلكتروني',
-        HireDate: 'تاريخ التعيين',
-        DepartmentId: 'القسم',
-        PositionId: 'المسمى الوظيفي',
-        UserId: 'حساب المستخدم',
+        PhoneNumber: 'Phone Number',
+        FirstName: 'First Name',
+        LastName: 'Last Name',
+        Email: 'Email',
+        HireDate: 'Hire Date',
+        DepartmentId: 'Department',
+        PositionId: 'Position',
+        UserId: 'User Account',
       };
 
       const messages: string[] = [];
@@ -212,38 +212,17 @@ export class EmployeeFormComponent implements OnInit {
         const label = fieldLabels[field] || field;
         const msgs = Array.isArray(errors) ? errors : [String(errors)];
         for (const msg of msgs) {
-          // نترجم الرسالة للعربي لو عندنا ترجمة
-          const translated = this.translateBackendMsg(String(msg));
-          messages.push(`• ${label}: ${translated}`);
+          messages.push(`• ${label}: ${msg}`);
         }
       }
       if (messages.length) return messages.join('\n');
     }
 
-    // رسالة عادية
     if (body.message) return body.message;
     if (body.title) return body.title;
     if (typeof body === 'string') return body;
 
-    return 'حدث خطأ أثناء الإرسال، يرجى المحاولة مرة أخرى.';
-  }
-
-  // ترجمة بعض رسائل الـ backend الشائعة للعربي
-  private translateBackendMsg(msg: string): string {
-    const map: Record<string, string> = {
-      'Invalid phone number format.':
-        'صيغة رقم الهاتف غير صحيحة (يجب أن يكون 10 أرقام)',
-      'Phone number must be 10 digits.':
-        'يجب أن يكون رقم الهاتف 10 أرقام بالضبط',
-      'The field PhoneNumber must be a string or array type with a maximum length of 10.':
-        'رقم الهاتف يجب ألا يتجاوز 10 أرقام',
-      'is required.': 'هذا الحقل مطلوب',
-      'already exists': 'هذا السجل موجود مسبقاً',
-    };
-    for (const [en, ar] of Object.entries(map)) {
-      if (msg.toLowerCase().includes(en.toLowerCase())) return ar;
-    }
-    return msg;
+    return 'An error occurred while submitting. Please try again.';
   }
 
   onSubmit() {
@@ -256,18 +235,18 @@ export class EmployeeFormComponent implements OnInit {
       if (phone?.errors?.['pattern']) {
         Swal.fire({
           icon: 'warning',
-          title: 'رقم هاتف غير صحيح',
-          text: 'رقم الهاتف يجب أن يتكون من 10 أرقام فقط (أرقام فقط بدون مسافات أو رموز)',
-          confirmButtonText: 'حسناً',
+          title: 'Invalid Phone Number',
+          text: 'Phone number must be exactly 10 digits (numbers only, no spaces or symbols).',
+          confirmButtonText: 'OK',
         });
         return;
       }
 
       Swal.fire({
         icon: 'warning',
-        title: 'بيانات ناقصة',
-        text: 'يرجى التأكد من تعبئة جميع الحقول المطلوبة بشكل صحيح',
-        confirmButtonText: 'حسناً',
+        title: 'Missing Information',
+        text: 'Please make sure all required fields are filled in correctly.',
+        confirmButtonText: 'OK',
       });
       return;
     }
@@ -298,9 +277,9 @@ export class EmployeeFormComponent implements OnInit {
             const msg = this.parseBackendError(err);
             Swal.fire({
               icon: 'error',
-              title: 'فشل التعديل',
+              title: 'Update Failed',
               text: msg,
-              confirmButtonText: 'حسناً',
+              confirmButtonText: 'OK',
             });
             console.error('Update error:', err);
           },
@@ -317,9 +296,9 @@ export class EmployeeFormComponent implements OnInit {
           const msg = this.parseBackendError(err);
           Swal.fire({
             icon: 'error',
-            title: 'فشل الإضافة',
+            title: 'Failed to Add Employee',
             text: msg,
-            confirmButtonText: 'حسناً',
+            confirmButtonText: 'OK',
           });
           console.error('Add error:', err);
         },

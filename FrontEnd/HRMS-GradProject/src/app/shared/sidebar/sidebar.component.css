@@ -259,6 +259,19 @@
   background-color: var(--color-border, #d1d5db);
 }
 
+/* ── Custom Icon Colors for Light Mode ── */
+.sidebar-nav a i.icon-blue { color: #2563eb; }
+.sidebar-nav a i.icon-blue-dark { color: #1e40af; }
+.sidebar-nav a i.icon-pink { color: #d63384; }
+.sidebar-nav a i.icon-brown { color: #8b5a2b; }
+.sidebar-nav a i.icon-yellow { color: #eab308; }
+.sidebar-nav a i.icon-orange { color: #f97316; }
+.sidebar-nav a i.icon-green { color: #22c55e; }
+.sidebar-nav a i.icon-gray { color: #6b7280; }
+.sidebar-nav a i.icon-indigo { color: #4f46e5; }
+.sidebar-nav a i.icon-teal { color: #14b8a6; }
+.sidebar-nav a i.icon-cyan { color: #06b6d4; }
+
 /* ── AI Assistant Nav Link ── */
 .sidebar-nav a.ai-nav-link {
   background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1));
@@ -299,4 +312,8 @@
 .sidebar-nav a.ai-nav-link:hover .ai-badge,
 .sidebar-nav a.ai-nav-link.active .ai-badge {
   background: rgba(255,255,255,0.25);
+}
+
+.object-fit-cover {
+  object-fit: cover;
 }

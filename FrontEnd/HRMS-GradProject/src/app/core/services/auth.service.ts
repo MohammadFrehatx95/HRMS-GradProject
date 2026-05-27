@@ -24,6 +24,8 @@ export class AuthService {
             localStorage.setItem('user_name', response.data.username);
           if (response.data.email)
             localStorage.setItem('user_email', response.data.email);
+          if (response.data.profilePictureUrl)
+            localStorage.setItem('user_profile_pic', response.data.profilePictureUrl);
         }
       }),
     );
@@ -40,10 +42,36 @@ export class AuthService {
   getMe(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/me`).pipe(
       map((response) => {
-        if (response && response.data) return response.data;
+        if (response && response.data) {
+          if (response.data.profilePictureUrl) {
+             localStorage.setItem('user_profile_pic', response.data.profilePictureUrl);
+          }
+          return response.data;
+        }
         return response;
       }),
     );
+  }
+
+  uploadProfilePicture(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    // NOTE: Now uploads as PENDING — awaiting HR/Admin approval
+    return this.http.post<any>(`${this.apiUrl}/upload-profile-picture`, formData);
+  }
+
+  getPendingProfilePictures(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/pending-profile-pictures`).pipe(
+      map((res) => res?.data ?? res)
+    );
+  }
+
+  approveProfilePicture(userId: number): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/approve-profile-picture/${userId}`, {});
+  }
+
+  rejectProfilePicture(userId: number): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/reject-profile-picture/${userId}`, {});
   }
 
   isLoggedIn(): boolean {
@@ -119,6 +147,7 @@ export class AuthService {
     localStorage.removeItem('user_role');
     localStorage.removeItem('user_name');
     localStorage.removeItem('user_email');
+    localStorage.removeItem('user_profile_pic');
   }
 
   getCurrentUserName(): string | null {
@@ -127,6 +156,10 @@ export class AuthService {
 
   getCurrentUserEmail(): string | null {
     return typeof window !== 'undefined' ? localStorage.getItem('user_email') : null;
+  }
+
+  getCurrentUserProfilePic(): string | null {
+    return typeof window !== 'undefined' ? localStorage.getItem('user_profile_pic') : null;
   }
 
   // كل اليوزرات

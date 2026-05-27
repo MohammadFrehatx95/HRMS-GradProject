@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { AiService, AiResponseDto, TokenStatsDto } from '../../core/services/ai.service';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
+import Swal from 'sweetalert2';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -318,11 +319,26 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   }
 
   clearChat(): void {
-    this.messages = [];
-    this.totalTokensUsed = 0;
-    localStorage.removeItem(this.getChatStorageKey());
-    localStorage.removeItem(this.getTokenStorageKey());
-    this.ngOnInit();
+    if (this.messages.length <= 1) return; // Only greeting message
+    
+    Swal.fire({
+      title: 'Clear Chat History?',
+      text: 'Are you sure you want to delete all messages? This cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, clear it',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.messages = [];
+        this.totalTokensUsed = 0;
+        localStorage.removeItem(this.getChatStorageKey());
+        localStorage.removeItem(this.getTokenStorageKey());
+        this.ngOnInit();
+      }
+    });
   }
 
   setAiMode(mode: number): void {

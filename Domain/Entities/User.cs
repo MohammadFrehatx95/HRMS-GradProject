@@ -1,4 +1,4 @@
-﻿namespace Domain.Entities;
+namespace Domain.Entities;
 
 public class User
 {
@@ -11,6 +11,8 @@ public class User
     public Employee? Employee { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public bool IsActive { get; set; } = true;
+    public string? ProfilePictureUrl { get; set; }
+    public string? PendingProfilePictureUrl { get; set; }
 
     // Navigation properties
 
