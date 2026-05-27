@@ -830,35 +830,4 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
-
-  loadPendingProfilePictures() {
-    this.authService.getPendingProfilePictures().subscribe({
-      next: (res) => {
-        this.pendingProfilePictures = res || [];
-      },
-      error: () => {
-        this.pendingProfilePictures = [];
-      }
-    });
-  }
-
-  approvePicture(userId: number) {
-    this.authService.approveProfilePicture(userId).subscribe({
-      next: () => {
-        Swal.fire('Approved', 'Profile picture approved.', 'success');
-        this.loadPendingProfilePictures();
-      },
-      error: (err) => Swal.fire('Error', 'Failed to approve.', 'error')
-    });
-  }
-
-  rejectPicture(userId: number) {
-    this.authService.rejectProfilePicture(userId).subscribe({
-      next: () => {
-        Swal.fire('Rejected', 'Profile picture rejected.', 'success');
-        this.loadPendingProfilePictures();
-      },
-      error: (err) => Swal.fire('Error', 'Failed to reject.', 'error')
-    });
-  }
 }
