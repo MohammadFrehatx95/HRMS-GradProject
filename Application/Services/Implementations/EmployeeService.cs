@@ -50,6 +50,8 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
         var query = uow.Repository<Employee>()
                        .GetAllQueryable()
                        .Include(e => e.Department)
+                       .Include(e => e.Position)
+                       .Include(e => e.User)
                        .OrderBy(e => e.DepartmentId)
                        .ThenBy(e => e.Id);
 
@@ -68,6 +70,8 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
         var employee = await uow.Repository<Employee>()
                                 .GetAllQueryable()
                                 .Include(e => e.Department)
+                                .Include(e => e.Position)
+                                .Include(e => e.User)
                                 .FirstOrDefaultAsync(e => e.Id == id);
 
         return employee is null ? null : mapper.Map<EmployeeDto>(employee);
@@ -145,6 +149,7 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
                                 .GetAllQueryable()
                                 .Include(e => e.Department)
                                 .Include(e => e.Position)
+                                .Include(e => e.User)
                                 .FirstOrDefaultAsync(e => e.Id == id);
 
         return employee is null ? null : mapper.Map<EmployeeProfileDto>(employee);

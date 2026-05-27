@@ -34,7 +34,9 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.PositionTitle,
                 opt => opt.MapFrom(src => src.Position != null ? src.Position.Title : string.Empty))
             .ForMember(dest => dest.UserId,
-                opt => opt.MapFrom(src => src.UserId));
+                opt => opt.MapFrom(src => src.UserId))
+            .ForMember(dest => dest.ProfilePictureUrl,
+                opt => opt.MapFrom(src => src.User != null ? src.User.ProfilePictureUrl : null));
 
 
         // For creation, we want to map from CreateEmployeeDto to Employee
@@ -50,7 +52,8 @@ public class MappingProfile : Profile
             .ForMember(d => d.Phone, o => o.MapFrom(s => s.PhoneNumber))  // ✅ PhoneNumber → Phone
             .ForMember(dest => dest.DepartmentName,
                     opt => opt.MapFrom(src => src.Department != null ? src.Department.Name : string.Empty))
-          .ForMember(d => d.PositionTitle, o => o.MapFrom(s => s.Position != null ? s.Position.Title : string.Empty));
+          .ForMember(d => d.PositionTitle, o => o.MapFrom(s => s.Position != null ? s.Position.Title : string.Empty))
+          .ForMember(d => d.ProfilePictureUrl, o => o.MapFrom(s => s.User != null ? s.User.ProfilePictureUrl : null));
 
         CreateMap<Department, DepartmentDto>()
           .ForMember(d => d.EmployeeCount,

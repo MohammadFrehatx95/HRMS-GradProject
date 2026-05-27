@@ -1,4 +1,4 @@
-﻿namespace Application.DTOs.Employee;
+namespace Application.DTOs.Employee;
 
 public class EmployeeProfileDto
 {
@@ -9,4 +9,5 @@ public class EmployeeProfileDto
     public string DepartmentName { get; set; } = string.Empty;
     public string PositionTitle { get; set; } = string.Empty;
     public DateTime HireDate { get; set; }
+    public string? ProfilePictureUrl { get; set; }
 }
