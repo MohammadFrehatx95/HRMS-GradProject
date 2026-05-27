@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+﻿import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -51,14 +51,13 @@ export class LeaveFormComponent {
     const formValue = this.leaveForm.value;
 
     const newLeave = {
-      // ✅ حوّل لرقم حتى يطابق Backend enum
+
       leaveType: Number(formValue.leaveType),
       startDate: new Date(formValue.startDate!).toISOString(),
       endDate: new Date(formValue.endDate!).toISOString(),
       reason: formValue.reason,
     };
 
-    // show slow-server warning after 6 seconds
     this.slowWarningTimer = setTimeout(() => {
       this.loadingMessage = 'Server is starting up, please wait a moment...';
     }, 6000);

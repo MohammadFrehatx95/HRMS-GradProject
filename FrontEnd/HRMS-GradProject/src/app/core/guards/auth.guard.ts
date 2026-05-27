@@ -1,8 +1,7 @@
-import { inject } from '@angular/core';
+﻿import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-// ✅ حماية الصفحات الداخلية — يرجع لللوجين إذا لم يكن مسجل
 export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
@@ -15,7 +14,6 @@ export const authGuard: CanActivateFn = (route, state) => {
   }
 };
 
-// ✅ منع المستخدم المسجل من رؤية صفحة اللوجين — يرجع للداشبورد إذا كان مسجلا
 export const noAuthGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);

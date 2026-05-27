@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+﻿import { Routes } from '@angular/router';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { EmployeesComponent } from './features/employees/employees.component';
 import { DepartmentsComponent } from './features/departments/departments.component';
@@ -53,7 +53,7 @@ export const routes: Routes = [
     component: DepartmentsComponent,
     canActivate: [authGuard, hrGuard],
   },
-  // الكل يشوف الإجازات، القبول/الرفض للـ admin وhr فقط
+
   { path: 'leave', component: LeaveComponent, canActivate: [authGuard] },
   {
     path: 'attendance',
@@ -65,7 +65,7 @@ export const routes: Routes = [
     component: AllAttendanceComponent,
     canActivate: [authGuard, hrGuard],
   },
-  // كل موظف يشوف راتبه، الإضافة والتعديل للـ admin
+
   { path: 'salary', component: SalaryComponent, canActivate: [authGuard] },
   {
     path: 'employee-form',

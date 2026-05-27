@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+﻿import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -7,7 +7,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class EmployeeService {
-  // شغل الموظفين
+
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/employees`;
 
@@ -36,7 +36,6 @@ export class EmployeeService {
     );
   }
 
-  // تفاصيل الموظف
   getEmployeeById(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
       map((response) => {

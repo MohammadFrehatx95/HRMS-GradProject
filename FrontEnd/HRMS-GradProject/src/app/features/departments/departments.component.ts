@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+﻿import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -27,7 +27,7 @@ export class DepartmentsComponent implements OnInit {
   private employeeService = inject(EmployeeService);
   private positionService = inject(PositionService);
 
-  allPositions: any[] = []; // lookup: positionId -> title
+  allPositions: any[] = [];
 
   departmentsList: any[] = [];
   isLoading: boolean = true;
@@ -40,7 +40,7 @@ export class DepartmentsComponent implements OnInit {
   private addModalInstance: any;
 
   allEmployees: any[] = [];
-  departmentStats: any = {}; // id -> { totalEmployees: 0, positions: { posName: count } }
+  departmentStats: any = {};
 
   deptEmployees: any[] = [];
   filteredDeptEmployees: any[] = [];
@@ -58,13 +58,13 @@ export class DepartmentsComponent implements OnInit {
   }
 
   loadPositionsThenEmployees() {
-    // جلب الـ positions أولاً ثم الموظفين لعمل join صحيح
+
     this.positionService.getPositions().subscribe({
       next: (res: any) => {
         this.allPositions = Array.isArray(res) ? res : res?.data || [];
         this.loadEmployees();
       },
-      error: () => this.loadEmployees(), // تحميل الموظفين حتى لو فشل جلب الـ positions
+      error: () => this.loadEmployees(),
     });
   }
 
@@ -74,7 +74,7 @@ export class DepartmentsComponent implements OnInit {
         const extracted: any[] = Array.isArray(res)
           ? res
           : res?.data?.items || res?.data || [];
-        // ربط اسم الـ position بكل موظف
+
         this.allEmployees = extracted.map((emp) => {
           if (!emp.positionName && emp.positionId) {
             const pos = this.allPositions.find((p) => p.id === emp.positionId);
@@ -98,8 +98,8 @@ export class DepartmentsComponent implements OnInit {
       }
 
       this.departmentStats[deptId].totalEmployees++;
-      const posName = emp.positionName; // نتجاهل الموظفين الذين ليس لديهم position
-      if (!posName) continue; // لا نُدرجهم في الـ Positions Breakdown
+      const posName = emp.positionName;
+      if (!posName) continue;
       if (!this.departmentStats[deptId].positions[posName]) {
         this.departmentStats[deptId].positions[posName] = 0;
       }
@@ -113,14 +113,14 @@ export class DepartmentsComponent implements OnInit {
       return stat ? stat.totalEmployees : 0;
     }
     if (type === 'positions') {
-      // العدّ الحقيقي من قائمة الـ positions المرتبطة بالقسم
+
       return this.allPositions.filter((p) => p.departmentId === deptId).length;
     }
     return 0;
   }
 
   loadDepartments() {
-    // تحميل الأقسام
+
     this.isLoading = true;
     this.departmentService.getDepartments().subscribe({
       next: (res: any) => {
@@ -142,17 +142,16 @@ export class DepartmentsComponent implements OnInit {
   }
 
   viewDetails(dept: any) {
-    // تفاصيل القسم
+
     this.selectedDepartment = dept;
     const stats = this.departmentStats[dept.id] || { totalEmployees: 0 };
     this.selectedDepartment.stats = stats;
-    // الـ positions الحقيقية المرتبطة بهذا القسم من الـ API
+
     const deptPositions = this.allPositions.filter(
       (p) => p.departmentId === dept.id,
     );
     this.selectedDepartment.totalPositions = deptPositions.length;
 
-    // جدول الموظفين داخل الـ modal — مع ربط الـ position
     this.deptEmployees = this.allEmployees
       .filter((e) => e.departmentId === dept.id)
       .map((emp) => {
@@ -163,7 +162,7 @@ export class DepartmentsComponent implements OnInit {
         return emp;
       });
     this.filteredDeptEmployees = [...this.deptEmployees];
-    // بناء قائمة الـ positions من الـ API مباشرةً وليس من الموظفين
+
     this.uniquePositions = deptPositions.map((p) => p.title).filter(Boolean);
     this.searchEmpQuery = '';
     this.selectedPositionFilter = '';
@@ -178,7 +177,7 @@ export class DepartmentsComponent implements OnInit {
   }
 
   filterDeptEmployees() {
-    // فلترة موظفين القسم
+
     this.filteredDeptEmployees = this.deptEmployees.filter((emp) => {
       let matchesSearch = true;
       if (this.searchEmpQuery) {
@@ -191,7 +190,7 @@ export class DepartmentsComponent implements OnInit {
 
       let matchesPos = true;
       if (this.selectedPositionFilter) {
-        // مقارنة بـ positionName أو عن طريق positionId
+
         const pos = this.allPositions.find(
           (p) => p.title === this.selectedPositionFilter,
         );
@@ -230,7 +229,7 @@ export class DepartmentsComponent implements OnInit {
   }
 
   saveDepartment() {
-    // حفظ القسم
+
     if (this.addForm.invalid) {
       Swal.fire('Warning', 'Please enter a valid department name.', 'warning');
       return;

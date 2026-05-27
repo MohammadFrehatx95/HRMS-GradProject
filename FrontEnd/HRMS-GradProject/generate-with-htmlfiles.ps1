@@ -17,7 +17,7 @@ $files = @("package.json")
 
 $srcFiles = Get-ChildItem -Path src -Recurse -File | Where-Object {
 
-    $_.Extension -eq ".ts" -and
+    ($_.Extension -eq ".ts" -or $_.Extension -eq ".html") -and
 
     $_.Name -notmatch "\.spec\.ts$" -and
 
@@ -48,7 +48,11 @@ foreach ($file in $files) {
         $relativePath = $relativePath -replace "^.\\", ""
 
         $ext = [System.IO.Path]::GetExtension($file).TrimStart('.')
-        $lang = if ($ext -eq "ts") { "typescript" } else { $ext }
+        $lang = switch ($ext) {
+            "ts"   { "typescript" }
+            "html" { "html" }
+            default { $ext }
+        }
 
         $backticks = '```'
         Add-Content -Path $outputFile -Value "`r`n### File: $relativePath"

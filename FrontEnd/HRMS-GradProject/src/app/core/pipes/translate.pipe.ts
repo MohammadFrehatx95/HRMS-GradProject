@@ -1,11 +1,11 @@
-import { Pipe, PipeTransform, inject } from '@angular/core';
+﻿import { Pipe, PipeTransform, inject } from '@angular/core';
 import { SettingsService } from '../services/settings.service';
 import { TRANSLATIONS } from '../i18n/translations';
 
 @Pipe({
   name: 't',
   standalone: true,
-  pure: false, // لازم يكون impure حتى يتحدث لما تتغير اللغة
+  pure: false,
 })
 export class TranslatePipe implements PipeTransform {
   private settings = inject(SettingsService);

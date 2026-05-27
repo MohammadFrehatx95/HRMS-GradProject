@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+﻿import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -34,7 +34,6 @@ export class EmployeeFormComponent implements OnInit {
   positions: any[] = [];
   unassignedUsers: any[] = [];
 
-  // بيانات اليوزر اللي مربوط بالموظف في حالة التعديل
   linkedUserInfo: { username: string; email: string; role: string; profilePictureUrl: string | null } | null =
     null;
 
@@ -59,32 +58,30 @@ export class EmployeeFormComponent implements OnInit {
   });
 
   ngOnInit() {
-    // تجهيز النموذج
+
     const state = window.history.state;
 
     if (state && state.editMode && state.employeeId) {
-      // edit mode
+
       this.isEditMode = true;
       this.currentEmployeeId = state.employeeId;
       this.loadEmployeeDetails(this.currentEmployeeId!);
-      // userId والإيميل ما يتعدلوا
+
       this.employeeForm.get('userId')?.disable();
       this.employeeForm.get('email')?.disable();
     } else {
-      // add mode
-      // لو جاية داتا من صفحة ثانية نعبيها مباشرة
+
       if (state && (state.userId || state.email)) {
         this.employeeForm.patchValue({
           userId: state.userId,
           email: state.email,
         });
       }
-      // الإيميل يتعبى تلقائياً من اليوزر المختار
+
       this.employeeForm.get('email')?.disable();
 
       this.loadUnassignedUsers();
 
-      // نعبي الإيميل لما يختار يوزر من الـ dropdown
       this.employeeForm.get('userId')?.valueChanges.subscribe((selectedId) => {
         const user = this.unassignedUsers.find(
           (u) => String(u.id) === String(selectedId),
@@ -105,10 +102,9 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  // جلب بيانات الموظف
   loadEmployeeDetails(id: number) {
     this.isLoading = true;
-    // بنجيب كامل التفاصيل
+
     this.employeeService.getEmployeeById(id).subscribe({
       next: (profile: any) => {
         this.isLoading = false;
@@ -118,7 +114,6 @@ export class EmployeeFormComponent implements OnInit {
           this.employeeForm.get('positionId')?.enable();
         }
 
-        // نعبي الفورم بالداتا الموجودة
         this.employeeForm.patchValue({
           firstName: profile.firstName || profile.fullName?.split(' ')[0] || '',
           lastName:
@@ -135,7 +130,6 @@ export class EmployeeFormComponent implements OnInit {
           userId: profile.userId || '',
         });
 
-        // معلومات بسيطة للعرض في الـ header
         this.linkedUserInfo = {
           username:
             profile.fullName ||
@@ -159,7 +153,7 @@ export class EmployeeFormComponent implements OnInit {
   }
 
   loadDepartments() {
-    // تحميل الأقسام
+
     this.departmentService.getDepartments().subscribe({
       next: (res: any) => {
         this.departments = Array.isArray(res) ? res : res?.data || [];
@@ -167,9 +161,8 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  // اليوزرات اللي ما ربطوا بموظف بعد
   loadUnassignedUsers() {
-    // تحميل يوزرات بدون موظف
+
     this.authService.getUnassignedEmployeeUsers().subscribe({
       next: (res: any) => {
         this.unassignedUsers = res?.items ?? (Array.isArray(res) ? res : []);
@@ -180,9 +173,8 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  // positions حسب القسم
   loadPositions(deptId: number) {
-    // تحميل المناصب
+
     this.positionService.getPositionsByDepartment(deptId).subscribe({
       next: (res: any) => {
         this.positions = Array.isArray(res) ? res : res?.data || [];
@@ -191,18 +183,15 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  // الإيميل disabled فنحتاج getRawValue
   get displayEmail(): string {
     return this.employeeForm.getRawValue().email || '';
   }
 
-  // تحويل أخطاء الـ backend لرسائل مفهومة
   private parseBackendError(err: any): string {
     const body = err?.error;
 
     if (!body) return 'An unexpected error occurred. Please try again.';
 
-    // ASP.NET validation errors
     if (body.errors && typeof body.errors === 'object') {
       const fieldLabels: Record<string, string> = {
         PhoneNumber: 'Phone Number',
@@ -236,7 +225,7 @@ export class EmployeeFormComponent implements OnInit {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      if (file.size > 5 * 1024 * 1024) {
         Swal.fire('Error', 'File size exceeds 5MB limit', 'error');
         return;
       }
@@ -250,11 +239,10 @@ export class EmployeeFormComponent implements OnInit {
   }
 
   onSubmit() {
-    // إرسال النموذج
+
     if (this.employeeForm.invalid) {
       this.employeeForm.markAllAsTouched();
 
-      // خطأ رقم الهاتف له رسالة مخصصة
       const phone = this.employeeForm.get('phoneNumber');
       if (phone?.errors?.['pattern']) {
         Swal.fire({

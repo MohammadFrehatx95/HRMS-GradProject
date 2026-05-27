@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+﻿import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -28,7 +28,6 @@ export class AttendanceComponent implements OnInit {
   isAdmin = false;
   isAdminOrHR = false;
 
-  // Pagination
   currentPage: number = 1;
   itemsPerPage: number = 7;
 
@@ -54,14 +53,12 @@ export class AttendanceComponent implements OnInit {
     return Math.min(a, b);
   }
 
-  // حالة clock in/out اليوم
   isCheckedInToday = false;
   isCheckedOutToday = false;
   todayWorkedHours = 0;
-  activeSession: any = null; // session مفتوحة بدون clock out
-  readonly today = new Date().toISOString().split('T')[0]; // للمقارنة في الـ template
+  activeSession: any = null;
+  readonly today = new Date().toISOString().split('T')[0];
 
-  // session من يوم سابق ونسي يعمل clock out
   get isStaleSession(): boolean {
     if (!this.activeSession?.date) return false;
     const sessionDate = new Date(this.activeSession.date)
@@ -81,7 +78,7 @@ export class AttendanceComponent implements OnInit {
   }
 
   loadAllAttendance() {
-    // تحميل كل الحضور
+
     this.isLoading = true;
     this.attendanceService.getAllAttendance().subscribe({
       next: (res: any) => {
@@ -102,7 +99,7 @@ export class AttendanceComponent implements OnInit {
   }
 
   loadMyAttendance() {
-    // تحميل حضوري
+
     this.isLoading = true;
     this.attendanceService.getMyAttendance().subscribe({
       next: (res: any) => {
@@ -154,7 +151,7 @@ export class AttendanceComponent implements OnInit {
   }
 
   private analyzeSessionStatus(records: any[]) {
-    // تحليل حالة الدوام
+
     const today = new Date().toDateString();
 
     const openSession = records.find(
@@ -187,11 +184,11 @@ export class AttendanceComponent implements OnInit {
   }
 
   onClockIn() {
-    // تسجيل دخول
+
     this.isProcessing = true;
     const now = new Date();
     const dateIso = now.toISOString();
-    const timeString = now.toTimeString().split(' ')[0]; // HH:MM:SS format
+    const timeString = now.toTimeString().split(' ')[0];
 
     this.attendanceService
       .clockIn({ date: dateIso, clockIn: timeString })
@@ -218,13 +215,11 @@ export class AttendanceComponent implements OnInit {
       });
   }
 
-  // ─── Clock Out ───
   onClockOut() {
     this.isProcessing = true;
     const now = new Date();
     const timeString = now.toTimeString().split(' ')[0];
 
-    // session من يوم سابق نغلقها بـ 23:59
     const isOldSession =
       this.activeSession &&
       new Date(this.activeSession.date).toDateString() !==
@@ -257,9 +252,9 @@ export class AttendanceComponent implements OnInit {
       },
     });
   }
-  // ─── Export to Excel (CSV) ───
+
   exportToExcel() {
-    // تصدير الملف
+
     if (this.attendanceRecords.length === 0) {
       Swal.fire(
         'No Data',
@@ -297,7 +292,6 @@ export class AttendanceComponent implements OnInit {
         .join(',');
     });
 
-    // BOM + sep hint عشان Excel يفتحه صح
     const csvContent =
       '\uFEFFsep=,\r\n' + [headers.join(','), ...csvData].join('\r\n');
 

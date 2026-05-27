@@ -1,4 +1,4 @@
-export enum AdjustmentType {
+﻿export enum AdjustmentType {
   Penalty = 0,
   Bonus = 1
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../core/services/notification.service';
 import { Router } from '@angular/router';
@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private sidebarService = inject(SidebarService);
   
-  // ✅ public حتى نستخدمه في الـ template
+
   pwaService = inject(PwaService);
   settingsService = inject(SettingsService);
   authService = inject(AuthService);
@@ -92,7 +92,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   markAllAsRead(event: Event) {
-    event.stopPropagation(); // لمنع إغلاق القائمة المنسدلة
+    event.stopPropagation();
     if (this.unreadCount === 0) return;
 
     this.notificationService.markAllAsRead().subscribe({

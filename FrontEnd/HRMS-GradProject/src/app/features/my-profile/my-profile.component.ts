@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+﻿import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EmployeeService } from '../../core/services/employee.service';
@@ -36,7 +36,7 @@ export class MyProfileComponent implements OnInit {
   pendingProfilePicUrl: string | null = null;
 
   ngOnInit() {
-    // تحميل البيانات
+
     this.isAdmin = this.authService.isAdmin();
     this.userName = localStorage.getItem('user_name') || 'User';
     this.userRole = localStorage.getItem('user_role') || 'Employee';
@@ -64,7 +64,6 @@ export class MyProfileComponent implements OnInit {
       this.profilePicUrl = this.authService.getCurrentUserProfilePic();
     });
 
-    // Load pending picture status from /me
     this.authService.getMe().subscribe({
       next: (me: any) => {
         if (me?.pendingProfilePictureUrl) {
@@ -95,7 +94,7 @@ export class MyProfileComponent implements OnInit {
   }
 
   loadMyProfile() {
-    // جلب بروفايلي
+
     this.isLoading = true;
     this.employeeService.getMyProfile().subscribe({
       next: (res: any) => {
@@ -112,7 +111,7 @@ export class MyProfileComponent implements OnInit {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      // Validate file type and size
+
       const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
       if (!allowedTypes.includes(file.type)) {
         Swal.fire('Invalid File', 'Please upload a JPG, PNG, WebP or GIF image.', 'error');
@@ -162,11 +161,10 @@ export class MyProfileComponent implements OnInit {
   }
 
   saveProfile() {
-    // حفظ التعديلات
+
     let requestsPending = 0;
     let hasError = false;
 
-    // 1. Password Update
     if (this.pwdData.oldPassword && this.pwdData.newPassword) {
       requestsPending++;
       this.isChangingPwd = true;
@@ -198,7 +196,6 @@ export class MyProfileComponent implements OnInit {
         });
     }
 
-    // 2. Profile Info Update
     const emailChanged =
       this.editData.email !== (this.profile?.email || this.userEmail);
     const phoneChanged =
@@ -211,7 +208,6 @@ export class MyProfileComponent implements OnInit {
         requestsPending++;
         this.isUpdatingProfile = true;
 
-        // Prepare updated employee object
         const updatedEmp = {
           ...this.profile,
           email: this.editData.email,
@@ -247,10 +243,9 @@ export class MyProfileComponent implements OnInit {
             },
           });
       } else {
-        // Admin without employee profile
+
         this.userEmail = this.editData.email;
-        // There might not be an endpoint to update Admin user email alone,
-        // but we update it locally for UX.
+
       }
     }
 

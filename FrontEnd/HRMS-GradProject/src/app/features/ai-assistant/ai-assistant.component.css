@@ -1,6 +1,4 @@
-/* ─────────────────────────────────────────────────────────────────────────── */
-/*  AI ASSISTANT — Premium Full Page UI                                        */
-/* ─────────────────────────────────────────────────────────────────────────── */
+﻿
 
 :host {
   display: block;
@@ -25,7 +23,6 @@
   background-size: 24px 24px, 100% 100%;
 }
 
-/* ── ANIMATED MESH BACKGROUND ── */
 .bg-mesh {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -44,21 +41,21 @@
 
 .blob-1 {
   width: 40vw; height: 40vw;
-  background: rgba(99, 102, 241, 0.15); /* Indigo */
+  background: rgba(99, 102, 241, 0.15); 
   top: -10%; left: -10%;
   animation-delay: 0s;
 }
 
 .blob-2 {
   width: 35vw; height: 35vw;
-  background: rgba(139, 92, 246, 0.15); /* Purple */
+  background: rgba(139, 92, 246, 0.15); 
   bottom: -10%; right: -5%;
   animation-delay: -5s;
 }
 
 .blob-3 {
   width: 30vw; height: 30vw;
-  background: rgba(56, 189, 248, 0.15); /* Sky blue */
+  background: rgba(56, 189, 248, 0.15); 
   top: 40%; left: 60%;
   animation-delay: -10s;
 }
@@ -69,8 +66,6 @@
   66%  { transform: translate(-3vw, 8vh) scale(0.9); }
   100% { transform: translate(-6vw, -4vh) scale(1.05); }
 }
-
-/* ── HEADER ──────────────────────────────────────────────────────────────── */
 
 .ai-header {
   background: white;
@@ -188,8 +183,6 @@
   transform: rotate(-15deg);
 }
 
-/* ── MESSAGES ────────────────────────────────────────────────────────────── */
-
 .messages-area {
   flex: 1;
   overflow-y: auto;
@@ -278,7 +271,6 @@
   box-shadow: none;
 }
 
-/* Markdown inside ai-bubble */
 .ai-bubble :deep(strong) { color: #0f172a; font-weight: 600; }
 .ai-bubble :deep(.bullet) { display: block; padding-left: 0.75rem; color: #475569; margin: 0.25rem 0; }
 .ai-bubble :deep(.numbered) { display: block; padding-left: 0.75rem; color: #475569; margin: 0.25rem 0; }
@@ -289,7 +281,6 @@
   min-width: 80px;
 }
 
-/* Typing indicator */
 .typing-indicator {
   display: flex;
   align-items: center;
@@ -331,8 +322,6 @@
   align-items: center;
   gap: 0.25rem;
 }
-
-/* ── QUICK ACTIONS (DOCKED) ──────────────────────────────────────────────── */
 
 .quick-actions-docked {
   display: flex;
@@ -384,8 +373,6 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
-
-/* ── INPUT BAR ───────────────────────────────────────────────────────────── */
 
 .input-area {
   background: rgba(255, 255, 255, 0.8);
@@ -493,8 +480,6 @@
   background: #cbd5e1;
 }
 
-/* ── RESPONSIVE ──────────────────────────────────────────────────────────── */
-
 @media (max-width: 768px) {
   .ai-header { padding: 1rem; }
   .messages-area { padding: 1.5rem 1rem; }
@@ -505,8 +490,6 @@
   .header-content { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
   .token-monitor { width: 100%; min-width: unset; }
 }
-
-/* ── DARK MODE ───────────────────────────────────────────────────────────── */
 
 :host-context(body.dark-mode) .ai-page {
   background-image: none;
@@ -523,7 +506,6 @@
   background: rgba(56, 189, 248, 0.06);
 }
 
-/* Header */
 :host-context(body.dark-mode) .ai-header {
   background: #22252b;
   border-bottom-color: #333;
@@ -538,7 +520,6 @@
   color: #64748b !important;
 }
 
-/* Message bubbles */
 :host-context(body.dark-mode) .ai-bubble {
   background: #22252b;
   color: #e2e8f0 !important;
@@ -559,7 +540,6 @@
   color: #cbd5e1 !important;
 }
 
-/* Meta / tokens */
 :host-context(body.dark-mode) .msg-meta {
   color: #475569;
 }
@@ -569,12 +549,10 @@
   color: #818cf8;
 }
 
-/* Typing dots */
 :host-context(body.dark-mode) .typing-indicator span {
   background: #6366f1;
 }
 
-/* Quick actions */
 :host-context(body.dark-mode) .quick-btn {
   background: #22252b;
   border-color: #333;
@@ -591,7 +569,6 @@
   border-color: #444;
 }
 
-/* Input bar */
 :host-context(body.dark-mode) .input-area {
   background: rgba(34, 37, 43, 0.85);
   border-top-color: #333;
@@ -624,7 +601,6 @@
   color: #334155;
 }
 
-/* User avatar */
 :host-context(body.dark-mode) .user-avatar-icon {
   background: #334155;
   color: #94a3b8;

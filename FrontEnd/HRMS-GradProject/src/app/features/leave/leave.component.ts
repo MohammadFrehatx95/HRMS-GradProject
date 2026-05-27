@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+﻿import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LeaveService } from '../../core/services/leave.service';
@@ -34,7 +34,6 @@ export class LeaveComponent implements OnInit {
 
   leaveModal: any;
 
-  // Pagination
   currentPage: number = 1;
   itemsPerPage: number = 7;
 
@@ -67,8 +66,8 @@ export class LeaveComponent implements OnInit {
   leaveTypes = [
     { id: 0, name: 'Annual' },
     { id: 1, name: 'Sick' },
-    { id: 2, name: 'Emergency' }, // ✅ يطابق Backend enum: Emergency=2
-    { id: 3, name: 'Unpaid' }, // ✅ يطابق Backend enum: Unpaid=3
+    { id: 2, name: 'Emergency' },
+    { id: 3, name: 'Unpaid' },
   ];
 
   ngOnInit() {
@@ -77,7 +76,7 @@ export class LeaveComponent implements OnInit {
   }
 
   loadLeaves() {
-    // تحميل الإجازات
+
     this.isLoading = true;
 
     const request = this.isAdminOrHR
@@ -112,7 +111,7 @@ export class LeaveComponent implements OnInit {
             );
           });
         } else if (!this.isAdminOrHR) {
-          // ✅ Include both 'Approved' and 'Pending' to correctly decrease available balance
+
           const usedAnnualLeavesDays = this.allLeavesList
             .filter(
               (l: any) => (this.getStatusText(l.status) === 'Approved' || this.getStatusText(l.status) === 'Pending') && this.getLeaveTypeText(l.leaveType) === 'Annual',
@@ -132,7 +131,7 @@ export class LeaveComponent implements OnInit {
   }
 
   filterLeaves() {
-    // فلترة الإجازات
+
     this.leavesList = this.allLeavesList.filter((l) => {
       let matchesSearch = true;
       if (this.leaveSearchQuery) {
@@ -155,8 +154,7 @@ export class LeaveComponent implements OnInit {
 
       let matchesType = true;
       if (this.selectedLeaveType) {
-        // الـ backend يرجع string مثل "Annual" أو رقم مثل 0
-        // نحوّل كلاهما لاسم ونقارن بـ case-insensitive
+
         const leaveTypeName = this.getLeaveTypeText(l.leaveType).toLowerCase();
         matchesType = leaveTypeName === this.selectedLeaveType.toLowerCase();
       }
@@ -181,11 +179,11 @@ export class LeaveComponent implements OnInit {
   }
 
   getStatusText(statusCode: any): string {
-    // ✅ Backend يُرجع string مباشرة من MappingProfile (.ToString())
+
     if (typeof statusCode === 'string' && isNaN(Number(statusCode))) {
-      return statusCode; // 'Pending' | 'Approved' | 'Rejected'
+      return statusCode;
     }
-    // توافقية مع القيم الرقمية القديمة
+
     if (statusCode === 0 || statusCode === '0') return 'Pending';
     if (statusCode === 1 || statusCode === '1') return 'Approved';
     if (statusCode === 2 || statusCode === '2') return 'Rejected';
@@ -193,7 +191,7 @@ export class LeaveComponent implements OnInit {
   }
 
   getLeaveTypeText(typeCode: any): string {
-    // ✅ Backend يُرجع string مباشرة: 'Annual', 'Sick', 'Emergency', 'Unpaid'
+
     if (typeof typeCode === 'string' && isNaN(Number(typeCode))) {
       const found = this.leaveTypes.find(
         (t) => t.name.toLowerCase() === typeCode.toLowerCase(),
@@ -202,7 +200,7 @@ export class LeaveComponent implements OnInit {
         ? found.name
         : typeCode.charAt(0).toUpperCase() + typeCode.slice(1);
     }
-    // توافقية مع القيم الرقمية
+
     const type = this.leaveTypes.find((t) => t.id === Number(typeCode));
     return type ? type.name : typeCode != null ? String(typeCode) : 'Unknown';
   }
@@ -235,7 +233,7 @@ export class LeaveComponent implements OnInit {
   }
 
   submitLeaveRequest() {
-    // إرسال طلب الإجازة
+
     if (this.leaveData.startDate < this.getToday()) {
       Swal.fire('Invalid Date', 'Start Date cannot be in the past.', 'warning');
       return;
@@ -250,13 +248,12 @@ export class LeaveComponent implements OnInit {
       return;
     }
 
-    // Calculate requested days
     const start = new Date(this.leaveData.startDate);
     const end = new Date(this.leaveData.endDate);
     const diffTime = Math.abs(end.getTime() - start.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // inclusive
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
-    if (Number(this.leaveData.leaveType) === 0) { // Annual
+    if (Number(this.leaveData.leaveType) === 0) {
       if (diffDays > Number(this.employeeAnnualLeaveBalance)) {
         Swal.fire('Insufficient Balance', `You are requesting ${diffDays} days, but you only have ${this.employeeAnnualLeaveBalance} annual leave days remaining.`, 'warning');
         return;
@@ -299,7 +296,7 @@ export class LeaveComponent implements OnInit {
   }
 
   changeStatus(id: number, newStatusCode: number) {
-    // تغيير الحالة
+
     if (newStatusCode === 2) {
       Swal.fire({
         title: 'Reject Leave Request',

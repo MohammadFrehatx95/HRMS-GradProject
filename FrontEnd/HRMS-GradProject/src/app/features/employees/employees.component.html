@@ -1,4 +1,4 @@
-
+﻿
 
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
     <div class="d-flex align-items-center">
@@ -88,7 +88,7 @@
                     <td data-label="ID" class="py-3 px-4 fw-bold text-dark">#{{ emp.id }}</td>
                     <td data-label="Full Name" class="py-3 px-4 fw-bold text-dark">
                         <div class="d-flex align-items-center">
-                            <!-- Profile picture or initials -->
+                            
                             <div class="me-3 flex-shrink-0" style="width: 36px; height: 36px;">
                                 <img *ngIf="emp.profilePictureUrl"
                                     [src]="emp.profilePictureUrl"
@@ -147,7 +147,7 @@
         </table>
     </div>
 
-    <!-- Pagination Footer -->
+    
     @if (employeesList.length > 0) {
     <div class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
         <small class="text-muted fw-medium">
@@ -169,14 +169,13 @@
 </div>
 }
 
-<!-- ══════════ Employee Details Modal ══════════ -->
 <div class="modal fade" id="employeeDetailsModal" tabindex="-1" aria-labelledby="employeeDetailsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
 
             <div class="modal-header border-0 p-0">
                 <div class="emp-modal-header w-100 p-4 d-flex align-items-center gap-3">
-                    <!-- Avatar: show real picture or initials -->
+                    
                     <div class="emp-modal-avatar" [class.p-0]="selectedEmployeeProfile?.profilePictureUrl" style="overflow: hidden;">
                         <img *ngIf="selectedEmployeeProfile?.profilePictureUrl"
                             [src]="selectedEmployeeProfile.profilePictureUrl"

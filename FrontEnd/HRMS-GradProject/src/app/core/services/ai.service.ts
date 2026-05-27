@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+﻿import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -36,8 +36,7 @@ export class AiService {
   }
 
   private startSignalRConnection() {
-    // apiUrl is usually like https://localhost:7198/api
-    // Hub URL should be https://localhost:7198/hubs/ai
+
     const baseUrl = environment.apiUrl.replace(/\/api$/, '');
     
     this.hubConnection = new signalR.HubConnectionBuilder()

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -38,18 +38,18 @@ export class LoginComponent implements OnInit, OnDestroy {
   });
 
   togglePasswordVisibility() {
-    // إظهار/إخفاء كلمة السر
+
     this.isPasswordVisible = !this.isPasswordVisible;
   }
 
   ngOnInit() {
-    // إجبار صفحة الدخول على الوضع الفاتح
+
     document.documentElement.setAttribute('data-theme', 'light');
     document.body.classList.remove('dark-mode');
   }
 
   ngOnDestroy() {
-    // إعادة تطبيق ثيم المستخدم المحفوظ عند الدخول للمشروع
+
     if (this.settingsService.isDarkMode) {
       document.documentElement.setAttribute('data-theme', 'dark');
       document.body.classList.add('dark-mode');
@@ -57,7 +57,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    // تسجيل الدخول
+
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.isLoading = true;
 
     const credentials = {
-      // بيانات الدخول
+
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
     };

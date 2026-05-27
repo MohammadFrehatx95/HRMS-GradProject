@@ -1,13 +1,12 @@
-import { Injectable, signal } from '@angular/core';
+﻿import { Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SettingsService {
-  // إعدادات المستخدم
-  // الثيم: dark أو light
+
   private _isDarkMode = signal(false);
-  // اللغة: en أو ar
+
   private _language = signal<'en' | 'ar'>('en');
 
   get isDarkMode() {
@@ -19,7 +18,7 @@ export class SettingsService {
   }
 
   constructor() {
-    // استرجع الإعدادات المحفوظة من localStorage
+
     const savedTheme = localStorage.getItem('hrms_theme');
     const savedLang = localStorage.getItem('hrms_language') as 'en' | 'ar';
 

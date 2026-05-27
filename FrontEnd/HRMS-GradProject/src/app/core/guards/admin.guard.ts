@@ -1,4 +1,4 @@
-import { inject } from '@angular/core';
+﻿import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import Swal from 'sweetalert2';
@@ -8,7 +8,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   if (authService.isAdmin()) {
-    // الأدمن بس
+
     return true;
   } else {
     Swal.fire({

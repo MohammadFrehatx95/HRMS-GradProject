@@ -1,7 +1,6 @@
-@import "bootstrap/dist/css/bootstrap.min.css";
+﻿@import "bootstrap/dist/css/bootstrap.min.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
-/*Light Mode Defaults*/
 :root {
   --color-bg: #f8f9fb;
   --color-bg-dot: rgba(0, 0, 0, 0.09);
@@ -58,9 +57,6 @@ body.dark-mode {
   --color-modal-bg: #22252b;
 }
 
-/*
-   BASE STYLES
-*/
 html,
 body {
   height: 100%;
@@ -78,16 +74,10 @@ body {
     color 0.3s ease;
 }
 
-/*
-   DARK MODE â€” Global Text & Element Rules
-*/
-
-/* Force ALL text colour to inherit from parent in dark mode */
 body.dark-mode * {
   color: inherit;
 }
 
-/* Headings */
 body.dark-mode h1,
 body.dark-mode h2,
 body.dark-mode h3,
@@ -97,23 +87,19 @@ body.dark-mode h6 {
   color: var(--color-text) !important;
 }
 
-/* Paragraphs */
 body.dark-mode p {
   color: var(--color-text-sub) !important;
 }
 
-/* Labels */
 body.dark-mode label {
   color: var(--color-text-sub) !important;
 }
 
-/* Small / helper text */
 body.dark-mode small,
 body.dark-mode .small {
   color: var(--color-text-muted) !important;
 }
 
-/* Bootstrap text utilities */
 body.dark-mode .text-dark {
   color: var(--color-text) !important;
 }
@@ -130,7 +116,6 @@ body.dark-mode .text-uppercase {
   color: var(--color-text-label) !important;
 }
 
-/* Layout */
 body.dark-mode .wrapper {
   background-color: var(--color-bg) !important;
 }
@@ -138,9 +123,6 @@ body.dark-mode .page-container {
   color: var(--color-text);
 }
 
-/*
-   NAVBAR / HEADER
-*/
 body.dark-mode .navbar,
 body.dark-mode .header-bar {
   background-color: var(--color-surface) !important;
@@ -151,9 +133,6 @@ body.dark-mode .header-bar * {
   color: var(--color-text) !important;
 }
 
-/*
-   SIDEBAR
-*/
 body.dark-mode .sidebar {
   background: linear-gradient(180deg, #1e2128 0%, #16181d 100%) !important;
   border-right-color: var(--color-border) !important;
@@ -217,9 +196,6 @@ body.dark-mode .btn-logout:hover {
   border-color: rgba(220, 38, 38, 0.3) !important;
 }
 
-/*
-   CARDS
-*/
 body.dark-mode .card {
   background-color: var(--color-card-bg) !important;
   border-color: var(--color-border) !important;
@@ -235,7 +211,6 @@ body.dark-mode .card * {
   color: inherit;
 }
 
-/* Dashboard specific cards */
 body.dark-mode .info-card,
 body.dark-mode .activity-card,
 body.dark-mode .chart-card,
@@ -249,9 +224,6 @@ body.dark-mode .chart-card * {
   color: inherit;
 }
 
-/*
-   TABLES
-*/
 body.dark-mode .table {
   --bs-table-bg: var(--color-surface);
   --bs-table-color: var(--color-table-td);
@@ -280,9 +252,6 @@ body.dark-mode .table td a {
   color: var(--color-table-td) !important;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   FORMS
-*/
 body.dark-mode .form-control,
 body.dark-mode .form-select {
   background-color: var(--color-input-bg) !important;
@@ -306,9 +275,6 @@ body.dark-mode .input-group-text {
   color: var(--color-text-label) !important;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   MODALS
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 body.dark-mode .modal-content {
   background-color: var(--color-modal-bg) !important;
   border-color: var(--color-border) !important;
@@ -325,9 +291,6 @@ body.dark-mode .modal-body * {
   color: var(--color-text) !important;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   DROPDOWNS
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 body.dark-mode .dropdown-menu {
   background-color: var(--color-surface) !important;
   border-color: var(--color-border) !important;
@@ -339,9 +302,6 @@ body.dark-mode .dropdown-item:hover {
   background-color: var(--color-surface-3) !important;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   BUTTONS
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 body.dark-mode .btn-light {
   background-color: var(--color-surface-3) !important;
   border-color: #444 !important;
@@ -356,9 +316,6 @@ body.dark-mode .btn-outline-secondary:hover {
   color: #fff !important;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   UTILITY CLASSES
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 body.dark-mode .bg-light {
   background-color: var(--color-surface-2) !important;
 }
@@ -375,9 +332,6 @@ body.dark-mode .badge {
   opacity: 0.95;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   STATUS BADGES
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .status-badge {
   padding: 0.4rem 1rem;
   border-radius: 50rem;
@@ -389,7 +343,6 @@ body.dark-mode .badge {
   border: 1px solid transparent;
 }
 
-/* Light Mode */
 .status-approved {
   background-color: #d1fae5;
   color: #065f46;
@@ -416,7 +369,6 @@ body.dark-mode .badge {
   border-color: #fca5a5;
 }
 
-/* Dark Mode */
 body.dark-mode .status-approved {
   background-color: rgba(16, 185, 129, 0.15) !important;
   color: #34d399 !important;
@@ -443,9 +395,6 @@ body.dark-mode .status-inactive {
   border-color: rgba(239, 68, 68, 0.3) !important;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   PAGINATION
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 body.dark-mode .page-link {
   background-color: var(--color-surface-2) !important;
   border-color: var(--color-border) !important;
@@ -462,9 +411,6 @@ body.dark-mode .page-item.disabled .page-link {
   border-color: var(--color-border) !important;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   RTL FIXES
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 html[dir="rtl"] .bi-box-arrow-right,
 html[dir="rtl"] .bi-box-arrow-in-right,
 html[dir="rtl"] .bi-chevron-right,
@@ -493,9 +439,6 @@ body.dark-mode .swal2-html-container {
   color: var(--color-text-label) !important;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   EMPLOYEE DETAILS MODAL
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 body.dark-mode .detail-item {
   background: #2d3139 !important;
   border-color: #3a3f4b !important;
@@ -518,24 +461,16 @@ body.dark-mode .modal-footer.bg-light {
   background-color: var(--color-surface-2) !important;
 }
 
-
-/* ------------------------------------------
-   GLOBAL TEXT OVERFLOW FIXES
-   ------------------------------------------ */
 td, .detail-value, .info-value, .card-text, .text-break-all {
   overflow-wrap: anywhere !important;
   word-break: break-word !important;
   hyphens: auto;
 }
 
-/* ------------------------------------------
-   GLOBAL COMPONENT FIXES
-   ------------------------------------------ */
 .icon-box {
   flex-shrink: 0;
 }
 
-/* Make white backgrounds transparent for the AI-generated black and white logo */
 .brand-logo {
   mix-blend-mode: multiply;
   object-fit: contain;
@@ -546,9 +481,6 @@ body.dark-mode .brand-logo {
   mix-blend-mode: screen;
 }
 
-/* ------------------------------------------
-   LIST GROUP (ANNOUNCEMENTS FIX)
-   ------------------------------------------ */
 body.dark-mode .list-group-item {
   background-color: var(--color-surface) !important;
   color: var(--color-text) !important;
@@ -559,18 +491,11 @@ body.dark-mode .list-group-item.hover-bg-light:hover {
   background-color: var(--color-surface-2) !important;
 }
 
-/* ------------------------------------------
-   RESPONSIVE TABLES FIX
-   ------------------------------------------ */
 .table-responsive .table th,
 .table-responsive .table td {
   white-space: nowrap !important;
 }
 
-/* ------------------------------------------
-   GLOBAL AESTHETIC ENHANCEMENTS
-   ------------------------------------------ */
-/* Card Enhancements */
 .card {
   border: none !important;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
@@ -591,7 +516,6 @@ body.dark-mode .card:hover {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2) !important;
 }
 
-/* Button Enhancements */
 .btn {
   border-radius: 8px;
   font-weight: 500;
@@ -624,7 +548,6 @@ body.dark-mode .btn-primary:hover {
   box-shadow: 0 6px 14px rgba(59, 130, 246, 0.4) !important;
 }
 
-/* Subtle Table Row Hover Animation */
 .table-hover tbody tr {
   transition: background-color 0.2s ease, transform 0.1s ease;
 }
@@ -632,11 +555,6 @@ body.dark-mode .btn-primary:hover {
   background-color: var(--color-table-hover) !important;
 }
 
-/* ------------------------------------------
-   PROFESSIONAL UI/UX POLISH
-   ------------------------------------------ */
-
-/* 1. Custom Scrollbars Global */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -659,7 +577,6 @@ body.dark-mode ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.25);
 }
 
-/* 2. Inputs & Forms Polish */
 .form-control, .form-select {
   background-color: #f9fafb !important;
   border: 1px solid #e5e7eb !important;
@@ -682,8 +599,6 @@ body.dark-mode .form-control:focus, body.dark-mode .form-select:focus {
   box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.25) !important;
 }
 
-/* 3. Animations & Transitions */
-/* Fade in animation for main content */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
@@ -692,7 +607,6 @@ body.dark-mode .form-control:focus, body.dark-mode .form-select:focus {
   animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* 4. Modals Polish */
 .modal-backdrop {
   backdrop-filter: blur(4px);
   background-color: rgba(0, 0, 0, 0.4);
@@ -719,7 +633,6 @@ body.dark-mode .modal-footer {
   background-color: var(--color-surface-2) !important;
 }
 
-/* 5. Tables Polish */
 .table {
   border-collapse: separate;
   border-spacing: 0;
@@ -744,7 +657,6 @@ body.dark-mode .modal-footer {
   border-bottom: none !important;
 }
 
-/* 6. Typography & Spacing tweaks */
 h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.02em;
   font-weight: 600;

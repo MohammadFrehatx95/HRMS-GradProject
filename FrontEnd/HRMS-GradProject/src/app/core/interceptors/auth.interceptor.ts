@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+﻿import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
 import Swal from 'sweetalert2';
 
@@ -23,7 +23,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(clonedReq).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401 && !req.url.includes('/login')) {
-        // Clear all auth data
+
         localStorage.removeItem('jwt_token');
         localStorage.removeItem('user_role');
         localStorage.removeItem('user_name');
@@ -36,7 +36,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           confirmButtonText: 'OK',
           confirmButtonColor: '#0d6efd'
         }).then(() => {
-          // Full page reload so sidebar/layout resets cleanly
+
           window.location.href = '/login';
         });
       }

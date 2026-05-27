@@ -1,10 +1,9 @@
-.login-page {
+﻿.login-page {
     background: linear-gradient(135deg, #0f1b2d 0%, #1a2e45 40%, #0d2137 100%);
     position: relative;
     overflow: hidden;
 }
 
-/* ── شبكة نقاط ── */
 .dot-grid {
     position: absolute;
     inset: 0;
@@ -14,7 +13,6 @@
     z-index: 0;
 }
 
-/* ── الدوائر العائمة ── */
 .bg-blobs {
     position: absolute;
     inset: 0;
@@ -75,7 +73,6 @@
     66%       { transform: translate(-20px, 25px) scale(0.97); }
 }
 
-/* البطاقة تطفو فوق الخلفية */
 .login-card {
     position: relative;
     z-index: 1;
@@ -89,9 +86,9 @@
     background-size: 24px 24px, 100% 100%;
     background-position: 0 0, 0 0;
     border-radius: 2rem;
-    width: 1200px; /* زيادة العرض */
+    width: 1200px; 
     max-width: 95vw;
-    min-height: 700px; /* زيادة الطول ليأخذ مساحة أطول */
+    min-height: 700px; 
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.8);
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
@@ -124,7 +121,6 @@
     outline: none;
 }
 
-/* الايرورز */
 .custom-input.is-invalid {
     border: 1.5px solid #dc3545 !important;
     background-color: #fff5f5;
@@ -142,7 +138,6 @@
     display: block;
 }
 
-/* مشان الـ invalid-feedback يشتغل صح */
 div:has(.custom-input.is-invalid) .invalid-feedback {
     display: block;
 }

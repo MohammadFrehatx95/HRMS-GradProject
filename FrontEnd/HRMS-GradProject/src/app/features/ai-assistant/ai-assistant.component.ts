@@ -1,4 +1,4 @@
-import {
+﻿import {
   Component,
   OnInit,
   inject,
@@ -37,7 +37,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   messages: ChatMessage[] = [];
   userInput: string = '';
   isLoading: boolean = false;
-  aiMode: number = 0; // 0 = Normal, 1 = DeepThink, 2 = Executive
+  aiMode: number = 0;
   cooldown: boolean = false;
   cooldownSeconds: number = 0;
   totalTokensUsed: number = 0;
@@ -48,7 +48,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   private timerInterval: any;
 
   readonly MAX_CHARS = 250;
-  readonly COOLDOWN_DURATION = 4; // seconds
+  readonly COOLDOWN_DURATION = 4;
 
   quickActions = [
     {
@@ -89,7 +89,6 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
       }
     }, 1000);
 
-    // Greeting if no chat history
     if (this.messages.length === 0) {
       this.messages.push({
         role: 'assistant',
@@ -288,7 +287,6 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
     return -1;
   }
 
-
   private startCooldown(): void {
     this.cooldown = true;
     this.cooldownSeconds = this.COOLDOWN_DURATION;
@@ -302,7 +300,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   }
 
   formatContent(content: string): string {
-    // Simple markdown-like formatting
+
     return content
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(.*?)\*/g, '<em>$1</em>')
@@ -319,7 +317,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   }
 
   clearChat(): void {
-    if (this.messages.length <= 1) return; // Only greeting message
+    if (this.messages.length <= 1) return;
     
     Swal.fire({
       title: 'Clear Chat History?',

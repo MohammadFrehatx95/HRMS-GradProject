@@ -1,4 +1,4 @@
-// بدل ما تعرض رسائل تقنية من الـ backend، نحولها لشيء مفهوم
+﻿
 export function getFriendlyErrorMessage(
   err: any,
   fallback: string = 'Something went wrong. Please try again later.',
@@ -7,7 +7,6 @@ export function getFriendlyErrorMessage(
   const rawMessage: string =
     err?.error?.message || err?.error?.title || err?.message || '';
 
-  // مشكلة شبكة أو الـ server مش شغال
   if (
     status === 0 ||
     (err?.name === 'HttpErrorResponse' && !navigator.onLine)
@@ -15,7 +14,6 @@ export function getFriendlyErrorMessage(
     return 'No internet connection. Please check your network and try again.';
   }
 
-  // أخطاء تقنية من الـ DB — المستخدم ما يحتاج يشوفها
   if (
     rawMessage.includes('EADDRNOTALLOWED') ||
     rawMessage.includes('allow_list') ||
@@ -41,13 +39,12 @@ export function getFriendlyErrorMessage(
   }
 
   if (status === 400) {
-    // Check if it's an array of Identity errors directly in the body
+
     if (Array.isArray(err?.error)) {
       const msgs = err.error.map((e: any) => e.description || e.errorMessage || e).filter((e: any) => typeof e === 'string');
       if (msgs.length > 0) return msgs.join('\n');
     }
 
-    // Check ASP.NET Core Validation Problem Details
     if (err?.error?.errors && typeof err.error.errors === 'object') {
       const errorMessages: string[] = [];
       for (const key in err.error.errors) {
@@ -65,7 +62,6 @@ export function getFriendlyErrorMessage(
       }
     }
 
-    // لو الرسالة قصيرة ومفهومة نعرضها مباشرة
     if (
       rawMessage &&
       rawMessage.length < 150 &&
@@ -92,7 +88,6 @@ export function getFriendlyErrorMessage(
   return fallback;
 }
 
-// نتحقق إذا كانت الرسالة تقنية وما تصلح للمستخدم
 function looksLikeTechError(msg: string): boolean {
   const techPatterns = [
     'XX',

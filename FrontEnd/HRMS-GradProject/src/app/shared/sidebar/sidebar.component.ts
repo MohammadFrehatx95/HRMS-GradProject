@@ -1,4 +1,4 @@
-import {
+﻿import {
   Component,
   OnInit,
   inject,
@@ -37,24 +37,22 @@ export class SidebarComponent implements OnInit {
 
   startResize(event: MouseEvent) {
     this.isResizing = true;
-    event.preventDefault(); // ما نحدد نص
+    event.preventDefault();
   }
 
   @HostListener('document:mousemove', ['$event'])
   onMouseMove(event: MouseEvent) {
     if (!this.isResizing) return;
     const newWidth = event.clientX;
-    // نحصر العرض
+
     if (newWidth >= 200 && newWidth <= 400) {
       this.sidebarRef.nativeElement.style.width = `${newWidth}px`;
 
-      // نحدّث المتغير العام
       document.documentElement.style.setProperty(
         '--sidebar-width',
         `${newWidth}px`,
       );
 
-      // سكيل على 260
       const scale = newWidth / 260;
       this.sidebarRef.nativeElement.style.setProperty(
         '--sidebar-scale',
@@ -74,7 +72,6 @@ export class SidebarComponent implements OnInit {
     this.userName = localStorage.getItem('user_name') || 'User';
     this.userRole = localStorage.getItem('user_role') || 'Employee';
 
-    // الأدمن ليس له Employee profile — نتجنب طلب الـ API الزائد
     if (!this.isAdmin) {
       this.employeeService.getMyProfile().subscribe({
         next: (profile) => {
@@ -82,7 +79,7 @@ export class SidebarComponent implements OnInit {
             this.userRole = profile.positionTitle;
           }
         },
-        error: () => {}, // طنّش الأخطاء
+        error: () => {},
       });
     }
 

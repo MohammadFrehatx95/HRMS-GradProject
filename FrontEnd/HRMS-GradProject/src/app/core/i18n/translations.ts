@@ -1,7 +1,6 @@
-// قاموس الترجمة الكامل — عربي/إنجليزي
+﻿
 export const TRANSLATIONS: { [key: string]: { en: string; ar: string } } = {
 
-  // ── Sidebar ──
   'Dashboard':        { en: 'Dashboard',        ar: 'لوحة التحكم' },
   'My Profile':       { en: 'My Profile',       ar: 'ملفي الشخصي' },
   'Employees':        { en: 'Employees',        ar: 'الموظفون' },
@@ -15,7 +14,6 @@ export const TRANSLATIONS: { [key: string]: { en: string; ar: string } } = {
   'Logout':           { en: 'Logout',            ar: 'تسجيل الخروج' },
   'HR Management':    { en: 'HR Management',     ar: 'إدارة الموارد البشرية' },
 
-  // ── Header ──
   'Settings':         { en: 'Settings',          ar: 'الإعدادات' },
   'Theme':            { en: 'Theme',             ar: 'المظهر' },
   'Dark Mode':        { en: 'Dark Mode',         ar: 'الوضع الداكن' },
@@ -28,7 +26,6 @@ export const TRANSLATIONS: { [key: string]: { en: string; ar: string } } = {
   'Install App':      { en: 'Install App',       ar: 'تثبيت التطبيق' },
   'Overall':          { en: 'Overall',           ar: 'الإجمالي' },
 
-  // ── Dashboard ──
   'Admin Dashboard':     { en: 'Admin Dashboard',     ar: 'لوحة تحكم المدير' },
   'Employee Dashboard':  { en: 'Employee Dashboard',  ar: 'لوحة تحكم الموظف' },
   'Welcome back':        { en: 'Welcome back',        ar: 'مرحباً بعودتك' },
@@ -47,7 +44,6 @@ export const TRANSLATIONS: { [key: string]: { en: string; ar: string } } = {
   'My Salary':           { en: 'My Salary',           ar: 'راتبي' },
   'My Pending Leaves':   { en: 'My Pending Leaves',   ar: 'إجازاتي المعلقة' },
 
-  // ── Leave ──
   'All Leave Requests':  { en: 'All Leave Requests',  ar: 'جميع طلبات الإجازة' },
   'My Leave Requests':   { en: 'My Leave Requests',   ar: 'طلبات إجازتي' },
   'Manage and track time-off requests effectively': 
@@ -81,7 +77,6 @@ export const TRANSLATIONS: { [key: string]: { en: string; ar: string } } = {
   'Loading requests...': { en: 'Loading requests...',  ar: 'جاري تحميل الطلبات...' },
   'No reason provided':  { en: 'No reason provided',   ar: 'لم يتم تحديد سبب' },
 
-  // ── Attendance ──
   'My Attendance':       { en: 'My Attendance',        ar: 'حضوري' },
   'Clock In':            { en: 'Clock In',             ar: 'تسجيل الدخول' },
   'Clock Out':           { en: 'Clock Out',            ar: 'تسجيل الخروج' },
@@ -92,7 +87,6 @@ export const TRANSLATIONS: { [key: string]: { en: string; ar: string } } = {
   'View All':            { en: 'View All',             ar: 'عرض الكل' },
   'Today':               { en: 'Today',                ar: 'اليوم' },
 
-  // ── Salary ──
   'My Salary History':   { en: 'My Salary History',    ar: 'سجل رواتبي' },
   'All Salaries':        { en: 'All Salaries',         ar: 'جميع الرواتب' },
   'Month':               { en: 'Month',                ar: 'الشهر' },
@@ -103,7 +97,6 @@ export const TRANSLATIONS: { [key: string]: { en: string; ar: string } } = {
   'Net Pay':             { en: 'Net Pay',              ar: 'صافي الراتب' },
   'Download Payslip':    { en: 'Download Payslip',     ar: 'تحميل كشف الراتب' },
 
-  // ── Employees ──
   'All Employees':       { en: 'All Employees',        ar: 'جميع الموظفين' },
   'Add Employee':        { en: 'Add Employee',         ar: 'إضافة موظف' },
   'Search employees...': { en: 'Search employees...',  ar: 'ابحث عن موظف...' },
@@ -119,7 +112,6 @@ export const TRANSLATIONS: { [key: string]: { en: string; ar: string } } = {
   'Export to Excel':     { en: 'Export to Excel',      ar: 'تصدير لـ Excel' },
   'Download Report':     { en: 'Download Report',      ar: 'تحميل التقرير' },
 
-  // ── Common ──
   'Showing':             { en: 'Showing',              ar: 'عرض' },
   'of':                  { en: 'of',                   ar: 'من' },
   'entries':             { en: 'entries',               ar: 'سجل' },
@@ -135,7 +127,6 @@ export const TRANSLATIONS: { [key: string]: { en: string; ar: string } } = {
   'Close':               { en: 'Close',                ar: 'إغلاق' },
   'Role':                { en: 'Role',                 ar: 'الدور' },
 
-  // ── My Profile ──
   'Account Details':     { en: 'Account Details',      ar: 'تفاصيل الحساب' },
   'Permissions':         { en: 'Permissions',          ar: 'الصلاحيات' },
   'Employee Management': { en: 'Employee Management',  ar: 'إدارة الموظفين' },
@@ -151,7 +142,6 @@ export const TRANSLATIONS: { [key: string]: { en: string; ar: string } } = {
   'Confirm New Password': { en: 'Confirm New Password', ar: 'تأكيد كلمة المرور' },
   'System Admin':        { en: 'System Admin',         ar: 'مدير النظام' },
 
-  // ── Additional Fields ──
   'First Name':          { en: 'First Name',           ar: 'الاسم الأول' },
   'Last Name':           { en: 'Last Name',            ar: 'اسم العائلة' },
   'Position':            { en: 'Position',             ar: 'المسمى الوظيفي' },
@@ -171,7 +161,6 @@ export const TRANSLATIONS: { [key: string]: { en: string; ar: string } } = {
   'Email Address':       { en: 'Email Address',        ar: 'البريد الإلكتروني' },
   'No Employees Found':  { en: 'No Employees Found',   ar: 'لم يتم العثور على موظفين' },
 
-  // ── Recently Added Missing Translations ──
   'Bonus & Penalty':     { en: 'Bonus & Penalty',      ar: 'المكافآت والخصومات' },
   'Meetings & Interviews': { en: 'Meetings & Interviews', ar: 'الاجتماعات والمقابلات' },
   'Manage schedules and appointments': { en: 'Manage schedules and appointments', ar: 'إدارة الجداول والمواعيد' },

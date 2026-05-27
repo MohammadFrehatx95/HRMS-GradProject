@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+﻿import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -8,7 +8,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class AuthService {
-  // شغل التوثيق
+
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/auth`;
 
@@ -56,7 +56,7 @@ export class AuthService {
   uploadProfilePicture(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
-    // NOTE: Now uploads as PENDING — awaiting HR/Admin approval
+
     return this.http.post<any>(`${this.apiUrl}/upload-profile-picture`, formData);
   }
 
@@ -92,14 +92,13 @@ export class AuthService {
       const exp = payload.exp;
       if (!exp) return true;
 
-      // exp بالثواني، Date.now() بالمللي ثانية
       if (Date.now() >= exp * 1000) {
         this.logout();
         return false;
       }
       return true;
     } catch {
-      // توكن فاسد
+
       this.logout();
       return false;
     }
@@ -117,7 +116,6 @@ export class AuthService {
     return this.hasRole('hr');
   }
 
-  // admin أو hr عندهم نفس الصلاحيات لبعض الأشياء
   isAdminOrHR(): boolean {
     return this.hasRole('admin') || this.hasRole('hr');
   }
@@ -168,7 +166,6 @@ export class AuthService {
     return typeof window !== 'undefined' ? localStorage.getItem('user_profile_pic') : null;
   }
 
-  // كل اليوزرات
   getUsers(pageNumber = 1, pageSize = 100): Observable<any> {
     return this.http
       .get<any>(
@@ -177,7 +174,6 @@ export class AuthService {
       .pipe(map((response) => response?.data ?? response));
   }
 
-  // يوزرات بدون ملف موظف
   getUnassignedEmployeeUsers(pageNumber = 1, pageSize = 100): Observable<any> {
     return this.http
       .get<any>(
@@ -186,7 +182,6 @@ export class AuthService {
       .pipe(map((response) => response?.data ?? response));
   }
 
-  // نجيب الـ id من الإيميل
   getUserIdByEmail(email: string): Observable<any> {
     return this.http
       .get<any>(

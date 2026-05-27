@@ -1,4 +1,4 @@
-.sidebar {
+﻿.sidebar {
   width: var(--sidebar-width, 260px);
   min-width: 200px;
   max-width: 400px;
@@ -259,7 +259,6 @@
   background-color: var(--color-border, #d1d5db);
 }
 
-/* ── Custom Icon Colors for Light Mode ── */
 .sidebar-nav a i.icon-blue { color: #2563eb; }
 .sidebar-nav a i.icon-blue-dark { color: #1e40af; }
 .sidebar-nav a i.icon-pink { color: #d63384; }
@@ -272,7 +271,6 @@
 .sidebar-nav a i.icon-teal { color: #14b8a6; }
 .sidebar-nav a i.icon-cyan { color: #06b6d4; }
 
-/* ── AI Assistant Nav Link ── */
 .sidebar-nav a.ai-nav-link {
   background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1));
   border: 1px solid rgba(99,102,241,0.2);

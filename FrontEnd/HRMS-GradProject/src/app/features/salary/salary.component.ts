@@ -1,6 +1,6 @@
-import { Component, OnInit, inject } from '@angular/core';
+﻿import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // لازم للـ forms
+import { FormsModule } from '@angular/forms';
 import { SalaryService } from '../../core/services/salary.service';
 import { EmployeeService } from '../../core/services/employee.service';
 import { AuthService } from '../../core/services/auth.service';
@@ -26,11 +26,10 @@ export class SalaryComponent implements OnInit {
   allSalariesList: any[] = [];
   salariesList: any[] = [];
   isLoading: boolean = true;
-  isAdmin: boolean = false; // أدمن (يضيف ويعدل)
-  isAdminOrHR: boolean = false; // أدمن أو hr (يشوف بس)
+  isAdmin: boolean = false;
+  isAdminOrHR: boolean = false;
   isProcessing: boolean = false;
-  isViewingAll: boolean = false; // Add toggle state
-
+  isViewingAll: boolean = false;
 
   salaryModal: any;
   isEditMode: boolean = false;
@@ -46,7 +45,6 @@ export class SalaryComponent implements OnInit {
   selectedMonth: string = '';
   uniqueYears: number[] = [];
 
-  // Pagination
   currentPage: number = 1;
   itemsPerPage: number = 7;
 
@@ -94,7 +92,7 @@ export class SalaryComponent implements OnInit {
   }
 
   loadEmployees() {
-    // تحميل الموظفين
+
     this.employeeService.getEmployees().subscribe({
       next: (res: any) => {
         const extractedData = Array.isArray(res) ? res : res?.data || [];
@@ -122,7 +120,6 @@ export class SalaryComponent implements OnInit {
       return fullName.includes(query) || idStr.includes(query);
     });
 
-    // Reset selected ID if typing changes
     this.salaryData.employeeId = null;
   }
 
@@ -139,7 +136,7 @@ export class SalaryComponent implements OnInit {
   }
 
   loadSalaries() {
-    // تحميل الرواتب
+
     this.isLoading = true;
     const request = (this.isAdminOrHR && this.isViewingAll)
       ? this.salaryService.getAllSalaries()
@@ -170,7 +167,7 @@ export class SalaryComponent implements OnInit {
   }
 
   filterSalaries() {
-    // فلترة الرواتب
+
     this.salariesList = this.allSalariesList.filter((s) => {
       let matchesSearch = true;
       if (this.salarySearchQuery) {
@@ -206,7 +203,7 @@ export class SalaryComponent implements OnInit {
       });
     }
 
-    this.currentPage = 1; // Reset to first page
+    this.currentPage = 1;
   }
 
   toggleViewAll() {
@@ -216,7 +213,6 @@ export class SalaryComponent implements OnInit {
     this.selectedMonth = '';
     this.loadSalaries();
   }
-
 
   openModal(salary: any = null) {
     if (salary) {
@@ -265,7 +261,7 @@ export class SalaryComponent implements OnInit {
   }
 
   saveSalary() {
-    // حفظ الراتب
+
     this.isProcessing = true;
 
     const isoDate = new Date(this.salaryData.effectiveDate).toISOString();
@@ -327,10 +323,9 @@ export class SalaryComponent implements OnInit {
   }
 
   downloadPayslip(salary: any) {
-    // تنزيل كشف الراتب
+
     const doc = new jsPDF();
 
-    // Add Header
     doc.setFontSize(22);
     doc.setTextColor(13, 110, 253);
     doc.text('Kawadir HRMS', 14, 20);
@@ -352,14 +347,12 @@ export class SalaryComponent implements OnInit {
     const effObj = new Date(salary.effectiveDate);
     const effDate = `${effObj.getFullYear()}-${String(effObj.getMonth() + 1).padStart(2, '0')}-${String(effObj.getDate()).padStart(2, '0')}`;
 
-    // Employee Info
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(12);
     doc.text(`Employee Name: ${empName}`, 14, 50);
     doc.text(`Payroll Period: ${period}`, 14, 58);
     doc.text(`Effective Date: ${effDate}`, 14, 66);
 
-    // Salary Details Table
     autoTable(doc, {
       startY: 75,
       head: [['Description', 'Amount (JD)']],
@@ -381,13 +374,11 @@ export class SalaryComponent implements OnInit {
 
     const finalY = (doc as any).lastAutoTable.finalY || 130;
 
-    // Net Pay Highlight
     doc.setFontSize(14);
     doc.setTextColor(25, 135, 84);
     doc.setFont('helvetica', 'bold');
     doc.text(`Net Pay: ${salary.netAmount} JD`, 14, finalY + 15);
 
-    // Footer
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.setTextColor(150, 150, 150);
@@ -397,7 +388,6 @@ export class SalaryComponent implements OnInit {
       finalY + 40,
     );
 
-    // Download
     const fileName = `Payslip_${empName.replace(/ /g, '_')}_${salary.month}_${salary.year}.pdf`;
     doc.save(fileName);
   }

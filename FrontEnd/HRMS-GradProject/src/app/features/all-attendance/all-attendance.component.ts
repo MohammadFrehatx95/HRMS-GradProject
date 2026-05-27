@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+﻿import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -23,7 +23,6 @@ export class AllAttendanceComponent implements OnInit {
 
   isLoading = true;
 
-  // Pagination
   currentPage: number = 1;
   itemsPerPage: number = 7;
 
@@ -47,7 +46,7 @@ export class AllAttendanceComponent implements OnInit {
   }
 
   ngOnInit() {
-    // تحميل السجلات
+
     this.attendanceService.getAllAttendance().subscribe({
       next: (res: any) => {
         const items = Array.isArray(res)
@@ -67,7 +66,7 @@ export class AllAttendanceComponent implements OnInit {
   }
 
   filterRecords() {
-    // فلترة السجلات
+
     this.records = this.allRecords.filter((rec) => {
       let matchesSearch = true;
       if (this.searchQuery) {

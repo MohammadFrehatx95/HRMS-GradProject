@@ -1,4 +1,4 @@
-import { Injectable, inject, ApplicationRef } from '@angular/core';
+﻿import { Injectable, inject, ApplicationRef } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
 import { first, switchMap } from 'rxjs/operators';
 import { concat, interval } from 'rxjs';
@@ -22,13 +22,10 @@ export class UpdateService {
       return;
     }
 
-    // Allow the app to stabilize first, before starting
-    // polling for updates with `interval()`.
     const appIsStable$ = this.appRef.isStable.pipe(
       first((isStable) => isStable === true),
     );
 
-    // Poll every 6 hours
     const everySixHours$ = interval(6 * 60 * 60 * 1000);
     const everySixHoursOnceAppIsStable$ = concat(appIsStable$, everySixHours$);
 

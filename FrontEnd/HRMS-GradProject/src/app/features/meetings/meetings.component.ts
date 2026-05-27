@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+﻿import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MeetingService } from '../../core/services/meeting.service';
@@ -119,7 +119,7 @@ export class MeetingsComponent implements OnInit {
     this.isSubmitting = true;
     const formValues = this.addForm.value;
     
-    // Combine Date and Time
+
     const combinedDateTime = new Date(`${formValues.meetingDate}T${formValues.meetingTime}`);
     
     const dto: CreateMeetingDto = {

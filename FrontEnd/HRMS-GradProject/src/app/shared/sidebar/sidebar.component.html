@@ -1,6 +1,6 @@
-<div class="sidebar" #sidebar>
+﻿<div class="sidebar" #sidebar>
 
-    <!-- ── Brand ── -->
+    
     <div class="sidebar-brand" style="cursor: pointer;" routerLink="/dashboard"
         (click)="closeMobileSidebar()">
         <div class="sidebar-logo-wrap"
@@ -19,7 +19,7 @@
         </div>
     </div>
 
-    <!-- ── Navigation ── -->
+    
     <nav class="sidebar-nav">
         <ul>
             <li><a routerLink="/dashboard" routerLinkActive="active"
@@ -91,7 +91,7 @@
         </ul>
     </nav>
 
-    <!-- ── Footer (Profile + Logout) ── -->
+    
     <div class="sidebar-footer">
         <div class="user-profile" routerLink="/my-profile"
             (click)="closeMobileSidebar()">
@@ -110,7 +110,7 @@
         </button>
     </div>
 
-    <!-- Resizer Handle -->
+    
     <div class="sidebar-resizer" [class.active]="isResizing"
         (mousedown)="startResize($event)"></div>
 </div>

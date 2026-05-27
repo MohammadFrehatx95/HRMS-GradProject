@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import Swal from 'sweetalert2';
 
 @Injectable({
@@ -17,7 +17,6 @@ export class PwaService {
       this.deferredPrompt = e;
     });
 
-    // إذا تم تثبيت التطبيق بالفعل
     window.addEventListener('appinstalled', () => {
       this.deferredPrompt = null;
     });
@@ -25,7 +24,7 @@ export class PwaService {
 
   public promptInstall(): void {
     if (this.deferredPrompt) {
-      // الـ browser يدعم التثبيت المباشر
+
       this.deferredPrompt.prompt();
       this.deferredPrompt.userChoice.then((choiceResult: { outcome: string }) => {
         this.deferredPrompt = null;
@@ -38,7 +37,7 @@ export class PwaService {
         confirmButtonColor: '#0d6efd'
       });
     } else {
-      // تعليمات يدوية حسب المتصفح
+
       const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
       const isChrome = /chrome/i.test(navigator.userAgent) && !/edge/i.test(navigator.userAgent);
       const isEdge = /edg/i.test(navigator.userAgent);
@@ -98,7 +97,6 @@ export class PwaService {
            (window.navigator as any).standalone === true;
   }
 
-  // الزر دائماً يظهر الآن
   public get canInstall(): boolean {
     return true;
   }

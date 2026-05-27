@@ -1,4 +1,4 @@
-.wrapper {
+﻿.wrapper {
   display: flex;
   height: 100vh;
   width: 100%;
@@ -16,12 +16,12 @@
 }
 
 .app-sidebar.hidden {
-  margin-left: calc(-1 * var(--sidebar-width, 260px)); /* Hide sidebar LTR */
+  margin-left: calc(-1 * var(--sidebar-width, 260px)); 
 }
 
 :host-context(html[dir="rtl"]) .app-sidebar.hidden {
   margin-left: 0;
-  margin-right: calc(-1 * var(--sidebar-width, 260px)); /* Hide sidebar RTL */
+  margin-right: calc(-1 * var(--sidebar-width, 260px)); 
 }
 
 .main-panel {
@@ -43,7 +43,6 @@
   flex-direction: column;
 }
 
-/* When on the AI Assistant page — remove padding & allow AI page to fill fully */
 .content.ai-route {
   padding: 0;
   overflow: hidden;

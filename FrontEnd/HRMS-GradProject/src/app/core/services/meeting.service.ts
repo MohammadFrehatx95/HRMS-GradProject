@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Meeting, CreateMeetingDto, UpdateMeetingDto, MeetingStatus } from '../models/meeting.model';
@@ -9,7 +9,7 @@ import { PagedResult } from '../models/paged-result.model';
   providedIn: 'root'
 })
 export class MeetingService {
-  private apiUrl = `${environment.apiUrl}/meetings`; // using /meetings as in backend route
+  private apiUrl = `${environment.apiUrl}/meetings`;
 
   constructor(private http: HttpClient) { }
 

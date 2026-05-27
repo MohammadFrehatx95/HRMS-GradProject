@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+﻿import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -46,7 +46,6 @@ export class EmployeesComponent implements OnInit {
 
   detailsModal: any;
 
-  // Pagination
   currentPage: number = 1;
   itemsPerPage: number = 7;
 
@@ -80,7 +79,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   ngOnInit() {
-    // أول تحميل
+
     this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
     this.loadEmployees();
@@ -97,7 +96,6 @@ export class EmployeesComponent implements OnInit {
     }
   }
 
-  // --- Export to Excel (CSV) ---
   exportToExcel() {
     if (this.employeesList.length === 0) {
       Swal.fire('No Data', 'There are no employees to export.', 'info');
@@ -130,8 +128,6 @@ export class EmployeesComponent implements OnInit {
         .join(',');
     });
 
-    // Add UTF-8 BOM for Excel to read Arabic/Special characters correctly
-    // Add sep=, to force Excel to recognize comma as delimiter regardless of region
     const csvContent =
       '\uFEFFsep=,\r\n' + [headers.join(','), ...csvData].join('\r\n');
 
@@ -170,7 +166,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   loadEmployees() {
-    // تحميل الموظفين
+
     this.isLoading = true;
     this.employeeService.getEmployees().subscribe({
       next: (data) => {
@@ -192,7 +188,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   filterEmployees() {
-    // فلترة القائمة
+
     this.employeesList = this.allEmployeesList.filter((emp) => {
       let matchesSearch = true;
       if (this.searchQuery) {
@@ -226,7 +222,7 @@ export class EmployeesComponent implements OnInit {
       return matchesSearch && matchesDept && matchesStatus;
     });
 
-    this.currentPage = 1; // Reset to first page on filter
+    this.currentPage = 1;
   }
 
   onDelete(id: number) {
@@ -246,7 +242,6 @@ export class EmployeesComponent implements OnInit {
               (emp) => emp.id !== id,
             );
 
-            // Adjust pagination if needed
             if (this.currentPage > this.totalPages) {
               this.currentPage = this.totalPages;
             }
@@ -263,7 +258,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   viewFullDetails(emp: any) {
-    // تفاصيل الموظف
+
     this.selectedEmployeeProfile = { ...emp, isLoadingDetails: true };
 
     const modalElement = document.getElementById('employeeDetailsModal');
@@ -293,7 +288,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   downloadEmployeeReport(emp: any) {
-    // تقرير الموظف
+
     if (!emp) return;
 
     this.isGeneratingReport = true;
@@ -301,7 +296,6 @@ export class EmployeesComponent implements OnInit {
       `${emp.firstName || ''} ${emp.lastName || ''}`.trim() ||
       `Employee #${emp.id}`;
 
-    // Fetch all data in parallel
     forkJoin({
       attendance: this.attendanceService
         .getAllAttendance()
@@ -313,7 +307,6 @@ export class EmployeesComponent implements OnInit {
     }).subscribe(({ attendance, leaves, salaries }) => {
       this.isGeneratingReport = false;
 
-      // Filter data for this specific employee
       const empAttendance = attendance
         .filter((a: any) => a.employeeId === emp.id)
         .sort(
@@ -358,7 +351,7 @@ export class EmployeesComponent implements OnInit {
     const pageW = doc.internal.pageSize.getWidth();
     const today = new Date();
     const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    // ✅ W3 Fix: تأكد من صحة كل أنواع الإجازات بما يطابق Backend enum
+
     const leaveTypeMap: any = {
       0: 'Annual',
       1: 'Sick',
@@ -378,7 +371,6 @@ export class EmployeesComponent implements OnInit {
       Rejected: 'Rejected',
     };
 
-    // ── HEADER BANNER ──────────────────────────────
     doc.setFillColor(67, 97, 238);
     doc.rect(0, 0, pageW, 38, 'F');
 
@@ -392,7 +384,6 @@ export class EmployeesComponent implements OnInit {
     doc.text('Employee Monthly Report', 14, 22);
     doc.text(`Generated: ${todayStr}`, 14, 29);
 
-    // ── EMPLOYEE INFO CARD ─────────────────────────
     doc.setFillColor(248, 249, 252);
     doc.roundedRect(10, 44, pageW - 20, 38, 3, 3, 'F');
     doc.setDrawColor(225, 228, 240);
@@ -421,7 +412,6 @@ export class EmployeesComponent implements OnInit {
 
     let curY = 90;
 
-    // ── SALARY SECTION ────────────────────────────
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10);
     doc.setTextColor(67, 97, 238);
@@ -473,7 +463,6 @@ export class EmployeesComponent implements OnInit {
       curY = (doc as any).lastAutoTable.finalY + 10;
     }
 
-    // ── ATTENDANCE SECTION ────────────────────────
     if (curY > 230) {
       doc.addPage();
       curY = 20;
@@ -517,7 +506,6 @@ export class EmployeesComponent implements OnInit {
       curY = (doc as any).lastAutoTable.finalY + 10;
     }
 
-    // ── LEAVE SECTION ─────────────────────────────
     if (curY > 230) {
       doc.addPage();
       curY = 20;
@@ -561,7 +549,6 @@ export class EmployeesComponent implements OnInit {
       curY = (doc as any).lastAutoTable.finalY + 10;
     }
 
-    // ── SUMMARY BOX ────────────────────────────────
     if (curY > 235) {
       doc.addPage();
       curY = 20;
@@ -599,7 +586,6 @@ export class EmployeesComponent implements OnInit {
       curY + 23,
     );
 
-    // ── FOOTER ────────────────────────────────────
     const pageCount = (doc.internal as any).getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);

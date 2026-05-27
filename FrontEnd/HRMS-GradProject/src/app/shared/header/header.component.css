@@ -1,4 +1,4 @@
-/* ── Settings Button ── */
+﻿
 .settings-btn {
   transition: transform 0.3s ease;
 }
@@ -11,7 +11,6 @@
   color: #0d6efd !important;
 }
 
-/* ── Settings Panel ── */
 .settings-panel {
   animation: slideDown 0.2s ease-out;
 }
@@ -27,7 +26,6 @@
   }
 }
 
-/* ── Settings Icon Circle ── */
 .settings-icon-circle {
   width: 36px;
   height: 36px;
@@ -51,7 +49,6 @@
   color: #fff;
 }
 
-/* ── Language Toggle Button ── */
 .lang-toggle-btn {
   background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: #fff;
@@ -67,7 +64,6 @@
   color: #fff;
 }
 
-/* ── Dark Mode Toggle Switch ── */
 .form-check-input:checked {
   background-color: #0d6efd;
   border-color: #0d6efd;
@@ -77,7 +73,6 @@
   cursor: pointer;
 }
 
-/* ── Sticky Header ── */
 .header-bar {
   position: sticky;
   top: 0;
@@ -93,7 +88,6 @@ body.dark-mode .header-bar {
   border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
 
-/* ── Notification Action Icons ── */
 .action-icon-btn {
   width: 32px;
   height: 32px;
@@ -130,7 +124,6 @@ body.dark-mode .action-icon-btn.text-danger:hover:not(:disabled) {
   background-color: rgba(220, 53, 69, 0.2);
 }
 
-/* ── Notification Dropdown Responsive ── */
 .notification-dropdown {
   width: 380px;
   min-width: 280px;
@@ -138,7 +131,7 @@ body.dark-mode .action-icon-btn.text-danger:hover:not(:disabled) {
 
 @media (max-width: 576px) {
   .notification-dropdown {
-    /* on mobile: stretch from near-left edge to right edge of screen */
+    
     position: fixed !important;
     left: 8px !important;
     right: 8px !important;

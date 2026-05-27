@@ -1,4 +1,4 @@
-/* Animations */
+﻿
 .fade-in {
     animation: fadeIn 0.4s ease-out;
 }
@@ -14,12 +14,10 @@
     }
 }
 
-/* Header Icon */
 .header-icon {
     flex-shrink: 0;
 }
 
-/* Minimalist Form Inputs */
 .clean-form .form-control,
 .clean-form .form-select {
     background-color: var(--color-surface) !important;
@@ -43,7 +41,6 @@ body.dark-mode .clean-form .form-select:focus {
     color: var(--color-text-muted);
 }
 
-/* Submit Button */
 .submit-btn {
     transition: all 0.3s ease;
 }

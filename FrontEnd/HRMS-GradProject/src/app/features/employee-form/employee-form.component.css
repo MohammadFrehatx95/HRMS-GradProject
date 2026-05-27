@@ -1,6 +1,4 @@
-/*
-   PAGE WRAPPER
-*/
+﻿
 .form-page-wrapper {
   min-height: 100vh;
   padding: 2rem 1rem 3rem;
@@ -13,9 +11,6 @@
   animation: slideUp 0.5s ease-out;
 }
 
-/* 
-   HEADER CARD
-*/
 .form-header-card {
   background: #fff;
   border-radius: 16px;
@@ -79,9 +74,6 @@
   color: #333;
 }
 
-/*
-   LINKED USER BANNER (Add mode — after selecting user)
-*/
 .linked-user-banner {
   background: linear-gradient(135deg, #d1fae5, #ecfdf5);
   border: 1px solid #6ee7b7;
@@ -135,9 +127,6 @@
   font-size: 1.5rem;
 }
 
-/*
-   LINKED ACCOUNT CARD (Edit mode)
-*/
 .linked-account-card {
   background: linear-gradient(135deg, #eff6ff, #dbeafe);
   border: 1px solid #93c5fd;
@@ -196,9 +185,6 @@
   flex-shrink: 0;
 }
 
-/*
-   FORM SECTIONS
-*/
 .form-section {
   background: #fff;
   border-radius: 16px;
@@ -249,9 +235,6 @@
   letter-spacing: 0.4px;
 }
 
-/*
-   FIELD STYLES
-*/
 .field-label {
   display: flex;
   align-items: center;
@@ -297,7 +280,6 @@
   line-height: 1.4;
 }
 
-/* Readonly field */
 .readonly-field-wrap {
   position: relative;
 }
@@ -325,9 +307,6 @@
   border-color: #e2e8f0 !important;
 }
 
-/*
-   FORM ACTIONS
-*/
 .form-actions {
   display: flex;
   align-items: center;
@@ -380,9 +359,6 @@
   cursor: not-allowed;
 }
 
-/*
-   SKELETON LOADING
-*/
 .form-body-card {
   background: #fff;
   border-radius: 16px;
@@ -413,9 +389,6 @@
   border-radius: 10px;
 }
 
-/*
-   ANIMATIONS
-*/
 @keyframes slideUp {
   from {
     opacity: 0;
@@ -437,9 +410,6 @@
   }
 }
 
-/*
-   RESPONSIVE
-*/
 @media (max-width: 576px) {
   .form-header-card {
     flex-direction: column;
@@ -456,9 +426,6 @@
   }
 }
 
-/*
-   DARK MODE OVERRIDES
-*/
 :host-context(body.dark-mode) .form-page-wrapper {
   background: var(--color-bg);
 }

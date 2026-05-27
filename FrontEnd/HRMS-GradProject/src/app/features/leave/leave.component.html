@@ -1,6 +1,4 @@
-<div class="page-container p-4">
-
-
+﻿<div class="page-container p-4">
 
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div class="d-flex align-items-center">
@@ -56,7 +54,7 @@
         </div>
     </div>
 
-    <!-- Annual Leave Balance Banner for Employees -->
+    
     <div class="row mb-4" *ngIf="!isAdminOrHR">
         <div class="col-12">
             <div class="card border-0 shadow-sm rounded-4 bg-primary bg-opacity-10 position-relative overflow-hidden">
@@ -201,7 +199,7 @@
             </table>
         </div>
 
-        <!-- Pagination Footer -->
+        
         <div *ngIf="leavesList.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
             <small class="text-muted fw-medium">
                 {{ 'Showing' | t }} {{ (currentPage - 1) * itemsPerPage + 1 }} {{ 'to' | t }} {{ getMathMin(currentPage * itemsPerPage, leavesList.length) }} {{ 'of' | t }} {{ leavesList.length }} {{ 'entries' | t }}
@@ -219,7 +217,6 @@
             </ul>
         </div>
     </div>
-
 
 <div class="modal fade" id="leaveModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

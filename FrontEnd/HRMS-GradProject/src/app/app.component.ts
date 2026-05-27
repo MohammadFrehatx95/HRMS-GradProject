@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+﻿import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from './core/services/auth.service';
@@ -27,17 +27,17 @@ export class AppComponent {
   }
 
   get isSidebarHidden() {
-    // حالة السايدبار
+
     return this.sidebarService.isSidebarHidden();
   }
 
   get isMobileSidebarOpen() {
-    // فتح السايدبار بالموبايل
+
     return this.sidebarService.isMobileSidebarOpen();
   }
 
   closeMobileSidebar() {
-    // إغلاق السايدبار بالموبايل
+
     this.sidebarService.closeMobileSidebar();
   }
 }

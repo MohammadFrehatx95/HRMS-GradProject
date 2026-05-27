@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+﻿import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { EmployeeService } from '../../core/services/employee.service';
@@ -40,7 +40,6 @@ export class DashboardComponent implements OnInit {
   announcementForm: FormGroup;
   showAnnouncementModal = false;
 
-
   totalEmployees = 0;
   pendingLeaves = 0;
   departmentsCount = 0;
@@ -51,7 +50,6 @@ export class DashboardComponent implements OnInit {
   allAttendances: any[] = [];
   isAdmin: boolean = false;
   isAdminOrHR: boolean = false;
-
 
   annualLeavePercent: number = 0;
   sickLeavePercent: number = 0;
@@ -64,7 +62,6 @@ export class DashboardComponent implements OnInit {
   employeeHoursWorked: number = 0;
   employeeNextPayday: string = '';
 
-  // يوم 25 من كل شهر
   readonly PAYDAY = 25;
 
   leaveChartInstance: any;
@@ -79,11 +76,9 @@ export class DashboardComponent implements OnInit {
     const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     const timeStr = today.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 
-    // ── CORPORATE HEADER BANNER ─────────────────────────────────────────────
     doc.setFillColor(67, 97, 238);
     doc.rect(0, 0, pageW, 42, 'F');
 
-    // Subtle accent strip
     doc.setFillColor(90, 120, 255);
     doc.rect(0, 38, pageW, 4, 'F');
 
@@ -101,7 +96,6 @@ export class DashboardComponent implements OnInit {
     doc.setTextColor(180, 195, 255);
     doc.text(`Generated: ${todayStr}  ·  ${timeStr}`, margin, 30);
 
-    // Right side: badge label
     doc.setFillColor(50, 75, 210);
     doc.roundedRect(pageW - 52, 8, 38, 14, 3, 3, 'F');
     doc.setFont('helvetica', 'bold');
@@ -109,10 +103,9 @@ export class DashboardComponent implements OnInit {
     doc.setTextColor(255, 255, 255);
     doc.text('ADMIN REPORT', pageW - 33, 16, { align: 'center' });
 
-    // ── KPI STAT CARDS ──────────────────────────────────────────────────────
     const cardY = 50;
     const cardH = 28;
-    const cardW = (pageW - margin * 2 - 9) / 4; // 4 cards with 3 gaps of 3mm
+    const cardW = (pageW - margin * 2 - 9) / 4;
     const cards = [
       { label: 'Total Employees', value: String(this.totalEmployees), accentColor: [239, 71, 111] as [number, number, number] },
       { label: 'Pending Leaves', value: String(this.pendingLeaves), accentColor: [255, 165, 2] as [number, number, number] },
@@ -122,34 +115,31 @@ export class DashboardComponent implements OnInit {
 
     cards.forEach((card, i) => {
       const x = margin + i * (cardW + 3);
-      // Card background
+
       doc.setFillColor(248, 249, 252);
       doc.roundedRect(x, cardY, cardW, cardH, 3, 3, 'F');
       doc.setDrawColor(225, 228, 240);
       doc.roundedRect(x, cardY, cardW, cardH, 3, 3, 'S');
-      // Top accent line
+
       doc.setFillColor(...card.accentColor);
       doc.roundedRect(x, cardY, cardW, 3, 1.5, 1.5, 'F');
-      // Value
+
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
       doc.setTextColor(30, 30, 50);
       doc.text(card.value, x + cardW / 2, cardY + 15, { align: 'center' });
-      // Label
+
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(7.5);
       doc.setTextColor(120, 125, 145);
       doc.text(card.label, x + cardW / 2, cardY + 22, { align: 'center' });
     });
 
-    // ── ANALYTICS SECTION ───────────────────────────────────────────────────
     let curY = cardY + cardH + 10;
 
-    // Section header line
     this._pdfSectionHeader(doc, 'SYSTEM ANALYTICS', margin, curY, pageW);
     curY += 8;
 
-    // Two-column analytics table (leave distribution + attendance)
     const analyticsData = [
       ['Annual Leave', `${this.annualLeavePercent}%`],
       ['Sick Leave', `${this.sickLeavePercent}%`],
@@ -186,7 +176,6 @@ export class DashboardComponent implements OnInit {
 
     curY = (doc as any).lastAutoTable.finalY + 10;
 
-    // ── RECENT LEAVE REQUESTS TABLE ─────────────────────────────────────────
     this._pdfSectionHeader(doc, 'RECENT LEAVE REQUESTS', margin, curY, pageW);
     curY += 8;
 
@@ -240,7 +229,6 @@ export class DashboardComponent implements OnInit {
       curY = (doc as any).lastAutoTable.finalY + 10;
     }
 
-    // ── RECENT ATTENDANCE TABLE ──────────────────────────────────────────────
     this._pdfSectionHeader(doc, 'RECENT ATTENDANCE RECORDS', margin, curY, pageW);
     curY += 8;
 
@@ -276,28 +264,26 @@ export class DashboardComponent implements OnInit {
       });
     }
 
-    // ── FOOTERS ON ALL PAGES ─────────────────────────────────────────────────
     const totalPages = (doc as any).internal.getNumberOfPages();
     for (let pg = 1; pg <= totalPages; pg++) {
       doc.setPage(pg);
-      // Footer separator line
+
       doc.setDrawColor(210, 215, 230);
       doc.setLineWidth(0.4);
       doc.line(margin, pageH - 12, pageW - margin, pageH - 12);
-      // Confidential left text
+
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(7.5);
       doc.setTextColor(160, 165, 180);
       doc.text('Confidential — Kawadir HRMS Internal Report', margin, pageH - 7);
-      // Page number right
+
       doc.text(`Page ${pg} of ${totalPages}`, pageW - margin, pageH - 7, { align: 'right' });
     }
 
-    // ── SAVE ─────────────────────────────────────────────────────────────────
     doc.save(`System_Summary_Report_${todayStr}.pdf`);
   }
 
-  /** Draws a styled section header underline in the PDF */
+  
   private _pdfSectionHeader(doc: jsPDF, title: string, x: number, y: number, pageW: number) {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(9);
@@ -311,7 +297,7 @@ export class DashboardComponent implements OnInit {
     doc.line(x, y + 2.5, pageW - x, y + 2.5);
   }
 
-  allEmployeesList: any[] = []; // for targeted announcements
+  allEmployeesList: any[] = [];
 
   constructor() {
     this.announcementForm = this.fb.group({
@@ -375,7 +361,7 @@ export class DashboardComponent implements OnInit {
     if (!formValue.expiryDate) {
       formValue.expiryDate = null;
     } else {
-      // Ensure it's sent as an ISO string so the backend parses it as UTC
+
       formValue.expiryDate = new Date(formValue.expiryDate).toISOString();
     }
 
@@ -418,7 +404,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadAdminStats() {
-    // تحميل بيانات الأدمن
+
     this.empService.getEmployees().subscribe({
       next: (employees: any[]) => {
         this.totalEmployees = employees.length;
@@ -430,7 +416,7 @@ export class DashboardComponent implements OnInit {
     this.leaveService.getAllLeaves().subscribe({
       next: (leaves: any[]) => {
         this.pendingLeaves = leaves.filter(
-          // الـ backend بيرجع string مش رقم
+
           (l: any) => l.status === 'Pending',
         ).length;
 
@@ -447,7 +433,7 @@ export class DashboardComponent implements OnInit {
           unpaid = 0;
 
         if (totalLeaves > 0) {
-          // كلها strings من الـ backend
+
           annual = leaves.filter(
             (l: any) => l.leaveType === 'Annual',
           ).length;
@@ -510,7 +496,7 @@ export class DashboardComponent implements OnInit {
   }
 
   calculateAttendanceRate() {
-    // نحسب نسبة الحضور
+
     if (this.totalEmployees === 0 || this.allAttendances.length === 0) return;
     const validAtt = this.allAttendances.filter((a) => a.date && a.clockIn);
     const uniqueDays = new Set(validAtt.map((a) => a.date.split('T')[0])).size;
@@ -526,7 +512,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadNextPayday() {
-    // نحسب موعد الراتب القادم
+
     this.salaryService.getMySalaries().subscribe({
       next: (salaries: any[]) => {
         if (!salaries || salaries.length === 0) return;
@@ -576,7 +562,6 @@ export class DashboardComponent implements OnInit {
   }
 
   loadEmployeeStats() {
-    // تحميل بيانات الموظف
 
     const today = new Date();
     const currentMonth = today.toLocaleString('en-US', { month: 'short' });
@@ -586,19 +571,17 @@ export class DashboardComponent implements OnInit {
       1,
     ).toLocaleString('en-US', { month: 'short' });
 
-    // قيمة مؤقتة تظهر فوراً، تتحدث لما يرجع الـ API
     if (today.getDate() > this.PAYDAY) {
       this.employeeNextPayday = `${nextMonth} ${this.PAYDAY}`;
     } else {
       this.employeeNextPayday = `${currentMonth} ${this.PAYDAY}`;
     }
 
-    // نجيب التاريخ الدقيق من آخر راتب
     this.loadNextPayday();
 
     this.leaveService.getMyLeaves().subscribe({
       next: (leaves: any[]) => {
-        // backend يرجع strings مش أرقام
+
         this.employeePendingLeaves = leaves.filter(
           (l: any) => l.status === 'Pending',
         ).length;
@@ -661,7 +644,7 @@ export class DashboardComponent implements OnInit {
     emergency: number,
     unpaid: number,
   ) {
-    // رسم تشارت الإجازات
+
     const ctx = document.getElementById('leaveTypeChart') as HTMLCanvasElement;
     if (!ctx) return;
 
@@ -669,7 +652,6 @@ export class DashboardComponent implements OnInit {
       this.leaveChartInstance.destroy();
     }
 
-    // لو مافي داتا نعرض دائرة فاضية
     if (annual === 0 && sick === 0 && emergency === 0 && unpaid === 0) {
       this.leaveChartInstance = new Chart(ctx, {
         type: 'doughnut',
@@ -741,7 +723,6 @@ export class DashboardComponent implements OnInit {
 
     if (this.totalEmployees === 0 || this.allAttendances.length === 0) return;
 
-    // Get last 7 days calendar-wise
     const labels = [];
     const data = [];
     let startDateStr = '';
@@ -771,7 +752,7 @@ export class DashboardComponent implements OnInit {
         datasets: [{
           label: 'Attendance Rate (%)',
           data: data,
-          borderColor: '#198754', // Success color matching the badge
+          borderColor: '#198754',
           backgroundColor: 'rgba(25, 135, 84, 0.1)',
           borderWidth: 3,
           fill: true,

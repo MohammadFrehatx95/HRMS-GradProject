@@ -1,4 +1,4 @@
-.stat-card {
+﻿.stat-card {
   border-radius: 16px;
   color: white;
   padding: 25px;
@@ -50,7 +50,6 @@
   opacity: 0.3;
 }
 
-/* Beautiful Gradients and Glows */
 .pink {
   background: linear-gradient(135deg, #ff5e7e 0%, #ff99ac 100%);
 }

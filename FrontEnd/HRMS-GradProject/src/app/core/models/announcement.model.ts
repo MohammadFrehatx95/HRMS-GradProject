@@ -1,9 +1,9 @@
-export interface Announcement {
+﻿export interface Announcement {
     id: number;
     title: string;
     content: string;
     createdAt: string;
-    priority: string; // "Normal", "High", "Urgent"
+    priority: string;
     isGeneral: boolean;
     targetEmployeeIds?: number[];
     expiryDate?: string;
