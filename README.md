@@ -781,7 +781,7 @@ git push origin feature/your-feature
 ## 📄 License
 
 Developed as a graduation project for academic purposes.
-© 2026 Kawādir HRMS Team — Computer Science · Yarmouk University.
+© 2026 Kawādir HRMS Team — Computer Science · Al-Balqa Applied University.
 
 ---
 
