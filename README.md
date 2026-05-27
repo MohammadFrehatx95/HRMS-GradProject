@@ -30,7 +30,7 @@
 
 <br/>
 
-> 🎓 **Graduation Project** — Computer Science · Yarmouk University · 2026
+> 🎓 **Graduation Project** — Computer Science · Al-Balqa Applied University · 2026
 >
 > 👨‍💻 **Abedalqader Alfaqeeh** · Mohammad Frehat · Saad Rabadi · Mohammad Alghazo
 
