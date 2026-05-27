@@ -74,6 +74,12 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/reject-profile-picture/${userId}`, {});
   }
 
+  adminUpdateProfilePicture(userId: number, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<any>(`${this.apiUrl}/admin-update-profile-picture/${userId}`, formData);
+  }
+
   isLoggedIn(): boolean {
     const token = localStorage.getItem('jwt_token');
     if (!token) return false;

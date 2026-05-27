@@ -101,5 +101,13 @@ export const routes: Routes = [
       ),
     canActivate: [authGuard],
   },
+  {
+    path: 'pending-approvals',
+    loadComponent: () =>
+      import('./features/pending-approvals/pending-approvals.component').then(
+        (m) => m.PendingApprovalsComponent,
+      ),
+    canActivate: [authGuard, hrGuard],
+  },
   { path: '**', redirectTo: 'login' },
 ];

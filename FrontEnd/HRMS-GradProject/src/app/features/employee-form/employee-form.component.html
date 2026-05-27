@@ -161,6 +161,44 @@
         </div>
       </div>
 
+      <!-- ═══ SECTION: Profile Picture ═══ -->
+      <div class="form-section">
+        <div class="section-header">
+          <i class="bi bi-person-bounding-box"></i>
+          <span>Profile Picture</span>
+          <span class="badge bg-light text-secondary border ms-2">Optional</span>
+        </div>
+        <div class="row g-3">
+          <div class="col-12 d-flex flex-column align-items-center">
+            
+            <!-- Picture Preview -->
+            <div class="position-relative mb-3" style="width: 120px; height: 120px;">
+              <img *ngIf="picturePreviewUrl" [src]="picturePreviewUrl" 
+                   class="rounded-circle object-fit-cover w-100 h-100 border shadow-sm" alt="Profile Preview">
+              <div *ngIf="!picturePreviewUrl" 
+                   class="rounded-circle bg-light d-flex align-items-center justify-content-center w-100 h-100 border shadow-sm text-secondary">
+                <i class="bi bi-person-fill fs-1"></i>
+              </div>
+              
+              <!-- Upload Icon Overlay -->
+              <div class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow" 
+                   style="width: 32px; height: 32px; cursor: pointer;"
+                   onclick="document.getElementById('profilePicInput').click()">
+                <i class="bi bi-camera-fill"></i>
+              </div>
+            </div>
+
+            <input type="file" id="profilePicInput" class="d-none" accept="image/*" (change)="onFileSelected($event)">
+            
+            <small class="text-muted text-center mt-1">
+              Click the camera icon to upload or change picture.<br>
+              <i class="bi bi-info-circle me-1"></i>Max size: 5MB. Formats: JPG, PNG.
+            </small>
+
+          </div>
+        </div>
+      </div>
+
       <!-- ═══ SECTION: Contact Details ═══ -->
       <div class="form-section">
         <div class="section-header">

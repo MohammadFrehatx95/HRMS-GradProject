@@ -36,6 +36,10 @@
                     (click)="closeMobileSidebar()"><i
                         class="bi bi-people icon-pink"></i> {{ 'Employees' | t
                     }}</a></li>
+            <li><a routerLink="/pending-approvals" routerLinkActive="active"
+                    (click)="closeMobileSidebar()" class="position-relative">
+                    <i class="bi bi-person-bounding-box icon-yellow"></i> {{ 'Pending Approvals' | t }}
+                </a></li>
             }
             <li><a routerLink="/payroll-adjustments" routerLinkActive="active"
                     (click)="closeMobileSidebar()"><i

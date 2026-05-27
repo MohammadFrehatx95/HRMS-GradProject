@@ -203,6 +203,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
       msg.includes('إعلان')
     ) {
       this.router.navigate(['/dashboard']);
+    } else if (
+      type.includes('ProfilePicture') ||
+      type.includes('profile_picture') ||
+      msg.includes('profile picture') ||
+      msg.includes('profile photo') ||
+      msg.includes('صورة') ||
+      msg.includes('picture')
+    ) {
+      this.router.navigate(['/pending-approvals']);
     } else {
       this.router.navigate(['/dashboard']);
     }

@@ -200,7 +200,38 @@ public class AuthController(IAuthService authService, IUserService userService, 
             "Your profile picture was rejected. Please upload a different photo that complies with company policy.",
             NotificationType.ProfilePictureRejected);
 
-        return Ok(ApiResponse.Ok("Profile picture rejected."));
+        return Ok(ApiResponse.Ok("Profile picture request rejected."));
+    }
+
+    [HttpPost("admin-update-profile-picture/{userId}")]
+    [Authorize(Roles = "Admin,HR")]
+    public async Task<IActionResult> AdminUpdateProfilePicture(int userId, IFormFile file,
+        [FromServices] IImageService imageService)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest(ApiResponse.Fail("No file uploaded."));
+
+        var user = await uow.Repository<User>().GetByIdAsync(userId);
+        if (user == null) return NotFound(ApiResponse.Fail("User not found."));
+
+        try
+        {
+            using var stream = file.OpenReadStream();
+            var url = await imageService.UploadImageAsync(stream, file.FileName);
+            if (url == null) return BadRequest(ApiResponse.Fail("Upload failed."));
+
+            // Apply directly
+            user.ProfilePictureUrl = url;
+            user.PendingProfilePictureUrl = null; // Clear pending if any
+            uow.Repository<User>().Update(user);
+            await uow.SaveChangesAsync();
+
+            return Ok(ApiResponse<string>.Ok(url, "Profile picture updated successfully by admin."));
+        }
+        catch (System.Exception ex)
+        {
+            return StatusCode(500, ApiResponse.Fail($"Error: {ex.Message}"));
+        }
     }
 
     [HttpGet("users")]

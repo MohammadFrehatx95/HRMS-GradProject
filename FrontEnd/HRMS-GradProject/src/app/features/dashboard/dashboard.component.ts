@@ -40,7 +40,6 @@ export class DashboardComponent implements OnInit {
   announcementForm: FormGroup;
   showAnnouncementModal = false;
 
-  pendingProfilePictures: any[] = [];
 
   totalEmployees = 0;
   pendingLeaves = 0;

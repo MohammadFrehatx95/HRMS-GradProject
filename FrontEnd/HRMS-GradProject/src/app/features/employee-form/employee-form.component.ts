@@ -35,8 +35,11 @@ export class EmployeeFormComponent implements OnInit {
   unassignedUsers: any[] = [];
 
   // بيانات اليوزر اللي مربوط بالموظف في حالة التعديل
-  linkedUserInfo: { username: string; email: string; role: string } | null =
+  linkedUserInfo: { username: string; email: string; role: string; profilePictureUrl: string | null } | null =
     null;
+
+  selectedPictureFile: File | null = null;
+  picturePreviewUrl: string | null = null;
 
   employeeForm = new FormGroup({
     firstName: new FormControl('', Validators.required),
@@ -140,7 +143,12 @@ export class EmployeeFormComponent implements OnInit {
             'Employee',
           email: profile.email || '',
           role: profile.positionTitle || profile.departmentName || 'Employee',
+          profilePictureUrl: profile.profilePictureUrl || null
         };
+        
+        if (profile.profilePictureUrl) {
+          this.picturePreviewUrl = profile.profilePictureUrl;
+        }
       },
       error: (err) => {
         this.isLoading = false;
@@ -225,6 +233,22 @@ export class EmployeeFormComponent implements OnInit {
     return 'An error occurred while submitting. Please try again.';
   }
 
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        Swal.fire('Error', 'File size exceeds 5MB limit', 'error');
+        return;
+      }
+      this.selectedPictureFile = file;
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.picturePreviewUrl = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
   onSubmit() {
     // إرسال النموذج
     if (this.employeeForm.invalid) {
@@ -268,9 +292,7 @@ export class EmployeeFormComponent implements OnInit {
         .updateEmployee(this.currentEmployeeId, payload)
         .subscribe({
           next: () => {
-            this.isLoading = false;
-            Swal.fire('Success', 'Employee details updated successfully', 'success');
-            this.router.navigate(['/employees']);
+            this.handlePictureUploadAndNavigate(Number(rawValues.userId));
           },
           error: (err) => {
             this.isLoading = false;
@@ -287,9 +309,7 @@ export class EmployeeFormComponent implements OnInit {
     } else {
       this.employeeService.addEmployee(payload).subscribe({
         next: () => {
-          this.isLoading = false;
-          Swal.fire('Success', 'Employee added successfully', 'success');
-          this.router.navigate(['/employees']);
+          this.handlePictureUploadAndNavigate(Number(rawValues.userId));
         },
         error: (err) => {
           this.isLoading = false;
@@ -303,6 +323,27 @@ export class EmployeeFormComponent implements OnInit {
           console.error('Add error:', err);
         },
       });
+    }
+  }
+
+  private handlePictureUploadAndNavigate(userId: number) {
+    if (this.selectedPictureFile) {
+      this.authService.adminUpdateProfilePicture(userId, this.selectedPictureFile).subscribe({
+        next: () => {
+          this.isLoading = false;
+          Swal.fire('Success', 'Employee saved with new profile picture successfully', 'success');
+          this.router.navigate(['/employees']);
+        },
+        error: () => {
+          this.isLoading = false;
+          Swal.fire('Warning', 'Employee saved, but failed to upload picture.', 'warning');
+          this.router.navigate(['/employees']);
+        }
+      });
+    } else {
+      this.isLoading = false;
+      Swal.fire('Success', 'Employee saved successfully', 'success');
+      this.router.navigate(['/employees']);
     }
   }
 }
