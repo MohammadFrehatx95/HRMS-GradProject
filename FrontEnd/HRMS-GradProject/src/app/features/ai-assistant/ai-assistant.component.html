@@ -1,4 +1,4 @@
-﻿<div class="ai-page">
+<div class="ai-page">
   
   <div class="bg-mesh">
     <div class="mesh-blob blob-1"></div>
@@ -119,11 +119,6 @@
           <button class="mode-btn deep-think" [class.active]="aiMode === 1"
             (click)="setAiMode(1)" title="Deep Think (Read-Only Search)">
             <i class="bi bi-cpu"></i> <span class="d-none d-sm-inline">Deep Think</span>
-          </button>
-          <button class="mode-btn executive" *ngIf="isAdminOrHR"
-            [class.active]="aiMode === 2" (click)="setAiMode(2)"
-            title="Executive Mode (Actions & Updates)">
-            <i class="bi bi-shield-lock"></i> <span class="d-none d-sm-inline">Executive</span>
           </button>
         </div>
       </div>

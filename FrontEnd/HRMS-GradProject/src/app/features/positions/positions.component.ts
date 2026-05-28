@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PositionService } from '../../core/services/position.service';
@@ -7,6 +7,8 @@ import Swal from 'sweetalert2';
 
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
+
+import { ExcelExportService } from '../../core/services/excel-export.service';
 
 declare var bootstrap: any;
 
@@ -19,6 +21,7 @@ declare var bootstrap: any;
 export class PositionsComponent implements OnInit {
   private positionService = inject(PositionService);
   private departmentService = inject(DepartmentService);
+  private excelExportService = inject(ExcelExportService);
 
   positionsList: any[] = [];
   departmentsList: any[] = [];
@@ -98,7 +101,11 @@ export class PositionsComponent implements OnInit {
 
     const modalEl = document.getElementById('positionModal');
     if (modalEl) {
-      this.positionModal = new bootstrap.Modal(modalEl);
+      let modalInstance = bootstrap.Modal.getInstance(modalEl);
+      if (!modalInstance) {
+        modalInstance = new bootstrap.Modal(modalEl);
+      }
+      this.positionModal = modalInstance;
       this.positionModal.show();
     }
   }
@@ -164,5 +171,23 @@ export class PositionsComponent implements OnInit {
     this.isProcessing = false;
     console.error('Position save error:', err);
     Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to save position data.'), 'error');
+  }
+
+  exportToExcel() {
+    if (this.positionsList.length === 0) {
+      Swal.fire('No Data', 'There are no positions to export.', 'info');
+      return;
+    }
+
+    const headers = ['ID', 'Title', 'Department', 'Salary Min', 'Salary Max'];
+    const data = this.positionsList.map(pos => [
+      `#${pos.id}`,
+      pos.title,
+      pos.departmentName || 'N/A',
+      `${pos.salaryMin} JD`,
+      `${pos.salaryMax} JD`
+    ]);
+
+    this.excelExportService.exportTableToExcel(headers, data, 'Positions');
   }
 }

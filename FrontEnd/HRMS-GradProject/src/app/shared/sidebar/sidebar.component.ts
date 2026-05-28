@@ -1,4 +1,4 @@
-﻿import {
+import {
   Component,
   OnInit,
   inject,
@@ -43,7 +43,12 @@ export class SidebarComponent implements OnInit {
   @HostListener('document:mousemove', ['$event'])
   onMouseMove(event: MouseEvent) {
     if (!this.isResizing) return;
-    const newWidth = event.clientX;
+    
+    let newWidth = event.clientX;
+    const isRtl = document.documentElement.dir === 'rtl';
+    if (isRtl) {
+      newWidth = window.innerWidth - event.clientX;
+    }
 
     if (newWidth >= 200 && newWidth <= 400) {
       this.sidebarRef.nativeElement.style.width = `${newWidth}px`;

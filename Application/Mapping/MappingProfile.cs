@@ -81,6 +81,8 @@ public class MappingProfile : Profile
                 o => o.MapFrom(s => s.Employee != null
                     ? $"{s.Employee.FirstName} {s.Employee.LastName}"
                     : string.Empty))
+            .ForMember(d => d.EmployeeProfilePictureUrl,
+                o => o.MapFrom(s => s.Employee != null && s.Employee.User != null ? s.Employee.User.ProfilePictureUrl : null))
             .ForMember(d => d.LeaveType, o => o.MapFrom(s => s.LeaveType.ToString()))
             .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()))
             .ForMember(d => d.Reason, o => o.MapFrom(s => s.Reason))
@@ -98,7 +100,9 @@ public class MappingProfile : Profile
             .ForMember(d => d.EmployeeName,
                 o => o.MapFrom(s => s.Employee != null
                     ? $"{s.Employee.FirstName} {s.Employee.LastName}"
-                    : string.Empty));
+                    : string.Empty))
+            .ForMember(d => d.EmployeeProfilePictureUrl,
+                o => o.MapFrom(s => s.Employee != null && s.Employee.User != null ? s.Employee.User.ProfilePictureUrl : null));
 
 
 
@@ -111,6 +115,8 @@ public class MappingProfile : Profile
                 o => o.MapFrom(s => s.Employee != null
                     ? $"{s.Employee.FirstName} {s.Employee.LastName}"
                     : string.Empty))
+            .ForMember(d => d.EmployeeProfilePictureUrl,
+                o => o.MapFrom(s => s.Employee != null && s.Employee.User != null ? s.Employee.User.ProfilePictureUrl : null))
             
             .ForMember(d => d.TotalHours,
                 o => o.MapFrom(s => s.ClockOut.HasValue
@@ -122,7 +128,9 @@ public class MappingProfile : Profile
             .ForMember(d => d.EmployeeName,
                 o => o.MapFrom(s => s.Employee != null
                     ? $"{s.Employee.FirstName} {s.Employee.LastName}"
-                    : string.Empty));
+                    : string.Empty))
+            .ForMember(d => d.EmployeeProfilePictureUrl,
+                o => o.MapFrom(s => s.Employee != null && s.Employee.User != null ? s.Employee.User.ProfilePictureUrl : null));
 
        
         CreateMap<Notification, NotificationDto>()

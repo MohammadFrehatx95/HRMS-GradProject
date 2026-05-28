@@ -22,4 +22,5 @@ public class MeetingDto
     // Employee info
     public int EmployeeId { get; set; }
     public string EmployeeName { get; set; } = string.Empty;
+    public string? EmployeeProfilePictureUrl { get; set; }
 }

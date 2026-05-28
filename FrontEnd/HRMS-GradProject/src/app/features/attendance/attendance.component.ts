@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -6,6 +6,7 @@ import { AttendanceService } from '../../core/services/attendance.service';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { ExcelExportService } from '../../core/services/excel-export.service';
 
 @Component({
   selector: 'app-attendance',
@@ -16,6 +17,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 export class AttendanceComponent implements OnInit {
   private attendanceService = inject(AttendanceService);
   private authService = inject(AuthService);
+  private excelExportService = inject(ExcelExportService);
 
   allAttendanceRecords: any[] = [];
   attendanceRecords: any[] = [];
@@ -274,7 +276,7 @@ export class AttendanceComponent implements OnInit {
       'Total Hours',
     ];
 
-    const csvData = this.attendanceRecords.map((rec) => {
+    const data = this.attendanceRecords.map((rec) => {
       const isCompleted = rec.clockOut && rec.clockOut !== '00:00:00';
       const status = isCompleted ? 'Completed' : 'Working';
       const empName = rec.employeeName || 'Emp #' + rec.employeeId;
@@ -287,32 +289,9 @@ export class AttendanceComponent implements OnInit {
         rec.clockOut && rec.clockOut !== '00:00:00' ? rec.clockOut : '--:--',
         status,
         rec.totalHours || '0',
-      ]
-        .map((value) => `"${String(value).replace(/"/g, '""')}"`)
-        .join(',');
+      ];
     });
 
-    const csvContent =
-      '\uFEFFsep=,\r\n' + [headers.join(','), ...csvData].join('\r\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute(
-      'download',
-      `Attendance_Kawadir_${new Date().toISOString().split('T')[0]}.csv`,
-    );
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    Swal.fire({
-      icon: 'success',
-      title: 'Exported Successfully',
-      text: 'Attendance data has been exported to Excel (CSV).',
-      timer: 2000,
-      showConfirmButton: false,
-    });
+    this.excelExportService.exportTableToExcel(headers, data, 'Attendance');
   }
 }

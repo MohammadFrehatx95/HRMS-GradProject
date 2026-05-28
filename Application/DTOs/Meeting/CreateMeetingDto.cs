@@ -1,4 +1,4 @@
-﻿// Application/DTOs/Meeting/CreateMeetingDto.cs
+// Application/DTOs/Meeting/CreateMeetingDto.cs
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.DTOs.Meeting;
@@ -20,7 +20,7 @@ public class CreateMeetingDto
     public int DurationMinutes { get; set; } = 30;
 
     [Required]
-    public int EmployeeId { get; set; }
+    public List<int> EmployeeIds { get; set; } = new();
 
     [StringLength(500)]
     public string? Notes { get; set; }

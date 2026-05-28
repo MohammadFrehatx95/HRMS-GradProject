@@ -1,4 +1,4 @@
-﻿
+
 
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
     <div class="d-flex align-items-center">
@@ -46,13 +46,17 @@
             </div>
         </div>
 
-        @if (isAdmin) {
+        @if (isAdminOrHR) {
         <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-outline-success px-3 px-md-4 fw-semibold" (click)="exportToExcel()" title="Export to Excel">
+            <button class="btn btn-outline-danger px-3 px-md-4 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
+                <i class="bi bi-file-earmark-pdf-fill" [class.me-md-2]="true"></i>
+                <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
+            </button>
+            <button class="btn btn-outline-success px-3 px-md-4 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
                 <i class="bi bi-file-earmark-excel-fill" [class.me-md-2]="true"></i>
                 <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
             </button>
-            <button class="btn btn-primary px-3 px-md-4 fw-semibold" routerLink="/employee-form" title="Add Employee">
+            <button class="btn btn-primary px-3 px-md-4 fw-semibold text-nowrap" routerLink="/employee-form" title="Add Employee">
                 <i class="bi bi-person-plus-fill" [class.me-md-2]="true"></i>
                 <span class="d-none d-md-inline">{{ 'Add Employee' | t }}</span>
             </button>
@@ -116,7 +120,7 @@
                         <button class="btn btn-outline-info btn-sm me-2" title="Details" (click)="viewFullDetails(emp)">
                             <i class="bi bi-file-earmark-person"></i>
                         </button>
-                        @if (isAdmin) {
+                        @if (isAdminOrHR) {
                         <button class="btn btn-sm btn-outline-secondary me-2" title="Download Report" (click)="downloadEmployeeReport(emp)">
                             <i class="bi bi-file-earmark-pdf"></i>
                         </button>
@@ -277,7 +281,7 @@
                     <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
                         <i class="bi bi-x-lg me-1"></i> {{ 'Close' | t }}
                     </button>
-                    @if (isAdmin) {
+                    @if (isAdminOrHR) {
                     <button type="button" class="btn btn-outline-danger rounded-pill px-4"
                         [disabled]="isGeneratingReport"
                         (click)="downloadEmployeeReport(selectedEmployeeProfile)">

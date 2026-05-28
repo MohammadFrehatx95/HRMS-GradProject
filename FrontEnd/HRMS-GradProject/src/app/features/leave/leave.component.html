@@ -1,4 +1,4 @@
-﻿<div class="page-container p-4">
+<div class="page-container p-4">
 
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div class="d-flex align-items-center">
@@ -45,6 +45,13 @@
                     </div>
                 </div>
             </div>
+
+            <button class="btn btn-outline-success px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="exportToExcel()" title="Export to Excel">
+                <i class="bi bi-file-earmark-excel-fill" [class.me-md-2]="true"></i> <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
+            </button>
+            <button class="btn btn-outline-danger px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="exportToPDF()" title="Export to PDF">
+                <i class="bi bi-file-earmark-pdf-fill" [class.me-md-2]="true"></i> <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
+            </button>
 
             <button *ngIf="!isAdminOrHR"
                 class="btn btn-primary px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
@@ -116,10 +123,15 @@
                     <tr *ngFor="let leave of paginatedLeaves">
                         <td *ngIf="isAdminOrHR" data-label="Employee" class="py-3 px-3">
                             <div class="d-flex align-items-center">
-                                <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center"
-                                    style="width: 32px; height: 32px; font-size: 13px;">
-                                    {{ leave.employeeName ? leave.employeeName.charAt(0).toUpperCase() : 'U' }}
-                                </div>
+                                <ng-container *ngIf="leave.employeeProfilePictureUrl; else noLeavePic">
+                                    <img [src]="leave.employeeProfilePictureUrl" alt="User" class="rounded-circle me-2 object-fit-cover shadow-sm" style="width: 32px; height: 32px; border: 2px solid #fff;">
+                                </ng-container>
+                                <ng-template #noLeavePic>
+                                    <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; font-size: 13px;">
+                                        {{ leave.employeeName ? leave.employeeName.charAt(0).toUpperCase() : 'U' }}
+                                    </div>
+                                </ng-template>
                                 <span class="fw-semibold text-dark">{{ leave.employeeName }}</span>
                             </div>
                         </td>
@@ -142,11 +154,16 @@
                         </td>
 
                         <td data-label="Reason" class="py-3 px-4 text-secondary">
-                            <span class="d-inline-block text-truncate"
-                                style="max-width: 180px;"
-                                [title]="leave.reason">
-                                {{ leave.reason || ('No reason provided' | t) }}
-                            </span>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="d-inline-block text-truncate"
+                                    style="max-width: 150px;"
+                                    [title]="leave.reason">
+                                    {{ leave.reason || ('No reason provided' | t) }}
+                                </span>
+                                <button *ngIf="leave.reason" class="btn btn-sm btn-link text-primary p-0 m-0 border-0" (click)="showReason(leave.reason)" title="View Full Reason">
+                                    <i class="bi bi-chat-text-fill"></i>
+                                </button>
+                            </div>
                         </td>
 
                         <td data-label="Status" class="py-3 px-4 text-center">
@@ -217,6 +234,7 @@
             </ul>
         </div>
     </div>
+</div>
 
 <div class="modal fade" id="leaveModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -296,4 +314,3 @@
 
 <style>
 </style>
-

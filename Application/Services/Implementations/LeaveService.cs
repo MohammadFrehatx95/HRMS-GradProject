@@ -22,7 +22,7 @@ namespace Application.Services.Implementations
         {
             var query = uow.Repository<Leave>()
                            .GetAllQueryable()
-                           .Include(l => l.Employee)
+                           .Include(l => l.Employee).ThenInclude(e => e.User)
                            .OrderByDescending(l => l.StartDate);
 
             var total = await query.CountAsync();
@@ -40,7 +40,7 @@ namespace Application.Services.Implementations
         {
             var query = uow.Repository<Leave>()
                            .GetAllQueryable()
-                           .Include(l => l.Employee)
+                           .Include(l => l.Employee).ThenInclude(e => e.User)
                            .Where(l => l.EmployeeId == employeeId)
                            .OrderByDescending(l => l.StartDate);
 
@@ -58,7 +58,7 @@ namespace Application.Services.Implementations
         {
             var leave = await uow.Repository<Leave>()
                                  .GetAllQueryable()
-                                 .Include(l => l.Employee)
+                                 .Include(l => l.Employee).ThenInclude(e => e.User)
                                  .FirstOrDefaultAsync(l => l.Id == id);
 
             return leave is null ? null : mapper.Map<LeaveDto>(leave);
@@ -69,7 +69,7 @@ namespace Application.Services.Implementations
         {
             var leave = await uow.Repository<Leave>()
                                  .GetAllQueryable()
-                                 .Include(l => l.Employee)
+                                 .Include(l => l.Employee).ThenInclude(e => e.User)
                                  .FirstOrDefaultAsync(l =>
                                      l.Id == leaveId &&
                                      l.EmployeeId == employeeId);
@@ -169,7 +169,7 @@ namespace Application.Services.Implementations
         {
             var leave = await uow.Repository<Leave>()
                                  .GetAllQueryable()
-                                 .Include(l => l.Employee)
+                                 .Include(l => l.Employee).ThenInclude(e => e.User)
                                  .FirstOrDefaultAsync(l => l.Id == leaveId)
                     ?? throw new KeyNotFoundException($"Leave {leaveId} not found");
 

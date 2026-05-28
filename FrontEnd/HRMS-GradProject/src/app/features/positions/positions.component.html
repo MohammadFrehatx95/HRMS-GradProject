@@ -1,4 +1,4 @@
-﻿<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
     <div class="d-flex align-items-center">
         <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
             <i class="bi bi-briefcase-fill fs-4"></i>
@@ -8,10 +8,15 @@
             <p class="text-muted mb-0 small">{{ 'Manage company job titles and roles' | t }}</p>
         </div>
     </div>
-    <button class="btn btn-primary shadow-sm fw-bold px-3 px-md-4"
-        (click)="openModal()">
-        <i class="bi bi-plus-lg" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'Add Position' | t }}</span>
-    </button>
+    <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-outline-success shadow-sm fw-bold px-3 px-md-4" (click)="exportToExcel()" title="Export to Excel">
+            <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
+        </button>
+        <button class="btn btn-primary shadow-sm fw-bold px-3 px-md-4"
+            (click)="openModal()">
+            <i class="bi bi-plus-lg" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'Add Position' | t }}</span>
+        </button>
+    </div>
 </div>
 
 @if (isLoading) {

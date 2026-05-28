@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EmployeeService } from '../../core/services/employee.service';
@@ -126,15 +126,32 @@ export class MyProfileComponent implements OnInit {
       this.authService.uploadProfilePicture(file).subscribe({
         next: (res) => {
           this.isUploadingPic = false;
-          this.pendingProfilePicUrl = res?.data ?? null;
-          Swal.fire({
-            icon: 'info',
-            title: 'Picture Submitted!',
-            html: `<p>Your profile picture has been submitted for review.</p>
-                   <p class="text-muted small mt-2">An HR manager will review and approve it shortly. You will be notified once it\'s approved.</p>`,
-            confirmButtonText: 'Got it!',
-            confirmButtonColor: '#4361ee',
-          });
+          
+          if (res?.message && res.message.includes('approval')) {
+            this.pendingProfilePicUrl = res?.data ?? null;
+            Swal.fire({
+              icon: 'info',
+              title: 'Picture Submitted!',
+              html: `<p>Your profile picture has been submitted for review.</p>
+                     <p class="text-muted small mt-2">An HR manager will review and approve it shortly. You will be notified once it\'s approved.</p>`,
+              confirmButtonText: 'Got it!',
+              confirmButtonColor: '#4361ee',
+            });
+          } else {
+            this.profilePicUrl = res?.data ?? null;
+            this.pendingProfilePicUrl = null;
+            if (this.profilePicUrl) {
+              localStorage.setItem('user_profile_pic', this.profilePicUrl);
+              window.dispatchEvent(new Event('profile_pic_updated'));
+            }
+            Swal.fire({
+              icon: 'success',
+              title: 'Picture Updated!',
+              text: 'Your profile picture has been updated successfully.',
+              timer: 2000,
+              showConfirmButton: false,
+            });
+          }
         },
         error: (err) => {
           this.isUploadingPic = false;

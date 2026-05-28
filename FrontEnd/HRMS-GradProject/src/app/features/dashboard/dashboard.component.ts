@@ -16,6 +16,7 @@ import autoTable from 'jspdf-autotable';
 import { AnnouncementService } from '../../core/services/announcement.service';
 import { Announcement } from '../../core/models/announcement.model';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ExcelExportService } from '../../core/services/excel-export.service';
 
 Chart.register(...registerables);
 
@@ -35,6 +36,7 @@ export class DashboardComponent implements OnInit {
   private salaryService = inject(SalaryService);
   private announcementService = inject(AnnouncementService);
   private fb = inject(FormBuilder);
+  private excelExportService = inject(ExcelExportService);
 
   announcements: Announcement[] = [];
   announcementForm: FormGroup;
@@ -210,19 +212,14 @@ export class DashboardComponent implements OnInit {
         },
         bodyStyles: { textColor: [50, 55, 70], fontSize: 8.5, cellPadding: 2.5 },
         alternateRowStyles: { fillColor: [248, 249, 252] },
-        didDrawCell: (data: any) => {
+        didParseCell: (data: any) => {
           if (data.section === 'body' && data.column.index === 4) {
             const status = data.cell.raw as string;
-            if (status === 'Approved') { doc.setTextColor(6, 150, 80); }
-            else if (status === 'Pending') { doc.setTextColor(200, 120, 0); }
-            else if (status === 'Rejected') { doc.setTextColor(180, 30, 50); }
-            doc.setFont('helvetica', 'bold');
-            doc.text(
-              status,
-              data.cell.x + data.cell.width / 2,
-              data.cell.y + data.cell.height / 2 + 0.5,
-              { align: 'center', baseline: 'middle' }
-            );
+            if (status === 'Approved') { data.cell.styles.textColor = [6, 150, 80]; }
+            else if (status === 'Pending') { data.cell.styles.textColor = [200, 120, 0]; }
+            else if (status === 'Rejected') { data.cell.styles.textColor = [180, 30, 50]; }
+            data.cell.styles.fontStyle = 'bold';
+            data.cell.styles.halign = 'center';
           }
         },
       });
@@ -299,6 +296,45 @@ export class DashboardComponent implements OnInit {
 
   allEmployeesList: any[] = [];
 
+  announcementSearchQuery: string = '';
+  announcementDepartmentFilter: string = '';
+
+  get announcementUniqueDepartments(): string[] {
+    const depts = this.allEmployeesList.map(e => e.departmentName).filter(d => !!d);
+    return Array.from(new Set(depts));
+  }
+
+  get filteredAnnouncementEmployees(): any[] {
+    return this.allEmployeesList.filter(emp => {
+      const matchesSearch = this.announcementSearchQuery ? 
+        `${emp.firstName} ${emp.lastName}`.toLowerCase().includes(this.announcementSearchQuery.toLowerCase()) : true;
+      const matchesDept = this.announcementDepartmentFilter ? 
+        emp.departmentName === this.announcementDepartmentFilter : true;
+      return matchesSearch && matchesDept;
+    });
+  }
+
+  get isAllFilteredAnnouncementEmployeesSelected(): boolean {
+    const currentSelected = this.announcementForm.get('targetEmployeeIds')?.value || [];
+    if (this.filteredAnnouncementEmployees.length === 0) return false;
+    return this.filteredAnnouncementEmployees.every(emp => currentSelected.includes(emp.id));
+  }
+
+  selectAllFilteredAnnouncementEmployees(event: any) {
+    const isChecked = event.target.checked;
+    const currentSelected = new Set(this.announcementForm.get('targetEmployeeIds')?.value || []);
+    
+    this.filteredAnnouncementEmployees.forEach(emp => {
+      if (isChecked) {
+        currentSelected.add(emp.id);
+      } else {
+        currentSelected.delete(emp.id);
+      }
+    });
+    
+    this.announcementForm.get('targetEmployeeIds')?.setValue(Array.from(currentSelected));
+  }
+
   constructor() {
     this.announcementForm = this.fb.group({
       title: ['', Validators.required],
@@ -349,6 +385,17 @@ export class DashboardComponent implements OnInit {
 
   closeAnnouncementModal() {
     this.showAnnouncementModal = false;
+  }
+
+  toggleEmployeeForAnnouncement(empId: number) {
+    const currentSelected = this.announcementForm.get('targetEmployeeIds')?.value || [];
+    const index = currentSelected.indexOf(empId);
+    if (index > -1) {
+      currentSelected.splice(index, 1);
+    } else {
+      currentSelected.push(empId);
+    }
+    this.announcementForm.get('targetEmployeeIds')?.setValue(currentSelected);
   }
 
   submitAnnouncement() {
@@ -810,5 +857,38 @@ export class DashboardComponent implements OnInit {
         }
       }
     });
+  }
+
+  exportRecentAttendancesToExcel() {
+    if (this.recentAttendances.length === 0) {
+      Swal.fire('No Data', 'There are no attendance records to export.', 'info');
+      return;
+    }
+
+    const headers = ['Employee', 'Date', 'Clock In', 'Clock Out'];
+    const data = this.recentAttendances.map(att => [
+      att.employeeName || 'Emp #' + att.employeeId,
+      att.date ? new Date(att.date).toLocaleDateString() : '',
+      att.clockIn || '--:--',
+      att.clockOut && att.clockOut !== '00:00:00' ? att.clockOut : '--:--'
+    ]);
+
+    this.excelExportService.exportTableToExcel(headers, data, 'Recent_Attendances');
+  }
+
+  exportMyRecentAttendancesToExcel() {
+    if (this.myRecentAttendances.length === 0) {
+      Swal.fire('No Data', 'There are no attendance records to export.', 'info');
+      return;
+    }
+
+    const headers = ['Date', 'Clock In', 'Clock Out'];
+    const data = this.myRecentAttendances.map(att => [
+      att.date ? new Date(att.date).toLocaleDateString() : '',
+      att.clockIn || '--:--',
+      att.clockOut && att.clockOut !== '00:00:00' ? att.clockOut : '--:--'
+    ]);
+
+    this.excelExportService.exportTableToExcel(headers, data, 'My_Recent_Attendances');
   }
 }

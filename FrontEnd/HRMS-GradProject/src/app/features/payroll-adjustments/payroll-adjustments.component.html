@@ -1,4 +1,4 @@
-﻿<div class="page-container p-4">
+<div class="page-container p-4">
     <div
         class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div class="d-flex align-items-center">
@@ -15,13 +15,21 @@
                     t }}</p>
             </div>
         </div>
-        @if (isAdminOrHR) {
-        <button
-            class="btn btn-primary shadow-sm text-nowrap px-4 py-2 rounded-3 fw-semibold"
-            (click)="openAddModal()">
-            <i class="bi bi-plus-lg me-1"></i> {{ 'Add Adjustment' | t }}
-        </button>
-        }
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-outline-success shadow-sm text-nowrap px-4 py-2 rounded-3 fw-semibold me-2" (click)="exportToExcel()" title="Export to Excel">
+                <i class="bi bi-file-earmark-excel-fill me-1"></i> {{ 'Export to Excel' | t }}
+            </button>
+            <button class="btn btn-outline-danger shadow-sm text-nowrap px-4 py-2 rounded-3 fw-semibold" (click)="exportToPDF()" title="Export to PDF">
+                <i class="bi bi-file-earmark-pdf-fill me-1"></i> {{ 'Export to PDF' | t }}
+            </button>
+            @if (isAdminOrHR) {
+            <button
+                class="btn btn-primary shadow-sm text-nowrap px-4 py-2 rounded-3 fw-semibold"
+                (click)="openAddModal()">
+                <i class="bi bi-plus-lg me-1"></i> {{ 'Add Adjustment' | t }}
+            </button>
+            }
+        </div>
     </div>
 
     @if (isLoading) {
@@ -61,13 +69,18 @@
                             }}</td>
                         <td class="py-3 px-4 fw-bold text-dark">
                             <div class="d-flex align-items-center">
-                                <div
-                                    class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-3 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                                    style="width: 35px; height: 35px; font-size: 13px;">
-                                    {{ (adj.employeeName ||
-                                    getEmployeeName(adj.employeeId)).charAt(0)
-                                    }}
-                                </div>
+                                <ng-container *ngIf="adj.employeeProfilePictureUrl; else noAdjPic">
+                                    <img [src]="adj.employeeProfilePictureUrl" alt="User" class="rounded-circle me-3 object-fit-cover shadow-sm flex-shrink-0" style="width: 35px; height: 35px; border: 2px solid #fff;">
+                                </ng-container>
+                                <ng-template #noAdjPic>
+                                    <div
+                                        class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-3 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                                        style="width: 35px; height: 35px; font-size: 13px;">
+                                        {{ (adj.employeeName ||
+                                        getEmployeeName(adj.employeeId)).charAt(0)
+                                        }}
+                                    </div>
+                                </ng-template>
                                 {{ adj.employeeName ||
                                 getEmployeeName(adj.employeeId) }}
                             </div>

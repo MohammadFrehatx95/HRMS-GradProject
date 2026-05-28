@@ -9,5 +9,6 @@ namespace Application.DTOs.Employee
         public bool? IsActive { get; set; }
         public int? DepartmentId { get; set; }
         public int? PositionId { get; set; }
+        public string? Password { get; set; }
     }
 }

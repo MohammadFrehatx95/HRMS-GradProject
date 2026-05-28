@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -14,6 +14,8 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { PdfExportService } from '../../core/services/pdf-export.service';
+import { ExcelExportService } from '../../core/services/excel-export.service';
 
 declare var bootstrap: any;
 
@@ -30,6 +32,8 @@ export class EmployeesComponent implements OnInit {
   private attendanceService = inject(AttendanceService);
   private leaveService = inject(LeaveService);
   private salaryService = inject(SalaryService);
+  private pdfExportService = inject(PdfExportService);
+  private excelExportService = inject(ExcelExportService);
 
   allEmployeesList: any[] = [];
   employeesList: any[] = [];
@@ -113,43 +117,18 @@ export class EmployeesComponent implements OnInit {
       'Role ID',
     ];
 
-    const csvData = this.employeesList.map((emp) => {
-      return [
-        emp.id,
-        emp.firstName || '',
-        emp.lastName || '',
-        emp.email || '',
-        emp.phoneNumber || 'N/A',
-        emp.address || 'N/A',
-        emp.isActive ? 'Active' : 'Inactive',
-        emp.roleId || 'N/A',
-      ]
-        .map((value) => `"${String(value).replace(/"/g, '""')}"`)
-        .join(',');
-    });
+    const data = this.employeesList.map((emp) => [
+      emp.id,
+      emp.firstName || '',
+      emp.lastName || '',
+      emp.email || '',
+      emp.phoneNumber || 'N/A',
+      emp.address || 'N/A',
+      emp.isActive ? 'Active' : 'Inactive',
+      emp.roleId || 'N/A',
+    ]);
 
-    const csvContent =
-      '\uFEFFsep=,\r\n' + [headers.join(','), ...csvData].join('\r\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute(
-      'download',
-      `Employees_Kawadir_${new Date().toISOString().split('T')[0]}.csv`,
-    );
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    Swal.fire({
-      icon: 'success',
-      title: 'Exported Successfully',
-      text: 'Employees list has been exported to Excel (CSV).',
-      timer: 2000,
-      showConfirmButton: false,
-    });
+    this.excelExportService.exportTableToExcel(headers, data, 'Employees');
   }
 
   getEmpInitials(emp: any): string {
@@ -606,5 +585,36 @@ export class EmployeesComponent implements OnInit {
 
     const fileName = `Report_${empName.replace(/ /g, '_')}_${todayStr}.pdf`;
     doc.save(fileName);
+  }
+
+  exportToPDF() {
+    if (this.employeesList.length === 0) {
+      Swal.fire('No Data', 'There are no employees to export.', 'info');
+      return;
+    }
+
+    const headers = ['ID', 'Name', 'Email', 'Phone', 'Department', 'Status'];
+    const data = this.employeesList.map(emp => [
+      `#${emp.id}`,
+      `${emp.firstName || ''} ${emp.lastName || ''}`.trim(),
+      emp.email || 'N/A',
+      emp.phoneNumber || 'N/A',
+      emp.departmentName || 'N/A',
+      emp.isActive ? 'Active' : 'Inactive'
+    ]);
+
+    const additionalInfo = [
+      { label: 'Total Employees', value: String(this.employeesList.length) },
+      { label: 'Active Employees', value: String(this.employeesList.filter(e => e.isActive).length) },
+      { label: 'Filtered Department', value: this.selectedDepartment ? this.selectedDepartment : 'All' }
+    ];
+
+    this.pdfExportService.generateTableReport(
+      'Employees Directory',
+      headers,
+      data,
+      'Employees_Report',
+      additionalInfo
+    );
   }
 }

@@ -1,4 +1,4 @@
-﻿export enum MeetingStatus {
+export enum MeetingStatus {
     Scheduled = 'Scheduled',
     Completed = 'Completed',
     Cancelled = 'Cancelled'
@@ -18,6 +18,7 @@ export interface Meeting {
     status: MeetingStatus | string;
     notes?: string;
     createdAt: string;
+    employeeProfilePictureUrl?: string;
 }
 
 export interface CreateMeetingDto {
@@ -25,7 +26,7 @@ export interface CreateMeetingDto {
     reason: string;
     scheduledAt: string;
     durationMinutes: number;
-    employeeId: number;
+    employeeIds: number[];
     notes?: string;
 }
 

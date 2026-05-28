@@ -9,9 +9,14 @@
                 <p class="text-muted small mb-0">{{ 'Manage schedules and appointments' | t }}</p>
             </div>
         </div>
-        <button *ngIf="isHrOrAdmin" class="btn btn-dark shadow-sm rounded-pill px-4" (click)="openAddModal()">
-            <i class="bi bi-plus-lg me-2"></i> {{ 'Schedule Meeting' | t }}
-        </button>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-outline-success shadow-sm rounded-pill px-4" (click)="exportToExcel()" title="Export to Excel">
+                <i class="bi bi-file-earmark-excel-fill me-2"></i> {{ 'Export to Excel' | t }}
+            </button>
+            <button *ngIf="isHrOrAdmin" class="btn btn-dark shadow-sm rounded-pill px-4" (click)="openAddModal()">
+                <i class="bi bi-plus-lg me-2"></i> {{ 'Schedule Meeting' | t }}
+            </button>
+        </div>
     </div>
 
     
@@ -49,7 +54,18 @@
                                 <span class="fw-medium text-dark">{{ meeting.organizerName || 'System' }}</span>
                             </td>
                             <td>
-                                <span class="fw-medium text-dark">{{ meeting.employeeName }}</span>
+                                <div class="d-flex align-items-center">
+                                    <ng-container *ngIf="meeting.employeeProfilePictureUrl; else noMeetPic">
+                                        <img [src]="meeting.employeeProfilePictureUrl" alt="User" class="rounded-circle me-2 object-fit-cover shadow-sm" style="width: 32px; height: 32px; border: 2px solid #fff;">
+                                    </ng-container>
+                                    <ng-template #noMeetPic>
+                                        <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center"
+                                            style="width: 32px; height: 32px; font-size: 13px;">
+                                            {{ meeting.employeeName ? meeting.employeeName.charAt(0).toUpperCase() : 'U' }}
+                                        </div>
+                                    </ng-template>
+                                    <span class="fw-medium text-dark">{{ meeting.employeeName }}</span>
+                                </div>
                             </td>
                             <td>
                                 <div><i class="bi bi-calendar-event text-muted me-2"></i>{{ meeting.scheduledAt | date:'mediumDate' }}</div>
@@ -125,13 +141,46 @@
 
                     <div class="mb-3">
                         <label class="form-label fw-bold text-secondary">{{ 'Employee' | t }} <span class="text-danger">*</span></label>
-                        <select class="form-select" formControlName="employeeId">
-                            <option value="">{{ 'Select Employee' | t }}</option>
-                            <option *ngFor="let emp of employees" [value]="emp.id">
-                                {{ emp.firstName }} {{ emp.lastName }} ({{ emp.position?.title }})
-                            </option>
-                        </select>
+                        
+                        
+                        <div class="d-flex gap-2 mb-2">
+                            <input type="text" class="form-control form-control-sm" placeholder="Search employee..." [(ngModel)]="employeeSearchQuery" [ngModelOptions]="{standalone: true}">
+                            <select class="form-select form-select-sm" [(ngModel)]="selectedDepartmentFilter" [ngModelOptions]="{standalone: true}">
+                                <option value="">All Departments</option>
+                                <option *ngFor="let dept of uniqueDepartments" [value]="dept">{{ dept }}</option>
+                            </select>
+                        </div>
+                        
+                        
+                        <div class="form-check mb-2 bg-light p-2 rounded border">
+                            <input class="form-check-input ms-1" type="checkbox" id="selectAllMeet"
+                                [checked]="isAllFilteredSelected"
+                                (change)="selectAllFilteredEmployees($event)" style="cursor: pointer;">
+                            <label class="form-check-label fw-bold text-dark ms-2" for="selectAllMeet" style="cursor: pointer;">
+                                Select All Filtered Employees
+                            </label>
+                        </div>
+
+                        <div class="border rounded p-2 overflow-auto" style="max-height: 250px; background: #fff; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);">
+                            <div class="form-check mb-2" *ngFor="let emp of filteredEmployees">
+                                <input class="form-check-input" type="checkbox" [id]="'empMeet' + emp.id"
+                                    [checked]="addForm.get('employeeIds')?.value?.includes(emp.id)"
+                                    (change)="toggleEmployeeForMeeting(emp.id)" style="cursor: pointer;">
+                                <label class="form-check-label w-100 d-flex align-items-center" [for]="'empMeet' + emp.id" style="cursor: pointer;">
+                                    <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 10px;">
+                                        {{ emp.firstName.charAt(0).toUpperCase() }}
+                                    </div>
+                                    <span class="fw-medium text-dark">{{ emp.firstName }} {{ emp.lastName }}</span>
+                                    <span class="ms-auto badge bg-light text-secondary border">{{ emp.departmentName }} | {{ emp.positionTitle || 'No Position' }}</span>
+                                </label>
+                            </div>
+                            <div *ngIf="filteredEmployees.length === 0" class="text-center text-muted small py-2">
+                                No employees found.
+                            </div>
+                        </div>
+                        <small class="text-muted d-block mt-1">{{ 'Select one or more employees to schedule a group meeting' | t }}</small>
                     </div>
+
 
                     <div class="row">
                         <div class="col-md-6 mb-3">

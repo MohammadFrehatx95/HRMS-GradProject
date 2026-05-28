@@ -12,7 +12,7 @@ public class PayrollAdjustmentService(IUnitOfWork uow, IEmailService emailServic
 {
     public async Task<PagedResult<PayrollAdjustmentDto>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
     {
-        var query = uow.Repository<PayrollAdjustment>().GetAllQueryable().Include(p => p.Employee);
+        var query = uow.Repository<PayrollAdjustment>().GetAllQueryable().Include(p => p.Employee).ThenInclude(e => e.User);
         var total = await query.CountAsync();
         var items = await query.OrderByDescending(p => p.Date)
             .Skip((pageNumber - 1) * pageSize)
@@ -22,6 +22,7 @@ public class PayrollAdjustmentService(IUnitOfWork uow, IEmailService emailServic
                 Id = p.Id,
                 EmployeeId = p.EmployeeId,
                 EmployeeName = p.Employee.FirstName + " " + p.Employee.LastName,
+                EmployeeProfilePictureUrl = p.Employee.User != null ? p.Employee.User.ProfilePictureUrl : null,
                 Type = p.Type,
                 Amount = p.Amount,
                 Reason = p.Reason,
@@ -33,7 +34,7 @@ public class PayrollAdjustmentService(IUnitOfWork uow, IEmailService emailServic
 
     public async Task<PagedResult<PayrollAdjustmentDto>> GetByEmployeeIdAsync(int employeeId, int pageNumber = 1, int pageSize = 10)
     {
-        var query = uow.Repository<PayrollAdjustment>().GetAllQueryable().Include(p => p.Employee).Where(p => p.EmployeeId == employeeId);
+        var query = uow.Repository<PayrollAdjustment>().GetAllQueryable().Include(p => p.Employee).ThenInclude(e => e.User).Where(p => p.EmployeeId == employeeId);
         var total = await query.CountAsync();
         var items = await query.OrderByDescending(p => p.Date)
             .Skip((pageNumber - 1) * pageSize)
@@ -43,6 +44,7 @@ public class PayrollAdjustmentService(IUnitOfWork uow, IEmailService emailServic
                 Id = p.Id,
                 EmployeeId = p.EmployeeId,
                 EmployeeName = p.Employee.FirstName + " " + p.Employee.LastName,
+                EmployeeProfilePictureUrl = p.Employee.User != null ? p.Employee.User.ProfilePictureUrl : null,
                 Type = p.Type,
                 Amount = p.Amount,
                 Reason = p.Reason,

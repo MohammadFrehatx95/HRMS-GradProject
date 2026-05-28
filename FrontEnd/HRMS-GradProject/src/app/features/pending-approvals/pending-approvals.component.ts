@@ -1,8 +1,10 @@
-﻿import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import Swal from 'sweetalert2';
+
+import { ExcelExportService } from '../../core/services/excel-export.service';
 
 @Component({
   selector: 'app-pending-approvals',
@@ -12,6 +14,7 @@ import Swal from 'sweetalert2';
 })
 export class PendingApprovalsComponent implements OnInit {
   private authService = inject(AuthService);
+  private excelExportService = inject(ExcelExportService);
 
   pendingPictures: any[] = [];
   isLoading = true;
@@ -78,5 +81,22 @@ export class PendingApprovalsComponent implements OnInit {
         });
       }
     });
+  }
+
+  exportToExcel() {
+    if (this.pendingPictures.length === 0) {
+      Swal.fire('No Data', 'There are no pending approvals to export.', 'info');
+      return;
+    }
+
+    const headers = ['User ID', 'Name', 'Email', 'Upload Date'];
+    const data = this.pendingPictures.map(p => [
+      `#${p.userId}`,
+      `${p.firstName} ${p.lastName}`,
+      p.email,
+      new Date(p.uploadedAt).toLocaleString()
+    ]);
+
+    this.excelExportService.exportTableToExcel(headers, data, 'Pending_Profile_Pictures');
   }
 }

@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MeetingService } from '../../core/services/meeting.service';
@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { Meeting, MeetingStatus, CreateMeetingDto } from '../../core/models/meeting.model';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { Observable } from 'rxjs';
+import { ExcelExportService } from '../../core/services/excel-export.service';
 
 declare var bootstrap: any;
 
@@ -23,6 +24,7 @@ export class MeetingsComponent implements OnInit {
   private meetingService = inject(MeetingService);
   private employeeService = inject(EmployeeService);
   private authService = inject(AuthService);
+  private excelExportService = inject(ExcelExportService);
 
   meetings: Meeting[] = [];
   employees: any[] = [];
@@ -36,9 +38,48 @@ export class MeetingsComponent implements OnInit {
   pageNumber = 1;
   pageSize = 100;
 
+  employeeSearchQuery: string = '';
+  selectedDepartmentFilter: string = '';
+
+  get uniqueDepartments(): string[] {
+    const depts = this.employees.map(e => e.departmentName).filter(d => !!d);
+    return Array.from(new Set(depts));
+  }
+
+  get filteredEmployees(): any[] {
+    return this.employees.filter(emp => {
+      const matchesSearch = this.employeeSearchQuery ? 
+        `${emp.firstName} ${emp.lastName}`.toLowerCase().includes(this.employeeSearchQuery.toLowerCase()) : true;
+      const matchesDept = this.selectedDepartmentFilter ? 
+        emp.departmentName === this.selectedDepartmentFilter : true;
+      return matchesSearch && matchesDept;
+    });
+  }
+
+  get isAllFilteredSelected(): boolean {
+    const currentSelected = this.addForm.get('employeeIds')?.value || [];
+    if (this.filteredEmployees.length === 0) return false;
+    return this.filteredEmployees.every(emp => currentSelected.includes(emp.id));
+  }
+
+  selectAllFilteredEmployees(event: any) {
+    const isChecked = event.target.checked;
+    const currentSelected = new Set(this.addForm.get('employeeIds')?.value || []);
+    
+    this.filteredEmployees.forEach(emp => {
+      if (isChecked) {
+        currentSelected.add(emp.id);
+      } else {
+        currentSelected.delete(emp.id);
+      }
+    });
+    
+    this.addForm.get('employeeIds')?.setValue(Array.from(currentSelected));
+  }
+
   constructor() {
     this.addForm = this.fb.group({
-      employeeId: ['', Validators.required],
+      employeeIds: [[], Validators.required],
       title: ['', [Validators.required, Validators.maxLength(200)]],
       reason: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]],
       meetingDate: ['', Validators.required],
@@ -125,7 +166,7 @@ export class MeetingsComponent implements OnInit {
     const dto: CreateMeetingDto = {
       title: formValues.title,
       reason: formValues.reason,
-      employeeId: Number(formValues.employeeId),
+      employeeIds: formValues.employeeIds,
       scheduledAt: combinedDateTime.toISOString(),
       durationMinutes: formValues.durationMinutes,
       notes: formValues.reason
@@ -185,6 +226,17 @@ export class MeetingsComponent implements OnInit {
     });
   }
 
+  toggleEmployeeForMeeting(empId: number) {
+    const currentSelected = this.addForm.get('employeeIds')?.value || [];
+    const index = currentSelected.indexOf(empId);
+    if (index > -1) {
+      currentSelected.splice(index, 1);
+    } else {
+      currentSelected.push(empId);
+    }
+    this.addForm.get('employeeIds')?.setValue(currentSelected);
+  }
+
   getStatusBadgeClass(status: any): string {
     const s = String(status);
     switch (s) {
@@ -209,5 +261,24 @@ export class MeetingsComponent implements OnInit {
       case 'Cancelled': return 'Cancelled';
       default: return 'Unknown';
     }
+  }
+
+  exportToExcel() {
+    if (this.meetings.length === 0) {
+      Swal.fire('No Data', 'There are no meetings to export.', 'info');
+      return;
+    }
+
+    const headers = ['ID', 'Title', 'Date & Time', 'Employee', 'Status', 'Duration (Min)'];
+    const data = this.meetings.map(m => [
+      `#${m.id}`,
+      m.title,
+      new Date(m.scheduledAt).toLocaleString(),
+      m.employeeName || 'N/A',
+      this.getStatusLabel(m.status),
+      m.durationMinutes
+    ]);
+
+    this.excelExportService.exportTableToExcel(headers, data, 'Meetings');
   }
 }

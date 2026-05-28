@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -13,6 +13,7 @@ import { PositionService } from '../../core/services/position.service';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import Swal from 'sweetalert2';
 import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
+import { ExcelExportService } from '../../core/services/excel-export.service';
 
 declare var bootstrap: any;
 
@@ -26,6 +27,7 @@ export class DepartmentsComponent implements OnInit {
   private departmentService = inject(DepartmentService);
   private employeeService = inject(EmployeeService);
   private positionService = inject(PositionService);
+  private excelExportService = inject(ExcelExportService);
 
   allPositions: any[] = [];
 
@@ -313,5 +315,22 @@ export class DepartmentsComponent implements OnInit {
         });
       }
     });
+  }
+
+  exportToExcel() {
+    if (this.departmentsList.length === 0) {
+      Swal.fire('No Data', 'There are no departments to export.', 'info');
+      return;
+    }
+
+    const headers = ['ID', 'Department Name', 'Total Employees', 'Positions'];
+    const data = this.departmentsList.map(dept => [
+      `#${dept.id}`,
+      dept.name,
+      this.getDeptStat(dept.id, 'employees'),
+      this.getDeptStat(dept.id, 'positions')
+    ]);
+
+    this.excelExportService.exportTableToExcel(headers, data, 'Departments');
   }
 }

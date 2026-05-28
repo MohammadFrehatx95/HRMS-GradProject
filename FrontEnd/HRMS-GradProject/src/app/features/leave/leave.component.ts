@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LeaveService } from '../../core/services/leave.service';
@@ -6,6 +6,8 @@ import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
 import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { ExcelExportService } from '../../core/services/excel-export.service';
+import { PdfExportService } from '../../core/services/pdf-export.service';
 
 declare var bootstrap: any;
 
@@ -18,6 +20,8 @@ declare var bootstrap: any;
 export class LeaveComponent implements OnInit {
   private leaveService = inject(LeaveService);
   private authService = inject(AuthService);
+  private excelExportService = inject(ExcelExportService);
+  private pdfExportService = inject(PdfExportService);
 
   allLeavesList: any[] = [];
   leavesList: any[] = [];
@@ -347,5 +351,46 @@ export class LeaveComponent implements OnInit {
           );
         },
       });
+  }
+
+  showReason(reason: string) {
+    if (!reason) return;
+    Swal.fire({
+      title: 'Leave Reason',
+      text: reason,
+      icon: 'info',
+      confirmButtonText: 'Close',
+      confirmButtonColor: '#0d6efd'
+    });
+  }
+
+  exportToExcel() {
+    this.excelExportService.exportTableToExcel(
+      ['Employee', 'Type', 'Start Date', 'End Date', 'Days', 'Status'],
+      this.leavesList.map(l => [
+        l.employeeName || `Emp #${l.employeeId}`,
+        this.getLeaveTypeText(l.leaveType),
+        new Date(l.startDate).toLocaleDateString(),
+        new Date(l.endDate).toLocaleDateString(),
+        l.totalDays || 0,
+        this.getStatusText(l.status)
+      ]),
+      'Leave_Records'
+    );
+  }
+
+  exportToPDF() {
+    const headers = ['Employee', 'Type', 'Start Date', 'End Date', 'Days', 'Status'];
+    
+    const rows = this.leavesList.map(l => [
+      l.employeeName || `Emp #${l.employeeId}`,
+      this.getLeaveTypeText(l.leaveType),
+      new Date(l.startDate).toLocaleDateString(),
+      new Date(l.endDate).toLocaleDateString(),
+      l.totalDays || 0,
+      this.getStatusText(l.status)
+    ]);
+    
+    this.pdfExportService.generateTableReport('Leave Records Report', headers, rows, 'Leave_Records');
   }
 }

@@ -275,17 +275,17 @@ export class AppComponent {
   }
 
   get isSidebarHidden() {
-    // حالة السايدبار
+
     return this.sidebarService.isSidebarHidden();
   }
 
   get isMobileSidebarOpen() {
-    // فتح السايدبار بالموبايل
+
     return this.sidebarService.isMobileSidebarOpen();
   }
 
   closeMobileSidebar() {
-    // إغلاق السايدبار بالموبايل
+
     this.sidebarService.closeMobileSidebar();
   }
 }
@@ -320,7 +320,7 @@ function initializeApp(authService: AuthService) {
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    // ضبط الـ providers الرئيسية
+
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withHashLocation()),
     provideHttpClient(withInterceptors([authInterceptor])),
@@ -395,7 +395,7 @@ export const routes: Routes = [
     component: DepartmentsComponent,
     canActivate: [authGuard, hrGuard],
   },
-  // الكل يشوف الإجازات، القبول/الرفض للـ admin وhr فقط
+
   { path: 'leave', component: LeaveComponent, canActivate: [authGuard] },
   {
     path: 'attendance',
@@ -407,7 +407,7 @@ export const routes: Routes = [
     component: AllAttendanceComponent,
     canActivate: [authGuard, hrGuard],
   },
-  // كل موظف يشوف راتبه، الإضافة والتعديل للـ admin
+
   { path: 'salary', component: SalaryComponent, canActivate: [authGuard] },
   {
     path: 'employee-form',
@@ -468,7 +468,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   if (authService.isAdmin()) {
-    // الأدمن بس
+
     return true;
   } else {
     Swal.fire({
@@ -490,7 +490,6 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-// ✅ حماية الصفحات الداخلية — يرجع لللوجين إذا لم يكن مسجل
 export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
@@ -503,7 +502,6 @@ export const authGuard: CanActivateFn = (route, state) => {
   }
 };
 
-// ✅ منع المستخدم المسجل من رؤية صفحة اللوجين — يرجع للداشبورد إذا كان مسجلا
 export const noAuthGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
@@ -523,7 +521,6 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-/** يسمح فقط لـ Admin أو HR */
 export const hrGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
@@ -565,7 +562,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(clonedReq).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401 && !req.url.includes('/login')) {
-        // Clear all auth data
+
         localStorage.removeItem('jwt_token');
         localStorage.removeItem('user_role');
         localStorage.removeItem('user_name');
@@ -578,7 +575,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           confirmButtonText: 'OK',
           confirmButtonColor: '#0d6efd'
         }).then(() => {
-          // Full page reload so sidebar/layout resets cleanly
+
           window.location.href = '/login';
         });
       }
@@ -597,7 +594,7 @@ export interface Announcement {
     title: string;
     content: string;
     createdAt: string;
-    priority: string; // "Normal", "High", "Urgent"
+    priority: string;
     isGeneral: boolean;
     targetEmployeeIds?: number[];
     expiryDate?: string;
@@ -628,7 +625,7 @@ export interface Meeting {
     id: number;
     title: string;
     reason: string;
-    scheduledAt: string; // ISO date string
+    scheduledAt: string;
     durationMinutes: number;
     meetLink: string;
     employeeId: number;
@@ -709,7 +706,7 @@ import { TRANSLATIONS } from '../i18n/translations';
 @Pipe({
   name: 't',
   standalone: true,
-  pure: false, // لازم يكون impure حتى يتحدث لما تتغير اللغة
+  pure: false,
 })
 export class TranslatePipe implements PipeTransform {
   private settings = inject(SettingsService);
@@ -766,8 +763,7 @@ export class AiService {
   }
 
   private startSignalRConnection() {
-    // apiUrl is usually like https://localhost:7198/api
-    // Hub URL should be https://localhost:7198/hubs/ai
+
     const baseUrl = environment.apiUrl.replace(/\/api$/, '');
     
     this.hubConnection = new signalR.HubConnectionBuilder()
@@ -860,7 +856,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class AttendanceService {
-  // شغل الحضور
+
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/attendance`;
 
@@ -923,7 +919,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class AuthService {
-  // شغل التوثيق
+
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/auth`;
 
@@ -971,7 +967,7 @@ export class AuthService {
   uploadProfilePicture(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
-    // NOTE: Now uploads as PENDING — awaiting HR/Admin approval
+
     return this.http.post<any>(`${this.apiUrl}/upload-profile-picture`, formData);
   }
 
@@ -1007,14 +1003,13 @@ export class AuthService {
       const exp = payload.exp;
       if (!exp) return true;
 
-      // exp بالثواني، Date.now() بالمللي ثانية
       if (Date.now() >= exp * 1000) {
         this.logout();
         return false;
       }
       return true;
     } catch {
-      // توكن فاسد
+
       this.logout();
       return false;
     }
@@ -1032,7 +1027,6 @@ export class AuthService {
     return this.hasRole('hr');
   }
 
-  // admin أو hr عندهم نفس الصلاحيات لبعض الأشياء
   isAdminOrHR(): boolean {
     return this.hasRole('admin') || this.hasRole('hr');
   }
@@ -1083,7 +1077,6 @@ export class AuthService {
     return typeof window !== 'undefined' ? localStorage.getItem('user_profile_pic') : null;
   }
 
-  // كل اليوزرات
   getUsers(pageNumber = 1, pageSize = 100): Observable<any> {
     return this.http
       .get<any>(
@@ -1092,7 +1085,6 @@ export class AuthService {
       .pipe(map((response) => response?.data ?? response));
   }
 
-  // يوزرات بدون ملف موظف
   getUnassignedEmployeeUsers(pageNumber = 1, pageSize = 100): Observable<any> {
     return this.http
       .get<any>(
@@ -1101,7 +1093,6 @@ export class AuthService {
       .pipe(map((response) => response?.data ?? response));
   }
 
-  // نجيب الـ id من الإيميل
   getUserIdByEmail(email: string): Observable<any> {
     return this.http
       .get<any>(
@@ -1125,7 +1116,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class DepartmentService {
-  // شغل الأقسام
+
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/departments`;
 
@@ -1180,7 +1171,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class EmployeeService {
-  // شغل الموظفين
+
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/employees`;
 
@@ -1209,7 +1200,6 @@ export class EmployeeService {
     );
   }
 
-  // تفاصيل الموظف
   getEmployeeById(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
       map((response) => {
@@ -1251,7 +1241,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class LeaveService {
-  // شغل الإجازات
+
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/leaves`;
 
@@ -1327,7 +1317,7 @@ import { PagedResult } from '../models/paged-result.model';
   providedIn: 'root'
 })
 export class MeetingService {
-  private apiUrl = `${environment.apiUrl}/meetings`; // using /meetings as in backend route
+  private apiUrl = `${environment.apiUrl}/meetings`;
 
   constructor(private http: HttpClient) { }
 
@@ -1375,7 +1365,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class NotificationService {
-  // شغل التنبيهات
+
   private http = inject(HttpClient);
 
   private apiUrl = `${environment.apiUrl}/notifications`;
@@ -1465,7 +1455,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class PositionService {
-  // شغل المسميات
+
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/positions`;
 
@@ -1533,7 +1523,6 @@ export class PwaService {
       this.deferredPrompt = e;
     });
 
-    // إذا تم تثبيت التطبيق بالفعل
     window.addEventListener('appinstalled', () => {
       this.deferredPrompt = null;
     });
@@ -1541,7 +1530,7 @@ export class PwaService {
 
   public promptInstall(): void {
     if (this.deferredPrompt) {
-      // الـ browser يدعم التثبيت المباشر
+
       this.deferredPrompt.prompt();
       this.deferredPrompt.userChoice.then((choiceResult: { outcome: string }) => {
         this.deferredPrompt = null;
@@ -1554,7 +1543,7 @@ export class PwaService {
         confirmButtonColor: '#0d6efd'
       });
     } else {
-      // تعليمات يدوية حسب المتصفح
+
       const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
       const isChrome = /chrome/i.test(navigator.userAgent) && !/edge/i.test(navigator.userAgent);
       const isEdge = /edg/i.test(navigator.userAgent);
@@ -1614,7 +1603,6 @@ export class PwaService {
            (window.navigator as any).standalone === true;
   }
 
-  // الزر دائماً يظهر الآن
   public get canInstall(): boolean {
     return true;
   }
@@ -1633,7 +1621,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class SalaryService {
-  // شغل الرواتب
+
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/salaries`;
 
@@ -1696,10 +1684,9 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class SettingsService {
-  // إعدادات المستخدم
-  // الثيم: dark أو light
+
   private _isDarkMode = signal(false);
-  // اللغة: en أو ar
+
   private _language = signal<'en' | 'ar'>('en');
 
   get isDarkMode() {
@@ -1711,7 +1698,7 @@ export class SettingsService {
   }
 
   constructor() {
-    // استرجع الإعدادات المحفوظة من localStorage
+
     const savedTheme = localStorage.getItem('hrms_theme');
     const savedLang = localStorage.getItem('hrms_language') as 'en' | 'ar';
 
@@ -1764,7 +1751,7 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class SidebarService {
-  // حالة السايدبار
+
   isSidebarHidden = signal<boolean>(false);
   isMobileSidebarOpen = signal<boolean>(false);
 
@@ -1811,13 +1798,10 @@ export class UpdateService {
       return;
     }
 
-    // Allow the app to stabilize first, before starting
-    // polling for updates with `interval()`.
     const appIsStable$ = this.appRef.isStable.pipe(
       first((isStable) => isStable === true),
     );
 
-    // Poll every 6 hours
     const everySixHours$ = interval(6 * 60 * 60 * 1000);
     const everySixHoursOnceAppIsStable$ = concat(appIsStable$, everySixHours$);
 
@@ -1879,7 +1863,7 @@ export class UpdateService {
 
 ### File: src\app\core\utils\error-handler.util.ts
 ```typescript
-// بدل ما تعرض رسائل تقنية من الـ backend، نحولها لشيء مفهوم
+
 export function getFriendlyErrorMessage(
   err: any,
   fallback: string = 'Something went wrong. Please try again later.',
@@ -1888,7 +1872,6 @@ export function getFriendlyErrorMessage(
   const rawMessage: string =
     err?.error?.message || err?.error?.title || err?.message || '';
 
-  // مشكلة شبكة أو الـ server مش شغال
   if (
     status === 0 ||
     (err?.name === 'HttpErrorResponse' && !navigator.onLine)
@@ -1896,7 +1879,6 @@ export function getFriendlyErrorMessage(
     return 'No internet connection. Please check your network and try again.';
   }
 
-  // أخطاء تقنية من الـ DB — المستخدم ما يحتاج يشوفها
   if (
     rawMessage.includes('EADDRNOTALLOWED') ||
     rawMessage.includes('allow_list') ||
@@ -1922,13 +1904,12 @@ export function getFriendlyErrorMessage(
   }
 
   if (status === 400) {
-    // Check if it's an array of Identity errors directly in the body
+
     if (Array.isArray(err?.error)) {
       const msgs = err.error.map((e: any) => e.description || e.errorMessage || e).filter((e: any) => typeof e === 'string');
       if (msgs.length > 0) return msgs.join('\n');
     }
 
-    // Check ASP.NET Core Validation Problem Details
     if (err?.error?.errors && typeof err.error.errors === 'object') {
       const errorMessages: string[] = [];
       for (const key in err.error.errors) {
@@ -1946,7 +1927,6 @@ export function getFriendlyErrorMessage(
       }
     }
 
-    // لو الرسالة قصيرة ومفهومة نعرضها مباشرة
     if (
       rawMessage &&
       rawMessage.length < 150 &&
@@ -1973,7 +1953,6 @@ export function getFriendlyErrorMessage(
   return fallback;
 }
 
-// نتحقق إذا كانت الرسالة تقنية وما تصلح للمستخدم
 function looksLikeTechError(msg: string): boolean {
   const techPatterns = [
     'XX',
@@ -2001,14 +1980,14 @@ function looksLikeTechError(msg: string): boolean {
 ### File: src\app\features\ai-assistant\ai-assistant.component.html
 ```html
 <div class="ai-page">
-  <!-- Animated Background -->
+  
   <div class="bg-mesh">
     <div class="mesh-blob blob-1"></div>
     <div class="mesh-blob blob-2"></div>
     <div class="mesh-blob blob-3"></div>
   </div>
 
-  <!-- ── Header ── -->
+  
   <div class="ai-header">
     <div class="header-content">
       <div class="ai-header-left">
@@ -2046,7 +2025,7 @@ function looksLikeTechError(msg: string): boolean {
     </div>
   </div>
 
-  <!-- ── Messages ── -->
+  
   <div class="messages-area" #messagesContainer>
     <div class="messages-content">
       <div
@@ -2054,25 +2033,25 @@ function looksLikeTechError(msg: string): boolean {
         class="message-row"
         [class.user-row]="msg.role === 'user'"
         [class.ai-row]="msg.role === 'assistant'">
-        <!-- AI avatar -->
+        
         <div class="msg-avatar" *ngIf="msg.role === 'assistant'">
           <img src="/kawadir-logo.png" alt="KawadirAi" class="brand-logo">
         </div>
-        <!-- User avatar -->
+        
         <div class="msg-avatar user-avatar-icon" *ngIf="msg.role === 'user'">
           <i class="bi bi-person-fill"></i>
         </div>
 
-        <!-- Bubble -->
+        
         <div class="bubble-wrap">
-          <!-- Loading -->
+          
           <div class="bubble ai-bubble loading-bubble" *ngIf="msg.loading">
             <div class="typing-indicator">
               <span></span><span></span><span></span>
             </div>
           </div>
 
-          <!-- Normal bubble -->
+          
           <div
             class="bubble"
             *ngIf="!msg.loading"
@@ -2080,7 +2059,7 @@ function looksLikeTechError(msg: string): boolean {
             [class.ai-bubble]="msg.role === 'assistant'"
             [innerHTML]="formatContent(msg.content)"></div>
 
-          <!-- Metadata -->
+          
           <div class="msg-meta" *ngIf="!msg.loading">
             <span>{{ msg.timestamp | date : 'HH:mm' }}</span>
             <span *ngIf="msg.tokens && msg.tokens > 0" class="token-tag">
@@ -2092,11 +2071,11 @@ function looksLikeTechError(msg: string): boolean {
     </div>
   </div>
 
-  <!-- ── Input Bar ── -->
+  
   <div class="input-area">
     <div class="input-container">
 
-      <!-- ── Quick Actions (Docked) ── -->
+      
       <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-3">
         <div class="quick-actions-docked m-0 flex-grow-1" *ngIf="messages.length <= 2">
           <button
@@ -2204,7 +2183,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   messages: ChatMessage[] = [];
   userInput: string = '';
   isLoading: boolean = false;
-  aiMode: number = 0; // 0 = Normal, 1 = DeepThink, 2 = Executive
+  aiMode: number = 0;
   cooldown: boolean = false;
   cooldownSeconds: number = 0;
   totalTokensUsed: number = 0;
@@ -2215,7 +2194,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   private timerInterval: any;
 
   readonly MAX_CHARS = 250;
-  readonly COOLDOWN_DURATION = 4; // seconds
+  readonly COOLDOWN_DURATION = 4;
 
   quickActions = [
     {
@@ -2256,7 +2235,6 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
       }
     }, 1000);
 
-    // Greeting if no chat history
     if (this.messages.length === 0) {
       this.messages.push({
         role: 'assistant',
@@ -2455,7 +2433,6 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
     return -1;
   }
 
-
   private startCooldown(): void {
     this.cooldown = true;
     this.cooldownSeconds = this.COOLDOWN_DURATION;
@@ -2469,7 +2446,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   }
 
   formatContent(content: string): string {
-    // Simple markdown-like formatting
+
     return content
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(.*?)\*/g, '<em>$1</em>')
@@ -2486,7 +2463,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   }
 
   clearChat(): void {
-    if (this.messages.length <= 1) return; // Only greeting message
+    if (this.messages.length <= 1) return;
     
     Swal.fire({
       title: 'Clear Chat History?',
@@ -2520,7 +2497,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
 ```html
 <div class="page-container p-4">
 
-    <!-- Header -->
+    
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div class="d-flex align-items-center">
             <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
@@ -2564,7 +2541,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
         </div>
     </div>
 
-    <!-- Table -->
+    
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0 text-nowrap">
@@ -2582,7 +2559,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
 
                 <tbody class="border-top-0">
 
-                    <!-- Loading -->
+                    
                     <tr *ngIf="isLoading">
                         <td colspan="6" class="text-center py-5 text-muted no-data-td">
                             <span class="spinner-border spinner-border-sm me-2"></span>
@@ -2590,7 +2567,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
                         </td>
                     </tr>
 
-                    <!-- Empty -->
+                    
                     <tr *ngIf="!isLoading && records.length === 0">
                         <td colspan="6" class="text-center py-5 no-data-td">
                             <div class="d-flex flex-column align-items-center">
@@ -2603,7 +2580,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
                         </td>
                     </tr>
 
-                    <!-- Rows -->
+                    
                     <tr *ngFor="let rec of paginatedRecords">
                         <td data-label="Employee" class="py-3 px-4">
                             <div class="fw-semibold text-dark">
@@ -2644,7 +2621,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
             </table>
         </div>
 
-        <!-- Pagination Footer -->
+        
         <div *ngIf="records.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
             <small class="text-muted fw-medium">
                 Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, records.length) }} of {{ records.length }} entries
@@ -2665,7 +2642,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
 </div>
 <div class="page-container p-4">
 
-    <!-- Header -->
+    
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div class="d-flex align-items-center">
             <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
@@ -2709,7 +2686,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
         </div>
     </div>
 
-    <!-- Table -->
+    
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0 text-nowrap">
@@ -2727,7 +2704,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
 
                 <tbody class="border-top-0">
 
-                    <!-- Loading -->
+                    
                     <tr *ngIf="isLoading">
                         <td colspan="6" class="text-center py-5 text-muted no-data-td">
                             <span class="spinner-border spinner-border-sm me-2"></span>
@@ -2735,7 +2712,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
                         </td>
                     </tr>
 
-                    <!-- Empty -->
+                    
                     <tr *ngIf="!isLoading && records.length === 0">
                         <td colspan="6" class="text-center py-5 no-data-td">
                             <div class="d-flex flex-column align-items-center">
@@ -2748,7 +2725,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
                         </td>
                     </tr>
 
-                    <!-- Rows -->
+                    
                     <tr *ngFor="let rec of paginatedRecords">
                         <td data-label="Employee" class="py-3 px-4">
                             <div class="fw-semibold text-dark">
@@ -2789,7 +2766,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
             </table>
         </div>
 
-        <!-- Pagination Footer -->
+        
         <div *ngIf="records.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
             <small class="text-muted fw-medium">
                 Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, records.length) }} of {{ records.length }} entries
@@ -2844,7 +2821,6 @@ export class AllAttendanceComponent implements OnInit {
 
   isLoading = true;
 
-  // Pagination
   currentPage: number = 1;
   itemsPerPage: number = 7;
 
@@ -2868,7 +2844,7 @@ export class AllAttendanceComponent implements OnInit {
   }
 
   ngOnInit() {
-    // تحميل السجلات
+
     this.attendanceService.getAllAttendance().subscribe({
       next: (res: any) => {
         const items = Array.isArray(res)
@@ -2888,7 +2864,7 @@ export class AllAttendanceComponent implements OnInit {
   }
 
   filterRecords() {
-    // فلترة السجلات
+
     this.records = this.allRecords.filter((rec) => {
       let matchesSearch = true;
       if (this.searchQuery) {
@@ -3097,7 +3073,7 @@ export class AllAttendanceComponent implements OnInit {
             </table>
         </div>
 
-        <!-- Pagination Footer -->
+        
         <div *ngIf="allAttendanceRecords.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
             <small class="text-muted fw-medium">
                 Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, attendanceRecords.length) }} of {{ attendanceRecords.length }} entries
@@ -3159,7 +3135,6 @@ export class AttendanceComponent implements OnInit {
   isAdmin = false;
   isAdminOrHR = false;
 
-  // Pagination
   currentPage: number = 1;
   itemsPerPage: number = 7;
 
@@ -3185,14 +3160,12 @@ export class AttendanceComponent implements OnInit {
     return Math.min(a, b);
   }
 
-  // حالة clock in/out اليوم
   isCheckedInToday = false;
   isCheckedOutToday = false;
   todayWorkedHours = 0;
-  activeSession: any = null; // session مفتوحة بدون clock out
-  readonly today = new Date().toISOString().split('T')[0]; // للمقارنة في الـ template
+  activeSession: any = null;
+  readonly today = new Date().toISOString().split('T')[0];
 
-  // session من يوم سابق ونسي يعمل clock out
   get isStaleSession(): boolean {
     if (!this.activeSession?.date) return false;
     const sessionDate = new Date(this.activeSession.date)
@@ -3212,7 +3185,7 @@ export class AttendanceComponent implements OnInit {
   }
 
   loadAllAttendance() {
-    // تحميل كل الحضور
+
     this.isLoading = true;
     this.attendanceService.getAllAttendance().subscribe({
       next: (res: any) => {
@@ -3233,7 +3206,7 @@ export class AttendanceComponent implements OnInit {
   }
 
   loadMyAttendance() {
-    // تحميل حضوري
+
     this.isLoading = true;
     this.attendanceService.getMyAttendance().subscribe({
       next: (res: any) => {
@@ -3285,7 +3258,7 @@ export class AttendanceComponent implements OnInit {
   }
 
   private analyzeSessionStatus(records: any[]) {
-    // تحليل حالة الدوام
+
     const today = new Date().toDateString();
 
     const openSession = records.find(
@@ -3318,11 +3291,11 @@ export class AttendanceComponent implements OnInit {
   }
 
   onClockIn() {
-    // تسجيل دخول
+
     this.isProcessing = true;
     const now = new Date();
     const dateIso = now.toISOString();
-    const timeString = now.toTimeString().split(' ')[0]; // HH:MM:SS format
+    const timeString = now.toTimeString().split(' ')[0];
 
     this.attendanceService
       .clockIn({ date: dateIso, clockIn: timeString })
@@ -3349,13 +3322,11 @@ export class AttendanceComponent implements OnInit {
       });
   }
 
-  // ─── Clock Out ───
   onClockOut() {
     this.isProcessing = true;
     const now = new Date();
     const timeString = now.toTimeString().split(' ')[0];
 
-    // session من يوم سابق نغلقها بـ 23:59
     const isOldSession =
       this.activeSession &&
       new Date(this.activeSession.date).toDateString() !==
@@ -3388,9 +3359,9 @@ export class AttendanceComponent implements OnInit {
       },
     });
   }
-  // ─── Export to Excel (CSV) ───
+
   exportToExcel() {
-    // تصدير الملف
+
     if (this.attendanceRecords.length === 0) {
       Swal.fire(
         'No Data',
@@ -3428,7 +3399,6 @@ export class AttendanceComponent implements OnInit {
         .join(',');
     });
 
-    // BOM + sep hint عشان Excel يفتحه صح
     const csvContent =
       '\uFEFFsep=,\r\n' + [headers.join(','), ...csvData].join('\r\n');
 
@@ -3460,7 +3430,7 @@ export class AttendanceComponent implements OnInit {
 ```html
 <div class="login-page d-flex align-items-center justify-content-center vh-100" dir="ltr">
 
-    <!-- خلفية متحركة -->
+    
     <div class="bg-blobs" aria-hidden="true">
         <span class="blob blob-1"></span>
         <span class="blob blob-2"></span>
@@ -3468,12 +3438,12 @@ export class AttendanceComponent implements OnInit {
         <span class="blob blob-4"></span>
         <span class="blob blob-5"></span>
     </div>
-    <!-- شبكة نقاط -->
+    
     <div class="dot-grid" aria-hidden="true"></div>
 
     <div class="login-card shadow-lg d-flex position-relative">
 
-        <!-- Left Side: Form -->
+        
         <div
             class="login-form-section p-5 d-flex flex-column position-relative">
             <div class="logo-text mt-2 mb-4 d-flex align-items-center">
@@ -3568,7 +3538,7 @@ export class AttendanceComponent implements OnInit {
             </div>
         </div>
 
-        <!-- Right Side: Image -->
+        
         <div class="login-image-section p-3 d-none d-lg-block">
             <img
                 src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
@@ -3623,18 +3593,18 @@ export class LoginComponent implements OnInit, OnDestroy {
   });
 
   togglePasswordVisibility() {
-    // إظهار/إخفاء كلمة السر
+
     this.isPasswordVisible = !this.isPasswordVisible;
   }
 
   ngOnInit() {
-    // إجبار صفحة الدخول على الوضع الفاتح
+
     document.documentElement.setAttribute('data-theme', 'light');
     document.body.classList.remove('dark-mode');
   }
 
   ngOnDestroy() {
-    // إعادة تطبيق ثيم المستخدم المحفوظ عند الدخول للمشروع
+
     if (this.settingsService.isDarkMode) {
       document.documentElement.setAttribute('data-theme', 'dark');
       document.body.classList.add('dark-mode');
@@ -3642,7 +3612,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    // تسجيل الدخول
+
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
@@ -3651,7 +3621,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.isLoading = true;
 
     const credentials = {
-      // بيانات الدخول
+
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
     };
@@ -3681,7 +3651,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 ### File: src\app\features\auth\register\register.component.html
 ```html
 <div class="page-container p-4 fade-in">
-    <!-- Clean Page Header -->
+    
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div class="d-flex align-items-center">
             <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
@@ -3694,31 +3664,31 @@ export class LoginComponent implements OnInit, OnDestroy {
         </div>
     </div>
 
-    <!-- Clean Form Grid Layout -->
+    
     <div class="row">
         <div class="col-12 col-xl-10">
             <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="clean-form">
                 <div class="row g-4 mb-5">
                     
-                    <!-- Username -->
+                    
                     <div class="col-md-6">
                         <label class="form-label fw-semibold text-secondary small mb-2">Username <span class="text-danger">*</span></label>
                         <input type="text" class="form-control px-3 py-2 fs-6 rounded-3" formControlName="username" placeholder="e.g. johndoe">
                     </div>
 
-                    <!-- Email -->
+                    
                     <div class="col-md-6">
                         <label class="form-label fw-semibold text-secondary small mb-2">Email Address <span class="text-danger">*</span></label>
                         <input type="email" class="form-control px-3 py-2 fs-6 rounded-3" formControlName="email" placeholder="john@company.com">
                     </div>
 
-                    <!-- Password -->
+                    
                     <div class="col-md-6">
                         <label class="form-label fw-semibold text-secondary small mb-2">Password <span class="text-danger">*</span></label>
                         <input type="password" class="form-control px-3 py-2 fs-6 rounded-3" formControlName="password" placeholder="Min. 6 characters">
                     </div>
 
-                    <!-- Role -->
+                    
                     <div class="col-md-6">
                         <label class="form-label fw-semibold text-secondary small mb-2">System Role <span class="text-danger">*</span></label>
                         <select class="form-select px-3 py-2 fs-6 rounded-3" formControlName="role">
@@ -3731,7 +3701,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
                 </div>
 
-                <!-- Action Button -->
+                
                 <div>
                     <button type="submit" class="btn btn-primary px-5 py-2 fw-medium shadow-sm rounded-3 submit-btn" [disabled]="registerForm.invalid || isLoading">
                         @if (isLoading) {
@@ -3791,12 +3761,11 @@ export class RegisterComponent {
   roles = ['Employee', 'Admin', 'HR'];
 
   onSubmit() {
-    // إنشاء حساب جديد
+
     if (this.registerForm.invalid) return;
 
     this.isLoading = true;
     const payload = this.registerForm.getRawValue();
-    // بيانات التسجيل
 
     this.authService.register(payload).subscribe({
       next: (res: any) => {
@@ -3846,7 +3815,7 @@ export class RegisterComponent {
 ```html
 <div class="dashboard-container">
 
-    <!-- Announcements Section -->
+    
     <div class="row mb-4">
         <div class="col-12">
             <div class="card shadow-sm border-0 rounded-4">
@@ -3897,7 +3866,7 @@ export class RegisterComponent {
         </button>
     </div>
 
-    <!-- Stat Cards -->
+    
     <div class="row g-4 mb-4">
         <div class="col-md-3">
             <div class="stat-card pink hover-elevate h-100 stat-card-link"
@@ -3941,11 +3910,11 @@ export class RegisterComponent {
         </div>
     </div>
 
-    <!-- Row 1: Left (Attendance + Attendance Rate) | Right (Leave Distribution + Recent Leaves) -->
+    
     <div class="row g-4">
-        <!-- Left Column -->
+        
         <div class="col-lg-8 d-flex flex-column gap-4">
-            <!-- Attendance Table -->
+            
             <div class="chart-card card hover-elevate shadow-sm border-0 rounded-4">
                 <div class="card-header bg-white p-3 border-0">
                     <h5 class="fw-bold m-0 text-dark">{{ 'Attendance' | t }}</h5>
@@ -3983,7 +3952,7 @@ export class RegisterComponent {
                 </div>
             </div>
 
-            <!-- Attendance Rate Chart -->
+            
             <div class="chart-card card hover-elevate shadow-sm border-0 rounded-4 flex-grow-1">
                 <div class="card-header bg-white p-3 border-0 pb-0 d-flex justify-content-between align-items-center">
                     <h5 class="fw-bold m-0 text-dark">{{ 'Attendance Rate' | t }}</h5>
@@ -3997,9 +3966,9 @@ export class RegisterComponent {
             </div>
         </div>
 
-        <!-- Right Column -->
+        
         <div class="col-lg-4 d-flex flex-column gap-4">
-            <!-- Leave Distribution -->
+            
             <div class="chart-card card hover-elevate shadow-sm border-0 rounded-4">
                 <div class="card-header bg-white p-3 border-0">
                     <h5 class="fw-bold m-0 text-dark">{{ 'Leave Distribution' | t }}</h5>
@@ -4014,7 +3983,7 @@ export class RegisterComponent {
                 </div>
             </div>
 
-            <!-- Recent Leave Requests -->
+            
             <div class="activity-card hover-elevate bg-white rounded-4 shadow-sm p-4 flex-grow-1">
                 <h6 class="fw-bold mb-3 text-dark">{{ 'Recent Leave Requests' | t }}</h6>
                 <div class="d-flex flex-column gap-2">
@@ -4133,7 +4102,6 @@ export class RegisterComponent {
     }
 </div>
 
-<!-- Announcement Modal -->
 <div class="modal fade show" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0,0,0,0.5);" *ngIf="showAnnouncementModal">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
@@ -4263,7 +4231,6 @@ export class DashboardComponent implements OnInit {
   employeeHoursWorked: number = 0;
   employeeNextPayday: string = '';
 
-  // يوم 25 من كل شهر
   readonly PAYDAY = 25;
 
   leaveChartInstance: any;
@@ -4278,11 +4245,9 @@ export class DashboardComponent implements OnInit {
     const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     const timeStr = today.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 
-    // ── CORPORATE HEADER BANNER ─────────────────────────────────────────────
     doc.setFillColor(67, 97, 238);
     doc.rect(0, 0, pageW, 42, 'F');
 
-    // Subtle accent strip
     doc.setFillColor(90, 120, 255);
     doc.rect(0, 38, pageW, 4, 'F');
 
@@ -4300,7 +4265,6 @@ export class DashboardComponent implements OnInit {
     doc.setTextColor(180, 195, 255);
     doc.text(`Generated: ${todayStr}  ·  ${timeStr}`, margin, 30);
 
-    // Right side: badge label
     doc.setFillColor(50, 75, 210);
     doc.roundedRect(pageW - 52, 8, 38, 14, 3, 3, 'F');
     doc.setFont('helvetica', 'bold');
@@ -4308,10 +4272,9 @@ export class DashboardComponent implements OnInit {
     doc.setTextColor(255, 255, 255);
     doc.text('ADMIN REPORT', pageW - 33, 16, { align: 'center' });
 
-    // ── KPI STAT CARDS ──────────────────────────────────────────────────────
     const cardY = 50;
     const cardH = 28;
-    const cardW = (pageW - margin * 2 - 9) / 4; // 4 cards with 3 gaps of 3mm
+    const cardW = (pageW - margin * 2 - 9) / 4;
     const cards = [
       { label: 'Total Employees', value: String(this.totalEmployees), accentColor: [239, 71, 111] as [number, number, number] },
       { label: 'Pending Leaves', value: String(this.pendingLeaves), accentColor: [255, 165, 2] as [number, number, number] },
@@ -4321,34 +4284,31 @@ export class DashboardComponent implements OnInit {
 
     cards.forEach((card, i) => {
       const x = margin + i * (cardW + 3);
-      // Card background
+
       doc.setFillColor(248, 249, 252);
       doc.roundedRect(x, cardY, cardW, cardH, 3, 3, 'F');
       doc.setDrawColor(225, 228, 240);
       doc.roundedRect(x, cardY, cardW, cardH, 3, 3, 'S');
-      // Top accent line
+
       doc.setFillColor(...card.accentColor);
       doc.roundedRect(x, cardY, cardW, 3, 1.5, 1.5, 'F');
-      // Value
+
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
       doc.setTextColor(30, 30, 50);
       doc.text(card.value, x + cardW / 2, cardY + 15, { align: 'center' });
-      // Label
+
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(7.5);
       doc.setTextColor(120, 125, 145);
       doc.text(card.label, x + cardW / 2, cardY + 22, { align: 'center' });
     });
 
-    // ── ANALYTICS SECTION ───────────────────────────────────────────────────
     let curY = cardY + cardH + 10;
 
-    // Section header line
     this._pdfSectionHeader(doc, 'SYSTEM ANALYTICS', margin, curY, pageW);
     curY += 8;
 
-    // Two-column analytics table (leave distribution + attendance)
     const analyticsData = [
       ['Annual Leave', `${this.annualLeavePercent}%`],
       ['Sick Leave', `${this.sickLeavePercent}%`],
@@ -4385,7 +4345,6 @@ export class DashboardComponent implements OnInit {
 
     curY = (doc as any).lastAutoTable.finalY + 10;
 
-    // ── RECENT LEAVE REQUESTS TABLE ─────────────────────────────────────────
     this._pdfSectionHeader(doc, 'RECENT LEAVE REQUESTS', margin, curY, pageW);
     curY += 8;
 
@@ -4439,7 +4398,6 @@ export class DashboardComponent implements OnInit {
       curY = (doc as any).lastAutoTable.finalY + 10;
     }
 
-    // ── RECENT ATTENDANCE TABLE ──────────────────────────────────────────────
     this._pdfSectionHeader(doc, 'RECENT ATTENDANCE RECORDS', margin, curY, pageW);
     curY += 8;
 
@@ -4475,28 +4433,26 @@ export class DashboardComponent implements OnInit {
       });
     }
 
-    // ── FOOTERS ON ALL PAGES ─────────────────────────────────────────────────
     const totalPages = (doc as any).internal.getNumberOfPages();
     for (let pg = 1; pg <= totalPages; pg++) {
       doc.setPage(pg);
-      // Footer separator line
+
       doc.setDrawColor(210, 215, 230);
       doc.setLineWidth(0.4);
       doc.line(margin, pageH - 12, pageW - margin, pageH - 12);
-      // Confidential left text
+
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(7.5);
       doc.setTextColor(160, 165, 180);
       doc.text('Confidential — Kawadir HRMS Internal Report', margin, pageH - 7);
-      // Page number right
+
       doc.text(`Page ${pg} of ${totalPages}`, pageW - margin, pageH - 7, { align: 'right' });
     }
 
-    // ── SAVE ─────────────────────────────────────────────────────────────────
     doc.save(`System_Summary_Report_${todayStr}.pdf`);
   }
 
-  /** Draws a styled section header underline in the PDF */
+  
   private _pdfSectionHeader(doc: jsPDF, title: string, x: number, y: number, pageW: number) {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(9);
@@ -4510,7 +4466,7 @@ export class DashboardComponent implements OnInit {
     doc.line(x, y + 2.5, pageW - x, y + 2.5);
   }
 
-  allEmployeesList: any[] = []; // for targeted announcements
+  allEmployeesList: any[] = [];
 
   constructor() {
     this.announcementForm = this.fb.group({
@@ -4574,7 +4530,7 @@ export class DashboardComponent implements OnInit {
     if (!formValue.expiryDate) {
       formValue.expiryDate = null;
     } else {
-      // Ensure it's sent as an ISO string so the backend parses it as UTC
+
       formValue.expiryDate = new Date(formValue.expiryDate).toISOString();
     }
 
@@ -4617,7 +4573,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadAdminStats() {
-    // تحميل بيانات الأدمن
+
     this.empService.getEmployees().subscribe({
       next: (employees: any[]) => {
         this.totalEmployees = employees.length;
@@ -4629,7 +4585,7 @@ export class DashboardComponent implements OnInit {
     this.leaveService.getAllLeaves().subscribe({
       next: (leaves: any[]) => {
         this.pendingLeaves = leaves.filter(
-          // الـ backend بيرجع string مش رقم
+
           (l: any) => l.status === 'Pending',
         ).length;
 
@@ -4646,7 +4602,7 @@ export class DashboardComponent implements OnInit {
           unpaid = 0;
 
         if (totalLeaves > 0) {
-          // كلها strings من الـ backend
+
           annual = leaves.filter(
             (l: any) => l.leaveType === 'Annual',
           ).length;
@@ -4709,7 +4665,7 @@ export class DashboardComponent implements OnInit {
   }
 
   calculateAttendanceRate() {
-    // نحسب نسبة الحضور
+
     if (this.totalEmployees === 0 || this.allAttendances.length === 0) return;
     const validAtt = this.allAttendances.filter((a) => a.date && a.clockIn);
     const uniqueDays = new Set(validAtt.map((a) => a.date.split('T')[0])).size;
@@ -4725,7 +4681,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadNextPayday() {
-    // نحسب موعد الراتب القادم
+
     this.salaryService.getMySalaries().subscribe({
       next: (salaries: any[]) => {
         if (!salaries || salaries.length === 0) return;
@@ -4775,7 +4731,6 @@ export class DashboardComponent implements OnInit {
   }
 
   loadEmployeeStats() {
-    // تحميل بيانات الموظف
 
     const today = new Date();
     const currentMonth = today.toLocaleString('en-US', { month: 'short' });
@@ -4785,19 +4740,17 @@ export class DashboardComponent implements OnInit {
       1,
     ).toLocaleString('en-US', { month: 'short' });
 
-    // قيمة مؤقتة تظهر فوراً، تتحدث لما يرجع الـ API
     if (today.getDate() > this.PAYDAY) {
       this.employeeNextPayday = `${nextMonth} ${this.PAYDAY}`;
     } else {
       this.employeeNextPayday = `${currentMonth} ${this.PAYDAY}`;
     }
 
-    // نجيب التاريخ الدقيق من آخر راتب
     this.loadNextPayday();
 
     this.leaveService.getMyLeaves().subscribe({
       next: (leaves: any[]) => {
-        // backend يرجع strings مش أرقام
+
         this.employeePendingLeaves = leaves.filter(
           (l: any) => l.status === 'Pending',
         ).length;
@@ -4860,7 +4813,7 @@ export class DashboardComponent implements OnInit {
     emergency: number,
     unpaid: number,
   ) {
-    // رسم تشارت الإجازات
+
     const ctx = document.getElementById('leaveTypeChart') as HTMLCanvasElement;
     if (!ctx) return;
 
@@ -4868,7 +4821,6 @@ export class DashboardComponent implements OnInit {
       this.leaveChartInstance.destroy();
     }
 
-    // لو مافي داتا نعرض دائرة فاضية
     if (annual === 0 && sick === 0 && emergency === 0 && unpaid === 0) {
       this.leaveChartInstance = new Chart(ctx, {
         type: 'doughnut',
@@ -4940,7 +4892,6 @@ export class DashboardComponent implements OnInit {
 
     if (this.totalEmployees === 0 || this.allAttendances.length === 0) return;
 
-    // Get last 7 days calendar-wise
     const labels = [];
     const data = [];
     let startDateStr = '';
@@ -4970,7 +4921,7 @@ export class DashboardComponent implements OnInit {
         datasets: [{
           label: 'Attendance Rate (%)',
           data: data,
-          borderColor: '#198754', // Success color matching the badge
+          borderColor: '#198754',
           backgroundColor: 'rgba(25, 135, 84, 0.1)',
           borderWidth: 3,
           fill: true,
@@ -5175,7 +5126,7 @@ export class DashboardComponent implements OnInit {
             <div class="modal-body p-0 bg-light">
                 @if (selectedDepartment) {
                 <div class="row g-0">
-                    <!-- Left Column: Overview Stats -->
+                    
                     <div class="col-lg-4 border-end bg-white">
                         <div class="p-4 h-100">
                             <h6 class="fw-bold text-dark mb-4 text-uppercase"
@@ -5218,7 +5169,7 @@ export class DashboardComponent implements OnInit {
                         </div>
                     </div>
 
-                    <!-- Right Column: Employees Table -->
+                    
                     <div class="col-lg-8 bg-light">
                         <div class="p-4 h-100 d-flex flex-column">
                             <div
@@ -5441,7 +5392,7 @@ export class DepartmentsComponent implements OnInit {
   private employeeService = inject(EmployeeService);
   private positionService = inject(PositionService);
 
-  allPositions: any[] = []; // lookup: positionId -> title
+  allPositions: any[] = [];
 
   departmentsList: any[] = [];
   isLoading: boolean = true;
@@ -5454,7 +5405,7 @@ export class DepartmentsComponent implements OnInit {
   private addModalInstance: any;
 
   allEmployees: any[] = [];
-  departmentStats: any = {}; // id -> { totalEmployees: 0, positions: { posName: count } }
+  departmentStats: any = {};
 
   deptEmployees: any[] = [];
   filteredDeptEmployees: any[] = [];
@@ -5472,13 +5423,13 @@ export class DepartmentsComponent implements OnInit {
   }
 
   loadPositionsThenEmployees() {
-    // جلب الـ positions أولاً ثم الموظفين لعمل join صحيح
+
     this.positionService.getPositions().subscribe({
       next: (res: any) => {
         this.allPositions = Array.isArray(res) ? res : res?.data || [];
         this.loadEmployees();
       },
-      error: () => this.loadEmployees(), // تحميل الموظفين حتى لو فشل جلب الـ positions
+      error: () => this.loadEmployees(),
     });
   }
 
@@ -5488,7 +5439,7 @@ export class DepartmentsComponent implements OnInit {
         const extracted: any[] = Array.isArray(res)
           ? res
           : res?.data?.items || res?.data || [];
-        // ربط اسم الـ position بكل موظف
+
         this.allEmployees = extracted.map((emp) => {
           if (!emp.positionName && emp.positionId) {
             const pos = this.allPositions.find((p) => p.id === emp.positionId);
@@ -5512,8 +5463,8 @@ export class DepartmentsComponent implements OnInit {
       }
 
       this.departmentStats[deptId].totalEmployees++;
-      const posName = emp.positionName; // نتجاهل الموظفين الذين ليس لديهم position
-      if (!posName) continue; // لا نُدرجهم في الـ Positions Breakdown
+      const posName = emp.positionName;
+      if (!posName) continue;
       if (!this.departmentStats[deptId].positions[posName]) {
         this.departmentStats[deptId].positions[posName] = 0;
       }
@@ -5527,14 +5478,14 @@ export class DepartmentsComponent implements OnInit {
       return stat ? stat.totalEmployees : 0;
     }
     if (type === 'positions') {
-      // العدّ الحقيقي من قائمة الـ positions المرتبطة بالقسم
+
       return this.allPositions.filter((p) => p.departmentId === deptId).length;
     }
     return 0;
   }
 
   loadDepartments() {
-    // تحميل الأقسام
+
     this.isLoading = true;
     this.departmentService.getDepartments().subscribe({
       next: (res: any) => {
@@ -5556,17 +5507,16 @@ export class DepartmentsComponent implements OnInit {
   }
 
   viewDetails(dept: any) {
-    // تفاصيل القسم
+
     this.selectedDepartment = dept;
     const stats = this.departmentStats[dept.id] || { totalEmployees: 0 };
     this.selectedDepartment.stats = stats;
-    // الـ positions الحقيقية المرتبطة بهذا القسم من الـ API
+
     const deptPositions = this.allPositions.filter(
       (p) => p.departmentId === dept.id,
     );
     this.selectedDepartment.totalPositions = deptPositions.length;
 
-    // جدول الموظفين داخل الـ modal — مع ربط الـ position
     this.deptEmployees = this.allEmployees
       .filter((e) => e.departmentId === dept.id)
       .map((emp) => {
@@ -5577,7 +5527,7 @@ export class DepartmentsComponent implements OnInit {
         return emp;
       });
     this.filteredDeptEmployees = [...this.deptEmployees];
-    // بناء قائمة الـ positions من الـ API مباشرةً وليس من الموظفين
+
     this.uniquePositions = deptPositions.map((p) => p.title).filter(Boolean);
     this.searchEmpQuery = '';
     this.selectedPositionFilter = '';
@@ -5592,7 +5542,7 @@ export class DepartmentsComponent implements OnInit {
   }
 
   filterDeptEmployees() {
-    // فلترة موظفين القسم
+
     this.filteredDeptEmployees = this.deptEmployees.filter((emp) => {
       let matchesSearch = true;
       if (this.searchEmpQuery) {
@@ -5605,7 +5555,7 @@ export class DepartmentsComponent implements OnInit {
 
       let matchesPos = true;
       if (this.selectedPositionFilter) {
-        // مقارنة بـ positionName أو عن طريق positionId
+
         const pos = this.allPositions.find(
           (p) => p.title === this.selectedPositionFilter,
         );
@@ -5644,7 +5594,7 @@ export class DepartmentsComponent implements OnInit {
   }
 
   saveDepartment() {
-    // حفظ القسم
+
     if (this.addForm.invalid) {
       Swal.fire('Warning', 'Please enter a valid department name.', 'warning');
       return;
@@ -5738,7 +5688,7 @@ export class DepartmentsComponent implements OnInit {
 <div class="form-page-wrapper">
   <div class="form-container">
 
-    <!-- ═══ HEADER CARD ═══ -->
+    
     <div class="form-header-card">
       <div class="d-flex align-items-center gap-3">
         <div class="header-icon-wrap" [class.edit-mode]="isEditMode">
@@ -5757,7 +5707,7 @@ export class DepartmentsComponent implements OnInit {
       </a>
     </div>
 
-    <!-- ═══ LOADING SKELETON ═══ -->
+    
     @if (isLoading && isEditMode) {
     <div class="form-body-card">
       <div class="skeleton-wrap">
@@ -5783,7 +5733,7 @@ export class DepartmentsComponent implements OnInit {
     @if (!isLoading || !isEditMode) {
     <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
 
-      <!-- ═══ ADD MODE: Linked User Banner ═══ -->
+      
       @if (!isEditMode && employeeForm.get('userId')?.value) {
       <div class="linked-user-banner">
         <div class="linked-user-avatar">
@@ -5799,7 +5749,7 @@ export class DepartmentsComponent implements OnInit {
       </div>
       }
 
-      <!-- ═══ EDIT MODE: Linked Account Info Card ═══ -->
+      
       @if (isEditMode && linkedUserInfo) {
       <div class="linked-account-card">
         <div class="lac-icon">
@@ -5818,7 +5768,7 @@ export class DepartmentsComponent implements OnInit {
       </div>
       }
 
-      <!-- ═══ SECTION: Link User (Add mode only) ═══ -->
+      
       @if (!isEditMode) {
       <div class="form-section">
         <div class="section-header">
@@ -5850,7 +5800,7 @@ export class DepartmentsComponent implements OnInit {
             </small>
           </div>
 
-          <!-- الايميل مسكر، بيتعبى لحاله -->
+          
           <div class="col-12">
             <label class="field-label">
               <i class="bi bi-envelope text-primary"></i>
@@ -5870,7 +5820,7 @@ export class DepartmentsComponent implements OnInit {
       </div>
       }
 
-      <!-- ═══ SECTION: Personal Information ═══ -->
+      
       <div class="form-section">
         <div class="section-header">
           <i class="bi bi-person-vcard"></i>
@@ -5898,7 +5848,7 @@ export class DepartmentsComponent implements OnInit {
         </div>
       </div>
 
-      <!-- ═══ SECTION: Profile Picture ═══ -->
+      
       <div class="form-section">
         <div class="section-header">
           <i class="bi bi-person-bounding-box"></i>
@@ -5908,7 +5858,7 @@ export class DepartmentsComponent implements OnInit {
         <div class="row g-3">
           <div class="col-12 d-flex flex-column align-items-center">
             
-            <!-- Picture Preview -->
+            
             <div class="position-relative mb-3" style="width: 120px; height: 120px;">
               <img *ngIf="picturePreviewUrl" [src]="picturePreviewUrl" 
                    class="rounded-circle object-fit-cover w-100 h-100 border shadow-sm" alt="Profile Preview">
@@ -5917,7 +5867,7 @@ export class DepartmentsComponent implements OnInit {
                 <i class="bi bi-person-fill fs-1"></i>
               </div>
               
-              <!-- Upload Icon Overlay -->
+              
               <div class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow" 
                    style="width: 32px; height: 32px; cursor: pointer;"
                    onclick="document.getElementById('profilePicInput').click()">
@@ -5936,14 +5886,14 @@ export class DepartmentsComponent implements OnInit {
         </div>
       </div>
 
-      <!-- ═══ SECTION: Contact Details ═══ -->
+      
       <div class="form-section">
         <div class="section-header">
           <i class="bi bi-telephone-fill"></i>
           <span>Contact Details</span>
         </div>
         <div class="row g-3">
-          <!-- الايميل بس ينعرض -->
+          
           @if (isEditMode) {
           <div class="col-md-6">
             <label class="field-label">
@@ -5987,7 +5937,7 @@ export class DepartmentsComponent implements OnInit {
         </div>
       </div>
 
-      <!-- ═══ SECTION: Employment Information ═══ -->
+      
       <div class="form-section">
         <div class="section-header">
           <i class="bi bi-briefcase-fill"></i>
@@ -6043,7 +5993,7 @@ export class DepartmentsComponent implements OnInit {
         </div>
       </div>
 
-      <!-- ═══ SUBMIT BUTTON ═══ -->
+      
       <div class="form-actions">
         <a routerLink="/employees" class="btn btn-cancel">
           <i class="bi bi-x-lg me-2"></i>Cancel
@@ -6104,7 +6054,6 @@ export class EmployeeFormComponent implements OnInit {
   positions: any[] = [];
   unassignedUsers: any[] = [];
 
-  // بيانات اليوزر اللي مربوط بالموظف في حالة التعديل
   linkedUserInfo: { username: string; email: string; role: string; profilePictureUrl: string | null } | null =
     null;
 
@@ -6129,32 +6078,30 @@ export class EmployeeFormComponent implements OnInit {
   });
 
   ngOnInit() {
-    // تجهيز النموذج
+
     const state = window.history.state;
 
     if (state && state.editMode && state.employeeId) {
-      // edit mode
+
       this.isEditMode = true;
       this.currentEmployeeId = state.employeeId;
       this.loadEmployeeDetails(this.currentEmployeeId!);
-      // userId والإيميل ما يتعدلوا
+
       this.employeeForm.get('userId')?.disable();
       this.employeeForm.get('email')?.disable();
     } else {
-      // add mode
-      // لو جاية داتا من صفحة ثانية نعبيها مباشرة
+
       if (state && (state.userId || state.email)) {
         this.employeeForm.patchValue({
           userId: state.userId,
           email: state.email,
         });
       }
-      // الإيميل يتعبى تلقائياً من اليوزر المختار
+
       this.employeeForm.get('email')?.disable();
 
       this.loadUnassignedUsers();
 
-      // نعبي الإيميل لما يختار يوزر من الـ dropdown
       this.employeeForm.get('userId')?.valueChanges.subscribe((selectedId) => {
         const user = this.unassignedUsers.find(
           (u) => String(u.id) === String(selectedId),
@@ -6175,10 +6122,9 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  // جلب بيانات الموظف
   loadEmployeeDetails(id: number) {
     this.isLoading = true;
-    // بنجيب كامل التفاصيل
+
     this.employeeService.getEmployeeById(id).subscribe({
       next: (profile: any) => {
         this.isLoading = false;
@@ -6188,7 +6134,6 @@ export class EmployeeFormComponent implements OnInit {
           this.employeeForm.get('positionId')?.enable();
         }
 
-        // نعبي الفورم بالداتا الموجودة
         this.employeeForm.patchValue({
           firstName: profile.firstName || profile.fullName?.split(' ')[0] || '',
           lastName:
@@ -6205,7 +6150,6 @@ export class EmployeeFormComponent implements OnInit {
           userId: profile.userId || '',
         });
 
-        // معلومات بسيطة للعرض في الـ header
         this.linkedUserInfo = {
           username:
             profile.fullName ||
@@ -6229,7 +6173,7 @@ export class EmployeeFormComponent implements OnInit {
   }
 
   loadDepartments() {
-    // تحميل الأقسام
+
     this.departmentService.getDepartments().subscribe({
       next: (res: any) => {
         this.departments = Array.isArray(res) ? res : res?.data || [];
@@ -6237,9 +6181,8 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  // اليوزرات اللي ما ربطوا بموظف بعد
   loadUnassignedUsers() {
-    // تحميل يوزرات بدون موظف
+
     this.authService.getUnassignedEmployeeUsers().subscribe({
       next: (res: any) => {
         this.unassignedUsers = res?.items ?? (Array.isArray(res) ? res : []);
@@ -6250,9 +6193,8 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  // positions حسب القسم
   loadPositions(deptId: number) {
-    // تحميل المناصب
+
     this.positionService.getPositionsByDepartment(deptId).subscribe({
       next: (res: any) => {
         this.positions = Array.isArray(res) ? res : res?.data || [];
@@ -6261,18 +6203,15 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  // الإيميل disabled فنحتاج getRawValue
   get displayEmail(): string {
     return this.employeeForm.getRawValue().email || '';
   }
 
-  // تحويل أخطاء الـ backend لرسائل مفهومة
   private parseBackendError(err: any): string {
     const body = err?.error;
 
     if (!body) return 'An unexpected error occurred. Please try again.';
 
-    // ASP.NET validation errors
     if (body.errors && typeof body.errors === 'object') {
       const fieldLabels: Record<string, string> = {
         PhoneNumber: 'Phone Number',
@@ -6306,7 +6245,7 @@ export class EmployeeFormComponent implements OnInit {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      if (file.size > 5 * 1024 * 1024) {
         Swal.fire('Error', 'File size exceeds 5MB limit', 'error');
         return;
       }
@@ -6320,11 +6259,10 @@ export class EmployeeFormComponent implements OnInit {
   }
 
   onSubmit() {
-    // إرسال النموذج
+
     if (this.employeeForm.invalid) {
       this.employeeForm.markAllAsTouched();
 
-      // خطأ رقم الهاتف له رسالة مخصصة
       const phone = this.employeeForm.get('phoneNumber');
       if (phone?.errors?.['pattern']) {
         Swal.fire({
@@ -6512,7 +6450,7 @@ export class EmployeeFormComponent implements OnInit {
                     <td data-label="ID" class="py-3 px-4 fw-bold text-dark">#{{ emp.id }}</td>
                     <td data-label="Full Name" class="py-3 px-4 fw-bold text-dark">
                         <div class="d-flex align-items-center">
-                            <!-- Profile picture or initials -->
+                            
                             <div class="me-3 flex-shrink-0" style="width: 36px; height: 36px;">
                                 <img *ngIf="emp.profilePictureUrl"
                                     [src]="emp.profilePictureUrl"
@@ -6571,7 +6509,7 @@ export class EmployeeFormComponent implements OnInit {
         </table>
     </div>
 
-    <!-- Pagination Footer -->
+    
     @if (employeesList.length > 0) {
     <div class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
         <small class="text-muted fw-medium">
@@ -6593,14 +6531,13 @@ export class EmployeeFormComponent implements OnInit {
 </div>
 }
 
-<!-- ══════════ Employee Details Modal ══════════ -->
 <div class="modal fade" id="employeeDetailsModal" tabindex="-1" aria-labelledby="employeeDetailsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
 
             <div class="modal-header border-0 p-0">
                 <div class="emp-modal-header w-100 p-4 d-flex align-items-center gap-3">
-                    <!-- Avatar: show real picture or initials -->
+                    
                     <div class="emp-modal-avatar" [class.p-0]="selectedEmployeeProfile?.profilePictureUrl" style="overflow: hidden;">
                         <img *ngIf="selectedEmployeeProfile?.profilePictureUrl"
                             [src]="selectedEmployeeProfile.profilePictureUrl"
@@ -6838,7 +6775,6 @@ export class EmployeesComponent implements OnInit {
 
   detailsModal: any;
 
-  // Pagination
   currentPage: number = 1;
   itemsPerPage: number = 7;
 
@@ -6872,7 +6808,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   ngOnInit() {
-    // أول تحميل
+
     this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
     this.loadEmployees();
@@ -6889,7 +6825,6 @@ export class EmployeesComponent implements OnInit {
     }
   }
 
-  // --- Export to Excel (CSV) ---
   exportToExcel() {
     if (this.employeesList.length === 0) {
       Swal.fire('No Data', 'There are no employees to export.', 'info');
@@ -6922,8 +6857,6 @@ export class EmployeesComponent implements OnInit {
         .join(',');
     });
 
-    // Add UTF-8 BOM for Excel to read Arabic/Special characters correctly
-    // Add sep=, to force Excel to recognize comma as delimiter regardless of region
     const csvContent =
       '\uFEFFsep=,\r\n' + [headers.join(','), ...csvData].join('\r\n');
 
@@ -6962,7 +6895,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   loadEmployees() {
-    // تحميل الموظفين
+
     this.isLoading = true;
     this.employeeService.getEmployees().subscribe({
       next: (data) => {
@@ -6984,7 +6917,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   filterEmployees() {
-    // فلترة القائمة
+
     this.employeesList = this.allEmployeesList.filter((emp) => {
       let matchesSearch = true;
       if (this.searchQuery) {
@@ -7018,7 +6951,7 @@ export class EmployeesComponent implements OnInit {
       return matchesSearch && matchesDept && matchesStatus;
     });
 
-    this.currentPage = 1; // Reset to first page on filter
+    this.currentPage = 1;
   }
 
   onDelete(id: number) {
@@ -7038,7 +6971,6 @@ export class EmployeesComponent implements OnInit {
               (emp) => emp.id !== id,
             );
 
-            // Adjust pagination if needed
             if (this.currentPage > this.totalPages) {
               this.currentPage = this.totalPages;
             }
@@ -7055,7 +6987,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   viewFullDetails(emp: any) {
-    // تفاصيل الموظف
+
     this.selectedEmployeeProfile = { ...emp, isLoadingDetails: true };
 
     const modalElement = document.getElementById('employeeDetailsModal');
@@ -7085,7 +7017,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   downloadEmployeeReport(emp: any) {
-    // تقرير الموظف
+
     if (!emp) return;
 
     this.isGeneratingReport = true;
@@ -7093,7 +7025,6 @@ export class EmployeesComponent implements OnInit {
       `${emp.firstName || ''} ${emp.lastName || ''}`.trim() ||
       `Employee #${emp.id}`;
 
-    // Fetch all data in parallel
     forkJoin({
       attendance: this.attendanceService
         .getAllAttendance()
@@ -7105,7 +7036,6 @@ export class EmployeesComponent implements OnInit {
     }).subscribe(({ attendance, leaves, salaries }) => {
       this.isGeneratingReport = false;
 
-      // Filter data for this specific employee
       const empAttendance = attendance
         .filter((a: any) => a.employeeId === emp.id)
         .sort(
@@ -7150,7 +7080,7 @@ export class EmployeesComponent implements OnInit {
     const pageW = doc.internal.pageSize.getWidth();
     const today = new Date();
     const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    // ✅ W3 Fix: تأكد من صحة كل أنواع الإجازات بما يطابق Backend enum
+
     const leaveTypeMap: any = {
       0: 'Annual',
       1: 'Sick',
@@ -7170,7 +7100,6 @@ export class EmployeesComponent implements OnInit {
       Rejected: 'Rejected',
     };
 
-    // ── HEADER BANNER ──────────────────────────────
     doc.setFillColor(67, 97, 238);
     doc.rect(0, 0, pageW, 38, 'F');
 
@@ -7184,7 +7113,6 @@ export class EmployeesComponent implements OnInit {
     doc.text('Employee Monthly Report', 14, 22);
     doc.text(`Generated: ${todayStr}`, 14, 29);
 
-    // ── EMPLOYEE INFO CARD ─────────────────────────
     doc.setFillColor(248, 249, 252);
     doc.roundedRect(10, 44, pageW - 20, 38, 3, 3, 'F');
     doc.setDrawColor(225, 228, 240);
@@ -7213,7 +7141,6 @@ export class EmployeesComponent implements OnInit {
 
     let curY = 90;
 
-    // ── SALARY SECTION ────────────────────────────
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10);
     doc.setTextColor(67, 97, 238);
@@ -7265,7 +7192,6 @@ export class EmployeesComponent implements OnInit {
       curY = (doc as any).lastAutoTable.finalY + 10;
     }
 
-    // ── ATTENDANCE SECTION ────────────────────────
     if (curY > 230) {
       doc.addPage();
       curY = 20;
@@ -7309,7 +7235,6 @@ export class EmployeesComponent implements OnInit {
       curY = (doc as any).lastAutoTable.finalY + 10;
     }
 
-    // ── LEAVE SECTION ─────────────────────────────
     if (curY > 230) {
       doc.addPage();
       curY = 20;
@@ -7353,7 +7278,6 @@ export class EmployeesComponent implements OnInit {
       curY = (doc as any).lastAutoTable.finalY + 10;
     }
 
-    // ── SUMMARY BOX ────────────────────────────────
     if (curY > 235) {
       doc.addPage();
       curY = 20;
@@ -7391,7 +7315,6 @@ export class EmployeesComponent implements OnInit {
       curY + 23,
     );
 
-    // ── FOOTER ────────────────────────────────────
     const pageCount = (doc.internal as any).getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
@@ -7420,7 +7343,6 @@ export class EmployeesComponent implements OnInit {
 ### File: src\app\features\leave\leave.component.html
 ```html
 <div class="page-container p-4">
-
 
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div class="d-flex align-items-center">
@@ -7476,7 +7398,7 @@ export class EmployeesComponent implements OnInit {
         </div>
     </div>
 
-    <!-- Annual Leave Balance Banner for Employees -->
+    
     <div class="row mb-4" *ngIf="!isAdminOrHR">
         <div class="col-12">
             <div class="card border-0 shadow-sm rounded-4 bg-primary bg-opacity-10 position-relative overflow-hidden">
@@ -7621,7 +7543,7 @@ export class EmployeesComponent implements OnInit {
             </table>
         </div>
 
-        <!-- Pagination Footer -->
+        
         <div *ngIf="leavesList.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
             <small class="text-muted fw-medium">
                 {{ 'Showing' | t }} {{ (currentPage - 1) * itemsPerPage + 1 }} {{ 'to' | t }} {{ getMathMin(currentPage * itemsPerPage, leavesList.length) }} {{ 'of' | t }} {{ leavesList.length }} {{ 'entries' | t }}
@@ -7760,7 +7682,6 @@ export class LeaveComponent implements OnInit {
 
   leaveModal: any;
 
-  // Pagination
   currentPage: number = 1;
   itemsPerPage: number = 7;
 
@@ -7793,8 +7714,8 @@ export class LeaveComponent implements OnInit {
   leaveTypes = [
     { id: 0, name: 'Annual' },
     { id: 1, name: 'Sick' },
-    { id: 2, name: 'Emergency' }, // ✅ يطابق Backend enum: Emergency=2
-    { id: 3, name: 'Unpaid' }, // ✅ يطابق Backend enum: Unpaid=3
+    { id: 2, name: 'Emergency' },
+    { id: 3, name: 'Unpaid' },
   ];
 
   ngOnInit() {
@@ -7803,7 +7724,7 @@ export class LeaveComponent implements OnInit {
   }
 
   loadLeaves() {
-    // تحميل الإجازات
+
     this.isLoading = true;
 
     const request = this.isAdminOrHR
@@ -7838,7 +7759,7 @@ export class LeaveComponent implements OnInit {
             );
           });
         } else if (!this.isAdminOrHR) {
-          // ✅ Include both 'Approved' and 'Pending' to correctly decrease available balance
+
           const usedAnnualLeavesDays = this.allLeavesList
             .filter(
               (l: any) => (this.getStatusText(l.status) === 'Approved' || this.getStatusText(l.status) === 'Pending') && this.getLeaveTypeText(l.leaveType) === 'Annual',
@@ -7858,7 +7779,7 @@ export class LeaveComponent implements OnInit {
   }
 
   filterLeaves() {
-    // فلترة الإجازات
+
     this.leavesList = this.allLeavesList.filter((l) => {
       let matchesSearch = true;
       if (this.leaveSearchQuery) {
@@ -7881,8 +7802,7 @@ export class LeaveComponent implements OnInit {
 
       let matchesType = true;
       if (this.selectedLeaveType) {
-        // الـ backend يرجع string مثل "Annual" أو رقم مثل 0
-        // نحوّل كلاهما لاسم ونقارن بـ case-insensitive
+
         const leaveTypeName = this.getLeaveTypeText(l.leaveType).toLowerCase();
         matchesType = leaveTypeName === this.selectedLeaveType.toLowerCase();
       }
@@ -7907,11 +7827,11 @@ export class LeaveComponent implements OnInit {
   }
 
   getStatusText(statusCode: any): string {
-    // ✅ Backend يُرجع string مباشرة من MappingProfile (.ToString())
+
     if (typeof statusCode === 'string' && isNaN(Number(statusCode))) {
-      return statusCode; // 'Pending' | 'Approved' | 'Rejected'
+      return statusCode;
     }
-    // توافقية مع القيم الرقمية القديمة
+
     if (statusCode === 0 || statusCode === '0') return 'Pending';
     if (statusCode === 1 || statusCode === '1') return 'Approved';
     if (statusCode === 2 || statusCode === '2') return 'Rejected';
@@ -7919,7 +7839,7 @@ export class LeaveComponent implements OnInit {
   }
 
   getLeaveTypeText(typeCode: any): string {
-    // ✅ Backend يُرجع string مباشرة: 'Annual', 'Sick', 'Emergency', 'Unpaid'
+
     if (typeof typeCode === 'string' && isNaN(Number(typeCode))) {
       const found = this.leaveTypes.find(
         (t) => t.name.toLowerCase() === typeCode.toLowerCase(),
@@ -7928,7 +7848,7 @@ export class LeaveComponent implements OnInit {
         ? found.name
         : typeCode.charAt(0).toUpperCase() + typeCode.slice(1);
     }
-    // توافقية مع القيم الرقمية
+
     const type = this.leaveTypes.find((t) => t.id === Number(typeCode));
     return type ? type.name : typeCode != null ? String(typeCode) : 'Unknown';
   }
@@ -7961,7 +7881,7 @@ export class LeaveComponent implements OnInit {
   }
 
   submitLeaveRequest() {
-    // إرسال طلب الإجازة
+
     if (this.leaveData.startDate < this.getToday()) {
       Swal.fire('Invalid Date', 'Start Date cannot be in the past.', 'warning');
       return;
@@ -7976,13 +7896,12 @@ export class LeaveComponent implements OnInit {
       return;
     }
 
-    // Calculate requested days
     const start = new Date(this.leaveData.startDate);
     const end = new Date(this.leaveData.endDate);
     const diffTime = Math.abs(end.getTime() - start.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // inclusive
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
-    if (Number(this.leaveData.leaveType) === 0) { // Annual
+    if (Number(this.leaveData.leaveType) === 0) {
       if (diffDays > Number(this.employeeAnnualLeaveBalance)) {
         Swal.fire('Insufficient Balance', `You are requesting ${diffDays} days, but you only have ${this.employeeAnnualLeaveBalance} annual leave days remaining.`, 'warning');
         return;
@@ -8025,7 +7944,7 @@ export class LeaveComponent implements OnInit {
   }
 
   changeStatus(id: number, newStatusCode: number) {
-    // تغيير الحالة
+
     if (newStatusCode === 2) {
       Swal.fire({
         title: 'Reject Leave Request',
@@ -8098,7 +8017,7 @@ export class LeaveComponent implements OnInit {
                     <select class="form-select bg-light" formControlName="leaveType">
                         <option value="" disabled selected>Select Leave
                             Type</option>
-                        <!-- ✅ استخدم أرقام تطابق Backend enum: Annual=0, Sick=1, Emergency=2, Unpaid=3 -->
+                        
                         <option value="0">Annual</option>
                         <option value="1">Sick</option>
                         <option value="2">Emergency</option>
@@ -8194,14 +8113,13 @@ export class LeaveFormComponent {
     const formValue = this.leaveForm.value;
 
     const newLeave = {
-      // ✅ حوّل لرقم حتى يطابق Backend enum
+
       leaveType: Number(formValue.leaveType),
       startDate: new Date(formValue.startDate!).toISOString(),
       endDate: new Date(formValue.endDate!).toISOString(),
       reason: formValue.reason,
     };
 
-    // show slow-server warning after 6 seconds
     this.slowWarningTimer = setTimeout(() => {
       this.loadingMessage = 'Server is starting up, please wait a moment...';
     }, 6000);
@@ -8242,7 +8160,7 @@ export class LeaveFormComponent {
         </button>
     </div>
 
-    <!-- Meetings Table -->
+    
     <div class="card shadow-sm border-0 rounded-4">
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -8290,7 +8208,7 @@ export class LeaveFormComponent {
                             </td>
                             <td class="text-end pe-4">
                                 <div class="d-flex align-items-center justify-content-end gap-2">
-                                    <!-- Mark Completed & Cancel (HR/Admin only, only when Scheduled) -->
+                                    
                                     <ng-container *ngIf="isHrOrAdmin && meeting.status === 'Scheduled'">
                                         <button
                                             class="btn btn-success btn-sm rounded-pill d-inline-flex align-items-center gap-1 px-3"
@@ -8307,7 +8225,7 @@ export class LeaveFormComponent {
                                             <span class="small">Cancel</span>
                                         </button>
                                     </ng-container>
-                                    <!-- Join Meet (visible to everyone when link exists) -->
+                                    
                                     <a *ngIf="meeting.meetLink && meeting.status === 'Scheduled'"
                                         [href]="meeting.meetLink" target="_blank"
                                         class="btn btn-outline-primary btn-sm rounded-pill d-inline-flex align-items-center gap-1 px-3"
@@ -8315,7 +8233,7 @@ export class LeaveFormComponent {
                                         <i class="bi bi-camera-video"></i>
                                         <span class="small">Join</span>
                                     </a>
-                                    <!-- No actions when Completed or Cancelled -->
+                                    
                                     <span *ngIf="meeting.status !== 'Scheduled'" class="text-muted small fst-italic">—</span>
                                 </div>
                             </td>
@@ -8336,7 +8254,6 @@ export class LeaveFormComponent {
     </div>
 </div>
 
-<!-- Add Meeting Modal -->
 <div class="modal fade" id="addMeetingModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow rounded-4">
@@ -8543,7 +8460,7 @@ export class MeetingsComponent implements OnInit {
     this.isSubmitting = true;
     const formValues = this.addForm.value;
     
-    // Combine Date and Time
+
     const combinedDateTime = new Date(`${formValues.meetingDate}T${formValues.meetingTime}`);
     
     const dto: CreateMeetingDto = {
@@ -8655,7 +8572,6 @@ export class MeetingsComponent implements OnInit {
   </button>
 </div>
 
-<!-- ─── Loading ─── -->
 @if (isLoading) {
 <div class="text-center my-5">
   <div class="spinner-border text-primary" role="status"></div>
@@ -8663,10 +8579,9 @@ export class MeetingsComponent implements OnInit {
 </div>
 }
 
-<!-- بروفايل الأدمن -->
 @else if (isAdmin) {
 <div class="row g-4">
-  <!-- Left card: Avatar -->
+  
   <div class="col-md-4">
     <div class="card shadow-sm border-0 h-100 text-center p-4">
       <div class="mb-3 text-center">
@@ -8683,7 +8598,7 @@ export class MeetingsComponent implements OnInit {
         </div>
       </div>
       
-      <!-- Pending Picture Preview (Admin) -->
+      
       <div *ngIf="pendingProfilePicUrl" class="mx-auto mb-3 text-center">
         <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
           <span class="badge bg-warning text-dark rounded-pill px-3 py-1">
@@ -8704,7 +8619,7 @@ export class MeetingsComponent implements OnInit {
     </div>
   </div>
 
-  <!-- Right card: Details -->
+  
   <div class="col-md-8">
     <div class="card shadow-sm border-0 h-100">
       <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
@@ -8759,7 +8674,6 @@ export class MeetingsComponent implements OnInit {
 </div>
 }
 
-<!-- ─── EMPLOYEE PROFILE ─── -->
 @else if (profile) {
 <div class="row g-4">
   <div class="col-md-4">
@@ -8778,7 +8692,7 @@ export class MeetingsComponent implements OnInit {
         </div>
       </div>
 
-      <!-- Pending Picture Preview (Employee) -->
+      
       <div *ngIf="pendingProfilePicUrl" class="mx-auto mb-3 text-center">
         <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
           <span class="badge bg-warning text-dark rounded-pill px-3 py-1">
@@ -8817,7 +8731,7 @@ export class MeetingsComponent implements OnInit {
             <label class="text-muted small text-uppercase fw-bold">
               <i class="bi bi-telephone me-1"></i> {{ 'Phone' | t }}
             </label>
-            <!-- رقم التلفون -->
+            
             <p class="fw-semibold text-dark fs-5 mb-0">
               {{ profile.phone || profile.phoneNumber || 'N/A' }}
             </p>
@@ -8858,7 +8772,6 @@ export class MeetingsComponent implements OnInit {
 </div>
 }
 
-<!-- ─── Not linked ─── -->
 @else if (!isLoading && !profile && !isAdmin) {
 <div class="alert alert-warning d-flex align-items-center rounded-3" role="alert">
   <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
@@ -8869,7 +8782,6 @@ export class MeetingsComponent implements OnInit {
 </div>
 }
 
-<!-- ─── Edit Profile Modal ─── -->
 <div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg rounded-4">
@@ -8879,7 +8791,7 @@ export class MeetingsComponent implements OnInit {
         <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body p-4">
-        <!-- Contact Info -->
+        
         <h6 class="fw-bold text-secondary mb-3 small text-uppercase">{{ 'Contact Information' | t }}</h6>
         <div class="mb-3">
           <label class="form-label text-muted small fw-semibold">Email Address</label>
@@ -8894,7 +8806,7 @@ export class MeetingsComponent implements OnInit {
 
         <hr class="my-4 text-muted opacity-25">
 
-        <!-- Security -->
+        
         <h6 class="fw-bold text-secondary mb-3 small text-uppercase">{{ 'Change Password' | t }}</h6>
         <div class="mb-3">
           <label class="form-label text-muted small fw-semibold">{{ 'Current Password' | t }}</label>
@@ -8996,7 +8908,7 @@ export class MyProfileComponent implements OnInit {
   pendingProfilePicUrl: string | null = null;
 
   ngOnInit() {
-    // تحميل البيانات
+
     this.isAdmin = this.authService.isAdmin();
     this.userName = localStorage.getItem('user_name') || 'User';
     this.userRole = localStorage.getItem('user_role') || 'Employee';
@@ -9024,7 +8936,6 @@ export class MyProfileComponent implements OnInit {
       this.profilePicUrl = this.authService.getCurrentUserProfilePic();
     });
 
-    // Load pending picture status from /me
     this.authService.getMe().subscribe({
       next: (me: any) => {
         if (me?.pendingProfilePictureUrl) {
@@ -9055,7 +8966,7 @@ export class MyProfileComponent implements OnInit {
   }
 
   loadMyProfile() {
-    // جلب بروفايلي
+
     this.isLoading = true;
     this.employeeService.getMyProfile().subscribe({
       next: (res: any) => {
@@ -9072,7 +8983,7 @@ export class MyProfileComponent implements OnInit {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      // Validate file type and size
+
       const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
       if (!allowedTypes.includes(file.type)) {
         Swal.fire('Invalid File', 'Please upload a JPG, PNG, WebP or GIF image.', 'error');
@@ -9122,11 +9033,10 @@ export class MyProfileComponent implements OnInit {
   }
 
   saveProfile() {
-    // حفظ التعديلات
+
     let requestsPending = 0;
     let hasError = false;
 
-    // 1. Password Update
     if (this.pwdData.oldPassword && this.pwdData.newPassword) {
       requestsPending++;
       this.isChangingPwd = true;
@@ -9158,7 +9068,6 @@ export class MyProfileComponent implements OnInit {
         });
     }
 
-    // 2. Profile Info Update
     const emailChanged =
       this.editData.email !== (this.profile?.email || this.userEmail);
     const phoneChanged =
@@ -9171,7 +9080,6 @@ export class MyProfileComponent implements OnInit {
         requestsPending++;
         this.isUpdatingProfile = true;
 
-        // Prepare updated employee object
         const updatedEmp = {
           ...this.profile,
           email: this.editData.email,
@@ -9207,10 +9115,9 @@ export class MyProfileComponent implements OnInit {
             },
           });
       } else {
-        // Admin without employee profile
+
         this.userEmail = this.editData.email;
-        // There might not be an endpoint to update Admin user email alone,
-        // but we update it locally for UX.
+
       }
     }
 
@@ -9376,7 +9283,6 @@ export class MyProfileComponent implements OnInit {
     }
 </div>
 
-<!-- Add Adjustment Modal -->
 <div class="modal fade" id="addAdjustmentModal" tabindex="-1"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -9644,7 +9550,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
 ```html
 <div class="page-wrapper">
 
-  <!-- Page Header -->
+  
   <div class="d-flex align-items-center mb-4 gap-3">
     <div class="icon-box bg-warning bg-opacity-15 text-warning rounded-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
       <i class="bi bi-person-bounding-box fs-4"></i>
@@ -9655,7 +9561,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
     </div>
   </div>
 
-  <!-- Loading -->
+  
   @if (isLoading) {
   <div class="text-center py-5">
     <div class="spinner-border text-warning" role="status"></div>
@@ -9663,7 +9569,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
   </div>
   }
 
-  <!-- Empty State -->
+  
   @else if (pendingPictures.length === 0) {
   <div class="card border-0 shadow-sm rounded-4 text-center py-5">
     <div class="d-flex flex-column align-items-center gap-3">
@@ -9676,7 +9582,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
   </div>
   }
 
-  <!-- Pending List -->
+  
   @else {
   <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
     <div class="card-header bg-white border-0 p-3 d-flex justify-content-between align-items-center">
@@ -9700,7 +9606,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
         <tbody>
           @for (pic of pendingPictures; track pic.userId) {
           <tr class="border-top">
-            <!-- Employee Info -->
+            
             <td class="ps-4 py-3">
               <div class="d-flex align-items-center gap-3">
                 <div class="rounded-circle bg-primary bg-opacity-10 text-primary fw-bold d-flex align-items-center justify-content-center flex-shrink-0"
@@ -9714,7 +9620,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
               </div>
             </td>
 
-            <!-- Current Picture -->
+            
             <td class="py-3">
               <div class="d-flex align-items-center gap-2">
                 <img *ngIf="pic.currentProfilePictureUrl"
@@ -9731,7 +9637,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
               </div>
             </td>
 
-            <!-- Pending Picture -->
+            
             <td class="py-3">
               <div class="d-flex align-items-center gap-2">
                 <img [src]="pic.pendingProfilePictureUrl"
@@ -9744,7 +9650,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
               </div>
             </td>
 
-            <!-- Actions -->
+            
             <td class="py-3 pe-4 text-end">
               <div class="d-flex gap-2 justify-content-end">
                 <button class="btn btn-success btn-sm px-3 shadow-sm" (click)="approve(pic.userId)">
@@ -10218,13 +10124,13 @@ export class PositionsComponent implements OnInit {
   };
 
   ngOnInit() {
-    // أول تحميل
+
     this.loadDepartments();
     this.loadPositions();
   }
 
   loadDepartments() {
-    // جلب الأقسام
+
     this.departmentService.getDepartments().subscribe({
       next: (res: any) => {
         const extracted = Array.isArray(res) ? res : res?.data || [];
@@ -10235,7 +10141,7 @@ export class PositionsComponent implements OnInit {
   }
 
   loadPositions() {
-    // جلب المناصب
+
     this.isLoading = true;
     this.positionService.getPositions().subscribe({
       next: (res: any) => {
@@ -10256,7 +10162,7 @@ export class PositionsComponent implements OnInit {
   }
 
   openModal(position: any = null) {
-    // فتح المودال
+
     if (position) {
       this.isEditMode = true;
       this.currentPositionId = position.id;
@@ -10285,7 +10191,7 @@ export class PositionsComponent implements OnInit {
   }
 
   savePosition() {
-    // حفظ المسمى
+
     this.isProcessing = true;
 
     if (this.isEditMode && this.currentPositionId) {
@@ -10304,7 +10210,7 @@ export class PositionsComponent implements OnInit {
   }
 
   onDelete(id: number) {
-    // حذف المسمى
+
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -10353,7 +10259,6 @@ export class PositionsComponent implements OnInit {
 ### File: src\app\features\salary\salary.component.html
 ```html
 <div class="page-container p-4">
-
 
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div class="d-flex align-items-center">
@@ -10465,7 +10370,7 @@ export class PositionsComponent implements OnInit {
                     </tr>
 
                     <tr *ngFor="let salary of paginatedSalaries">
-                        <!-- اسم الموظف للأدمن والـ hr -->
+                        
                         <td *ngIf="isAdminOrHR && isViewingAll" data-label="Employee" class="py-3 px-4 fw-bold text-dark">
                             {{ salary.employeeName || '#' + salary.employeeId }}
                         </td>
@@ -10487,7 +10392,7 @@ export class PositionsComponent implements OnInit {
                             <div class="text-muted" style="font-size: 0.7rem;">Before Deductions: ${{ salary.grossAmount
                                 }}</div>
                         </td>
-                        <!-- صلاحيات أدمن بس -->
+                        
                         <td data-label="Actions" class="py-3 px-4 text-end text-nowrap actions-cell">
                             <button class="btn btn-sm btn-outline-danger rounded-circle shadow-sm me-2"
                                 (click)="downloadPayslip(salary)" title="Download Payslip (PDF)">
@@ -10503,7 +10408,7 @@ export class PositionsComponent implements OnInit {
             </table>
         </div>
 
-        <!-- Pagination Footer -->
+        
         <div *ngIf="salariesList.length > 0"
             class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
             <small class="text-muted fw-medium">
@@ -10550,7 +10455,7 @@ export class PositionsComponent implements OnInit {
                                 autocomplete="off" required placeholder="Search by name or ID...">
                         </div>
 
-                        <!-- Custom Dropdown -->
+                        
                         <div class="dropdown-menu w-100 shadow-lg border-0 rounded-4 mt-2 py-2"
                             [class.show]="showEmployeeDropdown"
                             style="position: absolute; top: 100%; left: 0; max-height: 250px; overflow-y: auto; z-index: 1050;">
@@ -10657,7 +10562,7 @@ export class PositionsComponent implements OnInit {
 ```typescript
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // لازم للـ forms
+import { FormsModule } from '@angular/forms';
 import { SalaryService } from '../../core/services/salary.service';
 import { EmployeeService } from '../../core/services/employee.service';
 import { AuthService } from '../../core/services/auth.service';
@@ -10683,10 +10588,10 @@ export class SalaryComponent implements OnInit {
   allSalariesList: any[] = [];
   salariesList: any[] = [];
   isLoading: boolean = true;
-  isAdmin: boolean = false; // أدمن (يضيف ويعدل)
-  isAdminOrHR: boolean = false; // أدمن أو hr (يشوف بس)
+  isAdmin: boolean = false;
+  isAdminOrHR: boolean = false;
   isProcessing: boolean = false;
-  isViewingAll: boolean = false; // Add toggle state
+  isViewingAll: boolean = false;
 
   salaryModal: any;
   isEditMode: boolean = false;
@@ -10702,7 +10607,6 @@ export class SalaryComponent implements OnInit {
   selectedMonth: string = '';
   uniqueYears: number[] = [];
 
-  // Pagination
   currentPage: number = 1;
   itemsPerPage: number = 7;
 
@@ -10750,7 +10654,7 @@ export class SalaryComponent implements OnInit {
   }
 
   loadEmployees() {
-    // تحميل الموظفين
+
     this.employeeService.getEmployees().subscribe({
       next: (res: any) => {
         const extractedData = Array.isArray(res) ? res : res?.data || [];
@@ -10778,7 +10682,6 @@ export class SalaryComponent implements OnInit {
       return fullName.includes(query) || idStr.includes(query);
     });
 
-    // Reset selected ID if typing changes
     this.salaryData.employeeId = null;
   }
 
@@ -10795,7 +10698,7 @@ export class SalaryComponent implements OnInit {
   }
 
   loadSalaries() {
-    // تحميل الرواتب
+
     this.isLoading = true;
     const request = (this.isAdminOrHR && this.isViewingAll)
       ? this.salaryService.getAllSalaries()
@@ -10826,7 +10729,7 @@ export class SalaryComponent implements OnInit {
   }
 
   filterSalaries() {
-    // فلترة الرواتب
+
     this.salariesList = this.allSalariesList.filter((s) => {
       let matchesSearch = true;
       if (this.salarySearchQuery) {
@@ -10862,7 +10765,7 @@ export class SalaryComponent implements OnInit {
       });
     }
 
-    this.currentPage = 1; // Reset to first page
+    this.currentPage = 1;
   }
 
   toggleViewAll() {
@@ -10920,7 +10823,7 @@ export class SalaryComponent implements OnInit {
   }
 
   saveSalary() {
-    // حفظ الراتب
+
     this.isProcessing = true;
 
     const isoDate = new Date(this.salaryData.effectiveDate).toISOString();
@@ -10982,10 +10885,9 @@ export class SalaryComponent implements OnInit {
   }
 
   downloadPayslip(salary: any) {
-    // تنزيل كشف الراتب
+
     const doc = new jsPDF();
 
-    // Add Header
     doc.setFontSize(22);
     doc.setTextColor(13, 110, 253);
     doc.text('Kawadir HRMS', 14, 20);
@@ -11007,14 +10909,12 @@ export class SalaryComponent implements OnInit {
     const effObj = new Date(salary.effectiveDate);
     const effDate = `${effObj.getFullYear()}-${String(effObj.getMonth() + 1).padStart(2, '0')}-${String(effObj.getDate()).padStart(2, '0')}`;
 
-    // Employee Info
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(12);
     doc.text(`Employee Name: ${empName}`, 14, 50);
     doc.text(`Payroll Period: ${period}`, 14, 58);
     doc.text(`Effective Date: ${effDate}`, 14, 66);
 
-    // Salary Details Table
     autoTable(doc, {
       startY: 75,
       head: [['Description', 'Amount (JD)']],
@@ -11036,13 +10936,11 @@ export class SalaryComponent implements OnInit {
 
     const finalY = (doc as any).lastAutoTable.finalY || 130;
 
-    // Net Pay Highlight
     doc.setFontSize(14);
     doc.setTextColor(25, 135, 84);
     doc.setFont('helvetica', 'bold');
     doc.text(`Net Pay: ${salary.netAmount} JD`, 14, finalY + 15);
 
-    // Footer
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.setTextColor(150, 150, 150);
@@ -11052,7 +10950,6 @@ export class SalaryComponent implements OnInit {
       finalY + 40,
     );
 
-    // Download
     const fileName = `Payslip_${empName.replace(/ /g, '_')}_${salary.month}_${salary.year}.pdf`;
     doc.save(fileName);
   }
@@ -11074,7 +10971,7 @@ export class SalaryComponent implements OnInit {
 
         <ul class="navbar-nav ms-auto align-items-center flex-row gap-1">
 
-            <!-- ✅ Install App Button (conditionally visible) -->
+            
             @if (pwaService.canInstall) {
             <li class="nav-item me-3">
                 <button
@@ -11087,7 +10984,7 @@ export class SalaryComponent implements OnInit {
             </li>
             }
 
-            <!-- ✅ Settings Dropdown -->
+            
             <li class="nav-item me-3 dropdown">
                 <button
                     class="btn btn-light btn-sm border-0 shadow-none settings-btn"
@@ -11100,7 +10997,7 @@ export class SalaryComponent implements OnInit {
                     aria-labelledby="settingsDropdown"
                     style="width: 280px;">
 
-                    <!-- Header -->
+                    
                     <div class="p-3 border-bottom" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
                         <div class="d-flex align-items-center gap-2">
                             <i class="bi bi-gear-wide-connected text-white fs-5"></i>
@@ -11108,7 +11005,7 @@ export class SalaryComponent implements OnInit {
                         </div>
                     </div>
 
-                    <!-- Theme Toggle -->
+                    
                     <div class="px-3 py-3 border-bottom">
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="d-flex align-items-center gap-2">
@@ -11132,7 +11029,7 @@ export class SalaryComponent implements OnInit {
                         </div>
                     </div>
 
-                    <!-- Language Toggle -->
+                    
                     <div class="px-3 py-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="d-flex align-items-center gap-2">
@@ -11155,7 +11052,7 @@ export class SalaryComponent implements OnInit {
                 </div>
             </li>
 
-            <!-- Notifications Dropdown -->
+            
             <li class="nav-item dropdown" style="margin-inline-end: 0.5rem;">
                 <button
                     class="btn btn-light btn-sm border-0 position-relative shadow-none"
@@ -11276,7 +11173,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private sidebarService = inject(SidebarService);
   
-  // ✅ public حتى نستخدمه في الـ template
+
   pwaService = inject(PwaService);
   settingsService = inject(SettingsService);
   authService = inject(AuthService);
@@ -11346,7 +11243,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   markAllAsRead(event: Event) {
-    event.stopPropagation(); // لمنع إغلاق القائمة المنسدلة
+    event.stopPropagation();
     if (this.unreadCount === 0) return;
 
     this.notificationService.markAllAsRead().subscribe({
@@ -11479,7 +11376,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 ```html
 <div class="sidebar" #sidebar>
 
-    <!-- ── Brand ── -->
+    
     <div class="sidebar-brand" style="cursor: pointer;" routerLink="/dashboard"
         (click)="closeMobileSidebar()">
         <div class="sidebar-logo-wrap"
@@ -11498,7 +11395,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         </div>
     </div>
 
-    <!-- ── Navigation ── -->
+    
     <nav class="sidebar-nav">
         <ul>
             <li><a routerLink="/dashboard" routerLinkActive="active"
@@ -11570,7 +11467,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         </ul>
     </nav>
 
-    <!-- ── Footer (Profile + Logout) ── -->
+    
     <div class="sidebar-footer">
         <div class="user-profile" routerLink="/my-profile"
             (click)="closeMobileSidebar()">
@@ -11589,7 +11486,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         </button>
     </div>
 
-    <!-- Resizer Handle -->
+    
     <div class="sidebar-resizer" [class.active]="isResizing"
         (mousedown)="startResize($event)"></div>
 </div>
@@ -11636,24 +11533,22 @@ export class SidebarComponent implements OnInit {
 
   startResize(event: MouseEvent) {
     this.isResizing = true;
-    event.preventDefault(); // ما نحدد نص
+    event.preventDefault();
   }
 
   @HostListener('document:mousemove', ['$event'])
   onMouseMove(event: MouseEvent) {
     if (!this.isResizing) return;
     const newWidth = event.clientX;
-    // نحصر العرض
+
     if (newWidth >= 200 && newWidth <= 400) {
       this.sidebarRef.nativeElement.style.width = `${newWidth}px`;
 
-      // نحدّث المتغير العام
       document.documentElement.style.setProperty(
         '--sidebar-width',
         `${newWidth}px`,
       );
 
-      // سكيل على 260
       const scale = newWidth / 260;
       this.sidebarRef.nativeElement.style.setProperty(
         '--sidebar-scale',
@@ -11673,7 +11568,6 @@ export class SidebarComponent implements OnInit {
     this.userName = localStorage.getItem('user_name') || 'User';
     this.userRole = localStorage.getItem('user_role') || 'Employee';
 
-    // الأدمن ليس له Employee profile — نتجنب طلب الـ API الزائد
     if (!this.isAdmin) {
       this.employeeService.getMyProfile().subscribe({
         next: (profile) => {
@@ -11681,7 +11575,7 @@ export class SidebarComponent implements OnInit {
             this.userRole = profile.positionTitle;
           }
         },
-        error: () => {}, // طنّش الأخطاء
+        error: () => {},
       });
     }
 
@@ -11749,7 +11643,6 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';
 
-// تشغيل التطبيق
 bootstrapApplication(AppComponent, appConfig).catch((err) =>
   console.error(err),
 );

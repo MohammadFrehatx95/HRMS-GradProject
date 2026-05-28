@@ -22,7 +22,7 @@ namespace Application.Services.Implementations
         {
             var query = uow.Repository<Salary>()
                            .GetAllQueryable()
-                           .Include(s => s.Employee)
+                           .Include(s => s.Employee).ThenInclude(e => e.User)
                            .OrderByDescending(s => s.Year)
                            .ThenByDescending(s => s.Month);
 
@@ -41,7 +41,7 @@ namespace Application.Services.Implementations
         {
             var query = uow.Repository<Salary>()
                            .GetAllQueryable()
-                           .Include(s => s.Employee)
+                           .Include(s => s.Employee).ThenInclude(e => e.User)
                            .Where(s => s.EmployeeId == employeeId)
                            .OrderByDescending(s => s.Year)
                            .ThenByDescending(s => s.Month);
@@ -60,7 +60,7 @@ namespace Application.Services.Implementations
         {
             var salary = await uow.Repository<Salary>()
                                   .GetAllQueryable()
-                                  .Include(s => s.Employee)
+                                  .Include(s => s.Employee).ThenInclude(e => e.User)
                                   .FirstOrDefaultAsync(s => s.Id == id);
 
             return salary is null ? null : mapper.Map<SalaryDto>(salary);
@@ -170,7 +170,7 @@ namespace Application.Services.Implementations
         {
             var salary = await uow.Repository<Salary>()
                                   .GetAllQueryable()
-                                  .Include(s => s.Employee)
+                                  .Include(s => s.Employee).ThenInclude(e => e.User)
                                   .FirstOrDefaultAsync(s => s.Id == id)
                         ?? throw new KeyNotFoundException($"Salary {id} not found");
 

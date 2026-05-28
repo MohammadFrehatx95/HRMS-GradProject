@@ -1,4 +1,4 @@
-﻿import { Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { EmployeesComponent } from './features/employees/employees.component';
 import { DepartmentsComponent } from './features/departments/departments.component';
@@ -70,7 +70,7 @@ export const routes: Routes = [
   {
     path: 'employee-form',
     component: EmployeeFormComponent,
-    canActivate: [authGuard, adminGuard],
+    canActivate: [authGuard, hrGuard],
   },
   {
     path: 'positions',

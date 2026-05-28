@@ -39,7 +39,7 @@ public class MeetingService(
     {
         var query = uow.Repository<Meeting>()
             .GetAllQueryable()
-            .Include(m => m.Employee)
+            .Include(m => m.Employee).ThenInclude(e => e.User)
             .Include(m => m.Organizer)
             .OrderByDescending(m => m.ScheduledAt);
 
@@ -59,7 +59,7 @@ public class MeetingService(
     {
         var query = uow.Repository<Meeting>()
             .GetAllQueryable()
-            .Include(m => m.Employee)
+            .Include(m => m.Employee).ThenInclude(e => e.User)
             .Include(m => m.Organizer)
             .Where(m => m.EmployeeId == employeeId)
             .OrderByDescending(m => m.ScheduledAt);
@@ -79,7 +79,7 @@ public class MeetingService(
     {
         var meeting = await uow.Repository<Meeting>()
             .GetAllQueryable()
-            .Include(m => m.Employee)
+            .Include(m => m.Employee).ThenInclude(e => e.User)
             .Include(m => m.Organizer)
             .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -87,92 +87,100 @@ public class MeetingService(
     }
 
 
-    public async Task<MeetingDto> CreateAsync(
+    public async Task<IEnumerable<MeetingDto>> CreateAsync(
         int organizerUserId, CreateMeetingDto dto)
     {
-        // تحقق الموظف موجود
-        var employee = await uow.Repository<Employee>()
-            .GetAllQueryable()
-            .Include(e => e.User)
-            .FirstOrDefaultAsync(e => e.Id == dto.EmployeeId)
-            ?? throw new KeyNotFoundException(
-                   $"Employee {dto.EmployeeId} not found");
-
-        // تحقق الوقت في المستقبل
         var scheduledUtc = DateTime.SpecifyKind(dto.ScheduledAt, DateTimeKind.Utc);
         if (scheduledUtc <= DateTime.UtcNow)
-            throw new ArgumentException(
-                "Meeting must be scheduled in the future");
+            throw new ArgumentException("Meeting must be scheduled in the future");
 
-        // تحقق ما في ميتنج متعارض لنفس الموظف
-        var hasConflict = await uow.Repository<Meeting>()
-            .GetAllQueryable()
-            .AnyAsync(m =>
-                m.EmployeeId == dto.EmployeeId &&
-                m.Status == MeetingStatus.Scheduled &&
-                m.ScheduledAt >= scheduledUtc.AddMinutes(-dto.DurationMinutes) &&
-                m.ScheduledAt <= scheduledUtc.AddMinutes(dto.DurationMinutes));
+        var organizer = await uow.Repository<User>().GetByIdAsync(organizerUserId);
+        var organizerName = organizer?.Username ?? "HR Team";
+        var meetLink = GenerateMeetLink(); // Same link for all if it's a group meeting
 
-        if (hasConflict)
-            throw new InvalidOperationException(
-                "Employee already has a scheduled meeting within this time slot");
+        var createdMeetings = new List<Meeting>();
 
-        var meeting = new Meeting
+        foreach (var empId in dto.EmployeeIds)
         {
-            Title = dto.Title,
-            Reason = dto.Reason,
-            ScheduledAt = scheduledUtc,
-            DurationMinutes = dto.DurationMinutes,
-            MeetLink = GenerateMeetLink(),
-            Notes = dto.Notes,
-            OrganizerId = organizerUserId,
-            EmployeeId = dto.EmployeeId,
-            Status = MeetingStatus.Scheduled,
-            CreatedAt = DateTime.UtcNow
-        };
+            var employee = await uow.Repository<Employee>()
+                .GetAllQueryable()
+                .Include(e => e.User)
+                .FirstOrDefaultAsync(e => e.Id == empId);
 
-        await uow.Repository<Meeting>().AddAsync(meeting);
-        await uow.SaveChangesAsync();
+            if (employee == null) continue;
 
-        // ── الإشعار ────────────────────────────────────────────
-        var employeeUser = employee.User;
-        if (employeeUser is not null)
-        {
-            var employeeName = $"{employee.FirstName} {employee.LastName}";
-            var organizer = await uow.Repository<User>()
-                                          .GetByIdAsync(organizerUserId);
-            var organizerName = organizer?.Username ?? "HR Team";
+            var hasConflict = await uow.Repository<Meeting>()
+                .GetAllQueryable()
+                .AnyAsync(m =>
+                    m.EmployeeId == empId &&
+                    m.Status == MeetingStatus.Scheduled &&
+                    m.ScheduledAt >= scheduledUtc.AddMinutes(-dto.DurationMinutes) &&
+                    m.ScheduledAt <= scheduledUtc.AddMinutes(dto.DurationMinutes));
 
-            try
+            if (hasConflict)
+                throw new InvalidOperationException($"Employee {employee.FirstName} already has a scheduled meeting within this time slot");
+
+            var meeting = new Meeting
             {
-                await notificationService.CreateAsync(
-                    userId: employeeUser.Id,
-                    title: " Meeting Scheduled",
-                    message: $"You have a meeting '{dto.Title}' on " +
-                              $"{scheduledUtc:dddd, MMMM dd} at {scheduledUtc:HH:mm} UTC. " +
-                              $"Duration: {dto.DurationMinutes} min.",
-                    type: Domain.Enums.NotificationType.General);
+                Title = dto.Title,
+                Reason = dto.Reason,
+                ScheduledAt = scheduledUtc,
+                DurationMinutes = dto.DurationMinutes,
+                MeetLink = meetLink,
+                Notes = dto.Notes,
+                OrganizerId = organizerUserId,
+                EmployeeId = empId,
+                Status = MeetingStatus.Scheduled,
+                CreatedAt = DateTime.UtcNow
+            };
 
-                await emailService.SendMeetingScheduledAsync(
-                    toEmail: employeeUser.Email,
-                    employeeName: employeeName,
-                    organizerName: organizerName,
-                    title: dto.Title,
-                    reason: dto.Reason,
-                    scheduledAt: scheduledUtc,
-                    durationMinutes: dto.DurationMinutes,
-                    meetLink: meeting.MeetLink,
-                    notes: dto.Notes);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex,
-                    "Failed to send meeting notification to employee {Id}",
-                    dto.EmployeeId);
-            }
+            await uow.Repository<Meeting>().AddAsync(meeting);
+            createdMeetings.Add(meeting);
         }
 
-        return (await GetByIdAsync(meeting.Id))!;
+        await uow.SaveChangesAsync();
+
+        var result = new List<MeetingDto>();
+
+        foreach (var meeting in createdMeetings)
+        {
+            var employee = await uow.Repository<Employee>().GetAllQueryable().Include(e => e.User).FirstOrDefaultAsync(e => e.Id == meeting.EmployeeId);
+            var employeeUser = employee?.User;
+            if (employeeUser is not null && employee is not null)
+            {
+                var employeeName = $"{employee.FirstName} {employee.LastName}";
+                try
+                {
+                    await notificationService.CreateAsync(
+                        userId: employeeUser.Id,
+                        title: " Meeting Scheduled",
+                        message: $"You have a meeting '{dto.Title}' on " +
+                                  $"{scheduledUtc:dddd, MMMM dd} at {scheduledUtc:HH:mm} UTC. " +
+                                  $"Duration: {dto.DurationMinutes} min.",
+                        type: Domain.Enums.NotificationType.General);
+
+                    await emailService.SendMeetingScheduledAsync(
+                        toEmail: employeeUser.Email,
+                        employeeName: employeeName,
+                        organizerName: organizerName,
+                        title: dto.Title,
+                        reason: dto.Reason,
+                        scheduledAt: scheduledUtc,
+                        durationMinutes: dto.DurationMinutes,
+                        meetLink: meeting.MeetLink,
+                        notes: dto.Notes);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Failed to send meeting notification to employee {Id}", meeting.EmployeeId);
+                }
+            }
+
+            var mDto = await GetByIdAsync(meeting.Id);
+            if (mDto != null) result.Add(mDto);
+        }
+
+        return result;
     }
 
 
@@ -282,7 +290,7 @@ public class MeetingService(
     {
         var meeting = await uow.Repository<Meeting>()
             .GetAllQueryable()
-            .Include(m => m.Employee)
+            .Include(m => m.Employee).ThenInclude(e => e.User)
             .Include(m => m.Organizer)
             .FirstOrDefaultAsync(m => m.Id == id)
             ?? throw new KeyNotFoundException($"Meeting {id} not found");

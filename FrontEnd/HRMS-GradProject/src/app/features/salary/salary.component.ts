@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SalaryService } from '../../core/services/salary.service';
@@ -9,6 +9,8 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
+import { PdfExportService } from '../../core/services/pdf-export.service';
+import { ExcelExportService } from '../../core/services/excel-export.service';
 
 declare var bootstrap: any;
 
@@ -22,6 +24,8 @@ export class SalaryComponent implements OnInit {
   private salaryService = inject(SalaryService);
   private employeeService = inject(EmployeeService);
   private authService = inject(AuthService);
+  private pdfExportService = inject(PdfExportService);
+  private excelExportService = inject(ExcelExportService);
 
   allSalariesList: any[] = [];
   salariesList: any[] = [];
@@ -323,72 +327,52 @@ export class SalaryComponent implements OnInit {
   }
 
   downloadPayslip(salary: any) {
-
-    const doc = new jsPDF();
-
-    doc.setFontSize(22);
-    doc.setTextColor(13, 110, 253);
-    doc.text('Kawadir HRMS', 14, 20);
-
-    doc.setFontSize(14);
-    doc.setTextColor(0, 0, 0);
-    doc.text('Salary Payslip', 14, 30);
-
-    const today = new Date();
-    const dateGen = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-
-    doc.setFontSize(10);
-    doc.setTextColor(100, 100, 100);
-    doc.text(`Date Generated: ${dateGen}`, 14, 38);
-
     const empName = salary.employeeName || `Employee #${salary.employeeId}`;
     const period = `${salary.month} / ${salary.year}`;
-
     const effObj = new Date(salary.effectiveDate);
     const effDate = `${effObj.getFullYear()}-${String(effObj.getMonth() + 1).padStart(2, '0')}-${String(effObj.getDate()).padStart(2, '0')}`;
+    const fileName = `Payslip_${empName.replace(/ /g, '_')}_${salary.month}_${salary.year}`;
 
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(12);
-    doc.text(`Employee Name: ${empName}`, 14, 50);
-    doc.text(`Payroll Period: ${period}`, 14, 58);
-    doc.text(`Effective Date: ${effDate}`, 14, 66);
+    const additionalInfo = [
+      { label: 'Employee Name', value: empName },
+      { label: 'Payroll Period', value: period },
+      { label: 'Effective Date', value: effDate },
+      { label: 'Net Pay', value: `${salary.netAmount} JD` }
+    ];
 
-    autoTable(doc, {
-      startY: 75,
-      head: [['Description', 'Amount (JD)']],
-      body: [
-        ['Base Salary', `${salary.baseAmount} JD`],
-        ['Allowances', `+${salary.allowances} JD`],
-        ['Gross Salary', `${salary.grossAmount} JD`],
-        ['Deductions', `-${salary.deductions} JD`],
-      ],
-      theme: 'grid',
-      headStyles: {
-        fillColor: [240, 242, 245],
-        textColor: [0, 0, 0],
-        fontStyle: 'bold',
-      },
-      bodyStyles: { textColor: [50, 50, 50] },
-      alternateRowStyles: { fillColor: [252, 252, 252] },
-    });
+    const data = [
+      ['Base Salary', `${salary.baseAmount} JD`],
+      ['Allowances', `+${salary.allowances} JD`],
+      ['Gross Salary', `${salary.grossAmount} JD`],
+      ['Deductions', `-${salary.deductions} JD`]
+    ];
 
-    const finalY = (doc as any).lastAutoTable.finalY || 130;
-
-    doc.setFontSize(14);
-    doc.setTextColor(25, 135, 84);
-    doc.setFont('helvetica', 'bold');
-    doc.text(`Net Pay: ${salary.netAmount} JD`, 14, finalY + 15);
-
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(150, 150, 150);
-    doc.text(
-      'This is a system generated payslip and requires no signature.',
-      14,
-      finalY + 40,
+    this.pdfExportService.generateTableReport(
+      'Salary Payslip',
+      ['Description', 'Amount (JD)'],
+      data,
+      fileName,
+      additionalInfo
     );
+  }
 
-    const fileName = `Payslip_${empName.replace(/ /g, '_')}_${salary.month}_${salary.year}.pdf`;
-    doc.save(fileName);
+  exportToExcel() {
+    if (this.salariesList.length === 0) {
+      Swal.fire('No Data', 'There are no salary records to export.', 'info');
+      return;
+    }
+
+    const headers = ['Employee', 'Period (Month/Year)', 'Base (JD)', 'Allowances', 'Deductions', 'Net Salary', 'Effective Date'];
+    const data = this.salariesList.map(s => [
+      s.employeeName || `#${s.employeeId}`,
+      `${s.month} / ${s.year}`,
+      s.baseAmount,
+      s.allowances,
+      s.deductions,
+      s.netAmount,
+      s.effectiveDate ? s.effectiveDate.split('T')[0] : '—'
+    ]);
+
+    this.excelExportService.exportTableToExcel(headers, data, 'Salaries');
   }
 }

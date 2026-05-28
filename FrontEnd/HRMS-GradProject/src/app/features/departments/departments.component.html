@@ -1,4 +1,4 @@
-﻿<div class="page-container p-4">
+<div class="page-container p-4">
 
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div class="d-flex align-items-center">
@@ -10,11 +10,16 @@
                 <p class="text-muted small mb-0">{{ 'Manage organizational departments and view their employee structures' | t }}</p>
             </div>
         </div>
-        <button
-            class="btn btn-primary shadow-sm text-nowrap px-4 py-2 rounded-3 fw-semibold"
-            (click)="openAddModal()">
-            <i class="bi bi-plus-lg me-1"></i> {{ 'Add Department' | t }}
-        </button>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-outline-success shadow-sm text-nowrap px-4 py-2 rounded-3 fw-semibold" (click)="exportToExcel()" title="Export to Excel">
+                <i class="bi bi-file-earmark-excel-fill me-1"></i> {{ 'Export to Excel' | t }}
+            </button>
+            <button
+                class="btn btn-primary shadow-sm text-nowrap px-4 py-2 rounded-3 fw-semibold"
+                (click)="openAddModal()">
+                <i class="bi bi-plus-lg me-1"></i> {{ 'Add Department' | t }}
+            </button>
+        </div>
     </div>
 
     @if (isLoading) {
@@ -246,16 +251,20 @@
                                                 <td data-label="ID"
                                                     class="py-3 px-4 fw-bold text-secondary">#{{
                                                     emp.id }}</td>
-                                                <td data-label="Employee Name"
+                                                 <td data-label="Employee Name"
                                                     class="py-3 px-3 fw-bold text-dark">
                                                     <div
                                                         class="d-flex align-items-center">
-                                                        <div
-                                                            class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-3 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                                                            style="width: 35px; height: 35px; font-size: 13px;">
-                                                            {{
-                                                            emp.firstName?.charAt(0)
-                                                            || 'U' }}
+                                                        <div class="me-3 flex-shrink-0" style="width: 35px; height: 35px;">
+                                                            <img *ngIf="emp.profilePictureUrl"
+                                                                [src]="emp.profilePictureUrl"
+                                                                class="rounded-circle object-fit-cover w-100 h-100 border shadow-sm"
+                                                                alt="Profile">
+                                                            <div *ngIf="!emp.profilePictureUrl"
+                                                                class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-0 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 w-100 h-100"
+                                                                style="font-size: 13px;">
+                                                                {{ emp.firstName?.charAt(0) || 'U' }}
+                                                            </div>
                                                         </div>
                                                         {{ emp.firstName }} {{
                                                         emp.lastName }}

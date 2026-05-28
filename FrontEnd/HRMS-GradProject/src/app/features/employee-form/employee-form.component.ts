@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -55,6 +55,7 @@ export class EmployeeFormComponent implements OnInit {
       Validators.required,
     ),
     userId: new FormControl('', Validators.required),
+    password: new FormControl('', [Validators.minLength(6)]),
   });
 
   ngOnInit() {
@@ -239,10 +240,8 @@ export class EmployeeFormComponent implements OnInit {
   }
 
   onSubmit() {
-
     if (this.employeeForm.invalid) {
       this.employeeForm.markAllAsTouched();
-
       const phone = this.employeeForm.get('phoneNumber');
       if (phone?.errors?.['pattern']) {
         Swal.fire({
@@ -253,7 +252,6 @@ export class EmployeeFormComponent implements OnInit {
         });
         return;
       }
-
       Swal.fire({
         icon: 'warning',
         title: 'Missing Information',
@@ -266,7 +264,7 @@ export class EmployeeFormComponent implements OnInit {
     this.isLoading = true;
     const rawValues = this.employeeForm.getRawValue();
 
-    const payload = {
+    const payload: any = {
       ...rawValues,
       departmentId: Number(rawValues.departmentId),
       positionId: Number(rawValues.positionId),
@@ -275,25 +273,27 @@ export class EmployeeFormComponent implements OnInit {
         : new Date().toISOString(),
     };
 
+    if (this.isEditMode && rawValues.password) {
+      payload.password = rawValues.password;
+    }
+
     if (this.isEditMode && this.currentEmployeeId) {
-      this.employeeService
-        .updateEmployee(this.currentEmployeeId, payload)
-        .subscribe({
-          next: () => {
-            this.handlePictureUploadAndNavigate(Number(rawValues.userId));
-          },
-          error: (err) => {
-            this.isLoading = false;
-            const msg = this.parseBackendError(err);
-            Swal.fire({
-              icon: 'error',
-              title: 'Update Failed',
-              text: msg,
-              confirmButtonText: 'OK',
-            });
-            console.error('Update error:', err);
-          },
-        });
+      this.employeeService.updateEmployee(this.currentEmployeeId, payload).subscribe({
+        next: () => {
+          this.handlePictureUploadAndNavigate(Number(rawValues.userId));
+        },
+        error: (err) => {
+          this.isLoading = false;
+          const msg = this.parseBackendError(err);
+          Swal.fire({
+            icon: 'error',
+            title: 'Update Failed',
+            text: msg,
+            confirmButtonText: 'OK',
+          });
+          console.error('Update error:', err);
+        },
+      });
     } else {
       this.employeeService.addEmployee(payload).subscribe({
         next: () => {

@@ -42,10 +42,31 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.isPasswordVisible = !this.isPasswordVisible;
   }
 
-  ngOnInit() {
+  scrollToOverview(event: Event) {
+    event.preventDefault();
+    document.getElementById('overview')?.scrollIntoView({ behavior: 'smooth' });
+  }
 
+  ngOnInit() {
     document.documentElement.setAttribute('data-theme', 'light');
     document.body.classList.remove('dark-mode');
+
+    
+    setTimeout(() => {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+          } else {
+            entry.target.classList.remove('active');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.reveal-fade-up, .reveal-fade-left, .reveal-fade-right, .reveal-typing, .reveal-zoom').forEach((el) => {
+        observer.observe(el);
+      });
+    }, 100);
   }
 
   ngOnDestroy() {

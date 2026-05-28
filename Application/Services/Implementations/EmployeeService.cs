@@ -107,11 +107,18 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
     {
         var employee = await uow.Repository<Employee>()
                                 .GetAllQueryable()
+                                .Include(e => e.User)
                                 .FirstOrDefaultAsync(e => e.Id == id);
 
         if (employee is null) return null;
 
         mapper.Map(dto, employee);
+
+        if (!string.IsNullOrWhiteSpace(dto.Password) && employee.User != null)
+        {
+            employee.User.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+        }
+
         uow.Repository<Employee>().Update(employee);
         await uow.SaveChangesAsync();
 
@@ -137,6 +144,8 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
                                  .GetAllQueryable()
                                  .Where(e => e.DepartmentId == departmentId)
                                  .Include(e => e.Department)
+                                 .Include(e => e.Position)
+                                 .Include(e => e.User)
                                  .OrderBy(e => e.Id)
                                  .ToListAsync();
 

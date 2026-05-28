@@ -1,4 +1,4 @@
-﻿<div class="page-container p-4">
+<div class="page-container p-4">
 
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div class="d-flex align-items-center">
@@ -57,6 +57,11 @@
                 </div>
             </div>
 
+            <button class="btn btn-outline-success px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="exportToExcel()" title="Export to Excel">
+                <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i> 
+                <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
+            </button>
+
             <button *ngIf="isAdminOrHR && !isAdmin" class="btn btn-outline-primary px-3 px-md-4 py-2 rounded-3 shadow-sm text-nowrap"
                 (click)="toggleViewAll()" [title]="isViewingAll ? ('My Salaries' | t) : ('View All' | t)">
                 <i class="bi" [ngClass]="isViewingAll ? 'bi-person' : 'bi-people'" [class.me-md-1]="true"></i> 
@@ -111,8 +116,19 @@
 
                     <tr *ngFor="let salary of paginatedSalaries">
                         
-                        <td *ngIf="isAdminOrHR && isViewingAll" data-label="Employee" class="py-3 px-4 fw-bold text-dark">
-                            {{ salary.employeeName || '#' + salary.employeeId }}
+                        <td *ngIf="isAdminOrHR && isViewingAll" data-label="Employee" class="py-3 px-4">
+                            <div class="d-flex align-items-center">
+                                <ng-container *ngIf="salary.employeeProfilePictureUrl; else noSalaryPic">
+                                    <img [src]="salary.employeeProfilePictureUrl" alt="User" class="rounded-circle me-2 object-fit-cover shadow-sm" style="width: 32px; height: 32px; border: 2px solid #fff;">
+                                </ng-container>
+                                <ng-template #noSalaryPic>
+                                    <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; font-size: 13px;">
+                                        {{ salary.employeeName ? salary.employeeName.charAt(0).toUpperCase() : 'U' }}
+                                    </div>
+                                </ng-template>
+                                <span class="fw-bold text-dark">{{ salary.employeeName || '#' + salary.employeeId }}</span>
+                            </div>
                         </td>
                         <td data-label="Period" class="py-3 px-4">
                             <span class="badge bg-light text-dark border">{{

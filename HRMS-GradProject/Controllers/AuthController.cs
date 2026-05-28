@@ -104,28 +104,39 @@ public class AuthController(IAuthService authService, IUserService userService, 
             var url = await imageService.UploadImageAsync(stream, file.FileName);
             if (url == null) return BadRequest(ApiResponse.Fail("Upload failed."));
 
-            // Store as PENDING — not applied yet
-            user.PendingProfilePictureUrl = url;
-            uow.Repository<User>().Update(user);
-            await uow.SaveChangesAsync();
-
-            // Notify all HR and Admin users
-            var hrAdmins = await uow.Repository<User>()
-                .GetAllQueryable()
-                .Where(u => (u.Role == "Admin" || u.Role == "HR") && u.Id != userId)
-                .ToListAsync();
-
-            var employeeName = user.Username;
-            foreach (var hr in hrAdmins)
+            if (user.Role == "Admin" || user.Role == "HR")
             {
-                await notificationService.CreateAsync(
-                    hr.Id,
-                    "Profile Picture Approval Required",
-                    $"{employeeName} has submitted a new profile picture. Please review and approve or reject it.",
-                    NotificationType.ProfilePictureRequested);
+                user.ProfilePictureUrl = url;
+                user.PendingProfilePictureUrl = null;
+                uow.Repository<User>().Update(user);
+                await uow.SaveChangesAsync();
+                return Ok(ApiResponse<string>.Ok(url, "Profile picture updated successfully."));
             }
+            else
+            {
+                // Store as PENDING — not applied yet
+                user.PendingProfilePictureUrl = url;
+                uow.Repository<User>().Update(user);
+                await uow.SaveChangesAsync();
 
-            return Ok(ApiResponse<string>.Ok(url, "Profile picture submitted for approval."));
+                // Notify all HR and Admin users
+                var hrAdmins = await uow.Repository<User>()
+                    .GetAllQueryable()
+                    .Where(u => (u.Role == "Admin" || u.Role == "HR") && u.Id != userId)
+                    .ToListAsync();
+
+                var employeeName = user.Username;
+                foreach (var hr in hrAdmins)
+                {
+                    await notificationService.CreateAsync(
+                        hr.Id,
+                        "Profile Picture Approval Required",
+                        $"{employeeName} has submitted a new profile picture. Please review and approve or reject it.",
+                        NotificationType.ProfilePictureRequested);
+                }
+
+                return Ok(ApiResponse<string>.Ok(url, "Profile picture submitted for approval."));
+            }
         }
         catch (System.Exception ex)
         {

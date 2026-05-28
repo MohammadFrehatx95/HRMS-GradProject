@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +11,7 @@ namespace Application.DTOs.Salary
         public int Id { get; set; }
         public int EmployeeId { get; set; }
         public string EmployeeName { get; set; } = string.Empty;
+        public string? EmployeeProfilePictureUrl { get; set; }
         public decimal BaseAmount { get; set; }
         public decimal Allowances { get; set; }
         public decimal Deductions { get; set; }

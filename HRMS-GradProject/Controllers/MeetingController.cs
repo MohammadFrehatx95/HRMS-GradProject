@@ -60,15 +60,13 @@ public class MeetingController(IMeetingService meetingService) : ControllerBase
         return Ok(ApiResponse<MeetingDto>.Ok(result));
     }
 
-    // POST /api/meetings
     [HttpPost]
     [Authorize(Roles = "Admin,HR")]
     [ValidateModel]
     public async Task<IActionResult> Create([FromBody] CreateMeetingDto dto)
     {
         var result = await meetingService.CreateAsync(GetUserId(), dto);
-        return CreatedAtAction(nameof(GetById), new { id = result.Id },
-            ApiResponse<MeetingDto>.Ok(result, "Meeting scheduled successfully"));
+        return Ok(ApiResponse<IEnumerable<MeetingDto>>.Ok(result, "Meeting(s) scheduled successfully"));
     }
 
     // PUT /api/meetings/{id}

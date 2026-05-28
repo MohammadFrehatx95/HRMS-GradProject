@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { PayrollAdjustmentService } from '../../core/services/payroll-adjustments.service';
@@ -7,6 +7,8 @@ import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
 import { AdjustmentType, PayrollAdjustmentDto } from '../../core/models/payroll-adjustment.model';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { PdfExportService } from '../../core/services/pdf-export.service';
+import { ExcelExportService } from '../../core/services/excel-export.service';
 import { Router } from '@angular/router';
 
 declare var bootstrap: any;
@@ -23,6 +25,8 @@ export class PayrollAdjustmentsComponent implements OnInit {
   private adjustmentService = inject(PayrollAdjustmentService);
   private employeeService = inject(EmployeeService);
   private authService = inject(AuthService);
+  private pdfExportService = inject(PdfExportService);
+  private excelExportService = inject(ExcelExportService);
   private router = inject(Router);
 
   adjustments: PayrollAdjustmentDto[] = [];
@@ -168,5 +172,55 @@ export class PayrollAdjustmentsComponent implements OnInit {
   getEmployeeName(id: number): string {
     const emp = this.employees.find(e => e.id === id);
     return emp ? `${emp.firstName} ${emp.lastName}` : `Unknown (#${id})`;
+  }
+
+  exportToPDF() {
+    if (this.adjustments.length === 0) {
+      Swal.fire('No Data', 'There are no adjustments to export.', 'info');
+      return;
+    }
+
+    const headers = ['ID', 'Employee', 'Type', 'Amount', 'Reason', 'Applied'];
+    const data = this.adjustments.map(adj => [
+      `#${adj.id}`,
+      this.isAdminOrHR ? this.getEmployeeName(adj.employeeId) : `Emp #${adj.employeeId}`,
+      adj.type === 0 ? 'Penalty' : 'Bonus',
+      `JD ${adj.amount.toFixed(2)}`,
+      adj.reason || '—',
+      adj.isApplied ? 'Yes' : 'No'
+    ]);
+
+    const additionalInfo = [
+      { label: 'Total Adjustments', value: String(this.adjustments.length) },
+      { label: 'Total Penalties', value: `JD ${this.adjustments.filter(a => a.type === 0).reduce((sum, a) => sum + a.amount, 0).toFixed(2)}` },
+      { label: 'Total Bonuses', value: `JD ${this.adjustments.filter(a => a.type === 1).reduce((sum, a) => sum + a.amount, 0).toFixed(2)}` }
+    ];
+
+    this.pdfExportService.generateTableReport(
+      'Payroll Adjustments Report',
+      headers,
+      data,
+      'Adjustments_Report',
+      additionalInfo
+    );
+  }
+
+  exportToExcel() {
+    if (this.adjustments.length === 0) {
+      Swal.fire('No Data', 'There are no adjustments to export.', 'info');
+      return;
+    }
+
+    const headers = ['ID', 'Employee', 'Type', 'Amount', 'Reason', 'Applied'];
+    const data = this.adjustments.map(adj => [
+      `#${adj.id}`,
+      this.isAdminOrHR ? this.getEmployeeName(adj.employeeId) : `Emp #${adj.employeeId}`,
+      adj.type === 0 ? 'Penalty' : 'Bonus',
+      `JD ${adj.amount.toFixed(2)}`,
+      adj.reason || '—',
+      adj.isApplied ? 'Yes' : 'No'
+    ]);
+
+    this.excelExportService.exportTableToExcel(headers, data, 'Adjustments');
   }
 }

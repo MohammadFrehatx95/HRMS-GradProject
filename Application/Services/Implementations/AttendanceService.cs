@@ -26,7 +26,7 @@ namespace Application.Services.Implementations
         {
             var query = uow.Repository<Attendance>()
                            .GetAllQueryable()
-                           .Include(a => a.Employee)
+                           .Include(a => a.Employee).ThenInclude(e => e.User)
                            .OrderByDescending(a => a.Date);
 
             var total = await query.CountAsync();
@@ -44,7 +44,7 @@ namespace Application.Services.Implementations
         {
             var query = uow.Repository<Attendance>()
                            .GetAllQueryable()
-                           .Include(a => a.Employee)
+                           .Include(a => a.Employee).ThenInclude(e => e.User)
                            .Where(a => a.EmployeeId == employeeId)
                            .OrderByDescending(a => a.Date);
 
@@ -62,7 +62,7 @@ namespace Application.Services.Implementations
         {
             var attendance = await uow.Repository<Attendance>()
                                       .GetAllQueryable()
-                                      .Include(a => a.Employee)
+                                      .Include(a => a.Employee).ThenInclude(e => e.User)
                                       .FirstOrDefaultAsync(a => a.Id == id);
 
             return attendance is null ? null : mapper.Map<AttendanceDto>(attendance);
@@ -145,7 +145,7 @@ namespace Application.Services.Implementations
         {
             var attendance = await uow.Repository<Attendance>()
                                       .GetAllQueryable()
-                                      .Include(a => a.Employee)
+                                      .Include(a => a.Employee).ThenInclude(e => e.User)
                                       .Where(a => a.EmployeeId == employeeId && a.ClockOut == null)
                                       .OrderByDescending(a => a.Date)
                                       .FirstOrDefaultAsync()
