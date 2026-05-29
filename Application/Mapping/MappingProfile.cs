@@ -131,7 +131,7 @@ public class MappingProfile : Profile
                     : string.Empty))
             .ForMember(d => d.EmployeeProfilePictureUrl,
                 o => o.MapFrom(s => s.Employee != null && s.Employee.User != null ? s.Employee.User.ProfilePictureUrl : null))
-            .ForMember(d => d.Status, o => o.MapFrom(s => s.Status == 0 ? SalaryStatus.Draft.ToString() : s.Status.ToString()));
+            .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()));
 
        
         CreateMap<Notification, NotificationDto>()

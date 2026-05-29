@@ -108,25 +108,26 @@
                     ('My Salaries' | t) : ('View All' | t) }}</span>
             </button>
 
-            <button *ngIf="isAdmin && hasDraftSalaries"
-                class="btn btn-success px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
-                (click)="markAsPaid()" [title]="'Approve Salaries' | t">
-                <i class="bi bi-check-circle" [class.me-md-1]="true"></i>
-                <span class="d-none d-md-inline">{{ 'Approve Salaries' | t }}</span>
-            </button>
-            <button *ngIf="isAdmin"
-                class="btn btn-warning px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap text-dark"
-                (click)="generatePayroll()" [title]="'Generate Payroll' | t">
-                <i class="bi bi-calculator" [class.me-md-1]="true"></i>
-                <span class="d-none d-md-inline">{{ 'Generate Payroll' | t
-                    }}</span>
-            </button>
-            <button *ngIf="isAdmin"
-                class="btn btn-primary px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
-                (click)="openModal()" [title]="'Add Salary' | t">
-                <i class="bi bi-plus-lg" [class.me-md-1]="true"></i>
-                <span class="d-none d-md-inline">{{ 'Add Salary' | t }}</span>
-            </button>
+            <div class="d-flex gap-2" *ngIf="isAdmin">
+                <button *ngIf="hasDraftSalaries"
+                    class="btn btn-success px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
+                    (click)="markAsPaid()" [title]="'Approve Salaries' | t">
+                    <i class="bi bi-check-circle" [class.me-md-1]="true"></i>
+                    <span class="d-none d-md-inline">{{ 'Approve Salaries' | t }}</span>
+                </button>
+                <button
+                    class="btn btn-warning px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap text-dark"
+                    (click)="generatePayroll()" [title]="'Generate Payroll' | t">
+                    <i class="bi bi-calculator" [class.me-md-1]="true"></i>
+                    <span class="d-none d-md-inline">{{ 'Generate Payroll' | t }}</span>
+                </button>
+                <button
+                    class="btn btn-primary px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
+                    (click)="openModal()" [title]="'Add Salary' | t">
+                    <i class="bi bi-plus-lg" [class.me-md-1]="true"></i>
+                    <span class="d-none d-md-inline">{{ 'Add Salary' | t }}</span>
+                </button>
+            </div>
         </div>
     </div>
 
