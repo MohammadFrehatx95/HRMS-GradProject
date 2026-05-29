@@ -1,12 +1,21 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+  FormsModule,
+} from '@angular/forms';
 import { PayrollAdjustmentService } from '../../core/services/payroll-adjustments.service';
 import { EmployeeService } from '../../core/services/employee.service';
 import { DepartmentService } from '../../core/services/department.service';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
-import { AdjustmentType, PayrollAdjustmentDto } from '../../core/models/payroll-adjustment.model';
+import {
+  AdjustmentType,
+  PayrollAdjustmentDto,
+} from '../../core/models/payroll-adjustment.model';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { PdfExportService } from '../../core/services/pdf-export.service';
 import { ExcelExportService } from '../../core/services/excel-export.service';
@@ -19,7 +28,7 @@ declare var bootstrap: any;
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe],
   templateUrl: './payroll-adjustments.component.html',
-  styleUrls: ['./payroll-adjustments.component.css']
+  styleUrls: ['./payroll-adjustments.component.css'],
 })
 export class PayrollAdjustmentsComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -41,23 +50,29 @@ export class PayrollAdjustmentsComponent implements OnInit {
   addForm: FormGroup;
   adjustmentTypes = [
     { value: AdjustmentType.Penalty, label: 'Penalty (Deduction)' },
-    { value: AdjustmentType.Bonus, label: 'Bonus (Allowance)' }
+    { value: AdjustmentType.Bonus, label: 'Bonus (Allowance)' },
   ];
 
   pageNumber = 1;
   pageSize = 100;
   totalItems = 0;
-  
+
   filterMonth: number | '' = '';
   filterYear: number | '' = new Date().getFullYear();
 
   months = [
-    { value: 1, label: 'January' }, { value: 2, label: 'February' },
-    { value: 3, label: 'March' }, { value: 4, label: 'April' },
-    { value: 5, label: 'May' }, { value: 6, label: 'June' },
-    { value: 7, label: 'July' }, { value: 8, label: 'August' },
-    { value: 9, label: 'September' }, { value: 10, label: 'October' },
-    { value: 11, label: 'November' }, { value: 12, label: 'December' }
+    { value: 1, label: 'January' },
+    { value: 2, label: 'February' },
+    { value: 3, label: 'March' },
+    { value: 4, label: 'April' },
+    { value: 5, label: 'May' },
+    { value: 6, label: 'June' },
+    { value: 7, label: 'July' },
+    { value: 8, label: 'August' },
+    { value: 9, label: 'September' },
+    { value: 10, label: 'October' },
+    { value: 11, label: 'November' },
+    { value: 12, label: 'December' },
   ];
 
   constructor() {
@@ -69,14 +84,20 @@ export class PayrollAdjustmentsComponent implements OnInit {
       type: [AdjustmentType.Penalty, Validators.required],
       amount: ['', [Validators.required, Validators.min(0.01)]],
       reason: ['', [Validators.required, Validators.maxLength(500)]],
-      targetMonth: [now.getMonth() + 1, [Validators.required, Validators.min(1), Validators.max(12)]],
-      targetYear: [now.getFullYear(), [Validators.required, Validators.min(2000), Validators.max(2100)]]
+      targetMonth: [
+        now.getMonth() + 1,
+        [Validators.required, Validators.min(1), Validators.max(12)],
+      ],
+      targetYear: [
+        now.getFullYear(),
+        [Validators.required, Validators.min(2000), Validators.max(2100)],
+      ],
     });
   }
 
   ngOnInit(): void {
     this.isAdminOrHR = this.authService.isAdminOrHR();
-    
+
     this.loadAdjustments();
     if (this.isAdminOrHR) {
       this.loadEmployees();
@@ -96,28 +117,34 @@ export class PayrollAdjustmentsComponent implements OnInit {
         if (Array.isArray(res)) extracted = res;
         else if (res?.data && Array.isArray(res.data)) extracted = res.data;
         this.departments = extracted;
-      }
+      },
     });
   }
 
   loadAdjustments() {
     this.isLoading = true;
-    
+
     const m = this.filterMonth ? Number(this.filterMonth) : undefined;
     const y = this.filterYear ? Number(this.filterYear) : undefined;
 
-    const request = this.isAdminOrHR 
+    const request = this.isAdminOrHR
       ? this.adjustmentService.getAll(this.pageNumber, this.pageSize, m, y)
-      : this.adjustmentService.getMyAdjustments(this.pageNumber, this.pageSize, m, y);
+      : this.adjustmentService.getMyAdjustments(
+          this.pageNumber,
+          this.pageSize,
+          m,
+          y,
+        );
 
     request.subscribe({
       next: (res: any) => {
         let extracted: any[] = [];
         if (Array.isArray(res)) extracted = res;
         else if (res?.items && Array.isArray(res.items)) extracted = res.items;
-        else if (res?.data?.items && Array.isArray(res.data.items)) extracted = res.data.items;
+        else if (res?.data?.items && Array.isArray(res.data.items))
+          extracted = res.data.items;
         else if (res?.data && Array.isArray(res.data)) extracted = res.data;
-        
+
         this.adjustments = extracted;
         this.totalItems = res?.totalCount || res?.data?.totalCount || 0;
         this.isLoading = false;
@@ -128,7 +155,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
           Swal.fire('Error', 'Failed to load adjustments', 'error');
         }
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -137,13 +164,14 @@ export class PayrollAdjustmentsComponent implements OnInit {
       next: (res: any) => {
         let extracted: any[] = [];
         if (Array.isArray(res)) extracted = res;
-        else if (res?.data?.items && Array.isArray(res.data.items)) extracted = res.data.items;
+        else if (res?.data?.items && Array.isArray(res.data.items))
+          extracted = res.data.items;
         else if (res?.data && Array.isArray(res.data)) extracted = res.data;
         this.employees = extracted;
       },
       error: (err: any) => {
         console.error(err);
-      }
+      },
     });
   }
 
@@ -153,7 +181,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
       targetType: 'individual',
       type: AdjustmentType.Penalty,
       targetMonth: now.getMonth() + 1,
-      targetYear: now.getFullYear()
+      targetYear: now.getFullYear(),
     });
     const modalElement = document.getElementById('addAdjustmentModal');
     if (modalElement) {
@@ -185,7 +213,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
         amount: dto.amount,
         reason: dto.reason,
         month: dto.targetMonth,
-        year: dto.targetYear
+        year: dto.targetYear,
       });
     } else {
       const bulkDto: any = {
@@ -193,7 +221,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
         amount: dto.amount,
         reason: dto.reason,
         month: dto.targetMonth,
-        year: dto.targetYear
+        year: dto.targetYear,
       };
       if (target === 'department' && dto.departmentId) {
         bulkDto.departmentId = Number(dto.departmentId);
@@ -203,7 +231,11 @@ export class PayrollAdjustmentsComponent implements OnInit {
 
     request.subscribe({
       next: (res: any) => {
-        Swal.fire('Success', res?.message || 'Adjustment created successfully', 'success');
+        Swal.fire(
+          'Success',
+          res?.message || 'Adjustment created successfully',
+          'success',
+        );
         this.loadAdjustments();
         this.isSubmitting = false;
         const modalElement = document.getElementById('addAdjustmentModal');
@@ -216,7 +248,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
         console.error(err);
         Swal.fire('Error', 'Failed to create adjustment', 'error');
         this.isSubmitting = false;
-      }
+      },
     });
   }
 
@@ -228,7 +260,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: 'Delete',
     }).then((result) => {
       if (result.isConfirmed) {
         this.adjustmentService.delete(id).subscribe({
@@ -238,15 +270,19 @@ export class PayrollAdjustmentsComponent implements OnInit {
           },
           error: (err: any) => {
             console.error(err);
-            Swal.fire('Error!', 'Failed to delete adjustment. It may have already been applied.', 'error');
-          }
+            Swal.fire(
+              'Error!',
+              'Failed to delete adjustment. It may have already been applied.',
+              'error',
+            );
+          },
         });
       }
     });
   }
 
   getEmployeeName(id: number): string {
-    const emp = this.employees.find(e => e.id === id);
+    const emp = this.employees.find((e) => e.id === id);
     return emp ? `${emp.firstName} ${emp.lastName}` : `Unknown (#${id})`;
   }
 
@@ -257,19 +293,33 @@ export class PayrollAdjustmentsComponent implements OnInit {
     }
 
     const headers = ['ID', 'Employee', 'Type', 'Amount', 'Reason', 'Applied'];
-    const data = this.adjustments.map(adj => [
+    const data = this.adjustments.map((adj) => [
       `#${adj.id}`,
-      this.isAdminOrHR ? this.getEmployeeName(adj.employeeId) : `Emp #${adj.employeeId}`,
+      this.isAdminOrHR
+        ? this.getEmployeeName(adj.employeeId)
+        : `Emp #${adj.employeeId}`,
       adj.type === 0 ? 'Penalty' : 'Bonus',
       `JD ${adj.amount.toFixed(2)}`,
       adj.reason || '—',
-      adj.isApplied ? 'Yes' : 'No'
+      adj.isApplied ? 'Yes' : 'No',
     ]);
 
     const additionalInfo = [
       { label: 'Total Adjustments', value: String(this.adjustments.length) },
-      { label: 'Total Penalties', value: `JD ${this.adjustments.filter(a => a.type === 0).reduce((sum, a) => sum + a.amount, 0).toFixed(2)}` },
-      { label: 'Total Bonuses', value: `JD ${this.adjustments.filter(a => a.type === 1).reduce((sum, a) => sum + a.amount, 0).toFixed(2)}` }
+      {
+        label: 'Total Penalties',
+        value: `JD ${this.adjustments
+          .filter((a) => a.type === 0)
+          .reduce((sum, a) => sum + a.amount, 0)
+          .toFixed(2)}`,
+      },
+      {
+        label: 'Total Bonuses',
+        value: `JD ${this.adjustments
+          .filter((a) => a.type === 1)
+          .reduce((sum, a) => sum + a.amount, 0)
+          .toFixed(2)}`,
+      },
     ];
 
     this.pdfExportService.generateTableReport(
@@ -277,7 +327,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
       headers,
       data,
       'Adjustments_Report',
-      additionalInfo
+      additionalInfo,
     );
   }
 
@@ -288,13 +338,15 @@ export class PayrollAdjustmentsComponent implements OnInit {
     }
 
     const headers = ['ID', 'Employee', 'Type', 'Amount', 'Reason', 'Applied'];
-    const data = this.adjustments.map(adj => [
+    const data = this.adjustments.map((adj) => [
       `#${adj.id}`,
-      this.isAdminOrHR ? this.getEmployeeName(adj.employeeId) : `Emp #${adj.employeeId}`,
+      this.isAdminOrHR
+        ? this.getEmployeeName(adj.employeeId)
+        : `Emp #${adj.employeeId}`,
       adj.type === 0 ? 'Penalty' : 'Bonus',
       `JD ${adj.amount.toFixed(2)}`,
       adj.reason || '—',
-      adj.isApplied ? 'Yes' : 'No'
+      adj.isApplied ? 'Yes' : 'No',
     ]);
 
     this.excelExportService.exportTableToExcel(headers, data, 'Adjustments');

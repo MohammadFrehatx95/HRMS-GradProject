@@ -10,35 +10,35 @@ D:\PROJECTS\HRMS-TEAM\FRONTEND\HRMS-GRADPROJECT\SRC
 |   main.ts
 |   styles.css
 |   _redirects
-|   
+|
 +---app
 |   |   app.component.css
 |   |   app.component.html
 |   |   app.component.ts
 |   |   app.config.ts
 |   |   app.routes.ts
-|   |   
+|   |
 |   +---core
 |   |   +---guards
 |   |   |       admin.guard.ts
 |   |   |       auth.guard.ts
 |   |   |       hr.guard.ts
-|   |   |       
+|   |   |
 |   |   +---i18n
 |   |   |       translations.ts
-|   |   |       
+|   |   |
 |   |   +---interceptors
 |   |   |       auth.interceptor.ts
-|   |   |       
+|   |   |
 |   |   +---models
 |   |   |       announcement.model.ts
 |   |   |       meeting.model.ts
 |   |   |       paged-result.model.ts
 |   |   |       payroll-adjustment.model.ts
-|   |   |       
+|   |   |
 |   |   +---pipes
 |   |   |       translate.pipe.ts
-|   |   |       
+|   |   |
 |   |   +---services
 |   |   |       ai.service.ts
 |   |   |       announcement.service.ts
@@ -59,116 +59,116 @@ D:\PROJECTS\HRMS-TEAM\FRONTEND\HRMS-GRADPROJECT\SRC
 |   |   |       settings.service.ts
 |   |   |       sidebar.service.ts
 |   |   |       update.service.ts
-|   |   |       
+|   |   |
 |   |   \---utils
 |   |           error-handler.util.ts
-|   |           
+|   |
 |   +---features
 |   |   +---ai-assistant
 |   |   |       ai-assistant.component.css
 |   |   |       ai-assistant.component.html
 |   |   |       ai-assistant.component.ts
-|   |   |       
+|   |   |
 |   |   +---all-attendance
 |   |   |       all-attendance.component.html
 |   |   |       all-attendance.component.ts
-|   |   |       
+|   |   |
 |   |   +---attendance
 |   |   |       attendance.component.css
 |   |   |       attendance.component.html
 |   |   |       attendance.component.ts
-|   |   |       
+|   |   |
 |   |   +---auth
 |   |   |   +---login
 |   |   |   |       login.component.css
 |   |   |   |       login.component.html
 |   |   |   |       login.component.ts
-|   |   |   |       
+|   |   |   |
 |   |   |   \---register
 |   |   |           register.component.css
 |   |   |           register.component.html
 |   |   |           register.component.ts
-|   |   |           
+|   |   |
 |   |   +---dashboard
 |   |   |       dashboard.component.css
 |   |   |       dashboard.component.html
 |   |   |       dashboard.component.ts
-|   |   |       
+|   |   |
 |   |   +---departments
 |   |   |       departments.component.css
 |   |   |       departments.component.html
 |   |   |       departments.component.ts
-|   |   |       
+|   |   |
 |   |   +---employee-form
 |   |   |       employee-form.component.css
 |   |   |       employee-form.component.html
 |   |   |       employee-form.component.ts
-|   |   |       
+|   |   |
 |   |   +---employees
 |   |   |       employees.component.css
 |   |   |       employees.component.html
 |   |   |       employees.component.ts
-|   |   |       
+|   |   |
 |   |   +---leave
 |   |   |       leave.component.css
 |   |   |       leave.component.html
 |   |   |       leave.component.ts
-|   |   |       
+|   |   |
 |   |   +---leave-form
 |   |   |       leave-form.component.css
 |   |   |       leave-form.component.html
 |   |   |       leave-form.component.ts
-|   |   |       
+|   |   |
 |   |   +---meetings
 |   |   |       meetings.component.css
 |   |   |       meetings.component.html
 |   |   |       meetings.component.ts
-|   |   |       
+|   |   |
 |   |   +---my-profile
 |   |   |       my-profile.component.html
 |   |   |       my-profile.component.ts
-|   |   |       
+|   |   |
 |   |   +---payroll-adjustments
 |   |   |       payroll-adjustments.component.css
 |   |   |       payroll-adjustments.component.html
 |   |   |       payroll-adjustments.component.ts
-|   |   |       
+|   |   |
 |   |   +---pending-approvals
 |   |   |       pending-approvals.component.html
 |   |   |       pending-approvals.component.ts
-|   |   |       
+|   |   |
 |   |   +---positions
 |   |   |       positions.component.css
 |   |   |       positions.component.html
 |   |   |       positions.component.ts
-|   |   |       
+|   |   |
 |   |   \---salary
 |   |           salary.component.css
 |   |           salary.component.html
 |   |           salary.component.ts
-|   |           
+|   |
 |   \---shared
 |       +---header
 |       |       header.component.css
 |       |       header.component.html
 |       |       header.component.ts
-|       |       
+|       |
 |       \---sidebar
 |               sidebar.component.css
 |               sidebar.component.html
 |               sidebar.component.ts
-|               
+|
 \---environments
         environment.prod.ts
         environment.ts
-        
+
 
 ```
 
 ## Source Code
 
-
 ### File: package.json
+
 ```json
 {
   "name": "hrms-grad-project",
@@ -219,26 +219,26 @@ D:\PROJECTS\HRMS-TEAM\FRONTEND\HRMS-GRADPROJECT\SRC
     "typescript": "~5.7.2"
   }
 }
-
 ```
 
 ### File: src\app\app.component.html
+
 ```html
 @if (authService.isLoggedIn()) {
 <div class="wrapper">
-    @if (isMobileSidebarOpen) {
-        <div class="sidebar-overlay" (click)="closeMobileSidebar()"></div>
-    }
+  @if (isMobileSidebarOpen) {
+  <div class="sidebar-overlay" (click)="closeMobileSidebar()"></div>
+  }
 
-    <app-sidebar class="app-sidebar" [class.hidden]="isSidebarHidden" [class.mobile-open]="isMobileSidebarOpen"></app-sidebar>
+  <app-sidebar class="app-sidebar" [class.hidden]="isSidebarHidden" [class.mobile-open]="isMobileSidebarOpen"></app-sidebar>
 
-    <div class="main-panel" [class.expanded]="isSidebarHidden">
-        <app-header></app-header>
+  <div class="main-panel" [class.expanded]="isSidebarHidden">
+    <app-header></app-header>
 
-        <main class="content" [class.ai-route]="isAiRoute">
-            <router-outlet></router-outlet>
-        </main>
-    </div>
+    <main class="content" [class.ai-route]="isAiRoute">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
 </div>
 } @else {
 <router-outlet></router-outlet>
@@ -246,23 +246,24 @@ D:\PROJECTS\HRMS-TEAM\FRONTEND\HRMS-GRADPROJECT\SRC
 ```
 
 ### File: src\app\app.component.ts
+
 ```typescript
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router, RouterOutlet } from '@angular/router';
-import { AuthService } from './core/services/auth.service';
-import { SidebarService } from './core/services/sidebar.service';
-import { SidebarComponent } from './shared/sidebar/sidebar.component';
-import { HeaderComponent } from './shared/header/header.component';
-import { UpdateService } from './core/services/update.service';
-import { PwaService } from './core/services/pwa.service';
+import { Component, inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { Router, RouterOutlet } from "@angular/router";
+import { AuthService } from "./core/services/auth.service";
+import { SidebarService } from "./core/services/sidebar.service";
+import { SidebarComponent } from "./shared/sidebar/sidebar.component";
+import { HeaderComponent } from "./shared/header/header.component";
+import { UpdateService } from "./core/services/update.service";
+import { PwaService } from "./core/services/pwa.service";
 
 @Component({
-  selector: 'app-root',
+  selector: "app-root",
   standalone: true,
   imports: [CommonModule, RouterOutlet, SidebarComponent, HeaderComponent],
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"],
 })
 export class AppComponent {
   authService = inject(AuthService);
@@ -272,38 +273,35 @@ export class AppComponent {
   router = inject(Router);
 
   get isAiRoute(): boolean {
-    return this.router.url.includes('/ai-assistant');
+    return this.router.url.includes("/ai-assistant");
   }
 
   get isSidebarHidden() {
-
     return this.sidebarService.isSidebarHidden();
   }
 
   get isMobileSidebarOpen() {
-
     return this.sidebarService.isMobileSidebarOpen();
   }
 
   closeMobileSidebar() {
-
     this.sidebarService.closeMobileSidebar();
   }
 }
-
 ```
 
 ### File: src\app\app.config.ts
+
 ```typescript
-import { ApplicationConfig, provideZoneChangeDetection, APP_INITIALIZER, inject, isDevMode } from '@angular/core';
-import { provideRouter, withHashLocation } from '@angular/router';
-import { routes } from './app.routes';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { authInterceptor } from './core/interceptors/auth.interceptor';
-import { AuthService } from './core/services/auth.service';
-import { of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { provideServiceWorker } from '@angular/service-worker';
+import { ApplicationConfig, provideZoneChangeDetection, APP_INITIALIZER, inject, isDevMode } from "@angular/core";
+import { provideRouter, withHashLocation } from "@angular/router";
+import { routes } from "./app.routes";
+import { provideHttpClient, withInterceptors } from "@angular/common/http";
+import { authInterceptor } from "./core/interceptors/auth.interceptor";
+import { AuthService } from "./core/services/auth.service";
+import { of } from "rxjs";
+import { catchError } from "rxjs/operators";
+import { provideServiceWorker } from "@angular/service-worker";
 
 function initializeApp(authService: AuthService) {
   return () => {
@@ -312,7 +310,7 @@ function initializeApp(authService: AuthService) {
         catchError(() => {
           authService.logout();
           return of(null);
-        })
+        }),
       );
     }
     return of(null);
@@ -321,7 +319,6 @@ function initializeApp(authService: AuthService) {
 
 export const appConfig: ApplicationConfig = {
   providers: [
-
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withHashLocation()),
     provideHttpClient(withInterceptors([authInterceptor])),
@@ -329,167 +326,152 @@ export const appConfig: ApplicationConfig = {
       provide: APP_INITIALIZER,
       useFactory: initializeApp,
       deps: [AuthService],
-      multi: true
-    }, provideServiceWorker('ngsw-worker.js', {
-            enabled: !isDevMode(),
-            registrationStrategy: 'registerWhenStable:30000'
-          })
+      multi: true,
+    },
+    provideServiceWorker("ngsw-worker.js", {
+      enabled: !isDevMode(),
+      registrationStrategy: "registerWhenStable:30000",
+    }),
   ],
 };
-
 ```
 
 ### File: src\app\app.routes.ts
+
 ```typescript
-import { Routes } from '@angular/router';
-import { DashboardComponent } from './features/dashboard/dashboard.component';
-import { EmployeesComponent } from './features/employees/employees.component';
-import { DepartmentsComponent } from './features/departments/departments.component';
-import { LeaveComponent } from './features/leave/leave.component';
-import { AttendanceComponent } from './features/attendance/attendance.component';
-import { SalaryComponent } from './features/salary/salary.component';
-import { EmployeeFormComponent } from './features/employee-form/employee-form.component';
-import { LoginComponent } from './features/auth/login/login.component';
-import { authGuard, noAuthGuard } from './core/guards/auth.guard';
-import { adminGuard } from './core/guards/admin.guard';
-import { hrGuard } from './core/guards/hr.guard';
-import { AllAttendanceComponent } from './features/all-attendance/all-attendance.component';
-import { PositionsComponent } from './features/positions/positions.component';
-import { RegisterComponent } from './features/auth/register/register.component';
+import { Routes } from "@angular/router";
+import { DashboardComponent } from "./features/dashboard/dashboard.component";
+import { EmployeesComponent } from "./features/employees/employees.component";
+import { DepartmentsComponent } from "./features/departments/departments.component";
+import { LeaveComponent } from "./features/leave/leave.component";
+import { AttendanceComponent } from "./features/attendance/attendance.component";
+import { SalaryComponent } from "./features/salary/salary.component";
+import { EmployeeFormComponent } from "./features/employee-form/employee-form.component";
+import { LoginComponent } from "./features/auth/login/login.component";
+import { authGuard, noAuthGuard } from "./core/guards/auth.guard";
+import { adminGuard } from "./core/guards/admin.guard";
+import { hrGuard } from "./core/guards/hr.guard";
+import { AllAttendanceComponent } from "./features/all-attendance/all-attendance.component";
+import { PositionsComponent } from "./features/positions/positions.component";
+import { RegisterComponent } from "./features/auth/register/register.component";
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent, canActivate: [noAuthGuard] },
+  { path: "login", component: LoginComponent, canActivate: [noAuthGuard] },
 
   {
-    path: 'register',
+    path: "register",
     component: RegisterComponent,
     canActivate: [authGuard, adminGuard],
   },
 
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: "", redirectTo: "login", pathMatch: "full" },
 
   {
-    path: 'dashboard',
+    path: "dashboard",
     component: DashboardComponent,
     canActivate: [authGuard],
   },
   {
-    path: 'meetings',
-    loadComponent: () => import('./features/meetings/meetings.component').then(c => c.MeetingsComponent),
-    canActivate: [authGuard]
-  },
-  {
-    path: 'leave-form',
-    loadComponent: () =>
-      import('./features/leave-form/leave-form.component').then(
-        (m) => m.LeaveFormComponent,
-      ),
+    path: "meetings",
+    loadComponent: () => import("./features/meetings/meetings.component").then((c) => c.MeetingsComponent),
     canActivate: [authGuard],
   },
   {
-    path: 'employees',
+    path: "leave-form",
+    loadComponent: () => import("./features/leave-form/leave-form.component").then((m) => m.LeaveFormComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: "employees",
     component: EmployeesComponent,
     canActivate: [authGuard],
   },
   {
-    path: 'departments',
+    path: "departments",
     component: DepartmentsComponent,
     canActivate: [authGuard, hrGuard],
   },
 
-  { path: 'leave', component: LeaveComponent, canActivate: [authGuard] },
+  { path: "leave", component: LeaveComponent, canActivate: [authGuard] },
   {
-    path: 'attendance',
+    path: "attendance",
     component: AttendanceComponent,
     canActivate: [authGuard],
   },
   {
-    path: 'all-attendance',
+    path: "all-attendance",
     component: AllAttendanceComponent,
     canActivate: [authGuard, hrGuard],
   },
 
-  { path: 'salary', component: SalaryComponent, canActivate: [authGuard] },
+  { path: "salary", component: SalaryComponent, canActivate: [authGuard] },
   {
-    path: 'employee-form',
+    path: "employee-form",
     component: EmployeeFormComponent,
     canActivate: [authGuard, hrGuard],
   },
   {
-    path: 'positions',
+    path: "positions",
     component: PositionsComponent,
     canActivate: [authGuard, hrGuard],
   },
   {
-    path: 'my-profile',
-    loadComponent: () =>
-      import('./features/my-profile/my-profile.component').then(
-        (m) => m.MyProfileComponent,
-      ),
+    path: "my-profile",
+    loadComponent: () => import("./features/my-profile/my-profile.component").then((m) => m.MyProfileComponent),
     canActivate: [authGuard],
   },
   {
-    path: 'ai-assistant',
-    loadComponent: () =>
-      import('./features/ai-assistant/ai-assistant.component').then(
-        (m) => m.AiAssistantComponent,
-      ),
+    path: "ai-assistant",
+    loadComponent: () => import("./features/ai-assistant/ai-assistant.component").then((m) => m.AiAssistantComponent),
     canActivate: [authGuard],
   },
   {
-    path: 'payroll-adjustments',
-    loadComponent: () =>
-      import('./features/payroll-adjustments/payroll-adjustments.component').then(
-        (m) => m.PayrollAdjustmentsComponent,
-      ),
+    path: "payroll-adjustments",
+    loadComponent: () => import("./features/payroll-adjustments/payroll-adjustments.component").then((m) => m.PayrollAdjustmentsComponent),
     canActivate: [authGuard],
   },
   {
-    path: 'pending-approvals',
-    loadComponent: () =>
-      import('./features/pending-approvals/pending-approvals.component').then(
-        (m) => m.PendingApprovalsComponent,
-      ),
+    path: "pending-approvals",
+    loadComponent: () => import("./features/pending-approvals/pending-approvals.component").then((m) => m.PendingApprovalsComponent),
     canActivate: [authGuard, hrGuard],
   },
-  { path: '**', redirectTo: 'login' },
+  { path: "**", redirectTo: "login" },
 ];
-
 ```
 
 ### File: src\app\core\guards\admin.guard.ts
+
 ```typescript
-import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import Swal from 'sweetalert2';
+import { inject } from "@angular/core";
+import { CanActivateFn, Router } from "@angular/router";
+import { AuthService } from "../services/auth.service";
+import Swal from "sweetalert2";
 
 export const adminGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
   if (authService.isAdmin()) {
-
     return true;
   } else {
     Swal.fire({
-      icon: 'error',
-      title: 'Access Denied (403)',
-      text: 'You do not have permission to access this page.',
-      confirmButtonColor: '#dc3545',
+      icon: "error",
+      title: "Access Denied (403)",
+      text: "You do not have permission to access this page.",
+      confirmButtonColor: "#dc3545",
     });
-    router.navigate(['/dashboard']);
+    router.navigate(["/dashboard"]);
     return false;
   }
 };
-
 ```
 
 ### File: src\app\core\guards\auth.guard.ts
+
 ```typescript
-import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { inject } from "@angular/core";
+import { CanActivateFn, Router } from "@angular/router";
+import { AuthService } from "../services/auth.service";
 
 export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
@@ -498,7 +480,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   if (authService.isLoggedIn()) {
     return true;
   } else {
-    router.navigate(['/login']);
+    router.navigate(["/login"]);
     return false;
   }
 };
@@ -508,19 +490,19 @@ export const noAuthGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   if (authService.isLoggedIn()) {
-    router.navigate(['/dashboard']);
+    router.navigate(["/dashboard"]);
     return false;
   }
   return true;
 };
-
 ```
 
 ### File: src\app\core\guards\hr.guard.ts
+
 ```typescript
-import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { inject } from "@angular/core";
+import { CanActivateFn, Router } from "@angular/router";
+import { AuthService } from "../services/auth.service";
 
 export const hrGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
@@ -529,27 +511,25 @@ export const hrGuard: CanActivateFn = () => {
   if (authService.isAdminOrHR()) {
     return true;
   } else {
-    router.navigate(['/dashboard']);
+    router.navigate(["/dashboard"]);
     return false;
   }
 };
-
 ```
 
 ### File: src\app\core\interceptors\auth.interceptor.ts
+
 ```typescript
-import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
-import { catchError, throwError } from 'rxjs';
-import Swal from 'sweetalert2';
+import { HttpErrorResponse, HttpInterceptorFn } from "@angular/common/http";
+import { catchError, throwError } from "rxjs";
+import Swal from "sweetalert2";
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-
-  if (req.url.includes('/login')) {
+  if (req.url.includes("/login")) {
     return next(req);
   }
 
-  const token =
-    typeof window !== 'undefined' ? localStorage.getItem('jwt_token') : null;
+  const token = typeof window !== "undefined" ? localStorage.getItem("jwt_token") : null;
 
   let clonedReq = req;
   if (token) {
@@ -562,121 +542,118 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(clonedReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401 && !req.url.includes('/login')) {
-
-        localStorage.removeItem('jwt_token');
-        localStorage.removeItem('user_role');
-        localStorage.removeItem('user_name');
-        localStorage.removeItem('user_email');
+      if (error.status === 401 && !req.url.includes("/login")) {
+        localStorage.removeItem("jwt_token");
+        localStorage.removeItem("user_role");
+        localStorage.removeItem("user_name");
+        localStorage.removeItem("user_email");
 
         Swal.fire({
-          icon: 'warning',
-          title: 'Session Expired',
-          text: 'Your session has expired. Please log in again.',
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#0d6efd'
+          icon: "warning",
+          title: "Session Expired",
+          text: "Your session has expired. Please log in again.",
+          confirmButtonText: "OK",
+          confirmButtonColor: "#0d6efd",
         }).then(() => {
-
-          window.location.href = '/login';
+          window.location.href = "/login";
         });
       }
       return throwError(() => error);
-    })
+    }),
   );
 };
-
-
 ```
 
 ### File: src\app\core\models\announcement.model.ts
+
 ```typescript
 export interface Announcement {
-    id: number;
-    title: string;
-    content: string;
-    createdAt: string;
-    priority: string;
-    isGeneral: boolean;
-    targetEmployeeIds?: number[];
-    expiryDate?: string;
-    authorName: string;
-    authorId: number;
+  id: number;
+  title: string;
+  content: string;
+  createdAt: string;
+  priority: string;
+  isGeneral: boolean;
+  targetEmployeeIds?: number[];
+  expiryDate?: string;
+  authorName: string;
+  authorId: number;
 }
 
 export interface CreateAnnouncementDto {
-    title: string;
-    content: string;
-    priority: string;
-    isGeneral: boolean;
-    targetEmployeeIds?: number[];
-    expiryDate?: string;
+  title: string;
+  content: string;
+  priority: string;
+  isGeneral: boolean;
+  targetEmployeeIds?: number[];
+  expiryDate?: string;
 }
-
 ```
 
 ### File: src\app\core\models\meeting.model.ts
+
 ```typescript
 export enum MeetingStatus {
-    Scheduled = 'Scheduled',
-    Completed = 'Completed',
-    Cancelled = 'Cancelled'
+  Scheduled = "Scheduled",
+  Completed = "Completed",
+  Cancelled = "Cancelled",
 }
 
 export interface Meeting {
-    id: number;
-    title: string;
-    reason: string;
-    scheduledAt: string;
-    durationMinutes: number;
-    meetLink: string;
-    employeeId: number;
-    employeeName: string;
-    organizerId: number;
-    organizerName: string;
-    status: MeetingStatus | string;
-    notes?: string;
-    createdAt: string;
-    employeeProfilePictureUrl?: string;
+  id: number;
+  title: string;
+  reason: string;
+  scheduledAt: string;
+  durationMinutes: number;
+  meetLink: string;
+  employeeId: number;
+  employeeName: string;
+  organizerId: number;
+  organizerName: string;
+  status: MeetingStatus | string;
+  notes?: string;
+  createdAt: string;
+  employeeProfilePictureUrl?: string;
 }
 
 export interface CreateMeetingDto {
-    title: string;
-    reason: string;
-    scheduledAt: string;
-    durationMinutes: number;
-    employeeIds: number[];
-    notes?: string;
+  title: string;
+  reason: string;
+  scheduledAt: string;
+  durationMinutes: number;
+  employeeIds: number[];
+  notes?: string;
 }
 
 export interface UpdateMeetingDto {
-    title?: string;
-    reason?: string;
-    scheduledAt?: string;
-    durationMinutes?: number;
-    notes?: string;
+  title?: string;
+  reason?: string;
+  scheduledAt?: string;
+  durationMinutes?: number;
+  notes?: string;
 }
-
 ```
 
 ### File: src\app\core\models\paged-result.model.ts
+
 ```typescript
 export interface PagedResult<T> {
-    items: T[];
-    totalCount: number;
-    pageNumber: number;
-    pageSize: number;
-    totalPages: number;
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
+  items: T[];
+  totalCount: number;
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
 }
-
 ```
 
 ### File: src\app\core\models\payroll-adjustment.model.ts
+
 ```typescript
 export enum AdjustmentType {
   Penalty = 0,
-  Bonus = 1
+  Bonus = 1,
 }
 
 export interface PayrollAdjustmentDto {
@@ -697,17 +674,17 @@ export interface CreatePayrollAdjustmentDto {
   amount: number;
   reason: string;
 }
-
 ```
 
 ### File: src\app\core\pipes\translate.pipe.ts
+
 ```typescript
-import { Pipe, PipeTransform, inject } from '@angular/core';
-import { SettingsService } from '../services/settings.service';
-import { TRANSLATIONS } from '../i18n/translations';
+import { Pipe, PipeTransform, inject } from "@angular/core";
+import { SettingsService } from "../services/settings.service";
+import { TRANSLATIONS } from "../i18n/translations";
 
 @Pipe({
-  name: 't',
+  name: "t",
   standalone: true,
   pure: false,
 })
@@ -718,22 +695,22 @@ export class TranslatePipe implements PipeTransform {
     const lang = this.settings.language;
     const entry = TRANSLATIONS[key];
     if (entry) {
-      return entry[lang] || entry['en'] || key;
+      return entry[lang] || entry["en"] || key;
     }
     return key;
   }
 }
-
 ```
 
 ### File: src\app\core\services\ai.service.ts
+
 ```typescript
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { environment } from '../../../environments/environment';
-import * as signalR from '@microsoft/signalr';
+import { Injectable, inject } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable, Subject } from "rxjs";
+import { map } from "rxjs/operators";
+import { environment } from "../../../environments/environment";
+import * as signalR from "@microsoft/signalr";
 
 export interface TokenStatsDto {
   usedTokens: number;
@@ -758,7 +735,7 @@ export interface AiResponseDto {
   tokens: number;
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class AiService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/ai`;
@@ -772,52 +749,42 @@ export class AiService {
   }
 
   private startSignalRConnection() {
+    const baseUrl = environment.apiUrl.replace(/\/api$/, "");
 
-    const baseUrl = environment.apiUrl.replace(/\/api$/, '');
-    
-    this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`${baseUrl}/hubs/ai`)
-      .withAutomaticReconnect()
-      .build();
+    this.hubConnection = new signalR.HubConnectionBuilder().withUrl(`${baseUrl}/hubs/ai`).withAutomaticReconnect().build();
 
     this.hubConnection
       .start()
-      .then(() => console.log('SignalR Hub Connection Started'))
-      .catch(err => console.log('Error while starting connection: ' + err));
+      .then(() => console.log("SignalR Hub Connection Started"))
+      .catch((err) => console.log("Error while starting connection: " + err));
 
-    this.hubConnection.on('ReceiveTokenUpdate', (stats: TokenStatsDto) => {
+    this.hubConnection.on("ReceiveTokenUpdate", (stats: TokenStatsDto) => {
       this.tokenStatsSubject.next(stats);
     });
   }
 
   chat(message: string, mode: number = 0, history: ChatMessageDto[] = []): Observable<AiResponseDto> {
-    return this.http.post<any>(`${this.apiUrl}/chat`, { message, mode, history }).pipe(
-      map((res) => res?.data ?? res)
-    );
+    return this.http.post<any>(`${this.apiUrl}/chat`, { message, mode, history }).pipe(map((res) => res?.data ?? res));
   }
 
   analyzeLeave(): Observable<AiResponseDto> {
-    return this.http.get<any>(`${this.apiUrl}/analyze-leave`).pipe(
-      map((res) => res?.data ?? res)
-    );
+    return this.http.get<any>(`${this.apiUrl}/analyze-leave`).pipe(map((res) => res?.data ?? res));
   }
 
   salaryInsight(): Observable<AiResponseDto> {
-    return this.http.get<any>(`${this.apiUrl}/salary-insight`).pipe(
-      map((res) => res?.data ?? res)
-    );
+    return this.http.get<any>(`${this.apiUrl}/salary-insight`).pipe(map((res) => res?.data ?? res));
   }
 }
-
 ```
 
 ### File: src\app\core\services\announcement.service.ts
+
 ```typescript
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Announcement, CreateAnnouncementDto } from '../models/announcement.model';
-import { environment } from '../../../environments/environment';
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { Announcement, CreateAnnouncementDto } from "../models/announcement.model";
+import { environment } from "../../../environments/environment";
 
 export interface PaginatedResult<T> {
   items: T[];
@@ -828,18 +795,16 @@ export interface PaginatedResult<T> {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class AnnouncementService {
   private apiUrl = `${environment.apiUrl}/Announcement`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAnnouncements(pageNumber: number = 1, pageSize: number = 10): Observable<PaginatedResult<Announcement>> {
-    let params = new HttpParams()
-      .set('pageNumber', pageNumber.toString())
-      .set('pageSize', pageSize.toString());
-    
+    let params = new HttpParams().set("pageNumber", pageNumber.toString()).set("pageSize", pageSize.toString());
+
     return this.http.get<PaginatedResult<Announcement>>(this.apiUrl, { params });
   }
 
@@ -851,29 +816,29 @@ export class AnnouncementService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }
-
 ```
 
 ### File: src\app\core\services\attendance.service.ts
+
 ```typescript
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { Injectable, inject } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable, map } from "rxjs";
+import { environment } from "../../../environments/environment";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class AttendanceService {
-
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/attendance`;
 
-  getAllAttendance(): Observable<any[]> {
-    return this.http.get<any>(`${this.apiUrl}?pageNumber=1&pageSize=1000`).pipe(
+  getAllAttendance(date?: string): Observable<any[]> {
+    let url = `${this.apiUrl}?pageNumber=1&pageSize=1000`;
+    if (date) url += `&date=${date}`;
+    return this.http.get<any>(url).pipe(
       map((response) => {
-        if (response && response.data && response.data.items)
-          return response.data.items;
+        if (response && response.data && response.data.items) return response.data.items;
         if (Array.isArray(response)) return response;
         if (response && Array.isArray(response.data)) return response.data;
         return [];
@@ -881,18 +846,17 @@ export class AttendanceService {
     );
   }
 
-  getMyAttendance(): Observable<any[]> {
-    return this.http
-      .get<any>(`${this.apiUrl}/my?pageNumber=1&pageSize=1000`)
-      .pipe(
-        map((response) => {
-          if (response && response.data && response.data.items)
-            return response.data.items;
-          if (Array.isArray(response)) return response;
-          if (response && Array.isArray(response.data)) return response.data;
-          return [];
-        }),
-      );
+  getMyAttendance(date?: string): Observable<any[]> {
+    let url = `${this.apiUrl}/my?pageNumber=1&pageSize=1000`;
+    if (date) url += `&date=${date}`;
+    return this.http.get<any>(url).pipe(
+      map((response) => {
+        if (response && response.data && response.data.items) return response.data.items;
+        if (Array.isArray(response)) return response;
+        if (response && Array.isArray(response.data)) return response.data;
+        return [];
+      }),
+    );
   }
 
   clockIn(payload: { date: string; clockIn: string }): Observable<any> {
@@ -912,23 +876,21 @@ export class AttendanceService {
     );
   }
 }
-
-
 ```
 
 ### File: src\app\core\services\auth.service.ts
+
 ```typescript
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { tap, map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { Injectable, inject } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { tap, map } from "rxjs/operators";
+import { Observable } from "rxjs";
+import { environment } from "../../../environments/environment";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class AuthService {
-
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/auth`;
 
@@ -936,16 +898,12 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
       tap((response) => {
         if (response?.data?.token) {
-          localStorage.setItem('jwt_token', response.data.token);
+          localStorage.setItem("jwt_token", response.data.token);
 
-          if (response.data.role)
-            localStorage.setItem('user_role', response.data.role);
-          if (response.data.username)
-            localStorage.setItem('user_name', response.data.username);
-          if (response.data.email)
-            localStorage.setItem('user_email', response.data.email);
-          if (response.data.profilePictureUrl)
-            localStorage.setItem('user_profile_pic', response.data.profilePictureUrl);
+          if (response.data.role) localStorage.setItem("user_role", response.data.role);
+          if (response.data.username) localStorage.setItem("user_name", response.data.username);
+          if (response.data.email) localStorage.setItem("user_email", response.data.email);
+          if (response.data.profilePictureUrl) localStorage.setItem("user_profile_pic", response.data.profilePictureUrl);
         }
       }),
     );
@@ -964,7 +922,7 @@ export class AuthService {
       map((response) => {
         if (response && response.data) {
           if (response.data.profilePictureUrl) {
-             localStorage.setItem('user_profile_pic', response.data.profilePictureUrl);
+            localStorage.setItem("user_profile_pic", response.data.profilePictureUrl);
           }
           return response.data;
         }
@@ -975,15 +933,13 @@ export class AuthService {
 
   uploadProfilePicture(file: File): Observable<any> {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append("file", file);
 
     return this.http.post<any>(`${this.apiUrl}/upload-profile-picture`, formData);
   }
 
   getPendingProfilePictures(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/pending-profile-pictures`).pipe(
-      map((res) => res?.data ?? res)
-    );
+    return this.http.get<any>(`${this.apiUrl}/pending-profile-pictures`).pipe(map((res) => res?.data ?? res));
   }
 
   approveProfilePicture(userId: number): Observable<any> {
@@ -996,16 +952,16 @@ export class AuthService {
 
   adminUpdateProfilePicture(userId: number, file: File): Observable<any> {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append("file", file);
     return this.http.post<any>(`${this.apiUrl}/admin-update-profile-picture/${userId}`, formData);
   }
 
   isLoggedIn(): boolean {
-    const token = localStorage.getItem('jwt_token');
+    const token = localStorage.getItem("jwt_token");
     if (!token) return false;
 
     try {
-      const parts = token.split('.');
+      const parts = token.split(".");
       if (parts.length < 2) return false;
 
       const payload = JSON.parse(atob(parts[1]));
@@ -1018,41 +974,34 @@ export class AuthService {
       }
       return true;
     } catch {
-
       this.logout();
       return false;
     }
   }
 
   getUserRole(): string | null {
-    return localStorage.getItem('user_role');
+    return localStorage.getItem("user_role");
   }
 
   isAdmin(): boolean {
-    return this.hasRole('admin');
+    return this.hasRole("admin");
   }
 
   isHR(): boolean {
-    return this.hasRole('hr');
+    return this.hasRole("hr");
   }
 
   isAdminOrHR(): boolean {
-    return this.hasRole('admin') || this.hasRole('hr');
+    return this.hasRole("admin") || this.hasRole("hr");
   }
 
   private hasRole(role: string): boolean {
-    const token =
-      typeof window !== 'undefined' ? localStorage.getItem('jwt_token') : null;
+    const token = typeof window !== "undefined" ? localStorage.getItem("jwt_token") : null;
     if (!token) return false;
 
     try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const userRole =
-        payload[
-          'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
-        ] ||
-        payload['role'] ||
-        payload['Role'];
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const userRole = payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] || payload["role"] || payload["Role"];
 
       if (!userRole) return false;
 
@@ -1067,82 +1016,63 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('jwt_token');
-    localStorage.removeItem('user_role');
-    localStorage.removeItem('user_name');
-    localStorage.removeItem('user_email');
-    localStorage.removeItem('user_profile_pic');
+    localStorage.removeItem("jwt_token");
+    localStorage.removeItem("user_role");
+    localStorage.removeItem("user_name");
+    localStorage.removeItem("user_email");
+    localStorage.removeItem("user_profile_pic");
   }
 
   getCurrentUserName(): string | null {
-    return typeof window !== 'undefined' ? localStorage.getItem('user_name') : null;
+    return typeof window !== "undefined" ? localStorage.getItem("user_name") : null;
   }
 
   getCurrentUserEmail(): string | null {
-    return typeof window !== 'undefined' ? localStorage.getItem('user_email') : null;
+    return typeof window !== "undefined" ? localStorage.getItem("user_email") : null;
   }
 
   getCurrentUserProfilePic(): string | null {
-    return typeof window !== 'undefined' ? localStorage.getItem('user_profile_pic') : null;
+    return typeof window !== "undefined" ? localStorage.getItem("user_profile_pic") : null;
   }
 
   getUsers(pageNumber = 1, pageSize = 100): Observable<any> {
-    return this.http
-      .get<any>(
-        `${this.apiUrl}/users?pageNumber=${pageNumber}&pageSize=${pageSize}`,
-      )
-      .pipe(map((response) => response?.data ?? response));
+    return this.http.get<any>(`${this.apiUrl}/users?pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(map((response) => response?.data ?? response));
   }
 
   getUnassignedEmployeeUsers(pageNumber = 1, pageSize = 100): Observable<any> {
-    return this.http
-      .get<any>(
-        `${this.apiUrl}/unassigned-employees?pageNumber=${pageNumber}&pageSize=${pageSize}`,
-      )
-      .pipe(map((response) => response?.data ?? response));
+    return this.http.get<any>(`${this.apiUrl}/unassigned-employees?pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(map((response) => response?.data ?? response));
   }
 
   getUserIdByEmail(email: string): Observable<any> {
-    return this.http
-      .get<any>(
-        `${this.apiUrl}/get-user-id-by-email/${encodeURIComponent(email)}`,
-      )
-      .pipe(map((response) => response?.data ?? response));
+    return this.http.get<any>(`${this.apiUrl}/get-user-id-by-email/${encodeURIComponent(email)}`).pipe(map((response) => response?.data ?? response));
   }
 }
-
-
 ```
 
 ### File: src\app\core\services\department.service.ts
+
 ```typescript
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { Injectable, inject } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable, map } from "rxjs";
+import { environment } from "../../../environments/environment";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class DepartmentService {
-
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/departments`;
 
   getDepartments(): Observable<any[]> {
-    return this.http
-      .get<any>(
-        `${this.apiUrl}?pageNumber=1&pageSize=1000`,
-      )
-      .pipe(
-        map((response) => {
-          if (response && response.data && response.data.items)
-            return response.data.items;
-          if (Array.isArray(response)) return response;
-          if (response && Array.isArray(response.data)) return response.data;
-          return [];
-        }),
-      );
+    return this.http.get<any>(`${this.apiUrl}?pageNumber=1&pageSize=1000`).pipe(
+      map((response) => {
+        if (response && response.data && response.data.items) return response.data.items;
+        if (Array.isArray(response)) return response;
+        if (response && Array.isArray(response.data)) return response.data;
+        return [];
+      }),
+    );
   }
 
   addDepartment(data: any): Observable<any> {
@@ -1166,21 +1096,20 @@ export class DepartmentService {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }
-
 ```
 
 ### File: src\app\core\services\employee.service.ts
+
 ```typescript
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { Injectable, inject } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable, map } from "rxjs";
+import { environment } from "../../../environments/environment";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class EmployeeService {
-
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/employees`;
 
@@ -1235,108 +1164,103 @@ export class EmployeeService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }
-
-
 ```
 
 ### File: src\app\core\services\excel-export.service.ts
+
 ```typescript
-import { Injectable } from '@angular/core';
-import Swal from 'sweetalert2';
+import { Injectable } from "@angular/core";
+import Swal from "sweetalert2";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class ExcelExportService {
+  constructor() {}
 
-  constructor() { }
-
-  
   exportTableToExcel(headers: string[], data: any[][], filename: string) {
     if (!data || data.length === 0) {
-      Swal.fire('No Data', 'There is no data to export.', 'info');
+      Swal.fire("No Data", "There is no data to export.", "info");
       return;
     }
 
-    
     const csvData = data.map((row) => {
       return row
         .map((value) => {
           if (value === null || value === undefined) return '""';
-          
+
           const strValue = String(value).replace(/"/g, '""');
           return `"${strValue}"`;
         })
-        .join(',');
+        .join(",");
     });
 
-    
-    const csvContent = '\uFEFFsep=,\r\n' + [headers.join(','), ...csvData].join('\r\n');
+    const csvContent = "\uFEFFsep=,\r\n" + [headers.join(","), ...csvData].join("\r\n");
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    
+    const link = document.createElement("a");
+
     link.href = url;
-    
-    
-    const todayStr = new Date().toISOString().split('T')[0];
-    link.setAttribute('download', `${filename}_Kawadir_${todayStr}.csv`);
-    
+
+    const todayStr = new Date().toISOString().split("T")[0];
+    link.setAttribute("download", `${filename}_Kawadir_${todayStr}.csv`);
+
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
 
     Swal.fire({
-      icon: 'success',
-      title: 'Exported Successfully',
-      text: 'Data has been exported to Excel (CSV).',
+      icon: "success",
+      title: "Exported Successfully",
+      text: "Data has been exported to Excel (CSV).",
       timer: 2000,
       showConfirmButton: false,
     });
   }
 }
-
 ```
 
 ### File: src\app\core\services\leave.service.ts
+
 ```typescript
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { Injectable, inject } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable, map } from "rxjs";
+import { environment } from "../../../environments/environment";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class LeaveService {
-
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/leaves`;
 
-  getMyLeaves(): Observable<any[]> {
-    return this.http
-      .get<any>(`${this.apiUrl}/my?pageNumber=1&pageSize=1000`)
-      .pipe(
-        map((response) => {
-          if (response && response.data && response.data.items)
-            return response.data.items;
-          if (Array.isArray(response)) return response;
-          if (response && Array.isArray(response.data)) return response.data;
-          return [];
-        }),
-      );
+  getMyLeaves(month?: number, year?: number): Observable<any[]> {
+    let url = `${this.apiUrl}/my?pageNumber=1&pageSize=1000`;
+    if (month) url += `&month=${month}`;
+    if (year) url += `&year=${year}`;
+    return this.http.get<any>(url).pipe(
+      map((response) => {
+        if (response && response.data && response.data.items) return response.data.items;
+        if (Array.isArray(response)) return response;
+        if (response && Array.isArray(response.data)) return response.data;
+        return [];
+      }),
+    );
   }
 
   applyLeave(payload: any | FormData): Observable<any> {
     return this.http.post<any>(this.apiUrl, payload);
   }
 
-  getAllLeaves(): Observable<any[]> {
-    return this.http.get<any>(`${this.apiUrl}?pageNumber=1&pageSize=1000`).pipe(
+  getAllLeaves(month?: number, year?: number): Observable<any[]> {
+    let url = `${this.apiUrl}?pageNumber=1&pageSize=1000`;
+    if (month) url += `&month=${month}`;
+    if (year) url += `&year=${year}`;
+    return this.http.get<any>(url).pipe(
       map((response) => {
-        if (response && response.data && response.data.items)
-          return response.data.items;
+        if (response && response.data && response.data.items) return response.data.items;
         if (Array.isArray(response)) return response;
         if (response && Array.isArray(response.data)) return response.data;
         return [];
@@ -1353,11 +1277,7 @@ export class LeaveService {
     );
   }
 
-  updateLeaveStatus(
-    id: number,
-    status: string | number,
-    rejectionReason?: string,
-  ): Observable<any> {
+  updateLeaveStatus(id: number, status: string | number, rejectionReason?: string): Observable<any> {
     const payload: any = { status: Number(status) };
     if (rejectionReason) {
       payload.rejectionReason = rejectionReason;
@@ -1369,16 +1289,15 @@ export class LeaveService {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }
-
-
 ```
 
 ### File: src\app\core\services\leave-setting.service.ts
+
 ```typescript
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { Injectable, inject } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable, map } from "rxjs";
+import { environment } from "../../../environments/environment";
 
 export interface LeaveSetting {
   resetMonth: number;
@@ -1390,53 +1309,47 @@ export interface LeaveSetting {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class LeaveSettingService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/leavesettings`;
 
   getSettings(): Observable<LeaveSetting> {
-    return this.http.get<any>(this.apiUrl).pipe(
-      map(res => res.data)
-    );
+    return this.http.get<any>(this.apiUrl).pipe(map((res) => res.data));
   }
 
   updateSettings(settings: LeaveSetting): Observable<any> {
     return this.http.put<any>(this.apiUrl, settings);
   }
 }
-
 ```
 
 ### File: src\app\core\services\meeting.service.ts
+
 ```typescript
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Meeting, CreateMeetingDto, UpdateMeetingDto, MeetingStatus } from '../models/meeting.model';
-import { environment } from '../../../environments/environment';
-import { PagedResult } from '../models/paged-result.model';
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { Meeting, CreateMeetingDto, UpdateMeetingDto, MeetingStatus } from "../models/meeting.model";
+import { environment } from "../../../environments/environment";
+import { PagedResult } from "../models/paged-result.model";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class MeetingService {
   private apiUrl = `${environment.apiUrl}/meetings`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAll(pageNumber: number = 1, pageSize: number = 10): Observable<PagedResult<Meeting>> {
-    const params = new HttpParams()
-      .set('pageNumber', pageNumber.toString())
-      .set('pageSize', pageSize.toString());
+    const params = new HttpParams().set("pageNumber", pageNumber.toString()).set("pageSize", pageSize.toString());
     return this.http.get<PagedResult<Meeting>>(this.apiUrl, { params });
   }
 
   getMyMeetings(pageNumber: number = 1, pageSize: number = 10): Observable<PagedResult<Meeting>> {
-    const params = new HttpParams()
-      .set('pageNumber', pageNumber.toString())
-      .set('pageSize', pageSize.toString());
+    const params = new HttpParams().set("pageNumber", pageNumber.toString()).set("pageSize", pageSize.toString());
     return this.http.get<PagedResult<Meeting>>(`${this.apiUrl}/my`, { params });
   }
 
@@ -1456,21 +1369,20 @@ export class MeetingService {
     return this.http.put<void>(`${this.apiUrl}/${id}`, dto);
   }
 }
-
 ```
 
 ### File: src\app\core\services\notification.service.ts
+
 ```typescript
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { Injectable, inject } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable, map } from "rxjs";
+import { environment } from "../../../environments/environment";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class NotificationService {
-
   private http = inject(HttpClient);
 
   private apiUrl = `${environment.apiUrl}/notifications`;
@@ -1509,134 +1421,128 @@ export class NotificationService {
     return this.http.delete<any>(`${this.apiUrl}/delete-all`);
   }
 }
-
-
 ```
 
 ### File: src\app\core\services\payroll-adjustments.service.ts
-```typescript
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { environment } from '../../../environments/environment';
 
-@Injectable({ providedIn: 'root' })
+```typescript
+import { Injectable, inject } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
+import { environment } from "../../../environments/environment";
+
+@Injectable({ providedIn: "root" })
 export class PayrollAdjustmentService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/payroll-adjustments`;
 
-  getAll(pageNumber = 1, pageSize = 10): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(map(res => res?.data ?? res));
+  getAll(pageNumber = 1, pageSize = 10, month?: number, year?: number): Observable<any> {
+    let url = `${this.apiUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+    if (month) url += `&month=${month}`;
+    if (year) url += `&year=${year}`;
+    return this.http.get<any>(url).pipe(map((res) => res?.data ?? res));
   }
 
-  getByEmployeeId(employeeId: number, pageNumber = 1, pageSize = 10): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/employee/${employeeId}?pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(map(res => res?.data ?? res));
+  getByEmployeeId(employeeId: number, pageNumber = 1, pageSize = 10, month?: number, year?: number): Observable<any> {
+    let url = `${this.apiUrl}/employee/${employeeId}?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+    if (month) url += `&month=${month}`;
+    if (year) url += `&year=${year}`;
+    return this.http.get<any>(url).pipe(map((res) => res?.data ?? res));
   }
 
-  getMyAdjustments(pageNumber = 1, pageSize = 10): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/my?pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(map(res => res?.data ?? res));
+  getMyAdjustments(pageNumber = 1, pageSize = 10, month?: number, year?: number): Observable<any> {
+    let url = `${this.apiUrl}/my?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+    if (month) url += `&month=${month}`;
+    if (year) url += `&year=${year}`;
+    return this.http.get<any>(url).pipe(map((res) => res?.data ?? res));
   }
 
   create(adjustment: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, adjustment);
   }
 
+  createBulk(adjustment: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/bulk`, adjustment);
+  }
+
   delete(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }
-
 ```
 
 ### File: src\app\core\services\pdf-export.service.ts
+
 ```typescript
-import { Injectable } from '@angular/core';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import { Injectable } from "@angular/core";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class PdfExportService {
+  constructor() {}
 
-  constructor() { }
-
-  
-  generateTableReport(
-    reportTitle: string, 
-    headers: string[], 
-    data: any[][], 
-    filename: string,
-    additionalInfo?: { label: string, value: string }[]
-  ) {
-    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  generateTableReport(reportTitle: string, headers: string[], data: any[][], filename: string, additionalInfo?: { label: string; value: string }[]) {
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
     const pageW = doc.internal.pageSize.getWidth();
     const pageH = doc.internal.pageSize.getHeight();
     const margin = 14;
-    
-    
-    doc.setFillColor(67, 97, 238); 
-    doc.rect(0, 0, pageW, 42, 'F');
-    
-    
-    doc.setFillColor(90, 120, 255);
-    doc.rect(0, 38, pageW, 4, 'F');
 
-    
-    doc.setFont('helvetica', 'bold');
+    doc.setFillColor(67, 97, 238);
+    doc.rect(0, 0, pageW, 42, "F");
+
+    doc.setFillColor(90, 120, 255);
+    doc.rect(0, 38, pageW, 4, "F");
+
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(22);
     doc.setTextColor(255, 255, 255);
-    doc.text('Kawadir HRMS', margin, 16);
+    doc.text("Kawadir HRMS", margin, 16);
 
-    
     doc.setFontSize(12);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "normal");
     doc.setTextColor(200, 210, 255);
     doc.text(reportTitle, margin, 25);
 
-    
     const today = new Date();
-    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    const timeStr = today.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+    const timeStr = today.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
     doc.setFontSize(9);
     doc.setTextColor(180, 195, 255);
     doc.text(`Generated: ${todayStr}  ·  ${timeStr}`, margin, 32);
 
     let curY = 52;
 
-    
     if (additionalInfo && additionalInfo.length > 0) {
-      
       const itemsPerRow = Math.min(additionalInfo.length, 4);
       const boxW = (pageW - margin * 2 - (itemsPerRow - 1) * 4) / itemsPerRow;
-      
+
       let currentRow = 0;
-      
+
       additionalInfo.forEach((info, i) => {
         if (i > 0 && i % itemsPerRow === 0) {
           currentRow++;
           curY += 20;
         }
-        
+
         const col = i % itemsPerRow;
         const x = margin + col * (boxW + 4);
-        
-        
-        doc.setFillColor(248, 249, 252);
-        doc.roundedRect(x, curY, boxW, 16, 2, 2, 'F');
-        
-        doc.setDrawColor(225, 228, 240);
-        doc.roundedRect(x, curY, boxW, 16, 2, 2, 'S');
 
-        
-        doc.setFont('helvetica', 'bold');
+        doc.setFillColor(248, 249, 252);
+        doc.roundedRect(x, curY, boxW, 16, 2, 2, "F");
+
+        doc.setDrawColor(225, 228, 240);
+        doc.roundedRect(x, curY, boxW, 16, 2, 2, "S");
+
+        doc.setFont("helvetica", "bold");
         doc.setFontSize(11);
         doc.setTextColor(30, 30, 50);
         doc.text(info.value, x + 4, curY + 6);
-        
-        
-        doc.setFont('helvetica', 'normal');
+
+        doc.setFont("helvetica", "normal");
         doc.setFontSize(8);
         doc.setTextColor(120, 125, 145);
         doc.text(info.label, x + 4, curY + 12);
@@ -1644,84 +1550,76 @@ export class PdfExportService {
       curY += 24;
     }
 
-    
     autoTable(doc, {
       startY: curY,
       head: [headers],
       body: data,
       margin: { left: margin, right: margin, bottom: 20 },
-      theme: 'grid',
+      theme: "grid",
       tableWidth: pageW - margin * 2,
       headStyles: {
         fillColor: [50, 62, 140],
         textColor: [255, 255, 255],
-        fontStyle: 'bold',
+        fontStyle: "bold",
         fontSize: 9,
         cellPadding: 4,
       },
-      bodyStyles: { 
-        textColor: [50, 55, 70], 
-        fontSize: 9, 
-        cellPadding: 3.5 
+      bodyStyles: {
+        textColor: [50, 55, 70],
+        fontSize: 9,
+        cellPadding: 3.5,
       },
       alternateRowStyles: { fillColor: [248, 249, 252] },
       didParseCell: (data: any) => {
-        
-        if (data.section === 'body') {
+        if (data.section === "body") {
           const rawText = String(data.cell.raw).toLowerCase();
-          
-          if (rawText === 'approved' || rawText === 'paid' || rawText === 'active') {
-            data.cell.styles.textColor = [6, 150, 80]; 
-            data.cell.styles.fontStyle = 'bold';
-          } 
-          else if (rawText === 'pending' || rawText === 'unpaid') {
-            data.cell.styles.textColor = [200, 120, 0]; 
-            data.cell.styles.fontStyle = 'bold';
-          } 
-          else if (rawText === 'rejected' || rawText === 'inactive') {
-            data.cell.styles.textColor = [180, 30, 50]; 
-            data.cell.styles.fontStyle = 'bold';
+
+          if (rawText === "approved" || rawText === "paid" || rawText === "active") {
+            data.cell.styles.textColor = [6, 150, 80];
+            data.cell.styles.fontStyle = "bold";
+          } else if (rawText === "pending" || rawText === "unpaid") {
+            data.cell.styles.textColor = [200, 120, 0];
+            data.cell.styles.fontStyle = "bold";
+          } else if (rawText === "rejected" || rawText === "inactive") {
+            data.cell.styles.textColor = [180, 30, 50];
+            data.cell.styles.fontStyle = "bold";
           }
         }
-      }
+      },
     });
 
-    
     const totalPages = (doc as any).internal.getNumberOfPages();
     for (let pg = 1; pg <= totalPages; pg++) {
       doc.setPage(pg);
-      
-      
+
       doc.setDrawColor(210, 215, 230);
       doc.setLineWidth(0.4);
       doc.line(margin, pageH - 12, pageW - margin, pageH - 12);
-      
-      
-      doc.setFont('helvetica', 'normal');
+
+      doc.setFont("helvetica", "normal");
       doc.setFontSize(8);
       doc.setTextColor(150, 155, 170);
-      doc.text('Confidential — Kawadir HRMS Internal Report', margin, pageH - 7);
-      doc.text(`Page ${pg} of ${totalPages}`, pageW - margin, pageH - 7, { align: 'right' });
+      doc.text("Confidential — Kawadir HRMS Internal Report", margin, pageH - 7);
+      doc.text(`Page ${pg} of ${totalPages}`, pageW - margin, pageH - 7, { align: "right" });
     }
 
     doc.save(`${filename}_${todayStr}.pdf`);
   }
 }
-
 ```
 
 ### File: src\app\core\services\position.service.ts
+
 ```typescript
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { Injectable, inject } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable, map } from "rxjs";
+import { environment } from "../../../environments/environment";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class PositionService {
-
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/positions`;
 
@@ -1764,17 +1662,16 @@ export class PositionService {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }
-
-
 ```
 
 ### File: src\app\core\services\pwa.service.ts
+
 ```typescript
-import { Injectable } from '@angular/core';
-import Swal from 'sweetalert2';
+import { Injectable } from "@angular/core";
+import Swal from "sweetalert2";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class PwaService {
   private deferredPrompt: any = null;
@@ -1784,38 +1681,36 @@ export class PwaService {
   }
 
   private init() {
-    window.addEventListener('beforeinstallprompt', (e) => {
+    window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
       this.deferredPrompt = e;
     });
 
-    window.addEventListener('appinstalled', () => {
+    window.addEventListener("appinstalled", () => {
       this.deferredPrompt = null;
     });
   }
 
   public promptInstall(): void {
     if (this.deferredPrompt) {
-
       this.deferredPrompt.prompt();
       this.deferredPrompt.userChoice.then((choiceResult: { outcome: string }) => {
         this.deferredPrompt = null;
       });
     } else if (this.isAlreadyInstalled()) {
       Swal.fire({
-        icon: 'info',
-        title: 'Already Installed',
-        text: 'Kawadir app is already installed on your device!',
-        confirmButtonColor: '#0d6efd'
+        icon: "info",
+        title: "Already Installed",
+        text: "Kawadir app is already installed on your device!",
+        confirmButtonColor: "#0d6efd",
       });
     } else {
-
       const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
       const isChrome = /chrome/i.test(navigator.userAgent) && !/edge/i.test(navigator.userAgent);
       const isEdge = /edg/i.test(navigator.userAgent);
       const isFirefox = /firefox/i.test(navigator.userAgent);
 
-      let instructionsHtml = '';
+      let instructionsHtml = "";
 
       if (isIOS) {
         instructionsHtml = `
@@ -1830,7 +1725,7 @@ export class PwaService {
       } else if (isChrome || isEdge) {
         instructionsHtml = `
           <div style="text-align:left; line-height: 2;">
-            <p>To install on ${isEdge ? 'Edge' : 'Chrome'}:</p>
+            <p>To install on ${isEdge ? "Edge" : "Chrome"}:</p>
             <ol style="padding-left: 1.2rem;">
               <li>Click the <b>⋮</b> menu (top-right)</li>
               <li>Click <b>"Install Kawadir..."</b> or <b>"Add to Home Screen"</b></li>
@@ -1854,48 +1749,48 @@ export class PwaService {
       }
 
       Swal.fire({
-        icon: 'info',
-        title: '📲 Install Kawadir',
+        icon: "info",
+        title: "📲 Install Kawadir",
         html: instructionsHtml,
-        confirmButtonText: 'Got it!',
-        confirmButtonColor: '#0d6efd',
-        width: '420px'
+        confirmButtonText: "Got it!",
+        confirmButtonColor: "#0d6efd",
+        width: "420px",
       });
     }
   }
 
   private isAlreadyInstalled(): boolean {
-    return window.matchMedia('(display-mode: standalone)').matches ||
-           (window.navigator as any).standalone === true;
+    return window.matchMedia("(display-mode: standalone)").matches || (window.navigator as any).standalone === true;
   }
 
   public get canInstall(): boolean {
     return true;
   }
 }
-
 ```
 
 ### File: src\app\core\services\salary.service.ts
+
 ```typescript
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { Injectable, inject } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable, map } from "rxjs";
+import { environment } from "../../../environments/environment";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class SalaryService {
-
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/salaries`;
 
-  getAllSalaries(): Observable<any[]> {
-    return this.http.get<any>(`${this.apiUrl}?pageNumber=1&pageSize=1000`).pipe(
+  getAllSalaries(month?: number, year?: number): Observable<any[]> {
+    let url = `${this.apiUrl}?pageNumber=1&pageSize=1000`;
+    if (month) url += `&month=${month}`;
+    if (year) url += `&year=${year}`;
+    return this.http.get<any>(url).pipe(
       map((response) => {
-        if (response && response.data && response.data.items)
-          return response.data.items;
+        if (response && response.data && response.data.items) return response.data.items;
         if (Array.isArray(response)) return response;
         if (response && Array.isArray(response.data)) return response.data;
         return [];
@@ -1903,18 +1798,18 @@ export class SalaryService {
     );
   }
 
-  getMySalaries(): Observable<any[]> {
-    return this.http
-      .get<any>(`${this.apiUrl}/my?pageNumber=1&pageSize=1000`)
-      .pipe(
-        map((response) => {
-          if (response && response.data && response.data.items)
-            return response.data.items;
-          if (Array.isArray(response)) return response;
-          if (response && Array.isArray(response.data)) return response.data;
-          return [];
-        }),
-      );
+  getMySalaries(month?: number, year?: number): Observable<any[]> {
+    let url = `${this.apiUrl}/my?pageNumber=1&pageSize=1000`;
+    if (month) url += `&month=${month}`;
+    if (year) url += `&year=${year}`;
+    return this.http.get<any>(url).pipe(
+      map((response) => {
+        if (response && response.data && response.data.items) return response.data.items;
+        if (Array.isArray(response)) return response;
+        if (response && Array.isArray(response.data)) return response.data;
+        return [];
+      }),
+    );
   }
 
   getSalaryById(id: number): Observable<any> {
@@ -1937,23 +1832,29 @@ export class SalaryService {
   deleteSalary(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
+
+  generateBatch(month: number, year: number, departmentId?: number | null): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/generate-batch`, { month, year, departmentId });
+  }
+
+  previewBatch(month: number, year: number, departmentId?: number | null): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/preview-batch`, { month, year, departmentId });
+  }
 }
-
-
 ```
 
 ### File: src\app\core\services\settings.service.ts
+
 ```typescript
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal } from "@angular/core";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class SettingsService {
-
   private _isDarkMode = signal(false);
 
-  private _language = signal<'en' | 'ar'>('en');
+  private _language = signal<"en" | "ar">("en");
 
   get isDarkMode() {
     return this._isDarkMode();
@@ -1964,16 +1865,15 @@ export class SettingsService {
   }
 
   constructor() {
+    const savedTheme = localStorage.getItem("hrms_theme");
+    const savedLang = localStorage.getItem("hrms_language") as "en" | "ar";
 
-    const savedTheme = localStorage.getItem('hrms_theme');
-    const savedLang = localStorage.getItem('hrms_language') as 'en' | 'ar';
-
-    if (savedTheme === 'dark') {
+    if (savedTheme === "dark") {
       this._isDarkMode.set(true);
       this.applyTheme(true);
     }
 
-    if (savedLang === 'ar' || savedLang === 'en') {
+    if (savedLang === "ar" || savedLang === "en") {
       this._language.set(savedLang);
       this.applyLanguage(savedLang);
     }
@@ -1982,42 +1882,38 @@ export class SettingsService {
   toggleTheme() {
     const newMode = !this._isDarkMode();
     this._isDarkMode.set(newMode);
-    localStorage.setItem('hrms_theme', newMode ? 'dark' : 'light');
+    localStorage.setItem("hrms_theme", newMode ? "dark" : "light");
     this.applyTheme(newMode);
   }
 
   toggleLanguage() {
-    const newLang = this._language() === 'en' ? 'ar' : 'en';
+    const newLang = this._language() === "en" ? "ar" : "en";
     this._language.set(newLang);
-    localStorage.setItem('hrms_language', newLang);
+    localStorage.setItem("hrms_language", newLang);
     this.applyLanguage(newLang);
   }
 
   private applyTheme(isDark: boolean) {
-    document.documentElement.setAttribute(
-      'data-theme',
-      isDark ? 'dark' : 'light',
-    );
-    document.body.classList.toggle('dark-mode', isDark);
+    document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
+    document.body.classList.toggle("dark-mode", isDark);
   }
 
-  private applyLanguage(lang: 'en' | 'ar') {
+  private applyLanguage(lang: "en" | "ar") {
     document.documentElement.lang = lang;
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
   }
 }
-
 ```
 
 ### File: src\app\core\services\sidebar.service.ts
+
 ```typescript
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal } from "@angular/core";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class SidebarService {
-
   isSidebarHidden = signal<boolean>(false);
   isMobileSidebarOpen = signal<boolean>(false);
 
@@ -2035,19 +1931,19 @@ export class SidebarService {
     }
   }
 }
-
 ```
 
 ### File: src\app\core\services\update.service.ts
+
 ```typescript
-import { Injectable, inject, ApplicationRef } from '@angular/core';
-import { SwUpdate } from '@angular/service-worker';
-import { first, switchMap } from 'rxjs/operators';
-import { concat, interval } from 'rxjs';
-import Swal from 'sweetalert2';
+import { Injectable, inject, ApplicationRef } from "@angular/core";
+import { SwUpdate } from "@angular/service-worker";
+import { first, switchMap } from "rxjs/operators";
+import { concat, interval } from "rxjs";
+import Swal from "sweetalert2";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class UpdateService {
   private updates = inject(SwUpdate);
@@ -2060,13 +1956,11 @@ export class UpdateService {
 
   private initUpdateChecker() {
     if (!this.updates.isEnabled) {
-      console.log('Service Worker is not enabled.');
+      console.log("Service Worker is not enabled.");
       return;
     }
 
-    const appIsStable$ = this.appRef.isStable.pipe(
-      first((isStable) => isStable === true),
-    );
+    const appIsStable$ = this.appRef.isStable.pipe(first((isStable) => isStable === true));
 
     const everySixHours$ = interval(6 * 60 * 60 * 1000);
     const everySixHoursOnceAppIsStable$ = concat(appIsStable$, everySixHours$);
@@ -2074,13 +1968,9 @@ export class UpdateService {
     everySixHoursOnceAppIsStable$.subscribe(async () => {
       try {
         const updateFound = await this.updates.checkForUpdate();
-        console.log(
-          updateFound
-            ? 'A new version is available.'
-            : 'Already on the latest version.',
-        );
+        console.log(updateFound ? "A new version is available." : "Already on the latest version.");
       } catch (err) {
-        console.error('Failed to check for updates:', err);
+        console.error("Failed to check for updates:", err);
       }
     });
   }
@@ -2092,15 +1982,15 @@ export class UpdateService {
 
     this.updates.versionUpdates.subscribe((evt) => {
       switch (evt.type) {
-        case 'VERSION_DETECTED':
+        case "VERSION_DETECTED":
           console.log(`Downloading new app version: ${evt.version.hash}`);
           break;
-        case 'VERSION_READY':
+        case "VERSION_READY":
           console.log(`Current app version: ${evt.currentVersion.hash}`);
           console.log(`New app version ready for use: ${evt.latestVersion.hash}`);
           this.promptUser();
           break;
-        case 'VERSION_INSTALLATION_FAILED':
+        case "VERSION_INSTALLATION_FAILED":
           console.log(`Failed to install app version '${evt.version.hash}': ${evt.error}`);
           break;
       }
@@ -2109,14 +1999,14 @@ export class UpdateService {
 
   private promptUser() {
     Swal.fire({
-      title: 'Update Available!',
-      text: 'A new version of Kawadir HRMS is ready. Please update to get the latest features and fixes.',
-      icon: 'info',
+      title: "Update Available!",
+      text: "A new version of Kawadir HRMS is ready. Please update to get the latest features and fixes.",
+      icon: "info",
       showCancelButton: true,
-      confirmButtonColor: '#0d6efd',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Update Now',
-      cancelButtonText: 'Later',
+      confirmButtonColor: "#0d6efd",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Update Now",
+      cancelButtonText: "Later",
     }).then((result) => {
       if (result.isConfirmed) {
         this.updates.activateUpdate().then(() => document.location.reload());
@@ -2124,95 +2014,69 @@ export class UpdateService {
     });
   }
 }
-
 ```
 
 ### File: src\app\core\utils\error-handler.util.ts
+
 ```typescript
-
-export function getFriendlyErrorMessage(
-  err: any,
-  fallback: string = 'Something went wrong. Please try again later.',
-): string {
+export function getFriendlyErrorMessage(err: any, fallback: string = "Something went wrong. Please try again later."): string {
   const status: number = err?.status ?? 0;
-  const rawMessage: string =
-    err?.error?.message || err?.error?.title || err?.message || '';
+  const rawMessage: string = err?.error?.message || err?.error?.title || err?.message || "";
 
-  if (
-    status === 0 ||
-    (err?.name === 'HttpErrorResponse' && !navigator.onLine)
-  ) {
-    return 'No internet connection. Please check your network and try again.';
+  if (status === 0 || (err?.name === "HttpErrorResponse" && !navigator.onLine)) {
+    return "No internet connection. Please check your network and try again.";
   }
 
-  if (
-    rawMessage.includes('EADDRNOTALLOWED') ||
-    rawMessage.includes('allow_list') ||
-    rawMessage.includes('tenant') ||
-    rawMessage.includes('XX000') ||
-    rawMessage.includes('PGRST') ||
-    rawMessage.includes('connection refused') ||
-    rawMessage.includes('ECONNREFUSED')
-  ) {
-    return 'Unable to connect to the server. Please contact support or try again later.';
+  if (rawMessage.includes("EADDRNOTALLOWED") || rawMessage.includes("allow_list") || rawMessage.includes("tenant") || rawMessage.includes("XX000") || rawMessage.includes("PGRST") || rawMessage.includes("connection refused") || rawMessage.includes("ECONNREFUSED")) {
+    return "Unable to connect to the server. Please contact support or try again later.";
   }
 
   if (status === 401) {
-    return 'Your session has expired. Please log in again.';
+    return "Your session has expired. Please log in again.";
   }
 
   if (status === 403) {
-    return 'You do not have permission to perform this action.';
+    return "You do not have permission to perform this action.";
   }
 
   if (status === 404) {
-    return 'The requested resource was not found.';
+    return "The requested resource was not found.";
   }
 
   if (status === 400) {
-
     if (Array.isArray(err?.error)) {
-      const msgs = err.error.map((e: any) => e.description || e.errorMessage || e).filter((e: any) => typeof e === 'string');
-      if (msgs.length > 0) return msgs.join('\n');
+      const msgs = err.error.map((e: any) => e.description || e.errorMessage || e).filter((e: any) => typeof e === "string");
+      if (msgs.length > 0) return msgs.join("\n");
     }
 
-    if (err?.error?.errors && typeof err.error.errors === 'object') {
+    if (err?.error?.errors && typeof err.error.errors === "object") {
       const errorMessages: string[] = [];
       for (const key in err.error.errors) {
         if (Object.prototype.hasOwnProperty.call(err.error.errors, key)) {
           const messages = err.error.errors[key];
           if (Array.isArray(messages)) {
             errorMessages.push(...messages);
-          } else if (typeof messages === 'string') {
+          } else if (typeof messages === "string") {
             errorMessages.push(messages);
           }
         }
       }
       if (errorMessages.length > 0) {
-        return errorMessages.join('\n');
+        return errorMessages.join("\n");
       }
     }
 
-    if (
-      rawMessage &&
-      rawMessage.length < 150 &&
-      !looksLikeTechError(rawMessage) &&
-      rawMessage !== 'One or more validation errors occurred.'
-    ) {
+    if (rawMessage && rawMessage.length < 150 && !looksLikeTechError(rawMessage) && rawMessage !== "One or more validation errors occurred.") {
       return rawMessage;
     }
-    return 'Invalid input. Please check the form and try again.';
+    return "Invalid input. Please check the form and try again.";
   }
 
   if (status >= 500) {
-    return 'A server error occurred. Please try again later.';
+    return "A server error occurred. Please try again later.";
   }
 
-  if (
-    rawMessage &&
-    rawMessage.length < 150 &&
-    !looksLikeTechError(rawMessage)
-  ) {
+  if (rawMessage && rawMessage.length < 150 && !looksLikeTechError(rawMessage)) {
     return rawMessage;
   }
 
@@ -2220,46 +2084,27 @@ export function getFriendlyErrorMessage(
 }
 
 function looksLikeTechError(msg: string): boolean {
-  const techPatterns = [
-    'XX',
-    'PGRST',
-    'EADDR',
-    'ECONN',
-    'stack trace',
-    'NullReferenceException',
-    'SqlException',
-    'DbUpdateException',
-    'System.',
-    'Microsoft.',
-    'allow_list',
-    'tenant',
-    'Object reference',
-    'Unhandled exception',
-    'at System',
-    'at Microsoft',
-  ];
+  const techPatterns = ["XX", "PGRST", "EADDR", "ECONN", "stack trace", "NullReferenceException", "SqlException", "DbUpdateException", "System.", "Microsoft.", "allow_list", "tenant", "Object reference", "Unhandled exception", "at System", "at Microsoft"];
   return techPatterns.some((p) => msg.includes(p));
 }
-
 ```
 
 ### File: src\app\features\ai-assistant\ai-assistant.component.html
+
 ```html
 <div class="ai-page">
-  
   <div class="bg-mesh">
     <div class="mesh-blob blob-1"></div>
     <div class="mesh-blob blob-2"></div>
     <div class="mesh-blob blob-3"></div>
   </div>
 
-  
   <div class="ai-header">
     <div class="header-content">
       <div class="ai-header-left">
         <div class="ai-avatar-wrap">
           <div class="ai-avatar">
-            <img src="/kawadir-logo.png" alt="KawadirAi" class="brand-logo">
+            <img src="/kawadir-logo.png" alt="KawadirAi" class="brand-logo" />
           </div>
           <div class="ai-status-dot"></div>
         </div>
@@ -2268,142 +2113,84 @@ function looksLikeTechError(msg: string): boolean {
           <p class="ai-subtitle">Your Ai assistant</p>
         </div>
       </div>
-      <div class="ai-header-right">
-      </div>
+      <div class="ai-header-right"></div>
     </div>
   </div>
 
-  
   <div class="messages-area" #messagesContainer>
     <div class="messages-content">
-      <div
-        *ngFor="let msg of messages"
-        class="message-row"
-        [class.user-row]="msg.role === 'user'"
-        [class.ai-row]="msg.role === 'assistant'">
-        
+      <div *ngFor="let msg of messages" class="message-row" [class.user-row]="msg.role === 'user'" [class.ai-row]="msg.role === 'assistant'">
         <div class="msg-avatar" *ngIf="msg.role === 'assistant'">
-          <img src="/kawadir-logo.png" alt="KawadirAi" class="brand-logo">
+          <img src="/kawadir-logo.png" alt="KawadirAi" class="brand-logo" />
         </div>
-        
+
         <div class="msg-avatar user-avatar-icon" *ngIf="msg.role === 'user'">
           <i class="bi bi-person-fill"></i>
         </div>
 
-        
         <div class="bubble-wrap">
-          
           <div class="bubble ai-bubble loading-bubble" *ngIf="msg.loading">
-            <div class="typing-indicator">
-              <span></span><span></span><span></span>
-            </div>
+            <div class="typing-indicator"><span></span><span></span><span></span></div>
           </div>
 
-          
-          <div
-            class="bubble"
-            *ngIf="!msg.loading"
-            [class.user-bubble]="msg.role === 'user'"
-            [class.ai-bubble]="msg.role === 'assistant'"
-            [innerHTML]="formatContent(msg.content)"></div>
+          <div class="bubble" *ngIf="!msg.loading" [class.user-bubble]="msg.role === 'user'" [class.ai-bubble]="msg.role === 'assistant'" [innerHTML]="formatContent(msg.content)"></div>
 
-          
           <div class="msg-meta" *ngIf="!msg.loading">
             <span>{{ msg.timestamp | date : 'HH:mm' }}</span>
-            <span *ngIf="msg.tokens && msg.tokens > 0" class="token-tag">
-              <i class="bi bi-lightning-charge"></i> {{ msg.tokens }}
-            </span>
+            <span *ngIf="msg.tokens && msg.tokens > 0" class="token-tag"> <i class="bi bi-lightning-charge"></i> {{ msg.tokens }} </span>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  
   <div class="input-area">
     <div class="input-container">
-
-      
       <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-3">
         <div class="quick-actions-docked m-0 flex-grow-1" *ngIf="messages.length <= 2">
-          <button
-            *ngFor="let action of quickActions"
-            class="quick-btn"
-            (click)="triggerQuickAction(action)"
-            [disabled]="isLoading || cooldown">
-            <i class="{{ action.icon }}"></i> {{ action.label }}
-          </button>
+          <button *ngFor="let action of quickActions" class="quick-btn" (click)="triggerQuickAction(action)" [disabled]="isLoading || cooldown"><i class="{{ action.icon }}"></i> {{ action.label }}</button>
         </div>
         <div class="ms-auto" *ngIf="messages.length > 2"></div>
 
         <div class="ai-mode-selector d-flex align-items-center gap-1">
-          <button class="mode-btn danger-btn text-danger border-danger" *ngIf="messages.length > 1"
-            (click)="clearChat()" title="Clear Chat History">
+          <button class="mode-btn danger-btn text-danger border-danger" *ngIf="messages.length > 1" (click)="clearChat()" title="Clear Chat History">
             <i class="bi bi-trash"></i>
           </button>
-          <button class="mode-btn normal" [class.active]="aiMode === 0"
-            (click)="setAiMode(0)" title="Normal Mode (Fast)">
-            <i class="bi bi-lightning"></i> <span class="d-none d-sm-inline">Normal</span>
-          </button>
-          <button class="mode-btn deep-think" [class.active]="aiMode === 1"
-            (click)="setAiMode(1)" title="Deep Think (Read-Only Search)">
-            <i class="bi bi-cpu"></i> <span class="d-none d-sm-inline">Deep Think</span>
-          </button>
+          <button class="mode-btn normal" [class.active]="aiMode === 0" (click)="setAiMode(0)" title="Normal Mode (Fast)"><i class="bi bi-lightning"></i> <span class="d-none d-sm-inline">Normal</span></button>
+          <button class="mode-btn deep-think" [class.active]="aiMode === 1" (click)="setAiMode(1)" title="Deep Think (Read-Only Search)"><i class="bi bi-cpu"></i> <span class="d-none d-sm-inline">Deep Think</span></button>
         </div>
       </div>
 
       <div class="input-content">
         <div class="input-wrap">
-          <textarea
-            class="chat-input"
-            [(ngModel)]="userInput"
-            (keydown)="onKeydown($event)"
-            [placeholder]="cooldown ? 'Please wait ' + cooldownSeconds + 's...' : 'Ask me anything about HR, leave, attendance or salary...'"
-            [maxlength]="MAX_CHARS"
-            [disabled]="isLoading || cooldown"
-            rows="1"></textarea>
+          <textarea class="chat-input" [(ngModel)]="userInput" (keydown)="onKeydown($event)" [placeholder]="cooldown ? 'Please wait ' + cooldownSeconds + 's...' : 'Ask me anything about HR, leave, attendance or salary...'" [maxlength]="MAX_CHARS" [disabled]="isLoading || cooldown" rows="1"></textarea>
           <div class="input-footer">
-            <span class="char-counter"
-              [class.danger]="charCount > MAX_CHARS - 20">
-              {{ charCount }}/{{ MAX_CHARS }}
-            </span>
+            <span class="char-counter" [class.danger]="charCount > MAX_CHARS - 20"> {{ charCount }}/{{ MAX_CHARS }} </span>
           </div>
         </div>
-        <button
-          class="send-btn"
-          [disabled]="!canSend"
-          (click)="sendMessage()">
+        <button class="send-btn" [disabled]="!canSend" (click)="sendMessage()">
           <span *ngIf="!isLoading"><i class="bi bi-send-fill"></i></span>
-          <span *ngIf="isLoading"
-            class="spinner-border spinner-border-sm"></span>
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm"></span>
         </button>
       </div>
     </div>
   </div>
-
 </div>
-
 ```
 
 ### File: src\app\features\ai-assistant\ai-assistant.component.ts
+
 ```typescript
-import {
-  Component,
-  OnInit,
-  inject,
-  ViewChild,
-  ElementRef,
-  OnDestroy
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { AiService, AiResponseDto, TokenStatsDto } from '../../core/services/ai.service';
-import { Subscription } from 'rxjs';
-import { AuthService } from '../../core/services/auth.service';
-import Swal from 'sweetalert2';
+import { Component, OnInit, inject, ViewChild, ElementRef, OnDestroy } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { AiService, AiResponseDto, TokenStatsDto } from "../../core/services/ai.service";
+import { Subscription } from "rxjs";
+import { AuthService } from "../../core/services/auth.service";
+import Swal from "sweetalert2";
 
 interface ChatMessage {
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   content: string;
   timestamp: Date;
   tokens?: number;
@@ -2411,27 +2198,27 @@ interface ChatMessage {
 }
 
 @Component({
-  selector: 'app-ai-assistant',
+  selector: "app-ai-assistant",
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './ai-assistant.component.html',
-  styleUrls: ['./ai-assistant.component.css'],
+  templateUrl: "./ai-assistant.component.html",
+  styleUrls: ["./ai-assistant.component.css"],
 })
 export class AiAssistantComponent implements OnInit, OnDestroy {
   private aiService = inject(AiService);
   private authService = inject(AuthService);
 
-  @ViewChild('messagesContainer') messagesContainer!: ElementRef;
+  @ViewChild("messagesContainer") messagesContainer!: ElementRef;
 
   messages: ChatMessage[] = [];
-  userInput: string = '';
+  userInput: string = "";
   isLoading: boolean = false;
   aiMode: number = 0;
   cooldown: boolean = false;
   cooldownSeconds: number = 0;
   totalTokensUsed: number = 0;
   isAdminOrHR: boolean = false;
-  
+
   tokenStats: TokenStatsDto = { usedTokens: 0, maxTokensPerMinute: 14400, secondsUntilReset: 60 };
   private tokenSub: Subscription | undefined;
   private timerInterval: any;
@@ -2441,26 +2228,26 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
 
   quickActions = [
     {
-      label: '📊 Analyze My Leaves',
-      icon: 'bi-bar-chart-line',
-      action: 'analyze-leave',
+      label: "📊 Analyze My Leaves",
+      icon: "bi-bar-chart-line",
+      action: "analyze-leave",
     },
     {
-      label: '💰 Salary Insights',
-      icon: 'bi-graph-up-arrow',
-      action: 'salary-insight',
+      label: "💰 Salary Insights",
+      icon: "bi-graph-up-arrow",
+      action: "salary-insight",
     },
     {
-      label: '📋 Leave Policy',
-      icon: 'bi-journal-text',
-      action: 'chat',
-      prompt: 'What is the company leave policy?',
+      label: "📋 Leave Policy",
+      icon: "bi-journal-text",
+      action: "chat",
+      prompt: "What is the company leave policy?",
     },
     {
-      label: '🕐 How to Clock In',
-      icon: 'bi-clock',
-      action: 'chat',
-      prompt: 'How do I clock in and out for attendance?',
+      label: "🕐 How to Clock In",
+      icon: "bi-clock",
+      action: "chat",
+      prompt: "How do I clock in and out for attendance?",
     },
   ];
 
@@ -2468,7 +2255,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
     this.isAdminOrHR = this.authService.isAdminOrHR();
     this.loadChat();
 
-    this.tokenSub = this.aiService.tokenStats$.subscribe(stats => {
+    this.tokenSub = this.aiService.tokenStats$.subscribe((stats) => {
       this.tokenStats = stats;
     });
 
@@ -2480,7 +2267,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
 
     if (this.messages.length === 0) {
       this.messages.push({
-        role: 'assistant',
+        role: "assistant",
         content: "**Hello! I'm HRMS-AI**. How can I help you today?",
         timestamp: new Date(),
       });
@@ -2489,12 +2276,12 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   }
 
   private getChatStorageKey(): string {
-    const keyId = this.authService.getCurrentUserEmail() || this.authService.getCurrentUserName() || 'guest';
+    const keyId = this.authService.getCurrentUserEmail() || this.authService.getCurrentUserName() || "guest";
     return `hrms_ai_chat_${keyId}`;
   }
 
   private getTokenStorageKey(): string {
-    const keyId = this.authService.getCurrentUserEmail() || this.authService.getCurrentUserName() || 'guest';
+    const keyId = this.authService.getCurrentUserEmail() || this.authService.getCurrentUserName() || "guest";
     return `hrms_ai_tokens_${keyId}`;
   }
 
@@ -2535,18 +2322,13 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   }
 
   get canSend(): boolean {
-    return (
-      this.userInput.trim().length > 0 &&
-      this.userInput.length <= this.MAX_CHARS &&
-      !this.isLoading &&
-      !this.cooldown
-    );
+    return this.userInput.trim().length > 0 && this.userInput.length <= this.MAX_CHARS && !this.isLoading && !this.cooldown;
   }
 
   sendMessage(): void {
     if (!this.canSend) return;
     const text = this.userInput.trim();
-    this.userInput = '';
+    this.userInput = "";
     this.addUserMessage(text);
     this.callChat(text);
   }
@@ -2554,21 +2336,21 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   triggerQuickAction(action: any): void {
     if (this.isLoading || this.cooldown) return;
 
-    if (action.action === 'analyze-leave') {
-      this.addUserMessage('📊 Analyze my leave history');
+    if (action.action === "analyze-leave") {
+      this.addUserMessage("📊 Analyze my leave history");
       this.addLoadingMessage();
       this.aiService.analyzeLeave().subscribe({
         next: (res) => this.handleResponse(res),
         error: (err) => this.handleError(err),
       });
-    } else if (action.action === 'salary-insight') {
-      this.addUserMessage('💰 Give me salary insights');
+    } else if (action.action === "salary-insight") {
+      this.addUserMessage("💰 Give me salary insights");
       this.addLoadingMessage();
       this.aiService.salaryInsight().subscribe({
         next: (res) => this.handleResponse(res),
         error: (err) => this.handleError(err),
       });
-    } else if (action.action === 'chat' && action.prompt) {
+    } else if (action.action === "chat" && action.prompt) {
       this.addUserMessage(action.prompt);
       this.callChat(action.prompt);
     }
@@ -2576,13 +2358,12 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
 
   private callChat(text: string): void {
     this.addLoadingMessage();
-    
-    
+
     const historyMessages = this.messages
-      .filter(m => !m.loading)
-      .slice(0, -1) 
-      .slice(-4)    
-      .map(m => ({ role: m.role, content: m.content }));
+      .filter((m) => !m.loading)
+      .slice(0, -1)
+      .slice(-4)
+      .map((m) => ({ role: m.role, content: m.content }));
 
     this.aiService.chat(text, this.aiMode, historyMessages).subscribe({
       next: (res) => this.handleResponse(res),
@@ -2591,7 +2372,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   }
 
   private addUserMessage(text: string): void {
-    this.messages.push({ role: 'user', content: text, timestamp: new Date() });
+    this.messages.push({ role: "user", content: text, timestamp: new Date() });
     this.isLoading = true;
     this.saveChat();
     setTimeout(() => this.scrollToBottom(), 50);
@@ -2599,8 +2380,8 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
 
   private addLoadingMessage(): void {
     this.messages.push({
-      role: 'assistant',
-      content: '',
+      role: "assistant",
+      content: "",
       timestamp: new Date(),
       loading: true,
     });
@@ -2611,7 +2392,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
     const idx = this.findLastLoadingIndex();
     if (idx !== -1) {
       this.messages[idx] = {
-        role: 'assistant',
+        role: "assistant",
         content: res.reply,
         timestamp: new Date(),
         tokens: res.tokens,
@@ -2627,34 +2408,34 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
 
   private handleError(err: any): void {
     const idx = this.findLastLoadingIndex();
-    let errMsg = 'Something went wrong. Please try again.';
+    let errMsg = "Something went wrong. Please try again.";
 
     if (err?.error?.message) {
       const rawMessage = err.error.message as string;
-      
-      if (rawMessage.includes('Invalid API Key') || rawMessage.includes('invalid_api_key')) {
-        errMsg = 'The AI service is not properly configured (Invalid API Key). Please contact the system administrator.';
-      } else if (rawMessage.includes('rate_limit_exceeded')) {
-        errMsg = 'The AI service is currently busy (Rate Limit Exceeded). Please try again later.';
-      } else if (rawMessage.includes('insufficient_quota')) {
-        errMsg = 'The AI service quota has been exceeded. Please contact the system administrator.';
-      } else if (rawMessage.includes('Groq API error')) {
-         try {
-           const jsonStart = rawMessage.indexOf('{');
-           if (jsonStart !== -1) {
-             const jsonPart = rawMessage.substring(jsonStart);
-             const parsed = JSON.parse(jsonPart);
-             if (parsed?.error?.message) {
-               errMsg = `AI Error: ${parsed.error.message}`;
-             } else {
-               errMsg = 'The AI service encountered an error processing your request.';
-             }
-           } else {
-             errMsg = 'The AI service encountered a connection error. Please try again.';
-           }
-         } catch(e) {
-           errMsg = 'The AI service encountered an unexpected error. Please try again later.';
-         }
+
+      if (rawMessage.includes("Invalid API Key") || rawMessage.includes("invalid_api_key")) {
+        errMsg = "The AI service is not properly configured (Invalid API Key). Please contact the system administrator.";
+      } else if (rawMessage.includes("rate_limit_exceeded")) {
+        errMsg = "The AI service is currently busy (Rate Limit Exceeded). Please try again later.";
+      } else if (rawMessage.includes("insufficient_quota")) {
+        errMsg = "The AI service quota has been exceeded. Please contact the system administrator.";
+      } else if (rawMessage.includes("Groq API error")) {
+        try {
+          const jsonStart = rawMessage.indexOf("{");
+          if (jsonStart !== -1) {
+            const jsonPart = rawMessage.substring(jsonStart);
+            const parsed = JSON.parse(jsonPart);
+            if (parsed?.error?.message) {
+              errMsg = `AI Error: ${parsed.error.message}`;
+            } else {
+              errMsg = "The AI service encountered an error processing your request.";
+            }
+          } else {
+            errMsg = "The AI service encountered a connection error. Please try again.";
+          }
+        } catch (e) {
+          errMsg = "The AI service encountered an unexpected error. Please try again later.";
+        }
       } else {
         errMsg = rawMessage;
       }
@@ -2664,7 +2445,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
 
     if (idx !== -1) {
       this.messages[idx] = {
-        role: 'assistant',
+        role: "assistant",
         content: `**Error:** ${errMsg}`,
         timestamp: new Date(),
         loading: false,
@@ -2697,17 +2478,16 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   }
 
   formatContent(content: string): string {
-
     return content
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\*(.*?)\*/g, "<em>$1</em>")
       .replace(/^• (.+)/gm, '<span class="bullet">• $1</span>')
       .replace(/^\d+\. (.+)/gm, '<span class="numbered">$&</span>')
-      .replace(/\n/g, '<br>');
+      .replace(/\n/g, "<br>");
   }
 
   onKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Enter' && !event.shiftKey) {
+    if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
       this.sendMessage();
     }
@@ -2715,16 +2495,16 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
 
   clearChat(): void {
     if (this.messages.length <= 1) return;
-    
+
     Swal.fire({
-      title: 'Clear Chat History?',
-      text: 'Are you sure you want to delete all messages? This cannot be undone.',
-      icon: 'warning',
+      title: "Clear Chat History?",
+      text: "Are you sure you want to delete all messages? This cannot be undone.",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, clear it',
-      cancelButtonText: 'Cancel'
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, clear it",
+      cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
         this.messages = [];
@@ -2741,193 +2521,164 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
     this.aiMode = mode;
   }
 }
-
 ```
 
 ### File: src\app\features\all-attendance\all-attendance.component.html
+
 ```html
 <div class="page-container p-4">
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div class="d-flex align-items-center">
+      <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+        <i class="bi bi-clock-history fs-4"></i>
+      </div>
+      <div>
+        <h2 class="fw-bold text-dark mb-1">{{ 'All Employees Attendance' | t }}</h2>
+        <p class="text-muted small mb-0">{{ 'Overview of all employees clock-in and clock-out records' | t }}</p>
+      </div>
+    </div>
+    <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
+      <div class="input-group shadow-sm" style="max-width: 350px; min-width: 200px; flex: 1;">
+        <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control border-start-0 ps-0" placeholder="Search by name, ID, or date..." [(ngModel)]="searchQuery" (input)="filterRecords()" />
+      </div>
 
-    
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <div class="d-flex align-items-center">
-            <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
-                <i class="bi bi-clock-history fs-4"></i>
-            </div>
-            <div>
-                <h2 class="fw-bold text-dark mb-1">{{ 'All Employees Attendance' | t }}</h2>
-                <p class="text-muted small mb-0">{{ 'Overview of all employees clock-in and clock-out records' | t }}</p>
-            </div>
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Filter Attendance">
+          <i class="bi bi-funnel-fill"></i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4" style="width: 250px;">
+          <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">Filter Options</h6>
+
+          <div class="mb-2">
+            <label class="form-label small fw-semibold text-muted mb-1">Status</label>
+            <select class="form-select form-select-sm" [(ngModel)]="selectedStatus" (change)="filterRecords()">
+              <option value="">All Statuses</option>
+              <option value="Working">Working</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
         </div>
-        <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
-            <div class="input-group shadow-sm" style="max-width: 350px; min-width: 200px; flex: 1;">
-                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                <input type="text" class="form-control border-start-0 ps-0" 
-                    placeholder="Search by name, ID, or date..." 
-                    [(ngModel)]="searchQuery" 
-                    (input)="filterRecords()">
-            </div>
+      </div>
 
-            <div class="dropdown">
-                <button class="btn btn-outline-secondary shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Filter Attendance">
-                    <i class="bi bi-funnel-fill"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4" style="width: 250px;">
-                    <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">Filter Options</h6>
-                    
-                    <div class="mb-2">
-                        <label class="form-label small fw-semibold text-muted mb-1">Status</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="selectedStatus" (change)="filterRecords()">
-                            <option value="">All Statuses</option>
-                            <option value="Working">Working</option>
-                            <option value="Completed">Completed</option>
-                        </select>
-                    </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
+          <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i>
+          <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
+        </button>
+        <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
+          <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i>
+          <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
+        </button>
+      </div>
+      <a routerLink="/employees" class="btn btn-outline-secondary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap">
+        <i class="bi bi-arrow-left" [class.me-md-1]="true"></i>
+        <span class="d-none d-md-inline">{{ 'Back to Employees' | t }}</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0 text-nowrap">
+        <thead class="bg-light text-muted small text-uppercase" style="letter-spacing: 0.5px;">
+          <tr>
+            <th class="py-3 px-4 border-bottom-0 fw-semibold">Employee</th>
+            <th class="py-3 px-3 border-bottom-0 fw-semibold">Date</th>
+            <th class="py-3 px-3 border-bottom-0 fw-semibold text-success">Clock In</th>
+            <th class="py-3 px-3 border-bottom-0 fw-semibold text-danger">Clock Out</th>
+            <th class="py-3 px-3 border-bottom-0 fw-semibold text-primary">Total Hours</th>
+            <th class="py-3 px-4 border-bottom-0 fw-semibold">Status</th>
+          </tr>
+        </thead>
+
+        <tbody class="border-top-0">
+          <tr *ngIf="isLoading">
+            <td colspan="6" class="text-center py-5 text-muted no-data-td">
+              <span class="spinner-border spinner-border-sm me-2"></span>
+              Loading attendance records...
+            </td>
+          </tr>
+
+          <tr *ngIf="!isLoading && records.length === 0">
+            <td colspan="6" class="text-center py-5 no-data-td">
+              <div class="d-flex flex-column align-items-center">
+                <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                  <i class="bi bi-clock-history fs-1 text-secondary"></i>
                 </div>
-            </div>
+                <h5 class="fw-bold text-dark mb-1">No Attendance Records</h5>
+                <p class="text-muted small">There are no clock-in records available yet matching your criteria.</p>
+              </div>
+            </td>
+          </tr>
 
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
-                    <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> 
-                    <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
-                </button>
-                <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
-                    <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i> 
-                    <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
-                </button>
-            </div>
-            <a routerLink="/employees" class="btn btn-outline-secondary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap">
-                <i class="bi bi-arrow-left" [class.me-md-1]="true"></i> 
-                <span class="d-none d-md-inline">{{ 'Back to Employees' | t }}</span>
-            </a>
-        </div>
+          <tr *ngFor="let rec of paginatedRecords">
+            <td data-label="Employee" class="py-3 px-4">
+              <div class="fw-semibold text-dark">{{ rec.employeeName || ('Employee #' + rec.employeeId) }}</div>
+            </td>
+            <td data-label="Date" class="py-3 px-3 text-muted">{{ rec.date | date:'dd MMM yyyy' }}</td>
+            <td data-label="Clock In" class="py-3 px-3 text-success fw-medium">
+              <i class="bi bi-arrow-down-right-circle me-1"></i>
+              {{ rec.clockIn || '—' }}
+            </td>
+            <td data-label="Clock Out" class="py-3 px-3 text-danger fw-medium">
+              <i class="bi bi-arrow-up-right-circle me-1"></i>
+              {{ (!rec.clockOut || rec.clockOut === '00:00:00') ? '—' : rec.clockOut }}
+            </td>
+            <td data-label="Total Hours" class="py-3 px-3 fw-semibold text-primary">{{ calcHours(rec) }}</td>
+            <td data-label="Status" class="py-3 px-4">
+              <span class="badge rounded-pill px-3 py-2" [class.bg-success]="rec.clockOut && rec.clockOut !== '00:00:00'" [class.bg-opacity-10]="true" [class.text-success]="rec.clockOut && rec.clockOut !== '00:00:00'" [class.bg-warning]="!rec.clockOut || rec.clockOut === '00:00:00'" [class.text-warning]="!rec.clockOut || rec.clockOut === '00:00:00'" style="border: 1px solid currentColor; opacity: 0.9;">
+                <i class="bi me-1" [class.bi-check-circle-fill]="rec.clockOut && rec.clockOut !== '00:00:00'" [class.bi-clock-fill]="!rec.clockOut || rec.clockOut === '00:00:00'"></i>
+                {{ getStatusLabel(rec) }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
-    
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0 text-nowrap">
-
-                <thead class="bg-light text-muted small text-uppercase" style="letter-spacing: 0.5px;">
-                    <tr>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">Employee</th>
-                        <th class="py-3 px-3 border-bottom-0 fw-semibold">Date</th>
-                        <th class="py-3 px-3 border-bottom-0 fw-semibold text-success">Clock In</th>
-                        <th class="py-3 px-3 border-bottom-0 fw-semibold text-danger">Clock Out</th>
-                        <th class="py-3 px-3 border-bottom-0 fw-semibold text-primary">Total Hours</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">Status</th>
-                    </tr>
-                </thead>
-
-                <tbody class="border-top-0">
-
-                    
-                    <tr *ngIf="isLoading">
-                        <td colspan="6" class="text-center py-5 text-muted no-data-td">
-                            <span class="spinner-border spinner-border-sm me-2"></span>
-                            Loading attendance records...
-                        </td>
-                    </tr>
-
-                    
-                    <tr *ngIf="!isLoading && records.length === 0">
-                        <td colspan="6" class="text-center py-5 no-data-td">
-                            <div class="d-flex flex-column align-items-center">
-                                <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                                    <i class="bi bi-clock-history fs-1 text-secondary"></i>
-                                </div>
-                                <h5 class="fw-bold text-dark mb-1">No Attendance Records</h5>
-                                <p class="text-muted small">There are no clock-in records available yet matching your criteria.</p>
-                            </div>
-                        </td>
-                    </tr>
-
-                    
-                    <tr *ngFor="let rec of paginatedRecords">
-                        <td data-label="Employee" class="py-3 px-4">
-                            <div class="fw-semibold text-dark">
-                                {{ rec.employeeName || ('Employee #' + rec.employeeId) }}
-                            </div>
-                        </td>
-                        <td data-label="Date" class="py-3 px-3 text-muted">
-                            {{ rec.date | date:'dd MMM yyyy' }}
-                        </td>
-                        <td data-label="Clock In" class="py-3 px-3 text-success fw-medium">
-                            <i class="bi bi-arrow-down-right-circle me-1"></i>
-                            {{ rec.clockIn || '—' }}
-                        </td>
-                        <td data-label="Clock Out" class="py-3 px-3 text-danger fw-medium">
-                            <i class="bi bi-arrow-up-right-circle me-1"></i>
-                            {{ (!rec.clockOut || rec.clockOut === '00:00:00') ? '—' : rec.clockOut }}
-                        </td>
-                        <td data-label="Total Hours" class="py-3 px-3 fw-semibold text-primary">
-                            {{ calcHours(rec) }}
-                        </td>
-                        <td data-label="Status" class="py-3 px-4">
-                            <span class="badge rounded-pill px-3 py-2"
-                                [class.bg-success]="rec.clockOut && rec.clockOut !== '00:00:00'"
-                                [class.bg-opacity-10]="true"
-                                [class.text-success]="rec.clockOut && rec.clockOut !== '00:00:00'"
-                                [class.bg-warning]="!rec.clockOut || rec.clockOut === '00:00:00'"
-                                [class.text-warning]="!rec.clockOut || rec.clockOut === '00:00:00'"
-                                style="border: 1px solid currentColor; opacity: 0.9;">
-                                <i class="bi me-1"
-                                   [class.bi-check-circle-fill]="rec.clockOut && rec.clockOut !== '00:00:00'"
-                                   [class.bi-clock-fill]="!rec.clockOut || rec.clockOut === '00:00:00'"></i>
-                                {{ getStatusLabel(rec) }}
-                            </span>
-                        </td>
-                    </tr>
-
-                </tbody>
-            </table>
-        </div>
-
-        
-        <div *ngIf="records.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <small class="text-muted fw-medium">
-                Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, records.length) }} of {{ records.length }} entries
-            </small>
-            <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
-                <li class="page-item" [class.disabled]="currentPage === 1">
-                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
-                </li>
-                <li class="page-item active">
-                    <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
-                </li>
-                <li class="page-item" [class.disabled]="currentPage === totalPages">
-                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
-                </li>
-            </ul>
-        </div>
+    <div *ngIf="records.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+      <small class="text-muted fw-medium"> Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, records.length) }} of {{ records.length }} entries </small>
+      <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
+        </li>
+        <li class="page-item active">
+          <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
+        </li>
+      </ul>
     </div>
+  </div>
 </div>
 
 <style>
-.cursor-pointer {
-  cursor: pointer;
-}
+  .cursor-pointer {
+    cursor: pointer;
+  }
 </style>
-
 ```
 
 ### File: src\app\features\all-attendance\all-attendance.component.ts
-```typescript
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { AttendanceService } from '../../core/services/attendance.service';
 
-import { TranslatePipe } from '../../core/pipes/translate.pipe';
-import { PdfExportService } from '../../core/services/pdf-export.service';
-import { ExcelExportService } from '../../core/services/excel-export.service';
-import Swal from 'sweetalert2';
+```typescript
+import { Component, OnInit, inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterLink } from "@angular/router";
+import { FormsModule } from "@angular/forms";
+import { AttendanceService } from "../../core/services/attendance.service";
+
+import { TranslatePipe } from "../../core/pipes/translate.pipe";
+import { PdfExportService } from "../../core/services/pdf-export.service";
+import { ExcelExportService } from "../../core/services/excel-export.service";
+import Swal from "sweetalert2";
 @Component({
-  selector: 'app-all-attendance',
+  selector: "app-all-attendance",
   standalone: true,
   imports: [CommonModule, RouterLink, FormsModule, TranslatePipe],
-  templateUrl: './all-attendance.component.html',
+  templateUrl: "./all-attendance.component.html",
 })
 export class AllAttendanceComponent implements OnInit {
   private attendanceService = inject(AttendanceService);
@@ -2937,8 +2688,8 @@ export class AllAttendanceComponent implements OnInit {
   allRecords: any[] = [];
   records: any[] = [];
 
-  searchQuery: string = '';
-  selectedStatus: string = '';
+  searchQuery: string = "";
+  selectedStatus: string = "";
 
   isLoading = true;
 
@@ -2965,28 +2716,23 @@ export class AllAttendanceComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.attendanceService.getAllAttendance().subscribe({
       next: (res: any) => {
-        const items = Array.isArray(res)
-          ? res
-          : (res?.items ?? res?.data?.items ?? res?.data ?? []);
-        
+        const items = Array.isArray(res) ? res : (res?.items ?? res?.data?.items ?? res?.data ?? []);
+
         const rawRecords = Array.isArray(items) ? items : [];
         const uniqueRecords = new Map<string, any>();
-        
+
         for (const rec of rawRecords) {
           const key = `${rec.employeeId}_${rec.date}_${rec.clockIn}_${rec.clockOut}`;
           if (!uniqueRecords.has(key)) {
             uniqueRecords.set(key, rec);
           }
         }
-        
+
         this.allRecords = Array.from(uniqueRecords.values());
-        
-        this.allRecords.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-        );
+
+        this.allRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
         this.records = [...this.allRecords];
         this.isLoading = false;
       },
@@ -2997,18 +2743,14 @@ export class AllAttendanceComponent implements OnInit {
   }
 
   filterRecords() {
-
     this.records = this.allRecords.filter((rec) => {
       let matchesSearch = true;
       if (this.searchQuery) {
         const query = this.searchQuery.toLowerCase();
-        const empName = (rec.employeeName || '').toLowerCase();
-        const empId = String(rec.employeeId || '');
-        const dateStr = String(rec.date || '').toLowerCase();
-        matchesSearch =
-          empName.includes(query) ||
-          empId.includes(query) ||
-          dateStr.includes(query);
+        const empName = (rec.employeeName || "").toLowerCase();
+        const empId = String(rec.employeeId || "");
+        const dateStr = String(rec.date || "").toLowerCase();
+        matchesSearch = empName.includes(query) || empId.includes(query) || dateStr.includes(query);
       }
 
       let matchesStatus = true;
@@ -3024,17 +2766,17 @@ export class AllAttendanceComponent implements OnInit {
   }
 
   getStatusClass(rec: any): string {
-    if (!rec.clockOut || rec.clockOut === '00:00:00') return 'text-warning';
-    return 'text-success';
+    if (!rec.clockOut || rec.clockOut === "00:00:00") return "text-warning";
+    return "text-success";
   }
 
   getStatusLabel(rec: any): string {
-    if (!rec.clockOut || rec.clockOut === '00:00:00') return 'Working';
-    return 'Completed';
+    if (!rec.clockOut || rec.clockOut === "00:00:00") return "Working";
+    return "Completed";
   }
 
   calcHours(rec: any): string {
-    if (!rec.clockOut || rec.clockOut === '00:00:00') return '—';
+    if (!rec.clockOut || rec.clockOut === "00:00:00") return "—";
     const inn = new Date(`2000-01-01T${rec.clockIn}`);
     const out = new Date(`2000-01-01T${rec.clockOut}`);
     const hrs = (out.getTime() - inn.getTime()) / 3600000;
@@ -3043,286 +2785,231 @@ export class AllAttendanceComponent implements OnInit {
 
   exportToPDF() {
     if (this.records.length === 0) {
-      Swal.fire('No Data', 'There are no attendance records to export.', 'info');
+      Swal.fire("No Data", "There are no attendance records to export.", "info");
       return;
     }
 
-    const headers = ['Employee', 'Date', 'Clock In', 'Clock Out', 'Status', 'Total Hours'];
-    const data = this.records.map(rec => [
-      rec.employeeName || `#${rec.employeeId}`,
-      rec.date ? rec.date.split('T')[0] : '—',
-      rec.clockIn || '—',
-      rec.clockOut && rec.clockOut !== '00:00:00' ? rec.clockOut : '—',
-      this.getStatusLabel(rec),
-      rec.totalHours ?? this.calcHours(rec)
-    ]);
+    const headers = ["Employee", "Date", "Clock In", "Clock Out", "Status", "Total Hours"];
+    const data = this.records.map((rec) => [rec.employeeName || `#${rec.employeeId}`, rec.date ? rec.date.split("T")[0] : "—", rec.clockIn || "—", rec.clockOut && rec.clockOut !== "00:00:00" ? rec.clockOut : "—", this.getStatusLabel(rec), rec.totalHours ?? this.calcHours(rec)]);
 
     const additionalInfo = [
-      { label: 'Total Records', value: String(this.records.length) },
-      { label: 'Completed Sessions', value: String(this.records.filter(r => this.getStatusLabel(r) === 'Completed').length) },
-      { label: 'Currently Working', value: String(this.records.filter(r => this.getStatusLabel(r) === 'Working').length) }
+      { label: "Total Records", value: String(this.records.length) },
+      { label: "Completed Sessions", value: String(this.records.filter((r) => this.getStatusLabel(r) === "Completed").length) },
+      { label: "Currently Working", value: String(this.records.filter((r) => this.getStatusLabel(r) === "Working").length) },
     ];
 
-    this.pdfExportService.generateTableReport(
-      'Attendance Records',
-      headers,
-      data,
-      'Attendance_Report',
-      additionalInfo
-    );
+    this.pdfExportService.generateTableReport("Attendance Records", headers, data, "Attendance_Report", additionalInfo);
   }
 
   exportToExcel() {
     if (this.records.length === 0) {
-      Swal.fire('No Data', 'There are no attendance records to export.', 'info');
+      Swal.fire("No Data", "There are no attendance records to export.", "info");
       return;
     }
 
-    const headers = ['Employee', 'Date', 'Clock In', 'Clock Out', 'Status', 'Total Hours'];
-    const data = this.records.map(rec => [
-      rec.employeeName || `#${rec.employeeId}`,
-      rec.date ? rec.date.split('T')[0] : '—',
-      rec.clockIn || '—',
-      rec.clockOut && rec.clockOut !== '00:00:00' ? rec.clockOut : '—',
-      this.getStatusLabel(rec),
-      rec.totalHours ?? this.calcHours(rec)
-    ]);
+    const headers = ["Employee", "Date", "Clock In", "Clock Out", "Status", "Total Hours"];
+    const data = this.records.map((rec) => [rec.employeeName || `#${rec.employeeId}`, rec.date ? rec.date.split("T")[0] : "—", rec.clockIn || "—", rec.clockOut && rec.clockOut !== "00:00:00" ? rec.clockOut : "—", this.getStatusLabel(rec), rec.totalHours ?? this.calcHours(rec)]);
 
-    this.excelExportService.exportTableToExcel(headers, data, 'All_Attendance');
+    this.excelExportService.exportTableToExcel(headers, data, "All_Attendance");
   }
 }
-
 ```
 
 ### File: src\app\features\attendance\attendance.component.html
+
 ```html
 <div class="page-container p-4">
-
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <div class="d-flex align-items-center">
-            <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
-                <i class="bi bi-clock-history fs-4"></i>
-            </div>
-            <div>
-                <h2 class="fw-bold text-dark mb-1">
-                    {{ isAdmin ? ('Employee Attendance Tracking' | t) : ('My Attendance Tracking' | t) }}
-                </h2>
-                <p class="text-muted small mb-0">
-                    {{ isAdmin ? ('Monitor all employees daily clock-in and clock-out records' | t) : ('Monitor your daily clock-in and clock-out records' | t) }}
-                </p>
-            </div>
-        </div>
-
-        <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
-            <div class="input-group shadow-sm" style="max-width: 350px; min-width: 200px; flex: 1;">
-                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                <input type="text" class="form-control border-start-0 ps-0" 
-                    placeholder="{{ 'Search employees...' | t }}" 
-                    [(ngModel)]="searchQuery" 
-                    (input)="filterRecords()">
-            </div>
-
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
-                    <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> 
-                    <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
-                </button>
-                <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
-                    <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i> 
-                    <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
-                </button>
-            </div>
-
-            <div class="dropdown">
-                <button class="btn btn-outline-secondary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-filter" [class.me-md-1]="true"></i> 
-                <span class="d-none d-md-inline">{{ 'Filter' | t }}</span>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4" style="min-width: 250px;">
-                    <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">{{ 'Filter Options' | t }}</h6>
-                    <div class="mb-0">
-                        <label class="form-label small fw-semibold text-muted mb-1">{{ 'Status' | t }}</label>
-                        <select class="form-select form-select-sm border-light-subtle" [(ngModel)]="selectedStatus" (change)="filterRecords()">
-                            <option value="">{{ 'All Statuses' | t }}</option>
-                            <option value="Completed">{{ 'Completed' | t }}</option>
-                            <option value="Working">{{ 'Working' | t }}</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div *ngIf="!isAdmin" class="d-flex flex-column align-items-end gap-2">
-                <div *ngIf="isStaleSession"
-                     class="alert alert-warning py-2 px-3 mb-0 rounded-3 small d-flex align-items-center gap-2 w-100">
-                    <i class="bi bi-exclamation-triangle-fill"></i>
-                    <span>
-                        {{ 'Open session from' | t }} <strong>{{ activeSession?.date | date:'dd MMM yyyy' }}</strong>.
-                        {{ 'Click Clock Out to close it.' | t }}
-                    </span>
-                </div>
-
-                <div class="d-flex align-items-center gap-2">
-                    <a *ngIf="isAdminOrHR" routerLink="/all-attendance"
-                       class="btn btn-outline-primary px-3 px-md-4 py-2 rounded-3 shadow-sm text-nowrap">
-                        <i class="bi bi-people" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'View All' | t }}</span>
-                    </a>
-
-                    <button *ngIf="!isCheckedInToday"
-                        class="btn btn-success px-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
-                        (click)="onClockIn()"
-                        [disabled]="isProcessing || isLoading">
-                        <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2"></span>
-                        <i *ngIf="!isProcessing" class="bi bi-box-arrow-in-right me-2"></i> {{ 'Clock In' | t }}
-                    </button>
-
-                    <button *ngIf="isCheckedInToday && !isCheckedOutToday"
-                        class="btn btn-warning px-4 py-2 rounded-3 fw-semibold shadow-sm text-dark text-nowrap"
-                        (click)="onClockOut()"
-                        [disabled]="isProcessing || isLoading">
-                        <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2"></span>
-                        <i *ngIf="!isProcessing" class="bi bi-box-arrow-right me-2"></i> {{ 'Clock Out' | t }}
-                    </button>
-
-                    <span *ngIf="isCheckedInToday && isCheckedOutToday"
-                        class="badge bg-success bg-opacity-10 text-success px-4 py-2 rounded-3 fw-semibold border border-success border-opacity-25 text-nowrap">
-                        <i class="bi bi-check-circle-fill me-2"></i> {{ 'Shift Completed' | t }} ({{ todayWorkedHours | number:'1.1-2' }} {{ 'hrs' | t }})
-                    </span>
-                </div>
-            </div>
-        </div>
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div class="d-flex align-items-center">
+      <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+        <i class="bi bi-clock-history fs-4"></i>
+      </div>
+      <div>
+        <h2 class="fw-bold text-dark mb-1">{{ isAdmin ? ('Employee Attendance Tracking' | t) : ('My Attendance Tracking' | t) }}</h2>
+        <p class="text-muted small mb-0">{{ isAdmin ? ('Monitor all employees daily clock-in and clock-out records' | t) : ('Monitor your daily clock-in and clock-out records' | t) }}</p>
+      </div>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0 text-nowrap">
+    <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
+      <div class="input-group shadow-sm" style="max-width: 350px; min-width: 200px; flex: 1;">
+        <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control border-start-0 ps-0" placeholder="{{ 'Search employees...' | t }}" [(ngModel)]="searchQuery" (input)="filterRecordsLocal()" />
+      </div>
 
-                <thead class="bg-light text-muted small text-uppercase"
-                    style="letter-spacing: 0.5px;">
-                    <tr>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Date' | t }}</th>
-                        <th *ngIf="isAdminOrHR" class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Employee' | t }}</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Clock In' | t }}</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Clock Out' | t }}</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold text-center">{{ 'Status' | t }}</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold text-end">{{ 'Total Hours' | t }}</th>
-                    </tr>
-                </thead>
+      <div class="input-group shadow-sm" style="max-width: 250px;">
+        <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-calendar"></i></span>
+        <input type="date" class="form-control border-start-0 ps-0" [(ngModel)]="selectedDate" (change)="filterRecords()" />
+      </div>
 
-                <tbody class="border-top-0">
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
+          <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i>
+          <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
+        </button>
+        <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
+          <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i>
+          <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
+        </button>
+      </div>
 
-                    <tr *ngIf="isLoading">
-                        <td colspan="6" class="text-center py-5 text-muted no-data-td">
-                            <span
-                                class="spinner-border spinner-border-sm me-2"></span>
-                            {{ 'Loading attendance data...' | t }}
-                        </td>
-                    </tr>
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-filter" [class.me-md-1]="true"></i>
+          <span class="d-none d-md-inline">{{ 'Filter' | t }}</span>
+        </button>
+        <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4" style="min-width: 250px;">
+          <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">{{ 'Filter Options' | t }}</h6>
+          <div class="mb-0">
+            <label class="form-label small fw-semibold text-muted mb-1">{{ 'Status' | t }}</label>
+            <select class="form-select form-select-sm border-light-subtle" [(ngModel)]="selectedStatus" (change)="filterRecordsLocal()">
+              <option value="">{{ 'All Statuses' | t }}</option>
+              <option value="Completed">{{ 'Completed' | t }}</option>
+              <option value="Working">{{ 'Working' | t }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
 
-                    <tr *ngIf="!isLoading && attendanceRecords.length === 0">
-                        <td [colSpan]="isAdmin ? 6 : 5" class="text-center py-5 no-data-td">
-                            <div class="d-flex flex-column align-items-center">
-                                <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                                    <i class="bi bi-clock-history text-secondary fs-1"></i>
-                                </div>
-                                <h3 class="fw-bold text-dark mb-1">{{ 'Attendance' | t }}</h3>
-                                <p class="text-muted small mb-0">{{ 'No attendance records available yet matching your criteria.' | t }}</p>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr *ngFor="let record of paginatedRecords">
-                        <td data-label="Date" class="py-3 px-4 fw-bold text-dark">
-                            {{ record.date | date:'dd MMM yyyy' }}
-                        </td>
-                        <td *ngIf="isAdminOrHR" data-label="Employee" class="py-3 px-4">
-                            <div class="d-flex align-items-center">
-                                <ng-container *ngIf="record.employeeProfilePictureUrl; else noAttPic">
-                                    <img [src]="record.employeeProfilePictureUrl" alt="User" class="rounded-circle me-2 object-fit-cover shadow-sm" style="width: 32px; height: 32px; border: 2px solid #fff;">
-                                </ng-container>
-                                <ng-template #noAttPic>
-                                    <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center"
-                                        style="width: 32px; height: 32px; font-size: 13px;">
-                                        {{ record.employeeName ? record.employeeName.charAt(0).toUpperCase() : 'U' }}
-                                    </div>
-                                </ng-template>
-                                <span class="fw-bold text-dark">{{ record.employeeName || ('Emp #' + record.employeeId) }}</span>
-                            </div>
-                        </td>
-
-                        <td data-label="Clock-in Time" class="py-3 px-3 text-success fw-medium">
-                            <i class="bi bi-arrow-down-right-circle me-1"></i>
-                            {{ record.clockIn || '--:--' }}
-                        </td>
-
-                        <td data-label="Clock-out Time" class="py-3 px-3 text-danger fw-medium">
-                            <i class="bi bi-arrow-up-right-circle me-1"></i>
-                            {{ (record.clockOut && record.clockOut !==
-                            '00:00:00') ? record.clockOut : '--:--' }}
-                        </td>
-
-                        <td data-label="Status" class="py-3 px-4 text-center">
-                            <span class="badge px-3 py-2 rounded-pill"
-                                [ngClass]="(record.clockOut && record.clockOut !== '00:00:00') ? 'bg-success bg-opacity-10 text-success' : 'bg-primary bg-opacity-10 text-primary'">
-                                {{ (record.clockOut && record.clockOut !== '00:00:00') ? ('Completed' | t) : ('Working' | t) }}
-                            </span>
-                        </td>
-
-                        <td data-label="Total Hours" class="py-3 px-3 text-end">
-                            <span class="fw-bold fs-6">{{ record.totalHours || '-' }}</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+      <div *ngIf="!isAdmin" class="d-flex flex-column align-items-end gap-2">
+        <div *ngIf="isStaleSession" class="alert alert-warning py-2 px-3 mb-0 rounded-3 small d-flex align-items-center gap-2 w-100">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span> {{ 'Open session from' | t }} <strong>{{ activeSession?.date | date:'dd MMM yyyy' }}</strong>. {{ 'Click Clock Out to close it.' | t }} </span>
         </div>
 
-        
-        <div *ngIf="allAttendanceRecords.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <small class="text-muted fw-medium">
-                Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, attendanceRecords.length) }} of {{ attendanceRecords.length }} entries
-                <span *ngIf="attendanceRecords.length !== allAttendanceRecords.length" class="text-primary ms-1">
-                    (filtered from {{ allAttendanceRecords.length }} total)
-                </span>
-            </small>
-            <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
-                <li class="page-item" [class.disabled]="currentPage === 1">
-                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
-                </li>
-                <li class="page-item active">
-                    <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
-                </li>
-                <li class="page-item" [class.disabled]="currentPage === totalPages">
-                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
-                </li>
-            </ul>
+        <div class="d-flex align-items-center gap-2">
+          <a *ngIf="isAdminOrHR" routerLink="/all-attendance" class="btn btn-outline-primary px-3 px-md-4 py-2 rounded-3 shadow-sm text-nowrap"> <i class="bi bi-people" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'View All' | t }}</span> </a>
+
+          <button *ngIf="!isCheckedInToday" class="btn btn-success px-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="onClockIn()" [disabled]="isProcessing || isLoading">
+            <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2"></span>
+            <i *ngIf="!isProcessing" class="bi bi-box-arrow-in-right me-2"></i> {{ 'Clock In' | t }}
+          </button>
+
+          <button *ngIf="isCheckedInToday && !isCheckedOutToday" class="btn btn-warning px-4 py-2 rounded-3 fw-semibold shadow-sm text-dark text-nowrap" (click)="onClockOut()" [disabled]="isProcessing || isLoading">
+            <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2"></span>
+            <i *ngIf="!isProcessing" class="bi bi-box-arrow-right me-2"></i> {{ 'Clock Out' | t }}
+          </button>
+
+          <span *ngIf="isCheckedInToday && isCheckedOutToday" class="badge bg-success bg-opacity-10 text-success px-4 py-2 rounded-3 fw-semibold border border-success border-opacity-25 text-nowrap"> <i class="bi bi-check-circle-fill me-2"></i> {{ 'Shift Completed' | t }} ({{ todayWorkedHours | number:'1.1-2' }} {{ 'hrs' | t }}) </span>
         </div>
+      </div>
     </div>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0 text-nowrap">
+        <thead class="bg-light text-muted small text-uppercase" style="letter-spacing: 0.5px;">
+          <tr>
+            <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Date' | t }}</th>
+            <th *ngIf="isAdminOrHR" class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Employee' | t }}</th>
+            <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Clock In' | t }}</th>
+            <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Clock Out' | t }}</th>
+            <th class="py-3 px-4 border-bottom-0 fw-semibold text-center">{{ 'Status' | t }}</th>
+            <th class="py-3 px-4 border-bottom-0 fw-semibold text-end">{{ 'Total Hours' | t }}</th>
+          </tr>
+        </thead>
+
+        <tbody class="border-top-0">
+          <tr *ngIf="isLoading">
+            <td colspan="6" class="text-center py-5 text-muted no-data-td">
+              <span class="spinner-border spinner-border-sm me-2"></span>
+              {{ 'Loading attendance data...' | t }}
+            </td>
+          </tr>
+
+          <tr *ngIf="!isLoading && attendanceRecords.length === 0">
+            <td [colSpan]="isAdmin ? 6 : 5" class="text-center py-5 no-data-td">
+              <div class="d-flex flex-column align-items-center">
+                <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                  <i class="bi bi-clock-history text-secondary fs-1"></i>
+                </div>
+                <h3 class="fw-bold text-dark mb-1">{{ 'Attendance' | t }}</h3>
+                <p class="text-muted small mb-0">{{ 'No attendance records available yet matching your criteria.' | t }}</p>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngFor="let record of paginatedRecords">
+            <td data-label="Date" class="py-3 px-4 fw-bold text-dark">{{ record.date | date:'dd MMM yyyy' }}</td>
+            <td *ngIf="isAdminOrHR" data-label="Employee" class="py-3 px-4">
+              <div class="d-flex align-items-center">
+                <ng-container *ngIf="record.employeeProfilePictureUrl; else noAttPic">
+                  <img [src]="record.employeeProfilePictureUrl" alt="User" class="rounded-circle me-2 object-fit-cover shadow-sm" style="width: 32px; height: 32px; border: 2px solid #fff;" />
+                </ng-container>
+                <ng-template #noAttPic>
+                  <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 13px;">{{ record.employeeName ? record.employeeName.charAt(0).toUpperCase() : 'U' }}</div>
+                </ng-template>
+                <span class="fw-bold text-dark">{{ record.employeeName || ('Emp #' + record.employeeId) }}</span>
+              </div>
+            </td>
+
+            <td data-label="Clock-in Time" class="py-3 px-3 text-success fw-medium">
+              <i class="bi bi-arrow-down-right-circle me-1"></i>
+              {{ record.clockIn || '--:--' }}
+            </td>
+
+            <td data-label="Clock-out Time" class="py-3 px-3 text-danger fw-medium">
+              <i class="bi bi-arrow-up-right-circle me-1"></i>
+              {{ (record.clockOut && record.clockOut !== '00:00:00') ? record.clockOut : '--:--' }}
+            </td>
+
+            <td data-label="Status" class="py-3 px-4 text-center">
+              <span class="badge px-3 py-2 rounded-pill" [ngClass]="(record.clockOut && record.clockOut !== '00:00:00') ? 'bg-success bg-opacity-10 text-success' : 'bg-primary bg-opacity-10 text-primary'"> {{ (record.clockOut && record.clockOut !== '00:00:00') ? ('Completed' | t) : ('Working' | t) }} </span>
+            </td>
+
+            <td data-label="Total Hours" class="py-3 px-3 text-end">
+              <span class="fw-bold fs-6">{{ record.totalHours || '-' }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="allAttendanceRecords.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+      <small class="text-muted fw-medium">
+        Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, attendanceRecords.length) }} of {{ attendanceRecords.length }} entries
+        <span *ngIf="attendanceRecords.length !== allAttendanceRecords.length" class="text-primary ms-1"> (filtered from {{ allAttendanceRecords.length }} total) </span>
+      </small>
+      <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
+        </li>
+        <li class="page-item active">
+          <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>
 <style>
-.cursor-pointer {
-  cursor: pointer;
-}
+  .cursor-pointer {
+    cursor: pointer;
+  }
 </style>
-
 ```
 
 ### File: src\app\features\attendance\attendance.component.ts
+
 ```typescript
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { AttendanceService } from '../../core/services/attendance.service';
-import { AuthService } from '../../core/services/auth.service';
-import Swal from 'sweetalert2';
-import { TranslatePipe } from '../../core/pipes/translate.pipe';
-import { ExcelExportService } from '../../core/services/excel-export.service';
-import { PdfExportService } from '../../core/services/pdf-export.service';
+import { Component, OnInit, inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { RouterLink } from "@angular/router";
+import { AttendanceService } from "../../core/services/attendance.service";
+import { AuthService } from "../../core/services/auth.service";
+import Swal from "sweetalert2";
+import { TranslatePipe } from "../../core/pipes/translate.pipe";
+import { ExcelExportService } from "../../core/services/excel-export.service";
+import { PdfExportService } from "../../core/services/pdf-export.service";
 
 @Component({
-  selector: 'app-attendance',
+  selector: "app-attendance",
   standalone: true,
   imports: [CommonModule, FormsModule, TranslatePipe, RouterLink],
-  templateUrl: './attendance.component.html',
+  templateUrl: "./attendance.component.html",
 })
 export class AttendanceComponent implements OnInit {
   private attendanceService = inject(AttendanceService);
@@ -3333,8 +3020,9 @@ export class AttendanceComponent implements OnInit {
   allAttendanceRecords: any[] = [];
   attendanceRecords: any[] = [];
 
-  searchQuery: string = '';
-  selectedStatus: string = '';
+  searchQuery: string = "";
+  selectedStatus: string = "";
+  selectedDate: string = "";
 
   isLoading = true;
   isProcessing = false;
@@ -3346,10 +3034,7 @@ export class AttendanceComponent implements OnInit {
 
   get paginatedRecords() {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.attendanceRecords.slice(
-      startIndex,
-      startIndex + this.itemsPerPage,
-    );
+    return this.attendanceRecords.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
   get totalPages() {
@@ -3370,13 +3055,11 @@ export class AttendanceComponent implements OnInit {
   isCheckedOutToday = false;
   todayWorkedHours = 0;
   activeSession: any = null;
-  readonly today = new Date().toISOString().split('T')[0];
+  readonly today = new Date().toISOString().split("T")[0];
 
   get isStaleSession(): boolean {
     if (!this.activeSession?.date) return false;
-    const sessionDate = new Date(this.activeSession.date)
-      .toISOString()
-      .split('T')[0];
+    const sessionDate = new Date(this.activeSession.date).toISOString().split("T")[0];
     return sessionDate < this.today;
   }
 
@@ -3391,18 +3074,19 @@ export class AttendanceComponent implements OnInit {
   }
 
   loadAllAttendance() {
-
     this.isLoading = true;
-    this.attendanceService.getAllAttendance().subscribe({
+    const d = this.selectedDate || undefined;
+    this.attendanceService.getAllAttendance(d).subscribe({
       next: (res: any) => {
-        const items = Array.isArray(res)
-          ? res
-          : (res?.items ?? res?.data?.items ?? res?.data ?? []);
+        const items = Array.isArray(res) ? res : (res?.items ?? res?.data?.items ?? res?.data ?? []);
         this.allAttendanceRecords = Array.isArray(items) ? items : [];
-        this.allAttendanceRecords.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-        );
+
+        if (!d) {
+          this.allAttendanceRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        }
+
         this.attendanceRecords = [...this.allAttendanceRecords];
+        this.filterRecordsLocal();
         this.isLoading = false;
       },
       error: () => {
@@ -3412,43 +3096,47 @@ export class AttendanceComponent implements OnInit {
   }
 
   loadMyAttendance() {
-
     this.isLoading = true;
-    this.attendanceService.getMyAttendance().subscribe({
+    const d = this.selectedDate || undefined;
+    this.attendanceService.getMyAttendance(d).subscribe({
       next: (res: any) => {
-        const items = Array.isArray(res)
-          ? res
-          : (res?.items ?? res?.data?.items ?? res?.data ?? []);
+        const items = Array.isArray(res) ? res : (res?.items ?? res?.data?.items ?? res?.data ?? []);
         this.allAttendanceRecords = Array.isArray(items) ? items : [];
         this.attendanceRecords = [...this.allAttendanceRecords];
         this.analyzeSessionStatus(this.attendanceRecords);
+        this.filterRecordsLocal();
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching my attendance:', err);
+        console.error("Error fetching my attendance:", err);
         this.isLoading = false;
       },
     });
   }
 
   filterRecords() {
+    if (this.isAdmin) {
+      this.loadAllAttendance();
+    } else {
+      this.loadMyAttendance();
+    }
+  }
+
+  filterRecordsLocal() {
     this.attendanceRecords = this.allAttendanceRecords.filter((rec) => {
       let matchesSearch = true;
       if (this.searchQuery) {
         const query = this.searchQuery.toLowerCase();
-        const empName = (rec.employeeName || '').toLowerCase();
-        const empId = String(rec.employeeId || '');
-        const dateStr = String(rec.date || '').toLowerCase();
-        matchesSearch =
-          empName.includes(query) ||
-          empId.includes(query) ||
-          dateStr.includes(query);
+        const empName = (rec.employeeName || "").toLowerCase();
+        const empId = String(rec.employeeId || "");
+        const dateStr = String(rec.date || "").toLowerCase();
+        matchesSearch = empName.includes(query) || empId.includes(query) || dateStr.includes(query);
       }
 
       let matchesStatus = true;
       if (this.selectedStatus) {
-        const isCompleted = rec.clockOut && rec.clockOut !== '00:00:00';
-        const currentStatus = isCompleted ? 'Completed' : 'Working';
+        const isCompleted = rec.clockOut && rec.clockOut !== "00:00:00";
+        const currentStatus = isCompleted ? "Completed" : "Working";
         matchesStatus = currentStatus === this.selectedStatus;
       }
 
@@ -3457,23 +3145,16 @@ export class AttendanceComponent implements OnInit {
 
     this.currentPage = 1;
     if (this.attendanceRecords.length > 0) {
-      this.attendanceRecords.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-      );
+      this.attendanceRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     }
   }
 
   private analyzeSessionStatus(records: any[]) {
-
     const today = new Date().toDateString();
 
-    const openSession = records.find(
-      (r) => !r.clockOut || r.clockOut === '00:00:00' || r.clockOut === null,
-    );
+    const openSession = records.find((r) => !r.clockOut || r.clockOut === "00:00:00" || r.clockOut === null);
 
-    const todayRecord = records.find(
-      (r) => new Date(r.date).toDateString() === today,
-    );
+    const todayRecord = records.find((r) => new Date(r.date).toDateString() === today);
 
     if (openSession) {
       this.activeSession = openSession;
@@ -3497,58 +3178,47 @@ export class AttendanceComponent implements OnInit {
   }
 
   onClockIn() {
-
     this.isProcessing = true;
     const now = new Date();
     const dateIso = now.toISOString();
-    const timeString = now.toTimeString().split(' ')[0];
+    const timeString = now.toTimeString().split(" ")[0];
 
-    this.attendanceService
-      .clockIn({ date: dateIso, clockIn: timeString })
-      .subscribe({
-        next: () => {
-          this.isProcessing = false;
-          Swal.fire({
-            icon: 'success',
-            title: 'Clocked In ✅',
-            text: `Have a great day! Clocked in at ${timeString}`,
-            timer: 2000,
-            showConfirmButton: false,
-          });
-          this.loadMyAttendance();
-        },
-        error: (err) => {
-          this.isProcessing = false;
-          const msg =
-            err?.error?.message ||
-            err?.error?.Message ||
-            'Failed to clock in. Please try again.';
-          Swal.fire('Error', msg, 'error');
-        },
-      });
+    this.attendanceService.clockIn({ date: dateIso, clockIn: timeString }).subscribe({
+      next: () => {
+        this.isProcessing = false;
+        Swal.fire({
+          icon: "success",
+          title: "Clocked In ✅",
+          text: `Have a great day! Clocked in at ${timeString}`,
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        this.loadMyAttendance();
+      },
+      error: (err) => {
+        this.isProcessing = false;
+        const msg = err?.error?.message || err?.error?.Message || "Failed to clock in. Please try again.";
+        Swal.fire("Error", msg, "error");
+      },
+    });
   }
 
   onClockOut() {
     this.isProcessing = true;
     const now = new Date();
-    const timeString = now.toTimeString().split(' ')[0];
+    const timeString = now.toTimeString().split(" ")[0];
 
-    const isOldSession =
-      this.activeSession &&
-      new Date(this.activeSession.date).toDateString() !==
-        new Date().toDateString();
+    const isOldSession = this.activeSession && new Date(this.activeSession.date).toDateString() !== new Date().toDateString();
 
-    const clockOutTime = isOldSession ? '23:59:00' : timeString;
+    const clockOutTime = isOldSession ? "23:59:00" : timeString;
 
     this.attendanceService.clockOut({ clockOut: clockOutTime }).subscribe({
       next: () => {
         this.isProcessing = false;
-        const msg = isOldSession
-          ? `Previous session automatically closed at 23:59.`
-          : `Great job today! Clocked out at ${clockOutTime}`;
+        const msg = isOldSession ? `Previous session automatically closed at 23:59.` : `Great job today! Clocked out at ${clockOutTime}`;
         Swal.fire({
-          icon: 'success',
-          title: 'Clocked Out ✅',
+          icon: "success",
+          title: "Clocked Out ✅",
           text: msg,
           timer: 2500,
           showConfirmButton: false,
@@ -3557,558 +3227,309 @@ export class AttendanceComponent implements OnInit {
       },
       error: (err) => {
         this.isProcessing = false;
-        const msg =
-          err?.error?.message ||
-          err?.error?.Message ||
-          'Failed to clock out. Please try again.';
-        Swal.fire('Error', msg, 'error');
+        const msg = err?.error?.message || err?.error?.Message || "Failed to clock out. Please try again.";
+        Swal.fire("Error", msg, "error");
       },
     });
   }
 
   exportToExcel() {
-
     if (this.attendanceRecords.length === 0) {
-      Swal.fire(
-        'No Data',
-        'There are no attendance records to export.',
-        'info',
-      );
+      Swal.fire("No Data", "There are no attendance records to export.", "info");
       return;
     }
 
-    const headers = [
-      'Date',
-      'Employee Name',
-      'Employee ID',
-      'Clock In',
-      'Clock Out',
-      'Status',
-      'Total Hours',
-    ];
+    const headers = ["Date", "Employee Name", "Employee ID", "Clock In", "Clock Out", "Status", "Total Hours"];
 
     const data = this.attendanceRecords.map((rec) => {
-      const isCompleted = rec.clockOut && rec.clockOut !== '00:00:00';
-      const status = isCompleted ? 'Completed' : 'Working';
-      const empName = rec.employeeName || 'Emp #' + rec.employeeId;
+      const isCompleted = rec.clockOut && rec.clockOut !== "00:00:00";
+      const status = isCompleted ? "Completed" : "Working";
+      const empName = rec.employeeName || "Emp #" + rec.employeeId;
 
-      return [
-        rec.date ? new Date(rec.date).toLocaleDateString() : '',
-        empName,
-        rec.employeeId || 'N/A',
-        rec.clockIn || '--:--',
-        rec.clockOut && rec.clockOut !== '00:00:00' ? rec.clockOut : '--:--',
-        status,
-        rec.totalHours || '0',
-      ];
+      return [rec.date ? new Date(rec.date).toLocaleDateString() : "", empName, rec.employeeId || "N/A", rec.clockIn || "--:--", rec.clockOut && rec.clockOut !== "00:00:00" ? rec.clockOut : "--:--", status, rec.totalHours || "0"];
     });
 
-    this.excelExportService.exportTableToExcel(headers, data, 'Attendance');
+    this.excelExportService.exportTableToExcel(headers, data, "Attendance");
   }
 
   exportToPDF() {
     if (this.attendanceRecords.length === 0) {
-      Swal.fire(
-        'No Data',
-        'There are no attendance records to export.',
-        'info',
-      );
+      Swal.fire("No Data", "There are no attendance records to export.", "info");
       return;
     }
 
-    const headers = [
-      'Date',
-      'Employee Name',
-      'Employee ID',
-      'Clock In',
-      'Clock Out',
-      'Status',
-      'Total Hours',
-    ];
+    const headers = ["Date", "Employee Name", "Employee ID", "Clock In", "Clock Out", "Status", "Total Hours"];
 
     const data = this.attendanceRecords.map((rec) => {
-      const isCompleted = rec.clockOut && rec.clockOut !== '00:00:00';
-      const status = isCompleted ? 'Completed' : 'Working';
-      const empName = rec.employeeName || 'Emp #' + rec.employeeId;
+      const isCompleted = rec.clockOut && rec.clockOut !== "00:00:00";
+      const status = isCompleted ? "Completed" : "Working";
+      const empName = rec.employeeName || "Emp #" + rec.employeeId;
 
-      return [
-        rec.date ? new Date(rec.date).toLocaleDateString() : '',
-        empName,
-        rec.employeeId || 'N/A',
-        rec.clockIn || '--:--',
-        rec.clockOut && rec.clockOut !== '00:00:00' ? rec.clockOut : '--:--',
-        status,
-        rec.totalHours || '0',
-      ];
+      return [rec.date ? new Date(rec.date).toLocaleDateString() : "", empName, rec.employeeId || "N/A", rec.clockIn || "--:--", rec.clockOut && rec.clockOut !== "00:00:00" ? rec.clockOut : "--:--", status, rec.totalHours || "0"];
     });
 
-    this.pdfExportService.generateTableReport(
-      this.isAdmin ? 'Employee Attendance Tracking' : 'My Attendance Tracking',
-      headers,
-      data,
-      'Attendance_Report'
-    );
+    this.pdfExportService.generateTableReport(this.isAdmin ? "Employee Attendance Tracking" : "My Attendance Tracking", headers, data, "Attendance_Report");
   }
 }
-
 ```
 
 ### File: src\app\features\auth\login\login.component.html
+
 ```html
 <div class="login-wrapper" dir="ltr">
+  <div class="bg-blobs" aria-hidden="true">
+    <span class="blob blob-1"></span>
+    <span class="blob blob-2"></span>
+    <span class="blob blob-3"></span>
+    <span class="blob blob-4"></span>
+    <span class="blob blob-5"></span>
+  </div>
 
-    <div class="bg-blobs" aria-hidden="true">
-        <span class="blob blob-1"></span>
-        <span class="blob blob-2"></span>
-        <span class="blob blob-3"></span>
-        <span class="blob blob-4"></span>
-        <span class="blob blob-5"></span>
+  <div class="dot-grid" aria-hidden="true"></div>
+
+  <div class="login-hero position-relative min-vh-100 d-flex align-items-center justify-content-center overflow-hidden">
+    <div class="login-card shadow-lg d-flex position-relative z-1 my-5 login-form-anim">
+      <div class="login-form-section p-5 d-flex flex-column position-relative justify-content-center">
+        <div class="logo-text mt-2 mb-5 d-flex align-items-center">
+          <div class="me-4 flex-shrink-0 shadow-sm" style="width: 100px; height: 100px; border-radius: 24px; background: #f8f9fa; border: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: center; padding: 10px;">
+            <img src="kawadir-logo.png" alt="Kawadir" class="brand-logo" style="width: 100%; height: 100%; object-fit: contain; transform: scale(1.15);" />
+          </div>
+          <div class="d-flex flex-column justify-content-center">
+            <span style="font-size: 3rem; font-weight: 800; color: var(--bs-heading-color, #111); letter-spacing: 0.5px; line-height: 1;">Kawadir</span>
+            <span style="font-size: 0.95rem; color: #888; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-top: 8px;">HR Management</span>
+          </div>
+        </div>
+
+        <div class="form-content px-lg-3">
+          <div class="mb-5 text-center">
+            <h2 class="fw-bold text-dark mb-2 loop-typing" style="font-size: 2.2rem;">Welcome Back</h2>
+            <br />
+            <p class="text-muted loop-typing-sub" style="font-size: 1.1rem; min-height: 26px;">Access your HR dashboard</p>
+          </div>
+
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <div class="mb-4">
+              <label class="form-label text-secondary small fw-bold text-uppercase ms-3 mb-2" style="letter-spacing: 1px;">Email Address</label>
+              <input type="email" class="form-control rounded-pill custom-input px-4 py-3 border-0 fs-5" formControlName="email" placeholder="example@company.com" [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" />
+              <div class="invalid-feedback ms-3 mt-1">
+                <span *ngIf="loginForm.get('email')?.errors?.['required']"> <i class="bi bi-exclamation-circle me-1"></i>Email is required </span>
+                <span *ngIf="loginForm.get('email')?.errors?.['email']"> <i class="bi bi-exclamation-circle me-1"></i>Please enter a valid email address </span>
+              </div>
+            </div>
+
+            <div class="mb-5">
+              <label class="form-label text-secondary small fw-bold text-uppercase ms-3 mb-2" style="letter-spacing: 1px;">Password</label>
+              <div class="position-relative">
+                <input [type]="isPasswordVisible ? 'text' : 'password'" class="form-control rounded-pill custom-input px-4 py-3 border-0 pe-5 fs-5" formControlName="password" placeholder="******************" [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" />
+
+                <button class="btn btn-link text-muted position-absolute end-0 top-50 translate-middle-y me-3 text-decoration-none shadow-none" type="button" (click)="togglePasswordVisibility()" tabindex="-1" style="z-index: 5;">
+                  <i class="bi fs-4" [ngClass]="isPasswordVisible ? 'bi-eye-slash' : 'bi-eye'"></i>
+                </button>
+              </div>
+              <div class="invalid-feedback ms-3 mt-1">
+                <span *ngIf="loginForm.get('password')?.errors?.['required']"> <i class="bi bi-exclamation-circle me-1"></i>Password is required </span>
+                <span *ngIf="loginForm.get('password')?.errors?.['minlength']"> <i class="bi bi-exclamation-circle me-1"></i>Password must be at least 6 characters </span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-warning w-100 rounded-pill py-3 fw-bold shadow submit-btn text-dark mb-4 fs-5 d-flex justify-content-center align-items-center gap-2" [disabled]="isLoading">
+              @if (isLoading) {
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              }
+              <span>Sign In</span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="login-image-section p-3 d-none d-lg-block">
+        <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80" alt="Team working" class="h-100 w-100 object-fit-cover shadow-sm" style="border-radius: 2rem !important;" />
+      </div>
+    </div>
+  </div>
+
+  <div id="overview" class="overview-section pb-5 position-relative z-2">
+    <div class="container pt-5 mt-4">
+      <div class="text-center mb-5 pb-3">
+        <span class="badge bg-warning bg-opacity-10 text-warning px-4 py-2 rounded-pill fw-bold mb-3 border border-warning border-opacity-25" style="letter-spacing: 1px;">WHY CHOOSE KAWADIR</span>
+        <h2 class="display-4 fw-bold text-white mb-4">All-in-One HR Management</h2>
+        <p class="text-white-50 lead mx-auto" style="max-width: 700px; font-size: 1.25rem;">Streamline your HR processes with our powerful, intuitive platform designed for modern enterprises.</p>
+      </div>
+
+      <div class="row g-4 mt-2 pb-5">
+        <div class="col-md-4 reveal-fade-up delay-100">
+          <div class="feature-card p-5 rounded-4 h-100 position-relative overflow-hidden">
+            <div class="feature-icon mb-4 d-inline-flex align-items-center justify-content-center rounded-4 bg-primary bg-opacity-10 text-primary shadow-sm" style="width: 70px; height: 70px;">
+              <i class="bi bi-people fs-2"></i>
+            </div>
+            <h3 class="fw-bold text-white mb-3" style="font-size: 1.6rem;">Employee Lifecycle</h3>
+            <p class="text-white-50 mb-0 fs-5">Maintain complete employee records, track performance, and manage all events easily from a single comprehensive dashboard.</p>
+          </div>
+        </div>
+
+        <div class="col-md-4 reveal-fade-up delay-200">
+          <div class="feature-card p-5 rounded-4 h-100 position-relative overflow-hidden">
+            <div class="feature-icon mb-4 d-inline-flex align-items-center justify-content-center rounded-4 bg-success bg-opacity-10 text-success shadow-sm" style="width: 70px; height: 70px;">
+              <i class="bi bi-cash-stack fs-2"></i>
+            </div>
+            <h3 class="fw-bold text-white mb-3" style="font-size: 1.6rem;">Smart Payroll & Time</h3>
+            <p class="text-white-50 mb-0 fs-5">Automate payroll processing, manage deductions, track daily attendance and generate comprehensive financial reports.</p>
+          </div>
+        </div>
+
+        <div class="col-md-4 reveal-fade-up delay-300">
+          <div class="feature-card p-5 rounded-4 h-100 position-relative overflow-hidden">
+            <div class="feature-icon mb-4 d-inline-flex align-items-center justify-content-center rounded-4 bg-info bg-opacity-10 text-info shadow-sm" style="width: 70px; height: 70px;">
+              <i class="bi bi-robot fs-2"></i>
+            </div>
+            <h3 class="fw-bold text-white mb-3" style="font-size: 1.6rem;">AI Assistant</h3>
+            <p class="text-white-50 mb-0 fs-5">Leverage built-in AI for smart analytics, answering HR queries instantly, and extracting key insights from your organizational data.</p>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="dot-grid" aria-hidden="true"></div>
+    <div class="container py-5 mt-2 mb-4">
+      <div class="text-center mb-5 pb-3">
+        <span class="badge bg-success bg-opacity-10 text-success px-4 py-2 rounded-pill fw-bold mb-3 border border-success border-opacity-25" style="letter-spacing: 1px;">INSIDE THE PLATFORM</span>
+        <h2 class="display-4 fw-bold text-white mb-4">System Preview</h2>
+        <p class="text-white-50 lead mx-auto" style="max-width: 700px; font-size: 1.25rem;">A glimpse into the powerful tools and intuitive interfaces waiting for you inside.</p>
+      </div>
 
-    <div
-        class="login-hero position-relative min-vh-100 d-flex align-items-center justify-content-center overflow-hidden">
-
-        <div
-            class="login-card shadow-lg d-flex position-relative z-1 my-5 login-form-anim">
-
-            <div
-                class="login-form-section p-5 d-flex flex-column position-relative justify-content-center">
-                <div class="logo-text mt-2 mb-5 d-flex align-items-center">
-                    <div class="me-4 flex-shrink-0 shadow-sm"
-                        style="width: 100px; height: 100px; border-radius: 24px; background: #f8f9fa; border: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: center; padding: 10px;">
-                        <img src="kawadir-logo.png" alt="Kawadir"
-                            class="brand-logo"
-                            style="width: 100%; height: 100%; object-fit: contain; transform: scale(1.15);">
-                    </div>
-                    <div class="d-flex flex-column justify-content-center">
-                        <span
-                            style="font-size: 3rem; font-weight: 800; color: var(--bs-heading-color, #111); letter-spacing: 0.5px; line-height: 1;">Kawadir</span>
-                        <span
-                            style="font-size: 0.95rem; color: #888; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-top: 8px;">HR
-                            Management</span>
-                    </div>
-                </div>
-
-                <div class="form-content px-lg-3">
-                    <div class="mb-5 text-center">
-                        <h2 class="fw-bold text-dark mb-2 loop-typing"
-                            style="font-size: 2.2rem;">Welcome Back</h2><br>
-                        <p class="text-muted loop-typing-sub"
-                            style="font-size: 1.1rem; min-height: 26px;">Access
-                            your HR dashboard</p>
-                    </div>
-
-                    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-
-                        <div class="mb-4">
-                            <label
-                                class="form-label text-secondary small fw-bold text-uppercase ms-3 mb-2"
-                                style="letter-spacing: 1px;">Email
-                                Address</label>
-                            <input type="email"
-                                class="form-control rounded-pill custom-input px-4 py-3 border-0 fs-5"
-                                formControlName="email"
-                                placeholder="example@company.com"
-                                [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-                            <div class="invalid-feedback ms-3 mt-1">
-                                <span
-                                    *ngIf="loginForm.get('email')?.errors?.['required']">
-                                    <i
-                                        class="bi bi-exclamation-circle me-1"></i>Email
-                                    is required
-                                </span>
-                                <span
-                                    *ngIf="loginForm.get('email')?.errors?.['email']">
-                                    <i
-                                        class="bi bi-exclamation-circle me-1"></i>Please
-                                    enter a valid email address
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="mb-5">
-                            <label
-                                class="form-label text-secondary small fw-bold text-uppercase ms-3 mb-2"
-                                style="letter-spacing: 1px;">Password</label>
-                            <div class="position-relative">
-                                <input
-                                    [type]="isPasswordVisible ? 'text' : 'password'"
-                                    class="form-control rounded-pill custom-input px-4 py-3 border-0 pe-5 fs-5"
-                                    formControlName="password"
-                                    placeholder="******************"
-                                    [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-
-                                <button
-                                    class="btn btn-link text-muted position-absolute end-0 top-50 translate-middle-y me-3 text-decoration-none shadow-none"
-                                    type="button"
-                                    (click)="togglePasswordVisibility()"
-                                    tabindex="-1" style="z-index: 5;">
-                                    <i class="bi fs-4"
-                                        [ngClass]="isPasswordVisible ? 'bi-eye-slash' : 'bi-eye'"></i>
-                                </button>
-                            </div>
-                            <div class="invalid-feedback ms-3 mt-1">
-                                <span
-                                    *ngIf="loginForm.get('password')?.errors?.['required']">
-                                    <i
-                                        class="bi bi-exclamation-circle me-1"></i>Password
-                                    is required
-                                </span>
-                                <span
-                                    *ngIf="loginForm.get('password')?.errors?.['minlength']">
-                                    <i
-                                        class="bi bi-exclamation-circle me-1"></i>Password
-                                    must be at least 6 characters
-                                </span>
-                            </div>
-                        </div>
-
-                        <button type="submit"
-                            class="btn btn-warning w-100 rounded-pill py-3 fw-bold shadow submit-btn text-dark mb-4 fs-5 d-flex justify-content-center align-items-center gap-2"
-                            [disabled]="isLoading">
-                            @if (isLoading) {
-                            <span class="spinner-border spinner-border-sm"
-                                role="status" aria-hidden="true"></span>
-                            }
-                            <span>Sign In</span>
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            <div class="login-image-section p-3 d-none d-lg-block">
-                <img
-                    src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80"
-                    alt="Team working"
-                    class="h-100 w-100 object-fit-cover shadow-sm"
-                    style="border-radius: 2rem !important;">
-            </div>
-
+      <div class="row g-4 align-items-center mb-5 pb-5">
+        <div class="col-lg-6 order-lg-2 reveal-fade-left">
+          <div class="p-lg-5">
+            <h3 class="fw-bold text-white mb-3" style="font-size: 2.2rem;">Interactive Dashboard</h3>
+            <p class="text-white-50 fs-5 mb-4">Get a bird's-eye view of your entire organization. Monitor attendance rates, track employee distribution, and manage daily operations all from one centralized hub.</p>
+            <ul class="list-unstyled text-white-50 fs-5">
+              <li class="mb-3 d-flex align-items-center"><i class="bi bi-check-circle-fill text-success fs-4 me-3"></i>Real-time statistics and charts</li>
+              <li class="mb-3 d-flex align-items-center"><i class="bi bi-check-circle-fill text-success fs-4 me-3"></i>Quick access to essential modules</li>
+              <li class="d-flex align-items-center"><i class="bi bi-check-circle-fill text-success fs-4 me-3"></i>Exportable PDF reports</li>
+            </ul>
+          </div>
         </div>
+        <div class="col-lg-6 order-lg-1 reveal-fade-right">
+          <div class="position-relative preview-img-container" style="perspective: 1000px;">
+            <div class="position-absolute w-100 h-100 bg-primary bg-opacity-25 rounded-5" style="filter: blur(40px); transform: scale(0.9); top: 0; left: 0;"></div>
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Dashboard Preview" class="img-fluid rounded-4 shadow-lg position-relative border border-white border-opacity-10 transition-all" style="transform: rotateY(5deg); transition: transform 0.5s ease;" onmouseover="this.style.transform='rotateY(0deg)'" onmouseout="this.style.transform='rotateY(5deg)'" />
+          </div>
+        </div>
+      </div>
 
+      <div class="row g-4 align-items-center mt-3">
+        <div class="col-lg-6 reveal-fade-right">
+          <div class="p-lg-5">
+            <h3 class="fw-bold text-white mb-3" style="font-size: 2.2rem;">Smart Employee Management</h3>
+            <p class="text-white-50 fs-5 mb-4">A complete repository for your workforce. Easily add, edit, and search through employee profiles with our advanced filtering and modern UI components.</p>
+            <ul class="list-unstyled text-white-50 fs-5">
+              <li class="mb-3 d-flex align-items-center"><i class="bi bi-check-circle-fill text-info fs-4 me-3"></i>Comprehensive profile details</li>
+              <li class="mb-3 d-flex align-items-center"><i class="bi bi-check-circle-fill text-info fs-4 me-3"></i>Salary & Position tracking</li>
+              <li class="d-flex align-items-center"><i class="bi bi-check-circle-fill text-info fs-4 me-3"></i>Leave & Attendance history</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-6 reveal-fade-left">
+          <div class="position-relative preview-img-container" style="perspective: 1000px;">
+            <div class="position-absolute w-100 h-100 bg-info bg-opacity-25 rounded-5" style="filter: blur(40px); transform: scale(0.9); top: 0; left: 0;"></div>
+            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Data Management Preview" class="img-fluid rounded-4 shadow-lg position-relative border border-white border-opacity-10 transition-all" style="transform: rotateY(-5deg); transition: transform 0.5s ease;" onmouseover="this.style.transform='rotateY(0deg)'" onmouseout="this.style.transform='rotateY(-5deg)'" />
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div id="overview" class="overview-section pb-5 position-relative z-2">
-        <div class="container pt-5 mt-4">
-            <div class="text-center mb-5 pb-3">
-                <span
-                    class="badge bg-warning bg-opacity-10 text-warning px-4 py-2 rounded-pill fw-bold mb-3 border border-warning border-opacity-25"
-                    style="letter-spacing: 1px;">WHY CHOOSE KAWADIR</span>
-                <h2 class="display-4 fw-bold text-white mb-4">All-in-One HR
-                    Management</h2>
-                <p class="text-white-50 lead mx-auto"
-                    style="max-width: 700px; font-size: 1.25rem;">Streamline
-                    your HR processes with our powerful, intuitive platform
-                    designed for modern enterprises.</p>
+    <div class="container py-5 mt-3 mb-5">
+      <div class="text-center mb-5 pb-3">
+        <span class="badge bg-info bg-opacity-10 text-info px-4 py-2 rounded-pill fw-bold mb-3 border border-info border-opacity-25" style="letter-spacing: 1px;">DEVELOPED BY</span>
+        <h2 class="display-4 fw-bold text-white mb-4">Meet the Team</h2>
+        <p class="text-white-50 lead mx-auto" style="max-width: 600px; font-size: 1.25rem;">The brilliant minds behind the Kawadir HRMS project</p>
+      </div>
+
+      <div class="row g-4 justify-content-center">
+        <div class="col-sm-6 col-lg-3 reveal-zoom delay-100">
+          <div class="feature-card p-4 rounded-4 h-100 text-center position-relative overflow-hidden d-flex flex-column">
+            <div class="mb-4 mx-auto d-inline-flex align-items-center justify-content-center rounded-circle bg-white bg-opacity-10 text-white shadow-sm" style="width: 90px; height: 90px;">
+              <i class="bi bi-person-fill" style="font-size: 2.5rem;"></i>
             </div>
-
-            <div class="row g-4 mt-2 pb-5">
-                <div class="col-md-4 reveal-fade-up delay-100">
-                    <div
-                        class="feature-card p-5 rounded-4 h-100 position-relative overflow-hidden">
-                        <div
-                            class="feature-icon mb-4 d-inline-flex align-items-center justify-content-center rounded-4 bg-primary bg-opacity-10 text-primary shadow-sm"
-                            style="width: 70px; height: 70px;">
-                            <i class="bi bi-people fs-2"></i>
-                        </div>
-                        <h3 class="fw-bold text-white mb-3"
-                            style="font-size: 1.6rem;">Employee Lifecycle</h3>
-                        <p class="text-white-50 mb-0 fs-5">Maintain complete
-                            employee records, track performance, and manage all
-                            events easily from a single comprehensive
-                            dashboard.</p>
-                    </div>
-                </div>
-
-                <div class="col-md-4 reveal-fade-up delay-200">
-                    <div
-                        class="feature-card p-5 rounded-4 h-100 position-relative overflow-hidden">
-                        <div
-                            class="feature-icon mb-4 d-inline-flex align-items-center justify-content-center rounded-4 bg-success bg-opacity-10 text-success shadow-sm"
-                            style="width: 70px; height: 70px;">
-                            <i class="bi bi-cash-stack fs-2"></i>
-                        </div>
-                        <h3 class="fw-bold text-white mb-3"
-                            style="font-size: 1.6rem;">Smart Payroll & Time</h3>
-                        <p class="text-white-50 mb-0 fs-5">Automate payroll
-                            processing, manage deductions, track daily
-                            attendance and generate comprehensive financial
-                            reports.</p>
-                    </div>
-                </div>
-
-                <div class="col-md-4 reveal-fade-up delay-300">
-                    <div
-                        class="feature-card p-5 rounded-4 h-100 position-relative overflow-hidden">
-                        <div
-                            class="feature-icon mb-4 d-inline-flex align-items-center justify-content-center rounded-4 bg-info bg-opacity-10 text-info shadow-sm"
-                            style="width: 70px; height: 70px;">
-                            <i class="bi bi-robot fs-2"></i>
-                        </div>
-                        <h3 class="fw-bold text-white mb-3"
-                            style="font-size: 1.6rem;">AI Assistant</h3>
-                        <p class="text-white-50 mb-0 fs-5">Leverage built-in AI
-                            for smart analytics, answering HR queries instantly,
-                            and extracting key insights from your organizational
-                            data.</p>
-                    </div>
-                </div>
+            <h4 class="fw-bold text-white mb-2" style="font-size: 1.3rem;">Abdelqader<br />Alfaqeeh</h4>
+            <p class="text-warning small mb-3 fw-bold text-uppercase" style="letter-spacing: 1.5px;">Developer</p>
+            <div class="mt-auto pt-2 d-flex justify-content-center border-top border-white border-opacity-10">
+              <a href="https://github.com/3Abedalqader15" target="_blank" class="text-white-50 hover-white mt-3 d-inline-block transition-all" title="GitHub Profile"><i class="bi bi-github fs-5"></i></a>
             </div>
+          </div>
         </div>
 
-        <div class="container py-5 mt-2 mb-4">
-            <div class="text-center mb-5 pb-3">
-                <span
-                    class="badge bg-success bg-opacity-10 text-success px-4 py-2 rounded-pill fw-bold mb-3 border border-success border-opacity-25"
-                    style="letter-spacing: 1px;">INSIDE THE PLATFORM</span>
-                <h2 class="display-4 fw-bold text-white mb-4">System
-                    Preview</h2>
-                <p class="text-white-50 lead mx-auto"
-                    style="max-width: 700px; font-size: 1.25rem;">A glimpse into
-                    the powerful tools and intuitive interfaces waiting for you
-                    inside.</p>
+        <div class="col-sm-6 col-lg-3 reveal-zoom delay-200">
+          <div class="feature-card p-4 rounded-4 h-100 text-center position-relative overflow-hidden d-flex flex-column">
+            <div class="mb-4 mx-auto d-inline-flex align-items-center justify-content-center rounded-circle bg-white bg-opacity-10 text-white shadow-sm" style="width: 90px; height: 90px;">
+              <i class="bi bi-person-fill" style="font-size: 2.5rem;"></i>
             </div>
-
-            <div class="row g-4 align-items-center mb-5 pb-5">
-                <div class="col-lg-6 order-lg-2 reveal-fade-left">
-                    <div class="p-lg-5">
-                        <h3 class="fw-bold text-white mb-3"
-                            style="font-size: 2.2rem;">Interactive
-                            Dashboard</h3>
-                        <p class="text-white-50 fs-5 mb-4">Get a bird's-eye view
-                            of your entire organization. Monitor attendance
-                            rates, track employee distribution, and manage daily
-                            operations all from one centralized hub.</p>
-                        <ul class="list-unstyled text-white-50 fs-5">
-                            <li class="mb-3 d-flex align-items-center"><i
-                                    class="bi bi-check-circle-fill text-success fs-4 me-3"></i>Real-time
-                                statistics and charts</li>
-                            <li class="mb-3 d-flex align-items-center"><i
-                                    class="bi bi-check-circle-fill text-success fs-4 me-3"></i>Quick
-                                access to essential modules</li>
-                            <li class="d-flex align-items-center"><i
-                                    class="bi bi-check-circle-fill text-success fs-4 me-3"></i>Exportable
-                                PDF reports</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-6 order-lg-1 reveal-fade-right">
-                    <div class="position-relative preview-img-container"
-                        style="perspective: 1000px;">
-                        <div
-                            class="position-absolute w-100 h-100 bg-primary bg-opacity-25 rounded-5"
-                            style="filter: blur(40px); transform: scale(0.9); top: 0; left: 0;"></div>
-                        <img
-                            src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
-                            alt="Dashboard Preview"
-                            class="img-fluid rounded-4 shadow-lg position-relative border border-white border-opacity-10 transition-all"
-                            style="transform: rotateY(5deg); transition: transform 0.5s ease;"
-                            onmouseover="this.style.transform='rotateY(0deg)'"
-                            onmouseout="this.style.transform='rotateY(5deg)'">
-                    </div>
-                </div>
+            <h4 class="fw-bold text-white mb-2" style="font-size: 1.3rem;">Mohammad<br />Alghazo</h4>
+            <p class="text-warning small mb-3 fw-bold text-uppercase" style="letter-spacing: 1.5px;">Developer</p>
+            <div class="mt-auto pt-2 d-flex justify-content-center border-top border-white border-opacity-10">
+              <a href="https://github.com/MohammadAlghazo" target="_blank" class="text-white-50 hover-white mt-3 d-inline-block transition-all" title="GitHub Profile"><i class="bi bi-github fs-5"></i></a>
             </div>
-
-            <div class="row g-4 align-items-center mt-3">
-                <div class="col-lg-6 reveal-fade-right">
-                    <div class="p-lg-5">
-                        <h3 class="fw-bold text-white mb-3"
-                            style="font-size: 2.2rem;">Smart Employee
-                            Management</h3>
-                        <p class="text-white-50 fs-5 mb-4">A complete repository
-                            for your workforce. Easily add, edit, and search
-                            through employee profiles with our advanced
-                            filtering and modern UI components.</p>
-                        <ul class="list-unstyled text-white-50 fs-5">
-                            <li class="mb-3 d-flex align-items-center"><i
-                                    class="bi bi-check-circle-fill text-info fs-4 me-3"></i>Comprehensive
-                                profile details</li>
-                            <li class="mb-3 d-flex align-items-center"><i
-                                    class="bi bi-check-circle-fill text-info fs-4 me-3"></i>Salary
-                                & Position tracking</li>
-                            <li class="d-flex align-items-center"><i
-                                    class="bi bi-check-circle-fill text-info fs-4 me-3"></i>Leave
-                                & Attendance history</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-6 reveal-fade-left">
-                    <div class="position-relative preview-img-container"
-                        style="perspective: 1000px;">
-                        <div
-                            class="position-absolute w-100 h-100 bg-info bg-opacity-25 rounded-5"
-                            style="filter: blur(40px); transform: scale(0.9); top: 0; left: 0;"></div>
-                        <img
-                            src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
-                            alt="Data Management Preview"
-                            class="img-fluid rounded-4 shadow-lg position-relative border border-white border-opacity-10 transition-all"
-                            style="transform: rotateY(-5deg); transition: transform 0.5s ease;"
-                            onmouseover="this.style.transform='rotateY(0deg)'"
-                            onmouseout="this.style.transform='rotateY(-5deg)'">
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
 
-        <div class="container py-5 mt-3 mb-5">
-            <div class="text-center mb-5 pb-3">
-                <span
-                    class="badge bg-info bg-opacity-10 text-info px-4 py-2 rounded-pill fw-bold mb-3 border border-info border-opacity-25"
-                    style="letter-spacing: 1px;">DEVELOPED BY</span>
-                <h2 class="display-4 fw-bold text-white mb-4">Meet the Team</h2>
-                <p class="text-white-50 lead mx-auto"
-                    style="max-width: 600px; font-size: 1.25rem;">The brilliant
-                    minds behind the Kawadir HRMS project</p>
+        <div class="col-sm-6 col-lg-3 reveal-zoom delay-300">
+          <div class="feature-card p-4 rounded-4 h-100 text-center position-relative overflow-hidden d-flex flex-column">
+            <div class="mb-4 mx-auto d-inline-flex align-items-center justify-content-center rounded-circle bg-white bg-opacity-10 text-white shadow-sm" style="width: 90px; height: 90px;">
+              <i class="bi bi-person-fill" style="font-size: 2.5rem;"></i>
             </div>
-
-            <div class="row g-4 justify-content-center">
-
-                <div class="col-sm-6 col-lg-3 reveal-zoom delay-100">
-                    <div
-                        class="feature-card p-4 rounded-4 h-100 text-center position-relative overflow-hidden d-flex flex-column">
-                        <div
-                            class="mb-4 mx-auto d-inline-flex align-items-center justify-content-center rounded-circle bg-white bg-opacity-10 text-white shadow-sm"
-                            style="width: 90px; height: 90px;">
-                            <i class="bi bi-person-fill"
-                                style="font-size: 2.5rem;"></i>
-                        </div>
-                        <h4 class="fw-bold text-white mb-2"
-                            style="font-size: 1.3rem;">Abdelqader<br>Alfaqeeh</h4>
-                        <p
-                            class="text-warning small mb-3 fw-bold text-uppercase"
-                            style="letter-spacing: 1.5px;">Developer</p>
-                        <div
-                            class="mt-auto pt-2 d-flex justify-content-center border-top border-white border-opacity-10">
-                            <a href="https://github.com/3Abedalqader15"
-                                target="_blank"
-                                class="text-white-50 hover-white mt-3 d-inline-block transition-all"
-                                title="GitHub Profile"><i
-                                    class="bi bi-github fs-5"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-6 col-lg-3 reveal-zoom delay-200">
-                    <div
-                        class="feature-card p-4 rounded-4 h-100 text-center position-relative overflow-hidden d-flex flex-column">
-                        <div
-                            class="mb-4 mx-auto d-inline-flex align-items-center justify-content-center rounded-circle bg-white bg-opacity-10 text-white shadow-sm"
-                            style="width: 90px; height: 90px;">
-                            <i class="bi bi-person-fill"
-                                style="font-size: 2.5rem;"></i>
-                        </div>
-                        <h4 class="fw-bold text-white mb-2"
-                            style="font-size: 1.3rem;">Mohammad<br>Alghazo</h4>
-                        <p
-                            class="text-warning small mb-3 fw-bold text-uppercase"
-                            style="letter-spacing: 1.5px;">Developer</p>
-                        <div
-                            class="mt-auto pt-2 d-flex justify-content-center border-top border-white border-opacity-10">
-                            <a href="https://github.com/MohammadAlghazo"
-                                target="_blank"
-                                class="text-white-50 hover-white mt-3 d-inline-block transition-all"
-                                title="GitHub Profile"><i
-                                    class="bi bi-github fs-5"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-6 col-lg-3 reveal-zoom delay-300">
-                    <div
-                        class="feature-card p-4 rounded-4 h-100 text-center position-relative overflow-hidden d-flex flex-column">
-                        <div
-                            class="mb-4 mx-auto d-inline-flex align-items-center justify-content-center rounded-circle bg-white bg-opacity-10 text-white shadow-sm"
-                            style="width: 90px; height: 90px;">
-                            <i class="bi bi-person-fill"
-                                style="font-size: 2.5rem;"></i>
-                        </div>
-                        <h4 class="fw-bold text-white mb-2"
-                            style="font-size: 1.3rem;">Mohammad<br>Frehat</h4>
-                        <p
-                            class="text-warning small mb-3 fw-bold text-uppercase"
-                            style="letter-spacing: 1.5px;">Developer</p>
-                        <div
-                            class="mt-auto pt-2 d-flex justify-content-center border-top border-white border-opacity-10">
-                            <a href="https://github.com/MohammadFrehatx95"
-                                target="_blank"
-                                class="text-white-50 hover-white mt-3 d-inline-block transition-all"
-                                title="GitHub Profile"><i
-                                    class="bi bi-github fs-5"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-6 col-lg-3 reveal-zoom delay-400">
-                    <div
-                        class="feature-card p-4 rounded-4 h-100 text-center position-relative overflow-hidden d-flex flex-column">
-                        <div
-                            class="mb-4 mx-auto d-inline-flex align-items-center justify-content-center rounded-circle bg-white bg-opacity-10 text-white shadow-sm"
-                            style="width: 90px; height: 90px;">
-                            <i class="bi bi-person-fill"
-                                style="font-size: 2.5rem;"></i>
-                        </div>
-                        <h4 class="fw-bold text-white mb-2"
-                            style="font-size: 1.3rem;">Saad<br>Alrabadi</h4>
-                        <p
-                            class="text-warning small mb-3 fw-bold text-uppercase"
-                            style="letter-spacing: 1.5px;">Developer</p>
-                        <div
-                            class="mt-auto pt-2 d-flex justify-content-center border-top border-white border-opacity-10">
-                            <a href="https://github.com/SAADX25" target="_blank"
-                                class="text-white-50 hover-white mt-3 d-inline-block transition-all"
-                                title="GitHub Profile"><i
-                                    class="bi bi-github fs-5"></i></a>
-                        </div>
-                    </div>
-                </div>
+            <h4 class="fw-bold text-white mb-2" style="font-size: 1.3rem;">Mohammad<br />Frehat</h4>
+            <p class="text-warning small mb-3 fw-bold text-uppercase" style="letter-spacing: 1.5px;">Developer</p>
+            <div class="mt-auto pt-2 d-flex justify-content-center border-top border-white border-opacity-10">
+              <a href="https://github.com/MohammadFrehatx95" target="_blank" class="text-white-50 hover-white mt-3 d-inline-block transition-all" title="GitHub Profile"><i class="bi bi-github fs-5"></i></a>
             </div>
+          </div>
         </div>
 
-        <div
-            class="container border-top border-secondary border-opacity-25 pt-4 mt-2 pb-2">
-            <div
-                class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <p class="text-white-50 small mb-0">&copy; 2026 Kawadir HRMS.
-                    All rights reserved.</p>
-                <div class="d-flex gap-4">
-                    <a href="#"
-                        class="text-white-50 text-decoration-none small hover-white">Privacy
-                        Policy</a>
-                    <a href="#"
-                        class="text-white-50 text-decoration-none small hover-white">Terms
-                        of Service</a>
-                </div>
+        <div class="col-sm-6 col-lg-3 reveal-zoom delay-400">
+          <div class="feature-card p-4 rounded-4 h-100 text-center position-relative overflow-hidden d-flex flex-column">
+            <div class="mb-4 mx-auto d-inline-flex align-items-center justify-content-center rounded-circle bg-white bg-opacity-10 text-white shadow-sm" style="width: 90px; height: 90px;">
+              <i class="bi bi-person-fill" style="font-size: 2.5rem;"></i>
             </div>
+            <h4 class="fw-bold text-white mb-2" style="font-size: 1.3rem;">Saad<br />Alrabadi</h4>
+            <p class="text-warning small mb-3 fw-bold text-uppercase" style="letter-spacing: 1.5px;">Developer</p>
+            <div class="mt-auto pt-2 d-flex justify-content-center border-top border-white border-opacity-10">
+              <a href="https://github.com/SAADX25" target="_blank" class="text-white-50 hover-white mt-3 d-inline-block transition-all" title="GitHub Profile"><i class="bi bi-github fs-5"></i></a>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+
+    <div class="container border-top border-secondary border-opacity-25 pt-4 mt-2 pb-2">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <p class="text-white-50 small mb-0">&copy; 2026 Kawadir HRMS. All rights reserved.</p>
+        <div class="d-flex gap-4">
+          <a href="#" class="text-white-50 text-decoration-none small hover-white">Privacy Policy</a>
+          <a href="#" class="text-white-50 text-decoration-none small hover-white">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 ```
 
 ### File: src\app\features\auth\login\login.component.ts
+
 ```typescript
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  ReactiveFormsModule,
-  FormGroup,
-  FormControl,
-  Validators,
-  FormsModule,
-} from '@angular/forms';
-import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
-import { AuthService } from '../../../core/services/auth.service';
-import { getFriendlyErrorMessage } from '../../../core/utils/error-handler.util';
-import { SettingsService } from '../../../core/services/settings.service';
+import { Component, OnInit, OnDestroy, inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { ReactiveFormsModule, FormGroup, FormControl, Validators, FormsModule } from "@angular/forms";
+import { Router } from "@angular/router";
+import Swal from "sweetalert2";
+import { AuthService } from "../../../core/services/auth.service";
+import { getFriendlyErrorMessage } from "../../../core/utils/error-handler.util";
+import { SettingsService } from "../../../core/services/settings.service";
 
 @Component({
-  selector: 'app-login',
+  selector: "app-login",
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
+  templateUrl: "./login.component.html",
+  styleUrls: ["./login.component.css"],
 })
 export class LoginComponent implements OnInit, OnDestroy {
   private router = inject(Router);
@@ -4119,56 +3540,52 @@ export class LoginComponent implements OnInit, OnDestroy {
   isPasswordVisible = false;
 
   loginForm = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [
-      Validators.required,
-      Validators.minLength(6),
-    ]),
+    email: new FormControl("", [Validators.required, Validators.email]),
+    password: new FormControl("", [Validators.required, Validators.minLength(6)]),
     rememberMe: new FormControl(false),
   });
 
   togglePasswordVisibility() {
-
     this.isPasswordVisible = !this.isPasswordVisible;
   }
 
   scrollToOverview(event: Event) {
     event.preventDefault();
-    document.getElementById('overview')?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById("overview")?.scrollIntoView({ behavior: "smooth" });
   }
 
   ngOnInit() {
-    document.documentElement.setAttribute('data-theme', 'light');
-    document.body.classList.remove('dark-mode');
+    document.documentElement.setAttribute("data-theme", "light");
+    document.body.classList.remove("dark-mode");
 
-    
     setTimeout(() => {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('active');
-          } else {
-            entry.target.classList.remove('active');
-          }
-        });
-      }, { threshold: 0.1 });
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("active");
+            } else {
+              entry.target.classList.remove("active");
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
 
-      document.querySelectorAll('.reveal-fade-up, .reveal-fade-left, .reveal-fade-right, .reveal-typing, .reveal-zoom').forEach((el) => {
+      document.querySelectorAll(".reveal-fade-up, .reveal-fade-left, .reveal-fade-right, .reveal-typing, .reveal-zoom").forEach((el) => {
         observer.observe(el);
       });
     }, 100);
   }
 
   ngOnDestroy() {
-
     if (this.settingsService.isDarkMode) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      document.body.classList.add('dark-mode');
+      document.documentElement.setAttribute("data-theme", "dark");
+      document.body.classList.add("dark-mode");
     }
   }
 
   onSubmit() {
-
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
@@ -4177,7 +3594,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.isLoading = true;
 
     const credentials = {
-
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
     };
@@ -4185,148 +3601,134 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.authService.login(credentials).subscribe({
       next: (res: any) => {
         this.isLoading = false;
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(["/dashboard"]);
       },
       error: (err) => {
         this.isLoading = false;
-        Swal.fire(
-          'Login Failed',
-          getFriendlyErrorMessage(
-            err,
-            'Incorrect email or password. Please try again.',
-          ),
-          'error',
-        );
+        Swal.fire("Login Failed", getFriendlyErrorMessage(err, "Incorrect email or password. Please try again."), "error");
       },
     });
   }
 }
-
 ```
 
 ### File: src\app\features\auth\register\register.component.html
+
 ```html
 <div class="page-container p-4 fade-in">
-    
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <div class="d-flex align-items-center">
-            <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3 shadow-sm" style="width: 52px; height: 52px;">
-                <i class="bi bi-person-plus-fill fs-4"></i>
-            </div>
-            <div>
-                <h2 class="fw-bold text-dark mb-1">{{ 'Register New User' | t }}</h2>
-                <p class="text-muted small mb-0">{{ 'Create secure system credentials and assign appropriate roles for new employees.' | t }}</p>
-            </div>
-        </div>
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div class="d-flex align-items-center">
+      <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3 shadow-sm" style="width: 52px; height: 52px;">
+        <i class="bi bi-person-plus-fill fs-4"></i>
+      </div>
+      <div>
+        <h2 class="fw-bold text-dark mb-1">{{ 'Register New User' | t }}</h2>
+        <p class="text-muted small mb-0">{{ 'Create secure system credentials and assign appropriate roles for new employees.' | t }}</p>
+      </div>
     </div>
+  </div>
 
-    <div class="row justify-content-center justify-content-xl-start">
-        <div class="col-12 col-xl-10 col-xxl-8">
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-                <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4 px-md-5">
-                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-shield-lock text-primary me-2"></i>Account Details</h5>
-                </div>
-                <div class="card-body p-4 p-md-5 pt-3">
-                    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="modern-form">
-                        <div class="row g-4 mb-4">
-                            
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary small mb-2">{{ 'Username' | t }} <span class="text-danger">*</span></label>
-                                <div class="input-group input-group-lg shadow-sm rounded-3 overflow-hidden">
-                                    <span class="input-group-text bg-light border-0 text-muted px-3"><i class="bi bi-person"></i></span>
-                                    <input type="text" class="form-control border-0 bg-light fs-6" formControlName="username" placeholder="e.g. johndoe" style="box-shadow: none;">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary small mb-2">{{ 'Email Address' | t }} <span class="text-danger">*</span></label>
-                                <div class="input-group input-group-lg shadow-sm rounded-3 overflow-hidden">
-                                    <span class="input-group-text bg-light border-0 text-muted px-3"><i class="bi bi-envelope"></i></span>
-                                    <input type="email" class="form-control border-0 bg-light fs-6" formControlName="email" placeholder="john@company.com" style="box-shadow: none;">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary small mb-2">{{ 'Password' | t }} <span class="text-danger">*</span></label>
-                                <div class="input-group input-group-lg shadow-sm rounded-3 overflow-hidden">
-                                    <span class="input-group-text bg-light border-0 text-muted px-3"><i class="bi bi-key"></i></span>
-                                    <input type="password" class="form-control border-0 bg-light fs-6" formControlName="password" placeholder="Min. 6 characters" style="box-shadow: none;">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary small mb-2">{{ 'System Role' | t }} <span class="text-danger">*</span></label>
-                                <div class="input-group input-group-lg shadow-sm rounded-3 overflow-hidden">
-                                    <span class="input-group-text bg-light border-0 text-muted px-3"><i class="bi bi-person-badge"></i></span>
-                                    <select class="form-select border-0 bg-light fs-6 text-dark" formControlName="role" style="box-shadow: none; cursor: pointer;">
-                                        <option value="" disabled selected>{{ 'Select Role...' | t }}</option>
-                                        @for (role of roles; track role) {
-                                            <option [value]="role">{{ role | t }}</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <hr class="text-muted opacity-25 my-4">
-
-                        <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary btn-lg px-5 fw-bold shadow rounded-pill submit-btn d-flex align-items-center gap-2" [disabled]="registerForm.invalid || isLoading">
-                                @if (isLoading) {
-                                    <span class="spinner-border spinner-border-sm"></span> {{ 'Registering...' | t }}
-                                } @else {
-                                    <i class="bi bi-check2-circle"></i> {{ 'Create Account' | t }}
-                                }
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+  <div class="row justify-content-center justify-content-xl-start">
+    <div class="col-12 col-xl-10 col-xxl-8">
+      <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4 px-md-5">
+          <h5 class="fw-bold text-dark mb-0"><i class="bi bi-shield-lock text-primary me-2"></i>Account Details</h5>
         </div>
+        <div class="card-body p-4 p-md-5 pt-3">
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="modern-form">
+            <div class="row g-4 mb-4">
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-secondary small mb-2">{{ 'Username' | t }} <span class="text-danger">*</span></label>
+                <div class="input-group input-group-lg shadow-sm rounded-3 overflow-hidden">
+                  <span class="input-group-text bg-light border-0 text-muted px-3"><i class="bi bi-person"></i></span>
+                  <input type="text" class="form-control border-0 bg-light fs-6" formControlName="username" placeholder="e.g. johndoe" style="box-shadow: none;" />
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-secondary small mb-2">{{ 'Email Address' | t }} <span class="text-danger">*</span></label>
+                <div class="input-group input-group-lg shadow-sm rounded-3 overflow-hidden">
+                  <span class="input-group-text bg-light border-0 text-muted px-3"><i class="bi bi-envelope"></i></span>
+                  <input type="email" class="form-control border-0 bg-light fs-6" formControlName="email" placeholder="john@company.com" style="box-shadow: none;" />
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-secondary small mb-2">{{ 'Password' | t }} <span class="text-danger">*</span></label>
+                <div class="input-group input-group-lg shadow-sm rounded-3 overflow-hidden">
+                  <span class="input-group-text bg-light border-0 text-muted px-3"><i class="bi bi-key"></i></span>
+                  <input type="password" class="form-control border-0 bg-light fs-6" formControlName="password" placeholder="Min. 6 characters" style="box-shadow: none;" />
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-secondary small mb-2">{{ 'System Role' | t }} <span class="text-danger">*</span></label>
+                <div class="input-group input-group-lg shadow-sm rounded-3 overflow-hidden">
+                  <span class="input-group-text bg-light border-0 text-muted px-3"><i class="bi bi-person-badge"></i></span>
+                  <select class="form-select border-0 bg-light fs-6 text-dark" formControlName="role" style="box-shadow: none; cursor: pointer;">
+                    <option value="" disabled selected>{{ 'Select Role...' | t }}</option>
+                    @for (role of roles; track role) {
+                    <option [value]="role">{{ role | t }}</option>
+                    }
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <hr class="text-muted opacity-25 my-4" />
+
+            <div class="d-flex justify-content-end">
+              <button type="submit" class="btn btn-primary btn-lg px-5 fw-bold shadow rounded-pill submit-btn d-flex align-items-center gap-2" [disabled]="registerForm.invalid || isLoading">
+                @if (isLoading) {
+                <span class="spinner-border spinner-border-sm"></span> {{ 'Registering...' | t }} } @else { <i class="bi bi-check2-circle"></i> {{ 'Create Account' | t }} }
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <style>
-.input-group-text {
+  .input-group-text {
     min-width: 45px;
     justify-content: center;
-}
-.form-control:focus, .form-select:focus {
+  }
+  .form-control:focus,
+  .form-select:focus {
     background-color: #fff !important;
     outline: none;
-}
-.input-group:focus-within {
+  }
+  .input-group:focus-within {
     border: 1px solid var(--bs-primary);
     background-color: #fff !important;
-}
-.input-group:focus-within .input-group-text, .input-group:focus-within .form-control, .input-group:focus-within .form-select {
+  }
+  .input-group:focus-within .input-group-text,
+  .input-group:focus-within .form-control,
+  .input-group:focus-within .form-select {
     background-color: #fff !important;
-}
+  }
 </style>
 ```
 
 ### File: src\app\features\auth\register\register.component.ts
+
 ```typescript
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  ReactiveFormsModule,
-  FormGroup,
-  FormControl,
-  Validators,
-} from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
-import Swal from 'sweetalert2';
-import { getFriendlyErrorMessage } from '../../../core/utils/error-handler.util';
-import { TranslatePipe } from '../../../core/pipes/translate.pipe';
+import { Component, inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { ReactiveFormsModule, FormGroup, FormControl, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
+import { AuthService } from "../../../core/services/auth.service";
+import Swal from "sweetalert2";
+import { getFriendlyErrorMessage } from "../../../core/utils/error-handler.util";
+import { TranslatePipe } from "../../../core/pipes/translate.pipe";
 
 @Component({
-  selector: 'app-register',
+  selector: "app-register",
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
-  templateUrl: './register.component.html',
+  templateUrl: "./register.component.html",
 })
 export class RegisterComponent {
   private authService = inject(AuthService);
@@ -4335,22 +3737,15 @@ export class RegisterComponent {
   isLoading = false;
 
   registerForm = new FormGroup({
-    username: new FormControl('', [
-      Validators.required,
-      Validators.minLength(3),
-    ]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [
-      Validators.required,
-      Validators.minLength(6),
-    ]),
-    role: new FormControl('', Validators.required),
+    username: new FormControl("", [Validators.required, Validators.minLength(3)]),
+    email: new FormControl("", [Validators.required, Validators.email]),
+    password: new FormControl("", [Validators.required, Validators.minLength(6)]),
+    role: new FormControl("", Validators.required),
   });
 
-  roles = ['Employee', 'Admin', 'HR'];
+  roles = ["Employee", "Admin", "HR"];
 
   onSubmit() {
-
     if (this.registerForm.invalid) return;
 
     this.isLoading = true;
@@ -4361,398 +3756,358 @@ export class RegisterComponent {
         this.isLoading = false;
 
         const userIdFromRes = res?.data?.id || res?.id || res?.userId;
-        const userEmail = this.registerForm.get('email')?.value;
+        const userEmail = this.registerForm.get("email")?.value;
 
         Swal.fire({
-          icon: 'success',
-          title: 'Account Created Successfully',
-          text: 'Do you want to complete the employee profile now?',
+          icon: "success",
+          title: "Account Created Successfully",
+          text: "Do you want to complete the employee profile now?",
           showCancelButton: true,
-          confirmButtonText: 'Yes, Complete Profile',
-          cancelButtonText: 'Later',
+          confirmButtonText: "Yes, Complete Profile",
+          cancelButtonText: "Later",
         }).then((result) => {
           if (result.isConfirmed) {
-            this.router.navigate(['/employee-form'], {
+            this.router.navigate(["/employee-form"], {
               state: {
                 userId: userIdFromRes,
                 email: userEmail,
               },
             });
           } else {
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(["/dashboard"]);
           }
         });
       },
       error: (err) => {
         this.isLoading = false;
-        Swal.fire(
-          'Error',
-          getFriendlyErrorMessage(
-            err,
-            'Failed to create account. Please try again.',
-          ),
-          'error',
-        );
+        Swal.fire("Error", getFriendlyErrorMessage(err, "Failed to create account. Please try again."), "error");
       },
     });
   }
 }
-
 ```
 
 ### File: src\app\features\dashboard\dashboard.component.html
+
 ```html
 <div class="dashboard-container">
-
-    
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="ann-panel shadow-sm border-0 rounded-4 overflow-hidden">
-                
-                <div class="ann-header px-4 py-3 d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center gap-2">
-                        <div class="ann-icon-wrap">
-                            <i class="bi bi-megaphone-fill"></i>
-                        </div>
-                        <div>
-                            <h6 class="fw-bold m-0 text-dark" style="font-size: 0.95rem;">{{ 'Company Announcements' | t }}</h6>
-                            <small class="text-muted" style="font-size: 0.75rem;">{{ announcements.length }} {{ 'active announcement(s)' | t }}</small>
-                        </div>
-                    </div>
-                    <button *ngIf="isAdminOrHR" class="btn btn-primary btn-sm px-3 rounded-pill d-flex align-items-center gap-1" (click)="openAnnouncementModal()" style="font-size: 0.8rem;">
-                        <i class="bi bi-plus-lg"></i> {{ 'Post' | t }}
-                    </button>
-                </div>
-
-                
-                <div *ngIf="announcements.length === 0" class="text-center py-4 px-4 bg-white">
-                    <i class="bi bi-megaphone text-muted" style="font-size: 2rem; opacity: 0.4;"></i>
-                    <p class="text-muted small mt-2 mb-0">{{ 'No announcements at this time.' | t }}</p>
-                </div>
-
-                
-                <div class="ann-scroll-area bg-white" style="max-height: 260px; overflow-y: auto;">
-                    <div *ngFor="let ann of announcements; let last = last" class="ann-item px-4 py-3 d-flex gap-3 align-items-start" [class.border-bottom]="!last">
-                        
-                        
-                        <div class="ann-priority-dot flex-shrink-0 mt-1"
-                             [ngClass]="{'bg-danger': ann.priority === 'Urgent', 'bg-warning': ann.priority === 'High', 'bg-info': ann.priority === 'Normal'}">
-                        </div>
-
-                        
-                        <div class="flex-grow-1 min-w-0">
-                            <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
-                                <span class="ann-badge"
-                                      [ngClass]="{'ann-badge-urgent': ann.priority === 'Urgent', 'ann-badge-high': ann.priority === 'High', 'ann-badge-normal': ann.priority === 'Normal'}">
-                                    {{ ann.priority | t }}
-                                </span>
-                                <span class="text-muted" style="font-size: 0.72rem;">
-                                    <i class="bi bi-clock me-1"></i>{{ ann.createdAt | date:'MMM d, y' }}
-                                </span>
-                            </div>
-                            <div class="fw-semibold text-dark mb-1" style="font-size: 0.88rem;">{{ ann.title }}</div>
-                            <div class="text-secondary" style="font-size: 0.81rem; line-height: 1.5; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">{{ ann.content }}</div>
-                            <div class="d-flex align-items-center gap-2 mt-2">
-                                <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center fw-bold flex-shrink-0" style="width: 20px; height: 20px; font-size: 9px;">
-                                    {{ ann.authorName ? ann.authorName.charAt(0).toUpperCase() : 'A' }}
-                                </div>
-                                <small class="text-muted fw-medium" style="font-size: 0.72rem;">{{ ann.authorName }} · {{ ann.createdAt | date:'shortTime' }}</small>
-                            </div>
-                        </div>
-
-                        
-                        <button *ngIf="isAdminOrHR" class="btn btn-link text-danger p-0 flex-shrink-0 ann-delete-btn" (click)="deleteAnnouncement(ann.id)" [title]="'Delete' | t">
-                            <i class="bi bi-trash3" style="font-size: 0.85rem;"></i>
-                        </button>
-                    </div>
-                </div>
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="ann-panel shadow-sm border-0 rounded-4 overflow-hidden">
+        <div class="ann-header px-4 py-3 d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center gap-2">
+            <div class="ann-icon-wrap">
+              <i class="bi bi-megaphone-fill"></i>
             </div>
+            <div>
+              <h6 class="fw-bold m-0 text-dark" style="font-size: 0.95rem;">{{ 'Company Announcements' | t }}</h6>
+              <small class="text-muted" style="font-size: 0.75rem;">{{ announcements.length }} {{ 'active announcement(s)' | t }}</small>
+            </div>
+          </div>
+          <button *ngIf="isAdminOrHR" class="btn btn-primary btn-sm px-3 rounded-pill d-flex align-items-center gap-1" (click)="openAnnouncementModal()" style="font-size: 0.8rem;"><i class="bi bi-plus-lg"></i> {{ 'Post' | t }}</button>
         </div>
+
+        <div *ngIf="announcements.length === 0" class="text-center py-4 px-4 bg-white">
+          <i class="bi bi-megaphone text-muted" style="font-size: 2rem; opacity: 0.4;"></i>
+          <p class="text-muted small mt-2 mb-0">{{ 'No announcements at this time.' | t }}</p>
+        </div>
+
+        <div class="ann-scroll-area bg-white" style="max-height: 260px; overflow-y: auto;">
+          <div *ngFor="let ann of announcements; let last = last" class="ann-item px-4 py-3 d-flex gap-3 align-items-start" [class.border-bottom]="!last">
+            <div class="ann-priority-dot flex-shrink-0 mt-1" [ngClass]="{'bg-danger': ann.priority === 'Urgent', 'bg-warning': ann.priority === 'High', 'bg-info': ann.priority === 'Normal'}"></div>
+
+            <div class="flex-grow-1 min-w-0">
+              <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                <span class="ann-badge" [ngClass]="{'ann-badge-urgent': ann.priority === 'Urgent', 'ann-badge-high': ann.priority === 'High', 'ann-badge-normal': ann.priority === 'Normal'}"> {{ ann.priority | t }} </span>
+                <span class="text-muted" style="font-size: 0.72rem;"> <i class="bi bi-clock me-1"></i>{{ ann.createdAt | date:'MMM d, y' }} </span>
+              </div>
+              <div class="fw-semibold text-dark mb-1" style="font-size: 0.88rem;">{{ ann.title }}</div>
+              <div class="text-secondary" style="font-size: 0.81rem; line-height: 1.5; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">{{ ann.content }}</div>
+              <div class="d-flex align-items-center gap-2 mt-2">
+                <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center fw-bold flex-shrink-0" style="width: 20px; height: 20px; font-size: 9px;">{{ ann.authorName ? ann.authorName.charAt(0).toUpperCase() : 'A' }}</div>
+                <small class="text-muted fw-medium" style="font-size: 0.72rem;">{{ ann.authorName }} · {{ ann.createdAt | date:'shortTime' }}</small>
+              </div>
+            </div>
+
+            <button *ngIf="isAdminOrHR" class="btn btn-link text-danger p-0 flex-shrink-0 ann-delete-btn" (click)="deleteAnnouncement(ann.id)" [title]="'Delete' | t">
+              <i class="bi bi-trash3" style="font-size: 0.85rem;"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (isAdminOrHR) {
+  <div class="d-flex justify-content-end mb-3" *ngIf="isAdmin">
+    <button class="btn btn-primary d-flex align-items-center gap-2 shadow-sm px-4" (click)="downloadSystemReport()">
+      <i class="bi bi-file-earmark-arrow-down"></i>
+      {{ 'Download Report' | t }}
+    </button>
+  </div>
+
+  <div class="row g-4 mb-4">
+    <div class="col-md-3">
+      <div class="stat-card pink hover-elevate h-100 stat-card-link" [routerLink]="isAdminOrHR ? '/employees' : '/my-profile'">
+        <div class="card-body">
+          <h3>{{ totalEmployees }}</h3>
+          <p>{{ 'Total Employees' | t }}</p>
+          <i class="bi bi-people-fill icon"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stat-card orange hover-elevate h-100 stat-card-link" routerLink="/leave">
+        <div class="card-body">
+          <h3>{{ pendingLeaves }}</h3>
+          <p>{{ 'Pending Leaves' | t }}</p>
+          <i class="bi bi-calendar-x icon"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stat-card blue hover-elevate h-100 stat-card-link" [routerLink]="isAdminOrHR ? '/departments' : '/attendance'">
+        <div class="card-body">
+          <h3>{{ departmentsCount }}</h3>
+          <p>{{ 'Departments' | t }}</p>
+          <i class="bi bi-building icon"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stat-card green hover-elevate h-100 stat-card-link" routerLink="/salary">
+        <div class="card-body">
+          <h3>{{ totalSalaries | number }} JD</h3>
+          <p>{{ 'Salaries' | t }}</p>
+          <i class="bi bi-cash-stack icon"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-8 d-flex flex-column gap-4">
+      <div class="chart-card card hover-elevate shadow-sm border-0 rounded-4">
+        <div class="card-header bg-white p-3 border-0 d-flex justify-content-between align-items-center">
+          <h5 class="fw-bold m-0 text-dark">{{ 'Attendance' | t }}</h5>
+          <button class="btn btn-sm btn-outline-success border-0" (click)="exportRecentAttendancesToExcel()" title="Export to Excel">
+            <i class="bi bi-file-earmark-excel-fill"></i>
+          </button>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 text-nowrap">
+              <thead class="small text-muted text-uppercase bg-light">
+                <tr>
+                  <th class="ps-4">{{ 'Employee' | t }}</th>
+                  <th>{{ 'Date' | t }}</th>
+                  <th>{{ 'Clock In' | t }}</th>
+                  <th>{{ 'Clock Out' | t }}</th>
+                </tr>
+              </thead>
+              <tbody class="small">
+                @for (att of recentAttendances; track att.id) {
+                <tr>
+                  <td class="ps-4">
+                    <div class="d-flex align-items-center">
+                      <ng-container *ngIf="att.employeeProfilePictureUrl; else noDashPic">
+                        <img [src]="att.employeeProfilePictureUrl" alt="User" class="rounded-circle me-2 object-fit-cover shadow-sm" style="width: 28px; height: 28px; border: 1px solid #fff;" />
+                      </ng-container>
+                      <ng-template #noDashPic>
+                        <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; font-size: 11px;">{{ att.employeeName ? att.employeeName.charAt(0).toUpperCase() : 'E' }}</div>
+                      </ng-template>
+                      <span class="fw-bold text-dark">{{ att.employeeName || 'Emp #' + att.employeeId }}</span>
+                    </div>
+                  </td>
+                  <td>{{ att.date | date:'shortDate' }}</td>
+                  <td class="text-success"><i class="bi bi-box-arrow-in-right me-1"></i>{{ att.clockIn || '--:--' }}</td>
+                  <td class="text-danger"><i class="bi bi-box-arrow-right me-1"></i>{{ (att.clockOut && att.clockOut !== '00:00:00') ? att.clockOut : '--:--' }}</td>
+                </tr>
+                } @empty {
+                <tr>
+                  <td colspan="4" class="text-center py-4 text-muted">
+                    <i class="bi bi-calendar-x fs-3 d-block mb-2 text-light-gray"></i>
+                    {{ 'No Data' | t }}
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-card card hover-elevate shadow-sm border-0 rounded-4 flex-grow-1">
+        <div class="card-header bg-white p-3 border-0 pb-0 d-flex justify-content-between align-items-center">
+          <h5 class="fw-bold m-0 text-dark">{{ 'Attendance Rate' | t }}</h5>
+          <span class="badge bg-light text-success border border-success border-opacity-25 px-2 py-1"><i class="bi bi-person-check-fill me-1"></i>{{ attendanceRate }}% {{ 'Overall' | t }}</span>
+        </div>
+        <div class="card-body p-3 pt-4">
+          <div style="height: 300px; position: relative; width: 100%;">
+            <canvas id="attendanceRateChart"></canvas>
+          </div>
+        </div>
+      </div>
     </div>
 
-    @if (isAdminOrHR) {
-    <div class="d-flex justify-content-end mb-3" *ngIf="isAdmin">
-        <button class="btn btn-primary d-flex align-items-center gap-2 shadow-sm px-4" (click)="downloadSystemReport()">
-            <i class="bi bi-file-earmark-arrow-down"></i>
-            {{ 'Download Report' | t }}
-        </button>
-    </div>
-
-    
-    <div class="row g-4 mb-4">
-        <div class="col-md-3">
-            <div class="stat-card pink hover-elevate h-100 stat-card-link"
-                 [routerLink]="isAdminOrHR ? '/employees' : '/my-profile'">
-                <div class="card-body">
-                    <h3>{{ totalEmployees }}</h3>
-                    <p>{{ 'Total Employees' | t }}</p>
-                    <i class="bi bi-people-fill icon"></i>
-                </div>
-            </div>
+    <div class="col-lg-4 d-flex flex-column gap-4">
+      <div class="chart-card card hover-elevate shadow-sm border-0 rounded-4">
+        <div class="card-header bg-white p-3 border-0">
+          <h5 class="fw-bold m-0 text-dark">{{ 'Leave Distribution' | t }}</h5>
         </div>
-        <div class="col-md-3">
-            <div class="stat-card orange hover-elevate h-100 stat-card-link"
-                 routerLink="/leave">
-                <div class="card-body">
-                    <h3>{{ pendingLeaves }}</h3>
-                    <p>{{ 'Pending Leaves' | t }}</p>
-                    <i class="bi bi-calendar-x icon"></i>
-                </div>
-            </div>
+        <div class="card-body">
+          <div style="height: 250px; position: relative;" class="d-flex justify-content-center align-items-center">
+            <canvas id="leaveTypeChart"></canvas>
+            <div *ngIf="annualLeavePercent === 0 && sickLeavePercent === 0 && emergencyLeavePercent === 0 && unpaidLeavePercent === 0" class="position-absolute text-center text-muted small">{{ 'No Data' | t }}</div>
+          </div>
         </div>
-        <div class="col-md-3">
-            <div class="stat-card blue hover-elevate h-100 stat-card-link"
-                 [routerLink]="isAdminOrHR ? '/departments' : '/attendance'">
-                <div class="card-body">
-                    <h3>{{ departmentsCount }}</h3>
-                    <p>{{ 'Departments' | t }}</p>
-                    <i class="bi bi-building icon"></i>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card green hover-elevate h-100 stat-card-link"
-                 routerLink="/salary">
-                <div class="card-body">
-                    <h3>{{ totalSalaries | number }} JD</h3>
-                    <p>{{ 'Salaries' | t }}</p>
-                    <i class="bi bi-cash-stack icon"></i>
-                </div>
-            </div>
-        </div>
-    </div>
+      </div>
 
-    
-    <div class="row g-4">
-        
-        <div class="col-lg-8 d-flex flex-column gap-4">
-            
-            <div class="chart-card card hover-elevate shadow-sm border-0 rounded-4">
-                <div class="card-header bg-white p-3 border-0 d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold m-0 text-dark">{{ 'Attendance' | t }}</h5>
-                    <button class="btn btn-sm btn-outline-success border-0" (click)="exportRecentAttendancesToExcel()" title="Export to Excel">
-                        <i class="bi bi-file-earmark-excel-fill"></i>
-                    </button>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0 text-nowrap">
-                            <thead class="small text-muted text-uppercase bg-light">
-                                <tr>
-                                    <th class="ps-4">{{ 'Employee' | t }}</th>
-                                    <th>{{ 'Date' | t }}</th>
-                                    <th>{{ 'Clock In' | t }}</th>
-                                    <th>{{ 'Clock Out' | t }}</th>
-                                </tr>
-                            </thead>
-                            <tbody class="small">
-                                @for (att of recentAttendances; track att.id) {
-                                <tr>
-                                    <td class="ps-4">
-                                        <div class="d-flex align-items-center">
-                                            <ng-container *ngIf="att.employeeProfilePictureUrl; else noDashPic">
-                                                <img [src]="att.employeeProfilePictureUrl" alt="User" class="rounded-circle me-2 object-fit-cover shadow-sm" style="width: 28px; height: 28px; border: 1px solid #fff;">
-                                            </ng-container>
-                                            <ng-template #noDashPic>
-                                                <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center"
-                                                    style="width: 28px; height: 28px; font-size: 11px;">
-                                                    {{ att.employeeName ? att.employeeName.charAt(0).toUpperCase() : 'E' }}
-                                                </div>
-                                            </ng-template>
-                                            <span class="fw-bold text-dark">{{ att.employeeName || 'Emp #' + att.employeeId }}</span>
-                                        </div>
-                                    </td>
-                                    <td>{{ att.date | date:'shortDate' }}</td>
-                                    <td class="text-success"><i class="bi bi-box-arrow-in-right me-1"></i>{{ att.clockIn || '--:--' }}</td>
-                                    <td class="text-danger"><i class="bi bi-box-arrow-right me-1"></i>{{ (att.clockOut && att.clockOut !== '00:00:00') ? att.clockOut : '--:--' }}</td>
-                                </tr>
-                                } @empty {
-                                <tr>
-                                    <td colspan="4" class="text-center py-4 text-muted">
-                                        <i class="bi bi-calendar-x fs-3 d-block mb-2 text-light-gray"></i>
-                                        {{ 'No Data' | t }}
-                                    </td>
-                                </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+      <div class="activity-card hover-elevate bg-white rounded-4 shadow-sm p-4 flex-grow-1">
+        <h6 class="fw-bold mb-3 text-dark">{{ 'Recent Leave Requests' | t }}</h6>
+        <div class="d-flex flex-column gap-2">
+          @for (leave of recentLeaves; track leave.id) {
+          <div class="d-flex align-items-center justify-content-between py-2 px-3 rounded-3 bg-light gap-2">
+            <div class="d-flex align-items-center gap-2" style="min-width: 0;">
+              <div class="rounded-circle bg-primary bg-opacity-10 text-primary fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 32px; height: 32px; font-size: 12px;">{{ (leave.employeeName || 'E').charAt(0).toUpperCase() }}</div>
+              <span class="fw-semibold text-dark small text-truncate">{{ leave.employeeName || 'Emp #' + leave.employeeId }}</span>
             </div>
-
-            
-            <div class="chart-card card hover-elevate shadow-sm border-0 rounded-4 flex-grow-1">
-                <div class="card-header bg-white p-3 border-0 pb-0 d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold m-0 text-dark">{{ 'Attendance Rate' | t }}</h5>
-                    <span class="badge bg-light text-success border border-success border-opacity-25 px-2 py-1"><i class="bi bi-person-check-fill me-1"></i>{{ attendanceRate }}% {{ 'Overall' | t }}</span>
-                </div>
-                <div class="card-body p-3 pt-4">
-                    <div style="height: 300px; position: relative; width: 100%;">
-                        <canvas id="attendanceRateChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        
-        <div class="col-lg-4 d-flex flex-column gap-4">
-            
-            <div class="chart-card card hover-elevate shadow-sm border-0 rounded-4">
-                <div class="card-header bg-white p-3 border-0">
-                    <h5 class="fw-bold m-0 text-dark">{{ 'Leave Distribution' | t }}</h5>
-                </div>
-                <div class="card-body">
-                    <div style="height: 250px; position: relative;" class="d-flex justify-content-center align-items-center">
-                        <canvas id="leaveTypeChart"></canvas>
-                        <div *ngIf="annualLeavePercent === 0 && sickLeavePercent === 0 && emergencyLeavePercent === 0 && unpaidLeavePercent === 0" class="position-absolute text-center text-muted small">
-                            {{ 'No Data' | t }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            
-            <div class="activity-card hover-elevate bg-white rounded-4 shadow-sm p-4 flex-grow-1">
-                <h6 class="fw-bold mb-3 text-dark">{{ 'Recent Leave Requests' | t }}</h6>
-                <div class="d-flex flex-column gap-2">
-                    @for (leave of recentLeaves; track leave.id) {
-                    <div class="d-flex align-items-center justify-content-between py-2 px-3 rounded-3 bg-light gap-2">
-                        <div class="d-flex align-items-center gap-2" style="min-width: 0;">
-                            <div class="rounded-circle bg-primary bg-opacity-10 text-primary fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 32px; height: 32px; font-size: 12px;">
-                                {{ (leave.employeeName || 'E').charAt(0).toUpperCase() }}
-                            </div>
-                            <span class="fw-semibold text-dark small text-truncate">{{ leave.employeeName || 'Emp #' + leave.employeeId }}</span>
-                        </div>
-                        <span class="status-badge px-2 py-1 flex-shrink-0" style="font-size: 11px;"
-                            [ngClass]="{
+            <span
+              class="status-badge px-2 py-1 flex-shrink-0"
+              style="font-size: 11px;"
+              [ngClass]="{
                                 'status-approved': leave.status === 'Approved',
                                 'status-pending': leave.status === 'Pending',
                                 'status-rejected': leave.status === 'Rejected'
-                            }">
-                            <i class="bi me-1"
-                                [ngClass]="{
+                            }"
+            >
+              <i
+                class="bi me-1"
+                [ngClass]="{
                                     'bi-check-circle-fill': leave.status === 'Approved',
                                     'bi-hourglass-split': leave.status === 'Pending',
                                     'bi-x-circle-fill': leave.status === 'Rejected'
-                                }"></i>{{ leave.status | t }}
-                        </span>
-                    </div>
-                    } @empty {
-                    <div class="text-center text-muted py-4">
-                        <i class="bi bi-calendar-x fs-3 d-block mb-2"></i>
-                        {{ 'No Data' | t }}
-                    </div>
-                    }
-                </div>
-            </div>
+                                }"
+              ></i
+              >{{ leave.status | t }}
+            </span>
+          </div>
+          } @empty {
+          <div class="text-center text-muted py-4">
+            <i class="bi bi-calendar-x fs-3 d-block mb-2"></i>
+            {{ 'No Data' | t }}
+          </div>
+          }
         </div>
+      </div>
+    </div>
+  </div>
+
+  } @else {
+  <div class="row g-4 mb-4">
+    <div class="col-md-3">
+      <div class="stat-card blue hover-elevate h-100 stat-card-link" routerLink="/leave">
+        <div class="card-body">
+          <h3>{{ employeeAnnualLeaveBalance }}</h3>
+          <p>{{ 'Annual Leave Balance' | t }}</p>
+          <i class="bi bi-airplane-fill icon"></i>
+        </div>
+      </div>
     </div>
 
-    } @else {
-    <div class="row g-4 mb-4">
-        <div class="col-md-3">
-            <div class="stat-card blue hover-elevate h-100 stat-card-link" routerLink="/leave">
-                <div class="card-body">
-                    <h3>{{ employeeAnnualLeaveBalance }}</h3> <p>{{ 'Annual Leave Balance' | t }}</p>
-                    <i class="bi bi-airplane-fill icon"></i>
-                </div>
-            </div>
+    <div class="col-md-3">
+      <div class="stat-card orange hover-elevate h-100 stat-card-link" routerLink="/leave">
+        <div class="card-body">
+          <h3>{{ employeePendingLeaves }}</h3>
+          <p>{{ 'My Pending Leaves' | t }}</p>
+          <i class="bi bi-hourglass-split icon"></i>
         </div>
-
-        <div class="col-md-3">
-            <div class="stat-card orange hover-elevate h-100 stat-card-link" routerLink="/leave">
-                <div class="card-body">
-                    <h3>{{ employeePendingLeaves }}</h3> <p>{{ 'My Pending Leaves' | t }}</p>
-                    <i class="bi bi-hourglass-split icon"></i>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="stat-card pink hover-elevate h-100 stat-card-link" routerLink="/attendance">
-                <div class="card-body">
-                    <h3>{{ employeeHoursWorked }} <span class="fs-6 fw-normal">hrs</span></h3>
-                    <p>{{ 'Total Hours' | t }}</p>
-                    <i class="bi bi-clock-history icon"></i>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="stat-card payday hover-elevate h-100 stat-card-link" routerLink="/salary">
-                <div class="card-body">
-                    <h3>{{ employeeNextPayday }}</h3>
-                    <p>{{ 'Next Payday' | t }}</p>
-                    <i class="bi bi-calendar-check icon"></i>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
 
-    <div class="row g-4">
-        <div class="col-12">
-            <div class="chart-card card hover-elevate shadow-sm border-0 rounded-4 h-100">
-                <div class="card-header bg-white p-3 border-0 d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold m-0 text-dark">{{ 'My Attendance' | t }}</h5>
-                    <button class="btn btn-sm btn-outline-success border-0" (click)="exportMyRecentAttendancesToExcel()" title="Export to Excel">
-                        <i class="bi bi-file-earmark-excel-fill"></i>
-                    </button>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0 text-nowrap">
-                            <thead class="small text-muted text-uppercase bg-light">
-                                <tr>
-                                    <th class="ps-4">{{ 'Date' | t }}</th>
-                                    <th>{{ 'Clock In' | t }}</th>
-                                    <th>{{ 'Clock Out' | t }}</th>
-                                </tr>
-                            </thead>
-                            <tbody class="small">
-                                @for (att of myRecentAttendances; track att.id) {
-                                <tr>
-                                    <td class="ps-4 fw-bold">{{ att.date | date:'shortDate' }}</td>
-                                    <td class="text-success"><i class="bi bi-box-arrow-in-right me-1"></i>{{ att.clockIn || '--:--' }}</td>
-                                    <td class="text-danger"><i class="bi bi-box-arrow-right me-1"></i>{{ (att.clockOut && att.clockOut !== '00:00:00') ? att.clockOut : '--:--' }}</td>
-                                </tr>
-                                } @empty {
-                                <tr>
-                                    <td colspan="3" class="text-center py-4 text-muted">
-                                        <i class="bi bi-calendar-x fs-3 d-block mb-2 text-light-gray"></i>
-                                        {{ 'No Data' | t }}
-                                    </td>
-                                </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+    <div class="col-md-3">
+      <div class="stat-card pink hover-elevate h-100 stat-card-link" routerLink="/attendance">
+        <div class="card-body">
+          <h3>{{ employeeHoursWorked }} <span class="fs-6 fw-normal">hrs</span></h3>
+          <p>{{ 'Total Hours' | t }}</p>
+          <i class="bi bi-clock-history icon"></i>
         </div>
+      </div>
     </div>
-    }
+
+    <div class="col-md-3">
+      <div class="stat-card payday hover-elevate h-100 stat-card-link" routerLink="/salary">
+        <div class="card-body">
+          <h3>{{ employeeNextPayday }}</h3>
+          <p>{{ 'Next Payday' | t }}</p>
+          <i class="bi bi-calendar-check icon"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-12">
+      <div class="chart-card card hover-elevate shadow-sm border-0 rounded-4 h-100">
+        <div class="card-header bg-white p-3 border-0 d-flex justify-content-between align-items-center">
+          <h5 class="fw-bold m-0 text-dark">{{ 'My Attendance' | t }}</h5>
+          <button class="btn btn-sm btn-outline-success border-0" (click)="exportMyRecentAttendancesToExcel()" title="Export to Excel">
+            <i class="bi bi-file-earmark-excel-fill"></i>
+          </button>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 text-nowrap">
+              <thead class="small text-muted text-uppercase bg-light">
+                <tr>
+                  <th class="ps-4">{{ 'Date' | t }}</th>
+                  <th>{{ 'Clock In' | t }}</th>
+                  <th>{{ 'Clock Out' | t }}</th>
+                </tr>
+              </thead>
+              <tbody class="small">
+                @for (att of myRecentAttendances; track att.id) {
+                <tr>
+                  <td class="ps-4 fw-bold">{{ att.date | date:'shortDate' }}</td>
+                  <td class="text-success"><i class="bi bi-box-arrow-in-right me-1"></i>{{ att.clockIn || '--:--' }}</td>
+                  <td class="text-danger"><i class="bi bi-box-arrow-right me-1"></i>{{ (att.clockOut && att.clockOut !== '00:00:00') ? att.clockOut : '--:--' }}</td>
+                </tr>
+                } @empty {
+                <tr>
+                  <td colspan="3" class="text-center py-4 text-muted">
+                    <i class="bi bi-calendar-x fs-3 d-block mb-2 text-light-gray"></i>
+                    {{ 'No Data' | t }}
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
 </div>
 
 <div class="modal fade show" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0,0,0,0.5);" *ngIf="showAnnouncementModal">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
       <div class="modal-header bg-light border-0 py-3">
-        <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2">
-          <i class="bi bi-megaphone-fill text-primary"></i> {{ 'Post Announcement' | t }}
-        </h5>
+        <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2"><i class="bi bi-megaphone-fill text-primary"></i> {{ 'Post Announcement' | t }}</h5>
         <button type="button" class="btn-close" (click)="closeAnnouncementModal()"></button>
       </div>
       <div class="modal-body p-4">
         <form [formGroup]="announcementForm" (ngSubmit)="submitAnnouncement()">
           <div class="mb-3">
             <label class="form-label fw-semibold text-dark">{{ 'Title' | t }}</label>
-            <input type="text" class="form-control" formControlName="title" placeholder="{{ 'e.g., Company Holiday' | t }}" required>
+            <input type="text" class="form-control" formControlName="title" placeholder="{{ 'e.g., Company Holiday' | t }}" required />
           </div>
           <div class="mb-3">
             <label class="form-label fw-semibold text-dark">{{ 'Content' | t }}</label>
             <textarea class="form-control" formControlName="content" rows="4" placeholder="{{ 'Write your announcement here...' | t }}" required></textarea>
           </div>
-          
+
           <div class="row mb-3">
             <div class="col-md-6 d-flex flex-column justify-content-end">
               <label class="form-label fw-semibold text-dark">{{ 'Priority' | t }}</label>
@@ -4764,56 +4119,43 @@ export class RegisterComponent {
             </div>
             <div class="col-md-6 d-flex flex-column justify-content-end">
               <label class="form-label fw-semibold text-dark">{{ 'Expiry Date' | t }} <small class="text-muted fw-normal">({{ 'Optional' | t }})</small></label>
-              <input type="datetime-local" class="form-control" formControlName="expiryDate">
+              <input type="datetime-local" class="form-control" formControlName="expiryDate" />
             </div>
           </div>
 
           <div class="mb-3">
             <div class="form-check form-switch mb-2">
-              <input class="form-check-input" type="checkbox" id="isGeneralSwitch" formControlName="isGeneral">
+              <input class="form-check-input" type="checkbox" id="isGeneralSwitch" formControlName="isGeneral" />
               <label class="form-check-label fw-semibold text-dark" for="isGeneralSwitch">{{ 'General Announcement (All Employees)' | t }}</label>
             </div>
           </div>
 
           <div class="mb-4" *ngIf="!announcementForm.get('isGeneral')?.value">
             <label class="form-label fw-semibold text-dark">{{ 'Select Target Employees' | t }}</label>
-            
-            
+
             <div class="d-flex gap-2 mb-2">
-                <input type="text" class="form-control form-control-sm" placeholder="Search employee..." [(ngModel)]="announcementSearchQuery" [ngModelOptions]="{standalone: true}">
-                <select class="form-select form-select-sm" [(ngModel)]="announcementDepartmentFilter" [ngModelOptions]="{standalone: true}">
-                    <option value="">All Departments</option>
-                    <option *ngFor="let dept of announcementUniqueDepartments" [value]="dept">{{ dept }}</option>
-                </select>
+              <input type="text" class="form-control form-control-sm" placeholder="Search employee..." [(ngModel)]="announcementSearchQuery" [ngModelOptions]="{standalone: true}" />
+              <select class="form-select form-select-sm" [(ngModel)]="announcementDepartmentFilter" [ngModelOptions]="{standalone: true}">
+                <option value="">All Departments</option>
+                <option *ngFor="let dept of announcementUniqueDepartments" [value]="dept">{{ dept }}</option>
+              </select>
             </div>
-            
-            
+
             <div class="form-check mb-2 bg-light p-2 rounded border">
-                <input class="form-check-input ms-1" type="checkbox" id="selectAllAnn"
-                    [checked]="isAllFilteredAnnouncementEmployeesSelected"
-                    (change)="selectAllFilteredAnnouncementEmployees($event)" style="cursor: pointer;">
-                <label class="form-check-label fw-bold text-dark ms-2" for="selectAllAnn" style="cursor: pointer;">
-                    Select All Filtered Employees
-                </label>
+              <input class="form-check-input ms-1" type="checkbox" id="selectAllAnn" [checked]="isAllFilteredAnnouncementEmployeesSelected" (change)="selectAllFilteredAnnouncementEmployees($event)" style="cursor: pointer;" />
+              <label class="form-check-label fw-bold text-dark ms-2" for="selectAllAnn" style="cursor: pointer;"> Select All Filtered Employees </label>
             </div>
 
             <div class="border rounded p-2 overflow-auto" style="max-height: 250px; background: #fff; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);">
               <div class="form-check mb-2" *ngFor="let emp of filteredAnnouncementEmployees">
-                <input class="form-check-input" type="checkbox" [id]="'empAnn' + emp.id" 
-                       [checked]="announcementForm.get('targetEmployeeIds')?.value?.includes(emp.id)"
-                       (change)="toggleEmployeeForAnnouncement(emp.id)"
-                       style="cursor: pointer;">
+                <input class="form-check-input" type="checkbox" [id]="'empAnn' + emp.id" [checked]="announcementForm.get('targetEmployeeIds')?.value?.includes(emp.id)" (change)="toggleEmployeeForAnnouncement(emp.id)" style="cursor: pointer;" />
                 <label class="form-check-label w-100 d-flex align-items-center" [for]="'empAnn' + emp.id" style="cursor: pointer;">
-                  <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 10px;">
-                    {{ emp.firstName.charAt(0).toUpperCase() }}
-                  </div>
+                  <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 10px;">{{ emp.firstName.charAt(0).toUpperCase() }}</div>
                   <span class="fw-medium text-dark">{{ emp.firstName }} {{ emp.lastName }}</span>
                   <span class="ms-auto badge bg-light text-secondary border">{{ emp.departmentName || 'No Dept' }}</span>
                 </label>
               </div>
-              <div *ngIf="filteredAnnouncementEmployees.length === 0" class="text-center text-muted small py-2">
-                  No employees found.
-              </div>
+              <div *ngIf="filteredAnnouncementEmployees.length === 0" class="text-center text-muted small py-2">No employees found.</div>
             </div>
           </div>
 
@@ -4829,35 +4171,36 @@ export class RegisterComponent {
 ```
 
 ### File: src\app\features\dashboard\dashboard.component.ts
-```typescript
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { EmployeeService } from '../../core/services/employee.service';
-import { LeaveService } from '../../core/services/leave.service';
-import { DepartmentService } from '../../core/services/department.service';
-import { AuthService } from '../../core/services/auth.service';
-import { AttendanceService } from '../../core/services/attendance.service';
-import { SalaryService } from '../../core/services/salary.service';
-import { Chart, registerables } from 'chart.js';
-import { TranslatePipe } from '../../core/pipes/translate.pipe';
-import Swal from 'sweetalert2';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 
-import { AnnouncementService } from '../../core/services/announcement.service';
-import { Announcement } from '../../core/models/announcement.model';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { ExcelExportService } from '../../core/services/excel-export.service';
+```typescript
+import { Component, OnInit, inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterLink } from "@angular/router";
+import { EmployeeService } from "../../core/services/employee.service";
+import { LeaveService } from "../../core/services/leave.service";
+import { DepartmentService } from "../../core/services/department.service";
+import { AuthService } from "../../core/services/auth.service";
+import { AttendanceService } from "../../core/services/attendance.service";
+import { SalaryService } from "../../core/services/salary.service";
+import { Chart, registerables } from "chart.js";
+import { TranslatePipe } from "../../core/pipes/translate.pipe";
+import Swal from "sweetalert2";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
+import { AnnouncementService } from "../../core/services/announcement.service";
+import { Announcement } from "../../core/models/announcement.model";
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from "@angular/forms";
+import { ExcelExportService } from "../../core/services/excel-export.service";
 
 Chart.register(...registerables);
 
 @Component({
-  selector: 'app-dashboard',
+  selector: "app-dashboard",
   standalone: true,
   imports: [CommonModule, TranslatePipe, RouterLink, ReactiveFormsModule, FormsModule],
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css'],
+  templateUrl: "./dashboard.component.html",
+  styleUrls: ["./dashboard.component.css"],
 })
 export class DashboardComponent implements OnInit {
   private empService = inject(EmployeeService);
@@ -4894,7 +4237,10 @@ export class DashboardComponent implements OnInit {
   employeeAnnualLeaveBalance: number | string = 14;
   employeePendingLeaves: number = 0;
   employeeHoursWorked: number = 0;
-  employeeNextPayday: string = '';
+  employeeNextPayday: string = "";
+
+  showPayrollAlert: boolean = false;
+  pendingPayrollCount: number = 0;
 
   readonly PAYDAY = 25;
 
@@ -4902,97 +4248,97 @@ export class DashboardComponent implements OnInit {
   attendanceRateChartInstance: any;
 
   downloadSystemReport() {
-    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
     const pageW = doc.internal.pageSize.getWidth();
     const pageH = doc.internal.pageSize.getHeight();
     const margin = 14;
     const today = new Date();
-    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    const timeStr = today.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+    const timeStr = today.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
 
     doc.setFillColor(67, 97, 238);
-    doc.rect(0, 0, pageW, 42, 'F');
+    doc.rect(0, 0, pageW, 42, "F");
 
     doc.setFillColor(90, 120, 255);
-    doc.rect(0, 38, pageW, 4, 'F');
+    doc.rect(0, 38, pageW, 4, "F");
 
-    doc.setFont('helvetica', 'bold');
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(20);
     doc.setTextColor(255, 255, 255);
-    doc.text('Kawadir HRMS', margin, 15);
+    doc.text("Kawadir HRMS", margin, 15);
 
     doc.setFontSize(11);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "normal");
     doc.setTextColor(200, 210, 255);
-    doc.text('System Summary & Analytics Report', margin, 23);
+    doc.text("System Summary & Analytics Report", margin, 23);
 
     doc.setFontSize(8.5);
     doc.setTextColor(180, 195, 255);
     doc.text(`Generated: ${todayStr}  ·  ${timeStr}`, margin, 30);
 
     doc.setFillColor(50, 75, 210);
-    doc.roundedRect(pageW - 52, 8, 38, 14, 3, 3, 'F');
-    doc.setFont('helvetica', 'bold');
+    doc.roundedRect(pageW - 52, 8, 38, 14, 3, 3, "F");
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(8);
     doc.setTextColor(255, 255, 255);
-    doc.text('ADMIN REPORT', pageW - 33, 16, { align: 'center' });
+    doc.text("ADMIN REPORT", pageW - 33, 16, { align: "center" });
 
     const cardY = 50;
     const cardH = 28;
     const cardW = (pageW - margin * 2 - 9) / 4;
     const cards = [
-      { label: 'Total Employees', value: String(this.totalEmployees), accentColor: [239, 71, 111] as [number, number, number] },
-      { label: 'Pending Leaves', value: String(this.pendingLeaves), accentColor: [255, 165, 2] as [number, number, number] },
-      { label: 'Departments', value: String(this.departmentsCount), accentColor: [67, 97, 238] as [number, number, number] },
-      { label: 'Total Payroll', value: `${Number(this.totalSalaries).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} JD`, accentColor: [6, 214, 160] as [number, number, number] },
+      { label: "Total Employees", value: String(this.totalEmployees), accentColor: [239, 71, 111] as [number, number, number] },
+      { label: "Pending Leaves", value: String(this.pendingLeaves), accentColor: [255, 165, 2] as [number, number, number] },
+      { label: "Departments", value: String(this.departmentsCount), accentColor: [67, 97, 238] as [number, number, number] },
+      { label: "Total Payroll", value: `${Number(this.totalSalaries).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })} JD`, accentColor: [6, 214, 160] as [number, number, number] },
     ];
 
     cards.forEach((card, i) => {
       const x = margin + i * (cardW + 3);
 
       doc.setFillColor(248, 249, 252);
-      doc.roundedRect(x, cardY, cardW, cardH, 3, 3, 'F');
+      doc.roundedRect(x, cardY, cardW, cardH, 3, 3, "F");
       doc.setDrawColor(225, 228, 240);
-      doc.roundedRect(x, cardY, cardW, cardH, 3, 3, 'S');
+      doc.roundedRect(x, cardY, cardW, cardH, 3, 3, "S");
 
       doc.setFillColor(...card.accentColor);
-      doc.roundedRect(x, cardY, cardW, 3, 1.5, 1.5, 'F');
+      doc.roundedRect(x, cardY, cardW, 3, 1.5, 1.5, "F");
 
-      doc.setFont('helvetica', 'bold');
+      doc.setFont("helvetica", "bold");
       doc.setFontSize(14);
       doc.setTextColor(30, 30, 50);
-      doc.text(card.value, x + cardW / 2, cardY + 15, { align: 'center' });
+      doc.text(card.value, x + cardW / 2, cardY + 15, { align: "center" });
 
-      doc.setFont('helvetica', 'normal');
+      doc.setFont("helvetica", "normal");
       doc.setFontSize(7.5);
       doc.setTextColor(120, 125, 145);
-      doc.text(card.label, x + cardW / 2, cardY + 22, { align: 'center' });
+      doc.text(card.label, x + cardW / 2, cardY + 22, { align: "center" });
     });
 
     let curY = cardY + cardH + 10;
 
-    this._pdfSectionHeader(doc, 'SYSTEM ANALYTICS', margin, curY, pageW);
+    this._pdfSectionHeader(doc, "SYSTEM ANALYTICS", margin, curY, pageW);
     curY += 8;
 
     const analyticsData = [
-      ['Annual Leave', `${this.annualLeavePercent}%`],
-      ['Sick Leave', `${this.sickLeavePercent}%`],
-      ['Emergency Leave', `${this.emergencyLeavePercent}%`],
-      ['Unpaid Leave', `${this.unpaidLeavePercent}%`],
-      ['Overall Attendance Rate', `${this.attendanceRate}%`],
+      ["Annual Leave", `${this.annualLeavePercent}%`],
+      ["Sick Leave", `${this.sickLeavePercent}%`],
+      ["Emergency Leave", `${this.emergencyLeavePercent}%`],
+      ["Unpaid Leave", `${this.unpaidLeavePercent}%`],
+      ["Overall Attendance Rate", `${this.attendanceRate}%`],
     ];
 
     autoTable(doc, {
       startY: curY,
-      head: [['Metric', 'Value']],
+      head: [["Metric", "Value"]],
       body: analyticsData,
       margin: { left: margin, right: margin },
-      theme: 'grid',
+      theme: "grid",
       tableWidth: pageW - margin * 2,
       headStyles: {
         fillColor: [67, 97, 238],
         textColor: [255, 255, 255],
-        fontStyle: 'bold',
+        fontStyle: "bold",
         fontSize: 9,
         cellPadding: 3,
       },
@@ -5004,87 +4350,80 @@ export class DashboardComponent implements OnInit {
       alternateRowStyles: { fillColor: [248, 249, 252] },
       columnStyles: {
         0: { cellWidth: (pageW - margin * 2) * 0.68 },
-        1: { cellWidth: (pageW - margin * 2) * 0.32, halign: 'center', fontStyle: 'bold' },
+        1: { cellWidth: (pageW - margin * 2) * 0.32, halign: "center", fontStyle: "bold" },
       },
     });
 
     curY = (doc as any).lastAutoTable.finalY + 10;
 
-    this._pdfSectionHeader(doc, 'RECENT LEAVE REQUESTS', margin, curY, pageW);
+    this._pdfSectionHeader(doc, "RECENT LEAVE REQUESTS", margin, curY, pageW);
     curY += 8;
 
-    const leaveRows = this.recentLeaves.map((l: any) => [
-      l.employeeName || `Emp #${l.employeeId}`,
-      l.leaveType || '—',
-      l.startDate ? l.startDate.split('T')[0] : '—',
-      l.endDate ? l.endDate.split('T')[0] : '—',
-      l.status || '—',
-    ]);
+    const leaveRows = this.recentLeaves.map((l: any) => [l.employeeName || `Emp #${l.employeeId}`, l.leaveType || "—", l.startDate ? l.startDate.split("T")[0] : "—", l.endDate ? l.endDate.split("T")[0] : "—", l.status || "—"]);
 
     if (leaveRows.length === 0) {
-      doc.setFont('helvetica', 'italic');
+      doc.setFont("helvetica", "italic");
       doc.setFontSize(9);
       doc.setTextColor(170, 170, 180);
-      doc.text('No recent leave requests found.', margin + 4, curY + 5);
+      doc.text("No recent leave requests found.", margin + 4, curY + 5);
       curY += 14;
     } else {
       autoTable(doc, {
         startY: curY,
-        head: [['Employee', 'Type', 'Start Date', 'End Date', 'Status']],
+        head: [["Employee", "Type", "Start Date", "End Date", "Status"]],
         body: leaveRows,
         margin: { left: margin, right: margin },
-        theme: 'grid',
+        theme: "grid",
         tableWidth: pageW - margin * 2,
         headStyles: {
           fillColor: [50, 62, 140],
           textColor: [255, 255, 255],
-          fontStyle: 'bold',
+          fontStyle: "bold",
           fontSize: 8.5,
           cellPadding: 2.5,
         },
         bodyStyles: { textColor: [50, 55, 70], fontSize: 8.5, cellPadding: 2.5 },
         alternateRowStyles: { fillColor: [248, 249, 252] },
         didParseCell: (data: any) => {
-          if (data.section === 'body' && data.column.index === 4) {
+          if (data.section === "body" && data.column.index === 4) {
             const status = data.cell.raw as string;
-            if (status === 'Approved') { data.cell.styles.textColor = [6, 150, 80]; }
-            else if (status === 'Pending') { data.cell.styles.textColor = [200, 120, 0]; }
-            else if (status === 'Rejected') { data.cell.styles.textColor = [180, 30, 50]; }
-            data.cell.styles.fontStyle = 'bold';
-            data.cell.styles.halign = 'center';
+            if (status === "Approved") {
+              data.cell.styles.textColor = [6, 150, 80];
+            } else if (status === "Pending") {
+              data.cell.styles.textColor = [200, 120, 0];
+            } else if (status === "Rejected") {
+              data.cell.styles.textColor = [180, 30, 50];
+            }
+            data.cell.styles.fontStyle = "bold";
+            data.cell.styles.halign = "center";
           }
         },
       });
       curY = (doc as any).lastAutoTable.finalY + 10;
     }
 
-    this._pdfSectionHeader(doc, 'RECENT ATTENDANCE RECORDS', margin, curY, pageW);
+    this._pdfSectionHeader(doc, "RECENT ATTENDANCE RECORDS", margin, curY, pageW);
     curY += 8;
 
-    const attRows = this.recentAttendances.map((a: any) => [
-      a.employeeName || `Emp #${a.employeeId}`,
-      a.date ? a.date.split('T')[0] : '—',
-      a.clockIn || '--:--',
-      (a.clockOut && a.clockOut !== '00:00:00') ? a.clockOut : '--:--',
-    ]);
+    const attRows = this.recentAttendances.map((a: any) => [a.employeeName || `Emp #${a.employeeId}`, a.date ? a.date.split("T")[0] : "—", a.clockIn || "--:--", a.clockOut && a.clockOut !== "00:00:00" ? a.clockOut : "--:--"]);
 
     if (attRows.length === 0) {
-      doc.setFont('helvetica', 'italic');
+      doc.setFont("helvetica", "italic");
       doc.setFontSize(9);
       doc.setTextColor(170, 170, 180);
-      doc.text('No recent attendance records found.', margin + 4, curY + 5);
+      doc.text("No recent attendance records found.", margin + 4, curY + 5);
     } else {
       autoTable(doc, {
         startY: curY,
-        head: [['Employee', 'Date', 'Clock In', 'Clock Out']],
+        head: [["Employee", "Date", "Clock In", "Clock Out"]],
         body: attRows,
         margin: { left: margin, right: margin },
-        theme: 'grid',
+        theme: "grid",
         tableWidth: pageW - margin * 2,
         headStyles: {
           fillColor: [20, 140, 100],
           textColor: [255, 255, 255],
-          fontStyle: 'bold',
+          fontStyle: "bold",
           fontSize: 8.5,
           cellPadding: 2.5,
         },
@@ -5101,20 +4440,19 @@ export class DashboardComponent implements OnInit {
       doc.setLineWidth(0.4);
       doc.line(margin, pageH - 12, pageW - margin, pageH - 12);
 
-      doc.setFont('helvetica', 'normal');
+      doc.setFont("helvetica", "normal");
       doc.setFontSize(7.5);
       doc.setTextColor(160, 165, 180);
-      doc.text('Confidential — Kawadir HRMS Internal Report', margin, pageH - 7);
+      doc.text("Confidential — Kawadir HRMS Internal Report", margin, pageH - 7);
 
-      doc.text(`Page ${pg} of ${totalPages}`, pageW - margin, pageH - 7, { align: 'right' });
+      doc.text(`Page ${pg} of ${totalPages}`, pageW - margin, pageH - 7, { align: "right" });
     }
 
     doc.save(`System_Summary_Report_${todayStr}.pdf`);
   }
 
-  
   private _pdfSectionHeader(doc: jsPDF, title: string, x: number, y: number, pageW: number) {
-    doc.setFont('helvetica', 'bold');
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(9);
     doc.setTextColor(67, 97, 238);
     doc.text(title, x, y);
@@ -5128,53 +4466,51 @@ export class DashboardComponent implements OnInit {
 
   allEmployeesList: any[] = [];
 
-  announcementSearchQuery: string = '';
-  announcementDepartmentFilter: string = '';
+  announcementSearchQuery: string = "";
+  announcementDepartmentFilter: string = "";
 
   get announcementUniqueDepartments(): string[] {
-    const depts = this.allEmployeesList.map(e => e.departmentName).filter(d => !!d);
+    const depts = this.allEmployeesList.map((e) => e.departmentName).filter((d) => !!d);
     return Array.from(new Set(depts));
   }
 
   get filteredAnnouncementEmployees(): any[] {
-    return this.allEmployeesList.filter(emp => {
-      const matchesSearch = this.announcementSearchQuery ? 
-        `${emp.firstName} ${emp.lastName}`.toLowerCase().includes(this.announcementSearchQuery.toLowerCase()) : true;
-      const matchesDept = this.announcementDepartmentFilter ? 
-        emp.departmentName === this.announcementDepartmentFilter : true;
+    return this.allEmployeesList.filter((emp) => {
+      const matchesSearch = this.announcementSearchQuery ? `${emp.firstName} ${emp.lastName}`.toLowerCase().includes(this.announcementSearchQuery.toLowerCase()) : true;
+      const matchesDept = this.announcementDepartmentFilter ? emp.departmentName === this.announcementDepartmentFilter : true;
       return matchesSearch && matchesDept;
     });
   }
 
   get isAllFilteredAnnouncementEmployeesSelected(): boolean {
-    const currentSelected = this.announcementForm.get('targetEmployeeIds')?.value || [];
+    const currentSelected = this.announcementForm.get("targetEmployeeIds")?.value || [];
     if (this.filteredAnnouncementEmployees.length === 0) return false;
-    return this.filteredAnnouncementEmployees.every(emp => currentSelected.includes(emp.id));
+    return this.filteredAnnouncementEmployees.every((emp) => currentSelected.includes(emp.id));
   }
 
   selectAllFilteredAnnouncementEmployees(event: any) {
     const isChecked = event.target.checked;
-    const currentSelected = new Set(this.announcementForm.get('targetEmployeeIds')?.value || []);
-    
-    this.filteredAnnouncementEmployees.forEach(emp => {
+    const currentSelected = new Set(this.announcementForm.get("targetEmployeeIds")?.value || []);
+
+    this.filteredAnnouncementEmployees.forEach((emp) => {
       if (isChecked) {
         currentSelected.add(emp.id);
       } else {
         currentSelected.delete(emp.id);
       }
     });
-    
-    this.announcementForm.get('targetEmployeeIds')?.setValue(Array.from(currentSelected));
+
+    this.announcementForm.get("targetEmployeeIds")?.setValue(Array.from(currentSelected));
   }
 
   constructor() {
     this.announcementForm = this.fb.group({
-      title: ['', Validators.required],
-      content: ['', Validators.required],
-      priority: ['Normal', Validators.required],
+      title: ["", Validators.required],
+      content: ["", Validators.required],
+      priority: ["Normal", Validators.required],
       isGeneral: [true],
       targetEmployeeIds: [[]],
-      expiryDate: ['']
+      expiryDate: [""],
     });
   }
 
@@ -5197,7 +4533,7 @@ export class DashboardComponent implements OnInit {
       next: (res) => {
         this.allEmployeesList = res;
       },
-      error: (err) => console.error('Failed to load employees for announcements', err)
+      error: (err) => console.error("Failed to load employees for announcements", err),
     });
   }
 
@@ -5206,12 +4542,12 @@ export class DashboardComponent implements OnInit {
       next: (res) => {
         this.announcements = res.items;
       },
-      error: (err) => console.error('Failed to load announcements', err)
+      error: (err) => console.error("Failed to load announcements", err),
     });
   }
 
   openAnnouncementModal() {
-    this.announcementForm.reset({ priority: 'Normal', isGeneral: true, targetEmployeeIds: [] });
+    this.announcementForm.reset({ priority: "Normal", isGeneral: true, targetEmployeeIds: [] });
     this.showAnnouncementModal = true;
   }
 
@@ -5220,14 +4556,14 @@ export class DashboardComponent implements OnInit {
   }
 
   toggleEmployeeForAnnouncement(empId: number) {
-    const currentSelected = this.announcementForm.get('targetEmployeeIds')?.value || [];
+    const currentSelected = this.announcementForm.get("targetEmployeeIds")?.value || [];
     const index = currentSelected.indexOf(empId);
     if (index > -1) {
       currentSelected.splice(index, 1);
     } else {
       currentSelected.push(empId);
     }
-    this.announcementForm.get('targetEmployeeIds')?.setValue(currentSelected);
+    this.announcementForm.get("targetEmployeeIds")?.setValue(currentSelected);
   }
 
   submitAnnouncement() {
@@ -5240,7 +4576,6 @@ export class DashboardComponent implements OnInit {
     if (!formValue.expiryDate) {
       formValue.expiryDate = null;
     } else {
-
       formValue.expiryDate = new Date(formValue.expiryDate).toISOString();
     }
 
@@ -5248,31 +4583,31 @@ export class DashboardComponent implements OnInit {
       next: () => {
         this.closeAnnouncementModal();
         this.loadAnnouncements();
-        Swal.fire('Success', 'Announcement posted successfully', 'success');
+        Swal.fire("Success", "Announcement posted successfully", "success");
       },
       error: (err) => {
-        Swal.fire('Error', 'Failed to post announcement', 'error');
-      }
+        Swal.fire("Error", "Failed to post announcement", "error");
+      },
     });
   }
 
   deleteAnnouncement(id: number) {
     Swal.fire({
-      title: 'Are you sure?',
+      title: "Are you sure?",
       text: "You won't be able to revert this!",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Delete",
     }).then((result) => {
       if (result.isConfirmed) {
         this.announcementService.deleteAnnouncement(id).subscribe({
           next: () => {
             this.loadAnnouncements();
-            Swal.fire('Deleted!', 'Announcement has been deleted.', 'success');
+            Swal.fire("Deleted!", "Announcement has been deleted.", "success");
           },
-          error: (err) => Swal.fire('Error', 'Failed to delete', 'error')
+          error: (err) => Swal.fire("Error", "Failed to delete", "error"),
         });
       }
     });
@@ -5283,26 +4618,35 @@ export class DashboardComponent implements OnInit {
   }
 
   loadAdminStats() {
+    const today = new Date();
+    if (today.getDate() >= this.PAYDAY) {
+      const currentMonth = today.getMonth() + 1;
+      const currentYear = today.getFullYear();
+      this.salaryService.previewBatch(currentMonth, currentYear).subscribe({
+        next: (res: any) => {
+          const preview = res?.data ?? res;
+          if (preview && preview.employeeCount > 0) {
+            this.showPayrollAlert = true;
+            this.pendingPayrollCount = preview.employeeCount;
+          }
+        },
+        error: (err) => console.error("Error fetching payroll preview:", err),
+      });
+    }
 
     this.empService.getEmployees().subscribe({
       next: (employees: any[]) => {
         this.totalEmployees = employees.length;
         this.calculateAttendanceRate();
       },
-      error: (err) => console.error('Error fetching employees:', err),
+      error: (err) => console.error("Error fetching employees:", err),
     });
 
     this.leaveService.getAllLeaves().subscribe({
       next: (leaves: any[]) => {
-        this.pendingLeaves = leaves.filter(
+        this.pendingLeaves = leaves.filter((l: any) => l.status === "Pending").length;
 
-          (l: any) => l.status === 'Pending',
-        ).length;
-
-        leaves.sort(
-          (a, b) =>
-            new Date(b.startDate).getTime() - new Date(a.startDate).getTime(),
-        );
+        leaves.sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
         this.recentLeaves = leaves.slice(0, 5);
 
         const totalLeaves = leaves.length;
@@ -5312,23 +4656,14 @@ export class DashboardComponent implements OnInit {
           unpaid = 0;
 
         if (totalLeaves > 0) {
-
-          annual = leaves.filter(
-            (l: any) => l.leaveType === 'Annual',
-          ).length;
-          sick = leaves.filter((l: any) => l.leaveType === 'Sick').length;
-          emergency = leaves.filter(
-            (l: any) => l.leaveType === 'Emergency',
-          ).length;
-          unpaid = leaves.filter(
-            (l: any) => l.leaveType === 'Unpaid',
-          ).length;
+          annual = leaves.filter((l: any) => l.leaveType === "Annual").length;
+          sick = leaves.filter((l: any) => l.leaveType === "Sick").length;
+          emergency = leaves.filter((l: any) => l.leaveType === "Emergency").length;
+          unpaid = leaves.filter((l: any) => l.leaveType === "Unpaid").length;
 
           this.annualLeavePercent = Math.round((annual / totalLeaves) * 100);
           this.sickLeavePercent = Math.round((sick / totalLeaves) * 100);
-          this.emergencyLeavePercent = Math.round(
-            (emergency / totalLeaves) * 100,
-          );
+          this.emergencyLeavePercent = Math.round((emergency / totalLeaves) * 100);
           this.unpaidLeavePercent = Math.round((unpaid / totalLeaves) * 100);
         } else {
           this.annualLeavePercent = 0;
@@ -5341,44 +4676,38 @@ export class DashboardComponent implements OnInit {
           this.renderLeaveChart(annual, sick, emergency, unpaid);
         }, 100);
       },
-      error: (err) => console.error('Error fetching leaves:', err),
+      error: (err) => console.error("Error fetching leaves:", err),
     });
 
     this.deptService.getDepartments().subscribe({
       next: (departments: any[]) => {
         this.departmentsCount = departments.length;
       },
-      error: (err) => console.error('Error fetching departments:', err),
+      error: (err) => console.error("Error fetching departments:", err),
     });
 
     this.salaryService.getAllSalaries().subscribe({
       next: (salaries: any[]) => {
-        this.totalSalaries = salaries.reduce(
-          (sum, current) => sum + (current.netAmount || 0),
-          0,
-        );
+        this.totalSalaries = salaries.reduce((sum, current) => sum + (current.netAmount || 0), 0);
       },
-      error: (err) => console.error('Error fetching salaries:', err),
+      error: (err) => console.error("Error fetching salaries:", err),
     });
 
     this.attendanceService.getAllAttendance().subscribe({
       next: (attendances: any[]) => {
-        attendances.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-        );
+        attendances.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
         this.recentAttendances = attendances.slice(0, 5);
         this.allAttendances = attendances;
         this.calculateAttendanceRate();
       },
-      error: (err) => console.error('Error fetching attendance overview:', err),
+      error: (err) => console.error("Error fetching attendance overview:", err),
     });
   }
 
   calculateAttendanceRate() {
-
     if (this.totalEmployees === 0 || this.allAttendances.length === 0) return;
     const validAtt = this.allAttendances.filter((a) => a.date && a.clockIn);
-    const uniqueDays = new Set(validAtt.map((a) => a.date.split('T')[0])).size;
+    const uniqueDays = new Set(validAtt.map((a) => a.date.split("T")[0])).size;
     if (uniqueDays > 0) {
       const totalExpected = uniqueDays * this.totalEmployees;
       this.attendanceRate = Math.round((validAtt.length / totalExpected) * 100);
@@ -5391,7 +4720,6 @@ export class DashboardComponent implements OnInit {
   }
 
   loadNextPayday() {
-
     this.salaryService.getMySalaries().subscribe({
       next: (salaries: any[]) => {
         if (!salaries || salaries.length === 0) return;
@@ -5408,47 +4736,25 @@ export class DashboardComponent implements OnInit {
 
         if (latest.effectiveDate) {
           const effDate = new Date(latest.effectiveDate);
-          const nextEff = new Date(
-            nextPayYear,
-            nextPayMonth - 1,
-            effDate.getDate(),
-          );
+          const nextEff = new Date(nextPayYear, nextPayMonth - 1, effDate.getDate());
           const dayLabel = nextEff.getDate();
-          const monthLabel = nextEff.toLocaleString('en-US', {
-            month: 'short',
+          const monthLabel = nextEff.toLocaleString("en-US", {
+            month: "short",
           });
           this.employeeNextPayday = `${monthLabel} ${dayLabel}`;
         } else {
-          const monthNames = [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec',
-          ];
+          const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
           this.employeeNextPayday = `${monthNames[nextPayMonth - 1]} ${this.PAYDAY}`;
         }
       },
-      error: () => { },
+      error: () => {},
     });
   }
 
   loadEmployeeStats() {
-
     const today = new Date();
-    const currentMonth = today.toLocaleString('en-US', { month: 'short' });
-    const nextMonth = new Date(
-      today.getFullYear(),
-      today.getMonth() + 1,
-      1,
-    ).toLocaleString('en-US', { month: 'short' });
+    const currentMonth = today.toLocaleString("en-US", { month: "short" });
+    const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1).toLocaleString("en-US", { month: "short" });
 
     if (today.getDate() > this.PAYDAY) {
       this.employeeNextPayday = `${nextMonth} ${this.PAYDAY}`;
@@ -5460,45 +4766,29 @@ export class DashboardComponent implements OnInit {
 
     this.leaveService.getMyLeaves().subscribe({
       next: (leaves: any[]) => {
+        this.employeePendingLeaves = leaves.filter((l: any) => l.status === "Pending").length;
 
-        this.employeePendingLeaves = leaves.filter(
-          (l: any) => l.status === 'Pending',
-        ).length;
-
-        const approvedAnnualLeavesDays = leaves
-          .filter(
-            (l: any) => l.status === 'Approved' && l.leaveType === 'Annual',
-          )
-          .reduce((acc: number, l: any) => acc + (l.totalDays || 0), 0);
+        const approvedAnnualLeavesDays = leaves.filter((l: any) => l.status === "Approved" && l.leaveType === "Annual").reduce((acc: number, l: any) => acc + (l.totalDays || 0), 0);
 
         this.employeeAnnualLeaveBalance = 14 - approvedAnnualLeavesDays;
       },
-      error: (err) => console.error('Error fetching my leaves:', err),
+      error: (err) => console.error("Error fetching my leaves:", err),
     });
 
     this.attendanceService.getMyAttendance().subscribe({
       next: (attendances: any[]) => {
-
         const currentMonthNum = today.getMonth();
         const currentYear = today.getFullYear();
 
         let totalHours = 0;
         attendances.forEach((att: any) => {
-          if (
-            att.date &&
-            att.clockIn &&
-            att.clockOut &&
-            att.clockOut !== '00:00:00'
-          ) {
-            const baseDate = att.date.split('T')[0];
+          if (att.date && att.clockIn && att.clockOut && att.clockOut !== "00:00:00") {
+            const baseDate = att.date.split("T")[0];
 
             const clockInDate = new Date(`${baseDate}T${att.clockIn}`);
             const clockOutDate = new Date(`${baseDate}T${att.clockOut}`);
 
-            if (
-              clockInDate.getMonth() === currentMonthNum &&
-              clockInDate.getFullYear() === currentYear
-            ) {
+            if (clockInDate.getMonth() === currentMonthNum && clockInDate.getFullYear() === currentYear) {
               const diffMs = clockOutDate.getTime() - clockInDate.getTime();
               const diffHrs = diffMs / (1000 * 60 * 60);
               if (diffHrs > 0) totalHours += diffHrs;
@@ -5506,25 +4796,17 @@ export class DashboardComponent implements OnInit {
           }
         });
 
-        attendances.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-        );
+        attendances.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
         this.myRecentAttendances = attendances.slice(0, 5);
 
         this.employeeHoursWorked = Math.round(totalHours);
       },
-      error: (err) => console.error('Error fetching my attendance:', err),
+      error: (err) => console.error("Error fetching my attendance:", err),
     });
   }
 
-  renderLeaveChart(
-    annual: number,
-    sick: number,
-    emergency: number,
-    unpaid: number,
-  ) {
-
-    const ctx = document.getElementById('leaveTypeChart') as HTMLCanvasElement;
+  renderLeaveChart(annual: number, sick: number, emergency: number, unpaid: number) {
+    const ctx = document.getElementById("leaveTypeChart") as HTMLCanvasElement;
     if (!ctx) return;
 
     if (this.leaveChartInstance) {
@@ -5533,13 +4815,13 @@ export class DashboardComponent implements OnInit {
 
     if (annual === 0 && sick === 0 && emergency === 0 && unpaid === 0) {
       this.leaveChartInstance = new Chart(ctx, {
-        type: 'doughnut',
+        type: "doughnut",
         data: {
-          labels: ['No Data'],
+          labels: ["No Data"],
           datasets: [
             {
               data: [1],
-              backgroundColor: ['rgba(150, 150, 150, 0.15)'],
+              backgroundColor: ["rgba(150, 150, 150, 0.15)"],
               borderWidth: 0,
               hoverOffset: 0,
             },
@@ -5552,20 +4834,20 @@ export class DashboardComponent implements OnInit {
             legend: { display: false },
             tooltip: { enabled: false },
           },
-          cutout: '75%',
+          cutout: "75%",
         },
       });
       return;
     }
 
     this.leaveChartInstance = new Chart(ctx, {
-      type: 'doughnut',
+      type: "doughnut",
       data: {
-        labels: ['Annual', 'Sick', 'Emergency', 'Unpaid'],
+        labels: ["Annual", "Sick", "Emergency", "Unpaid"],
         datasets: [
           {
             data: [annual, sick, emergency, unpaid],
-            backgroundColor: ['#0d6efd', '#dc3545', '#ffc107', '#6c757d'],
+            backgroundColor: ["#0d6efd", "#dc3545", "#ffc107", "#6c757d"],
             borderWidth: 0,
             hoverOffset: 6,
           },
@@ -5576,7 +4858,7 @@ export class DashboardComponent implements OnInit {
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            position: 'bottom',
+            position: "bottom",
             labels: {
               usePointStyle: true,
               padding: 20,
@@ -5587,13 +4869,13 @@ export class DashboardComponent implements OnInit {
             },
           },
         },
-        cutout: '75%',
+        cutout: "75%",
       },
     });
   }
 
   renderAttendanceRateChart() {
-    const ctx = document.getElementById('attendanceRateChart') as HTMLCanvasElement;
+    const ctx = document.getElementById("attendanceRateChart") as HTMLCanvasElement;
     if (!ctx) return;
 
     if (this.attendanceRateChartInstance) {
@@ -5604,44 +4886,46 @@ export class DashboardComponent implements OnInit {
 
     const labels = [];
     const data = [];
-    let startDateStr = '';
+    let startDateStr = "";
 
     for (let i = 6; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
-      const dateString = d.toISOString().split('T')[0];
+      const dateString = d.toISOString().split("T")[0];
 
       if (i === 6) {
-        startDateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        startDateStr = d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
       }
 
-      const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
+      const dayName = d.toLocaleDateString("en-US", { weekday: "short" });
       labels.push(dayName);
 
-      const dayAtts = this.allAttendances.filter(a => a.date && a.date.startsWith(dateString) && a.clockIn);
+      const dayAtts = this.allAttendances.filter((a) => a.date && a.date.startsWith(dateString) && a.clockIn);
       let rate = Math.round((dayAtts.length / this.totalEmployees) * 100);
       if (rate > 100) rate = 100;
       data.push(rate);
     }
 
     this.attendanceRateChartInstance = new Chart(ctx, {
-      type: 'line',
+      type: "line",
       data: {
         labels: labels,
-        datasets: [{
-          label: 'Attendance Rate (%)',
-          data: data,
-          borderColor: '#198754',
-          backgroundColor: 'rgba(25, 135, 84, 0.1)',
-          borderWidth: 3,
-          fill: true,
-          tension: 0.4,
-          pointBackgroundColor: '#198754',
-          pointBorderColor: '#fff',
-          pointBorderWidth: 2,
-          pointRadius: 4,
-          pointHoverRadius: 6
-        }]
+        datasets: [
+          {
+            label: "Attendance Rate (%)",
+            data: data,
+            borderColor: "#198754",
+            backgroundColor: "rgba(25, 135, 84, 0.1)",
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: "#198754",
+            pointBorderColor: "#fff",
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+          },
+        ],
       },
       options: {
         responsive: true,
@@ -5650,502 +4934,340 @@ export class DashboardComponent implements OnInit {
           title: {
             display: true,
             text: `Attendance rates since ${startDateStr} (Renews every 7 days)`,
-            align: 'start',
-            color: '#6c757d',
+            align: "start",
+            color: "#6c757d",
             font: {
               family: "'Inter', sans-serif",
               size: 13,
-              weight: 'normal'
+              weight: "normal",
             },
-            padding: { bottom: 15 }
+            padding: { bottom: 15 },
           },
           legend: { display: false },
           tooltip: {
             callbacks: {
               label: function (context: any) {
-                return context.parsed.y + '%';
-              }
-            }
-          }
+                return context.parsed.y + "%";
+              },
+            },
+          },
         },
         scales: {
           y: {
             beginAtZero: true,
             max: 100,
             grid: {
-              color: 'rgba(0, 0, 0, 0.05)',
+              color: "rgba(0, 0, 0, 0.05)",
             },
             ticks: {
               callback: function (value: any) {
-                return value + '%';
-              }
-            }
+                return value + "%";
+              },
+            },
           },
           x: {
             grid: {
-              display: false
-            }
-          }
-        }
-      }
+              display: false,
+            },
+          },
+        },
+      },
     });
   }
 
   exportRecentAttendancesToExcel() {
     if (this.recentAttendances.length === 0) {
-      Swal.fire('No Data', 'There are no attendance records to export.', 'info');
+      Swal.fire("No Data", "There are no attendance records to export.", "info");
       return;
     }
 
-    const headers = ['Employee', 'Date', 'Clock In', 'Clock Out'];
-    const data = this.recentAttendances.map(att => [
-      att.employeeName || 'Emp #' + att.employeeId,
-      att.date ? new Date(att.date).toLocaleDateString() : '',
-      att.clockIn || '--:--',
-      att.clockOut && att.clockOut !== '00:00:00' ? att.clockOut : '--:--'
-    ]);
+    const headers = ["Employee", "Date", "Clock In", "Clock Out"];
+    const data = this.recentAttendances.map((att) => [att.employeeName || "Emp #" + att.employeeId, att.date ? new Date(att.date).toLocaleDateString() : "", att.clockIn || "--:--", att.clockOut && att.clockOut !== "00:00:00" ? att.clockOut : "--:--"]);
 
-    this.excelExportService.exportTableToExcel(headers, data, 'Recent_Attendances');
+    this.excelExportService.exportTableToExcel(headers, data, "Recent_Attendances");
   }
 
   exportMyRecentAttendancesToExcel() {
     if (this.myRecentAttendances.length === 0) {
-      Swal.fire('No Data', 'There are no attendance records to export.', 'info');
+      Swal.fire("No Data", "There are no attendance records to export.", "info");
       return;
     }
 
-    const headers = ['Date', 'Clock In', 'Clock Out'];
-    const data = this.myRecentAttendances.map(att => [
-      att.date ? new Date(att.date).toLocaleDateString() : '',
-      att.clockIn || '--:--',
-      att.clockOut && att.clockOut !== '00:00:00' ? att.clockOut : '--:--'
-    ]);
+    const headers = ["Date", "Clock In", "Clock Out"];
+    const data = this.myRecentAttendances.map((att) => [att.date ? new Date(att.date).toLocaleDateString() : "", att.clockIn || "--:--", att.clockOut && att.clockOut !== "00:00:00" ? att.clockOut : "--:--"]);
 
-    this.excelExportService.exportTableToExcel(headers, data, 'My_Recent_Attendances');
+    this.excelExportService.exportTableToExcel(headers, data, "My_Recent_Attendances");
   }
 }
-
 ```
 
 ### File: src\app\features\departments\departments.component.html
+
 ```html
 <div class="page-container p-4">
-
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <div class="d-flex align-items-center">
-            <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
-                <i class="bi bi-diagram-3-fill fs-4"></i>
-            </div>
-            <div>
-                <h2 class="fw-bold text-dark mb-1">{{ 'Departments' | t }}</h2>
-                <p class="text-muted small mb-0">{{ 'Manage organizational departments and view their employee structures' | t }}</p>
-            </div>
-        </div>
-        <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
-                    <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> 
-                    <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
-                </button>
-                <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
-                    <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i> 
-                    <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
-                </button>
-            </div>
-            <button class="btn btn-primary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="openAddModal()">
-                <i class="bi bi-plus-lg" [class.me-md-1]="true"></i> 
-                <span class="d-none d-md-inline">{{ 'Add Department' | t }}</span>
-            </button>
-        </div>
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div class="d-flex align-items-center">
+      <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+        <i class="bi bi-diagram-3-fill fs-4"></i>
+      </div>
+      <div>
+        <h2 class="fw-bold text-dark mb-1">{{ 'Departments' | t }}</h2>
+        <p class="text-muted small mb-0">{{ 'Manage organizational departments and view their employee structures' | t }}</p>
+      </div>
     </div>
-
-    @if (isLoading) {
-    <div class="text-center my-5 py-5">
-        <div class="spinner-border text-primary mb-3" role="status"
-            style="width: 3rem; height: 3rem;"></div>
-        <p class="text-muted fw-medium fs-5">Fetching departments data...</p>
+    <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
+          <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i>
+          <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
+        </button>
+        <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
+          <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i>
+          <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
+        </button>
+      </div>
+      <button class="btn btn-primary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="openAddModal()">
+        <i class="bi bi-plus-lg" [class.me-md-1]="true"></i>
+        <span class="d-none d-md-inline">{{ 'Add Department' | t }}</span>
+      </button>
     </div>
-    } @else {
-    <div class="row g-4">
-        @for (dept of departmentsList; track dept.id) {
-        <div class="col-md-6 col-xl-4 col-xxl-3">
-            <div
-                class="card border-0 shadow-sm h-100 rounded-4 overflow-hidden position-relative transition-hover"
-                style="transition: transform 0.2s, box-shadow 0.2s;">
-                <div class="card-header bg-white border-0 pt-4 pb-0 px-4">
-                    <div
-                        class="d-flex justify-content-between align-items-center mb-3">
-                        <div
-                            class="bg-primary bg-opacity-10 text-primary p-2 rounded-3 d-flex align-items-center justify-content-center"
-                            style="width: 48px; height: 48px;">
-                            <i class="bi bi-buildings fs-4"></i>
-                        </div>
-                        <div class="dropdown">
-                            <button
-                                class="btn btn-light btn-sm rounded-circle shadow-none text-muted d-flex align-items-center justify-content-center p-0"
-                                type="button" data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                                style="width: 32px; height: 32px;">
-                                <i class="bi bi-three-dots-vertical"></i>
-                            </button>
-                            <ul
-                                class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3">
-                                <li><a
-                                        class="dropdown-item py-2 fw-medium text-dark"
-                                        href="javascript:void(0)"
-                                        (click)="openEditModal(dept)"><i
-                                            class="bi bi-pencil-square text-primary me-2"></i>{{
-                                        'Edit' | t }}</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a
-                                        class="dropdown-item py-2 fw-medium text-danger"
-                                        href="javascript:void(0)"
-                                        (click)="deleteDepartment(dept.id)"><i
-                                            class="bi bi-trash3 me-2"></i>{{
-                                        'Delete' | t }}</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <h5 class="card-title fw-bold text-dark mb-1 text-truncate"
-                        [title]="dept.name">{{ dept.name }}</h5>
-                    <p class="text-muted small mb-0 fw-medium">{{ 'ID' | t }}:
-                        #{{ dept.id }}</p>
-                </div>
-                <div class="card-body px-4 pb-4 pt-3 mt-1">
-                    <div
-                        class="d-flex justify-content-between align-items-center bg-light rounded-3 p-3">
-                        <div class="text-center flex-fill">
-                            <h5 class="fw-bold text-primary mb-0">{{
-                                getDeptStat(dept.id, 'employees') }}</h5>
-                            <small class="text-muted fw-semibold"
-                                style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">{{
-                                'Employees' | t }}</small>
-                        </div>
-                        <div
-                            style="width: 1px; height: 35px; background-color: #dee2e6;"></div>
-                        <div class="text-center flex-fill">
-                            <h5 class="fw-bold text-dark mb-0">{{
-                                getDeptStat(dept.id, 'positions') }}</h5>
-                            <small class="text-muted fw-semibold"
-                                style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">{{
-                                'Positions' | t }}</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer bg-white border-top-0 px-4 pb-4 pt-0">
-                    <button
-                        class="btn btn-outline-primary w-100 rounded-3 fw-semibold shadow-sm py-2 d-flex align-items-center justify-content-center"
-                        (click)="viewDetails(dept)">
-                        <i class="bi bi-eye me-2 fs-5"></i> View Details
-                    </button>
-                </div>
+  </div>
+
+  @if (isLoading) {
+  <div class="text-center my-5 py-5">
+    <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;"></div>
+    <p class="text-muted fw-medium fs-5">Fetching departments data...</p>
+  </div>
+  } @else {
+  <div class="row g-4">
+    @for (dept of departmentsList; track dept.id) {
+    <div class="col-md-6 col-xl-4 col-xxl-3">
+      <div class="card border-0 shadow-sm h-100 rounded-4 overflow-hidden position-relative transition-hover" style="transition: transform 0.2s, box-shadow 0.2s;">
+        <div class="card-header bg-white border-0 pt-4 pb-0 px-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="bg-primary bg-opacity-10 text-primary p-2 rounded-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+              <i class="bi bi-buildings fs-4"></i>
             </div>
-        </div>
-        } @empty {
-        <div class="col-12 text-center my-5 py-5">
-            <div
-                class="bg-light rounded-circle d-inline-flex justify-content-center align-items-center mb-4"
-                style="width: 100px; height: 100px;">
-                <i class="bi bi-diagram-2 text-secondary"
-                    style="font-size: 40px;"></i>
+            <div class="dropdown">
+              <button class="btn btn-light btn-sm rounded-circle shadow-none text-muted d-flex align-items-center justify-content-center p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 32px; height: 32px;">
+                <i class="bi bi-three-dots-vertical"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3">
+                <li>
+                  <a class="dropdown-item py-2 fw-medium text-dark" href="javascript:void(0)" (click)="openEditModal(dept)"><i class="bi bi-pencil-square text-primary me-2"></i>{{ 'Edit' | t }}</a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item py-2 fw-medium text-danger" href="javascript:void(0)" (click)="deleteDepartment(dept.id)"><i class="bi bi-trash3 me-2"></i>{{ 'Delete' | t }}</a>
+                </li>
+              </ul>
             </div>
-            <h4 class="fw-bold text-dark mb-2">{{ 'No Data' | t }}</h4>
-            <p class="text-muted">There are no departments created in the system
-                yet.</p>
-            <button class="btn btn-primary mt-2 px-4 rounded-3"
-                (click)="openAddModal()"><i class="bi bi-plus-lg me-1"></i> Add
-                Your First Department</button>
+          </div>
+          <h5 class="card-title fw-bold text-dark mb-1 text-truncate" [title]="dept.name">{{ dept.name }}</h5>
+          <p class="text-muted small mb-0 fw-medium">{{ 'ID' | t }}: #{{ dept.id }}</p>
         </div>
-        }
+        <div class="card-body px-4 pb-4 pt-3 mt-1">
+          <div class="d-flex justify-content-between align-items-center bg-light rounded-3 p-3">
+            <div class="text-center flex-fill">
+              <h5 class="fw-bold text-primary mb-0">{{ getDeptStat(dept.id, 'employees') }}</h5>
+              <small class="text-muted fw-semibold" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">{{ 'Employees' | t }}</small>
+            </div>
+            <div style="width: 1px; height: 35px; background-color: #dee2e6;"></div>
+            <div class="text-center flex-fill">
+              <h5 class="fw-bold text-dark mb-0">{{ getDeptStat(dept.id, 'positions') }}</h5>
+              <small class="text-muted fw-semibold" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">{{ 'Positions' | t }}</small>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer bg-white border-top-0 px-4 pb-4 pt-0">
+          <button class="btn btn-outline-primary w-100 rounded-3 fw-semibold shadow-sm py-2 d-flex align-items-center justify-content-center" (click)="viewDetails(dept)"><i class="bi bi-eye me-2 fs-5"></i> View Details</button>
+        </div>
+      </div>
+    </div>
+    } @empty {
+    <div class="col-12 text-center my-5 py-5">
+      <div class="bg-light rounded-circle d-inline-flex justify-content-center align-items-center mb-4" style="width: 100px; height: 100px;">
+        <i class="bi bi-diagram-2 text-secondary" style="font-size: 40px;"></i>
+      </div>
+      <h4 class="fw-bold text-dark mb-2">{{ 'No Data' | t }}</h4>
+      <p class="text-muted">There are no departments created in the system yet.</p>
+      <button class="btn btn-primary mt-2 px-4 rounded-3" (click)="openAddModal()"><i class="bi bi-plus-lg me-1"></i> Add Your First Department</button>
     </div>
     }
+  </div>
+  }
 </div>
 
 <div class="modal fade" id="deptDetailsModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-            <div class="modal-header border-bottom-0 bg-white pt-4 pb-2 px-4">
-                <h4
-                    class="modal-title fw-bold text-dark d-flex align-items-center">
-                    <div
-                        class="bg-primary bg-opacity-10 text-primary p-2 rounded-3 me-3 d-flex align-items-center justify-content-center"
-                        style="width: 40px; height: 40px;">
-                        <i class="bi bi-building fs-5"></i>
-                    </div>
-                    {{ selectedDepartment?.name }} Department
-                </h4>
-                <button type="button" class="btn-close shadow-none"
-                    data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-0 bg-light">
-                @if (selectedDepartment) {
-                <div class="row g-0">
-                    
-                    <div class="col-lg-4 border-end bg-white">
-                        <div class="p-4 h-100">
-                            <h6 class="fw-bold text-dark mb-4 text-uppercase"
-                                style="letter-spacing: 0.5px; font-size: 13px;">Department
-                                Overview</h6>
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+      <div class="modal-header border-bottom-0 bg-white pt-4 pb-2 px-4">
+        <h4 class="modal-title fw-bold text-dark d-flex align-items-center">
+          <div class="bg-primary bg-opacity-10 text-primary p-2 rounded-3 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+            <i class="bi bi-building fs-5"></i>
+          </div>
+          {{ selectedDepartment?.name }} Department
+        </h4>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0 bg-light">
+        @if (selectedDepartment) {
+        <div class="row g-0">
+          <div class="col-lg-4 border-end bg-white">
+            <div class="p-4 h-100">
+              <h6 class="fw-bold text-dark mb-4 text-uppercase" style="letter-spacing: 0.5px; font-size: 13px;">Department Overview</h6>
 
-                            <div
-                                class="d-flex align-items-center mb-4 p-3 bg-light rounded-4 border">
-                                <div
-                                    class="bg-primary text-white rounded-3 d-flex justify-content-center align-items-center me-3"
-                                    style="width: 48px; height: 48px;">
-                                    <i class="bi bi-people-fill fs-5"></i>
-                                </div>
-                                <div>
-                                    <p
-                                        class="text-muted small mb-0 fw-semibold">Total
-                                        Employees</p>
-                                    <h3 class="fw-bold text-primary mb-0">{{
-                                        selectedDepartment.stats?.totalEmployees
-                                        || 0 }}</h3>
-                                </div>
-                            </div>
-
-                            <div
-                                class="d-flex align-items-center mb-4 p-3 bg-light rounded-4 border">
-                                <div
-                                    class="bg-secondary text-white rounded-3 d-flex justify-content-center align-items-center me-3"
-                                    style="width: 48px; height: 48px;">
-                                    <i class="bi bi-diagram-3-fill fs-5"></i>
-                                </div>
-                                <div>
-                                    <p
-                                        class="text-muted small mb-0 fw-semibold">Total
-                                        Positions</p>
-                                    <h3 class="fw-bold text-secondary mb-0">{{
-                                        selectedDepartment.totalPositions || 0
-                                        }}</h3>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    
-                    <div class="col-lg-8 bg-light">
-                        <div class="p-4 h-100 d-flex flex-column">
-                            <div
-                                class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-                                <h6
-                                    class="fw-bold text-dark mb-0 text-uppercase"
-                                    style="letter-spacing: 0.5px; font-size: 13px;">Employees
-                                    Directory</h6>
-
-                                <div class="d-flex gap-2">
-                                    <div
-                                        class="input-group input-group-sm shadow-sm"
-                                        style="max-width: 200px;">
-                                        <span
-                                            class="input-group-text bg-white border-end-0 text-muted"><i
-                                                class="bi bi-search"></i></span>
-                                        <input type="text"
-                                            class="form-control border-start-0 ps-0"
-                                            placeholder="Search by name or ID..."
-                                            [(ngModel)]="searchEmpQuery"
-                                            (input)="filterDeptEmployees()">
-                                    </div>
-                                    <select
-                                        class="form-select form-select-sm shadow-sm w-auto fw-medium text-secondary"
-                                        [(ngModel)]="selectedPositionFilter"
-                                        (change)="filterDeptEmployees()">
-                                        <option value>All Positions</option>
-                                        <option
-                                            *ngFor="let p of uniquePositions"
-                                            [value]="p">{{ p }}</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div
-                                class="card border-0 shadow-sm rounded-4 flex-grow-1 overflow-hidden">
-                                <div class="table-responsive h-100"
-                                    style="max-height: 500px;">
-                                    <table
-                                        class="table table-hover align-middle mb-0 text-nowrap">
-                                        <thead class="bg-light sticky-top"
-                                            style="z-index: 1;">
-                                            <tr>
-                                                <th
-                                                    class="py-3 px-4 text-muted small text-uppercase fw-semibold"
-                                                    style="letter-spacing: 0.5px; border-bottom: 2px solid #e9ecef;">ID</th>
-                                                <th
-                                                    class="py-3 px-3 text-muted small text-uppercase fw-semibold"
-                                                    style="letter-spacing: 0.5px; border-bottom: 2px solid #e9ecef;">Employee
-                                                    Name</th>
-                                                <th
-                                                    class="py-3 px-3 text-muted small text-uppercase fw-semibold"
-                                                    style="letter-spacing: 0.5px; border-bottom: 2px solid #e9ecef;">Position</th>
-                                                <th
-                                                    class="py-3 px-4 text-muted small text-uppercase fw-semibold text-center"
-                                                    style="letter-spacing: 0.5px; border-bottom: 2px solid #e9ecef;">Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="border-top-0">
-                                            <tr
-                                                *ngFor="let emp of filteredDeptEmployees">
-                                                <td data-label="ID"
-                                                    class="py-3 px-4 fw-bold text-secondary">#{{
-                                                    emp.id }}</td>
-                                                 <td data-label="Employee Name"
-                                                    class="py-3 px-3 fw-bold text-dark">
-                                                    <div
-                                                        class="d-flex align-items-center">
-                                                        <div class="me-3 flex-shrink-0" style="width: 35px; height: 35px;">
-                                                            <img *ngIf="emp.profilePictureUrl"
-                                                                [src]="emp.profilePictureUrl"
-                                                                class="rounded-circle object-fit-cover w-100 h-100 border shadow-sm"
-                                                                alt="Profile">
-                                                            <div *ngIf="!emp.profilePictureUrl"
-                                                                class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-0 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 w-100 h-100"
-                                                                style="font-size: 13px;">
-                                                                {{ emp.firstName?.charAt(0) || 'U' }}
-                                                            </div>
-                                                        </div>
-                                                        {{ emp.firstName }} {{
-                                                        emp.lastName }}
-                                                    </div>
-                                                </td>
-                                                <td data-label="Position"
-                                                    class="py-3 px-3 text-muted fw-medium">{{
-                                                    emp.positionName || 'N/A'
-                                                    }}</td>
-                                                <td data-label="Status"
-                                                    class="py-3 px-4 text-center">
-                                                    <span
-                                                        class="badge rounded-pill px-3 py-2 fw-semibold"
-                                                        [ngClass]="emp.isActive ? 'bg-success bg-opacity-10 text-success border border-success border-opacity-25' : 'bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25'">
-                                                        {{ emp.isActive ?
-                                                        'Active' : 'Inactive' }}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                            <tr
-                                                *ngIf="filteredDeptEmployees.length === 0">
-                                                <td colspan="4"
-                                                    class="text-center py-5 no-data-td">
-                                                    <div
-                                                        class="text-muted d-flex flex-column align-items-center">
-                                                        <i
-                                                            class="bi bi-search fs-1 mb-3 text-black-50"></i>
-                                                        <span
-                                                            class="fw-medium fs-6">No
-                                                            employees
-                                                            found.</span>
-                                                        <small>Try adjusting
-                                                            your search or
-                                                            filter
-                                                            criteria.</small>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+              <div class="d-flex align-items-center mb-4 p-3 bg-light rounded-4 border">
+                <div class="bg-primary text-white rounded-3 d-flex justify-content-center align-items-center me-3" style="width: 48px; height: 48px;">
+                  <i class="bi bi-people-fill fs-5"></i>
                 </div>
-                }
+                <div>
+                  <p class="text-muted small mb-0 fw-semibold">Total Employees</p>
+                  <h3 class="fw-bold text-primary mb-0">{{ selectedDepartment.stats?.totalEmployees || 0 }}</h3>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center mb-4 p-3 bg-light rounded-4 border">
+                <div class="bg-secondary text-white rounded-3 d-flex justify-content-center align-items-center me-3" style="width: 48px; height: 48px;">
+                  <i class="bi bi-diagram-3-fill fs-5"></i>
+                </div>
+                <div>
+                  <p class="text-muted small mb-0 fw-semibold">Total Positions</p>
+                  <h3 class="fw-bold text-secondary mb-0">{{ selectedDepartment.totalPositions || 0 }}</h3>
+                </div>
+              </div>
             </div>
-            <div class="modal-footer bg-white border-top pt-3 pb-3 px-4">
-                <button type="button"
-                    class="btn btn-secondary px-5 py-2 rounded-3 fw-semibold shadow-sm"
-                    data-bs-dismiss="modal">Close</button>
+          </div>
+
+          <div class="col-lg-8 bg-light">
+            <div class="p-4 h-100 d-flex flex-column">
+              <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                <h6 class="fw-bold text-dark mb-0 text-uppercase" style="letter-spacing: 0.5px; font-size: 13px;">Employees Directory</h6>
+
+                <div class="d-flex gap-2">
+                  <div class="input-group input-group-sm shadow-sm" style="max-width: 200px;">
+                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control border-start-0 ps-0" placeholder="Search by name or ID..." [(ngModel)]="searchEmpQuery" (input)="filterDeptEmployees()" />
+                  </div>
+                  <select class="form-select form-select-sm shadow-sm w-auto fw-medium text-secondary" [(ngModel)]="selectedPositionFilter" (change)="filterDeptEmployees()">
+                    <option value>All Positions</option>
+                    <option *ngFor="let p of uniquePositions" [value]="p">{{ p }}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="card border-0 shadow-sm rounded-4 flex-grow-1 overflow-hidden">
+                <div class="table-responsive h-100" style="max-height: 500px;">
+                  <table class="table table-hover align-middle mb-0 text-nowrap">
+                    <thead class="bg-light sticky-top" style="z-index: 1;">
+                      <tr>
+                        <th class="py-3 px-4 text-muted small text-uppercase fw-semibold" style="letter-spacing: 0.5px; border-bottom: 2px solid #e9ecef;">ID</th>
+                        <th class="py-3 px-3 text-muted small text-uppercase fw-semibold" style="letter-spacing: 0.5px; border-bottom: 2px solid #e9ecef;">Employee Name</th>
+                        <th class="py-3 px-3 text-muted small text-uppercase fw-semibold" style="letter-spacing: 0.5px; border-bottom: 2px solid #e9ecef;">Position</th>
+                        <th class="py-3 px-4 text-muted small text-uppercase fw-semibold text-center" style="letter-spacing: 0.5px; border-bottom: 2px solid #e9ecef;">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody class="border-top-0">
+                      <tr *ngFor="let emp of filteredDeptEmployees">
+                        <td data-label="ID" class="py-3 px-4 fw-bold text-secondary">#{{ emp.id }}</td>
+                        <td data-label="Employee Name" class="py-3 px-3 fw-bold text-dark">
+                          <div class="d-flex align-items-center">
+                            <div class="me-3 flex-shrink-0" style="width: 35px; height: 35px;">
+                              <img *ngIf="emp.profilePictureUrl" [src]="emp.profilePictureUrl" class="rounded-circle object-fit-cover w-100 h-100 border shadow-sm" alt="Profile" />
+                              <div *ngIf="!emp.profilePictureUrl" class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-0 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 w-100 h-100" style="font-size: 13px;">{{ emp.firstName?.charAt(0) || 'U' }}</div>
+                            </div>
+                            {{ emp.firstName }} {{ emp.lastName }}
+                          </div>
+                        </td>
+                        <td data-label="Position" class="py-3 px-3 text-muted fw-medium">{{ emp.positionName || 'N/A' }}</td>
+                        <td data-label="Status" class="py-3 px-4 text-center">
+                          <span class="badge rounded-pill px-3 py-2 fw-semibold" [ngClass]="emp.isActive ? 'bg-success bg-opacity-10 text-success border border-success border-opacity-25' : 'bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25'"> {{ emp.isActive ? 'Active' : 'Inactive' }} </span>
+                        </td>
+                      </tr>
+                      <tr *ngIf="filteredDeptEmployees.length === 0">
+                        <td colspan="4" class="text-center py-5 no-data-td">
+                          <div class="text-muted d-flex flex-column align-items-center">
+                            <i class="bi bi-search fs-1 mb-3 text-black-50"></i>
+                            <span class="fw-medium fs-6">No employees found.</span>
+                            <small>Try adjusting your search or filter criteria.</small>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
+        }
+      </div>
+      <div class="modal-footer bg-white border-top pt-3 pb-3 px-4">
+        <button type="button" class="btn btn-secondary px-5 py-2 rounded-3 fw-semibold shadow-sm" data-bs-dismiss="modal">Close</button>
+      </div>
     </div>
+  </div>
 </div>
 
 <div class="modal fade" id="addDeptModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header border-bottom border-success border-4 bg-light">
+        <h5 class="modal-title text-success fw-bold">
+          <i class="bi" [class.bi-plus-circle]="!isEditMode" [class.bi-pencil-square]="isEditMode"></i>
+          {{ isEditMode ? ('Edit' | t) : ('Add Department' | t) }}
+        </h5>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
 
-            <div
-                class="modal-header border-bottom border-success border-4 bg-light">
-                <h5 class="modal-title text-success fw-bold">
-                    <i class="bi" [class.bi-plus-circle]="!isEditMode"
-                        [class.bi-pencil-square]="isEditMode"></i>
-                    {{ isEditMode ? ('Edit' | t) : ('Add Department' | t) }}
-                </h5>
-                <button type="button" class="btn-close shadow-none"
-                    data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <form [formGroup]="addForm" (ngSubmit)="saveDepartment()">
-                <div class="modal-body p-4">
-                    <div class="mb-3">
-                        <label
-                            class="form-label fw-bold text-secondary">{{
-                            'Department Name' | t }} <span
-                                class="text-danger">*</span></label>
-                        <input type="text" class="form-control"
-                            formControlName="name"
-                            placeholder="e.g., Marketing, Sales..."
-                            [class.is-invalid]="addForm.get('name')?.invalid && addForm.get('name')?.touched">
-                        @if (addForm.get('name')?.invalid &&
-                        addForm.get('name')?.touched) {
-                        <div class="invalid-feedback">
-                            Department name is required.
-                        </div>
-                        }
-                    </div>
-                </div>
-
-                <div class="modal-footer bg-light border-top-0">
-                    <button type="button" class="btn btn-light px-4 border"
-                        data-bs-dismiss="modal"
-                        [disabled]="isSubmitting">{{ 'Cancel' | t }}</button>
-                    <button type="submit" class="btn btn-success px-4"
-                        [disabled]="addForm.invalid || isSubmitting">
-                        @if (isSubmitting) {
-                        <span class="spinner-border spinner-border-sm me-2"
-                            role="status" aria-hidden="true"></span>Saving...
-                        } @else {
-                        <i class="bi bi-save me-1"></i> {{ 'Save Changes' | t }}
-                        }
-                    </button>
-                </div>
-            </form>
-
+      <form [formGroup]="addForm" (ngSubmit)="saveDepartment()">
+        <div class="modal-body p-4">
+          <div class="mb-3">
+            <label class="form-label fw-bold text-secondary">{{ 'Department Name' | t }} <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" formControlName="name" placeholder="e.g., Marketing, Sales..." [class.is-invalid]="addForm.get('name')?.invalid && addForm.get('name')?.touched" />
+            @if (addForm.get('name')?.invalid && addForm.get('name')?.touched) {
+            <div class="invalid-feedback">Department name is required.</div>
+            }
+          </div>
         </div>
+
+        <div class="modal-footer bg-light border-top-0">
+          <button type="button" class="btn btn-light px-4 border" data-bs-dismiss="modal" [disabled]="isSubmitting">{{ 'Cancel' | t }}</button>
+          <button type="submit" class="btn btn-success px-4" [disabled]="addForm.invalid || isSubmitting">
+            @if (isSubmitting) {
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Saving... } @else { <i class="bi bi-save me-1"></i> {{ 'Save Changes' | t }} }
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
 
-<style>
-</style>
-
-
+<style></style>
 ```
 
 ### File: src\app\features\departments\departments.component.ts
+
 ```typescript
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  ReactiveFormsModule,
-  FormGroup,
-  FormControl,
-  Validators,
-  FormsModule,
-} from '@angular/forms';
-import { DepartmentService } from '../../core/services/department.service';
-import { EmployeeService } from '../../core/services/employee.service';
-import { PositionService } from '../../core/services/position.service';
-import { TranslatePipe } from '../../core/pipes/translate.pipe';
-import Swal from 'sweetalert2';
-import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
-import { ExcelExportService } from '../../core/services/excel-export.service';
-import { PdfExportService } from '../../core/services/pdf-export.service';
+import { Component, OnInit, inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { ReactiveFormsModule, FormGroup, FormControl, Validators, FormsModule } from "@angular/forms";
+import { DepartmentService } from "../../core/services/department.service";
+import { EmployeeService } from "../../core/services/employee.service";
+import { PositionService } from "../../core/services/position.service";
+import { TranslatePipe } from "../../core/pipes/translate.pipe";
+import Swal from "sweetalert2";
+import { getFriendlyErrorMessage } from "../../core/utils/error-handler.util";
+import { ExcelExportService } from "../../core/services/excel-export.service";
+import { PdfExportService } from "../../core/services/pdf-export.service";
 
 declare var bootstrap: any;
 
 @Component({
-  selector: 'app-departments',
+  selector: "app-departments",
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe],
-  templateUrl: './departments.component.html',
+  templateUrl: "./departments.component.html",
 })
 export class DepartmentsComponent implements OnInit {
   private departmentService = inject(DepartmentService);
@@ -6171,12 +5293,12 @@ export class DepartmentsComponent implements OnInit {
 
   deptEmployees: any[] = [];
   filteredDeptEmployees: any[] = [];
-  searchEmpQuery: string = '';
-  selectedPositionFilter: string = '';
+  searchEmpQuery: string = "";
+  selectedPositionFilter: string = "";
   uniquePositions: string[] = [];
 
   addForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.minLength(2)]),
+    name: new FormControl("", [Validators.required, Validators.minLength(2)]),
   });
 
   ngOnInit() {
@@ -6185,7 +5307,6 @@ export class DepartmentsComponent implements OnInit {
   }
 
   loadPositionsThenEmployees() {
-
     this.positionService.getPositions().subscribe({
       next: (res: any) => {
         this.allPositions = Array.isArray(res) ? res : res?.data || [];
@@ -6198,9 +5319,7 @@ export class DepartmentsComponent implements OnInit {
   loadEmployees() {
     this.employeeService.getEmployees().subscribe({
       next: (res: any) => {
-        const extracted: any[] = Array.isArray(res)
-          ? res
-          : res?.data?.items || res?.data || [];
+        const extracted: any[] = Array.isArray(res) ? res : res?.data?.items || res?.data || [];
 
         this.allEmployees = extracted.map((emp) => {
           if (!emp.positionName && emp.positionId) {
@@ -6234,27 +5353,24 @@ export class DepartmentsComponent implements OnInit {
     }
   }
 
-  getDeptStat(deptId: number, type: 'employees' | 'positions'): number {
-    if (type === 'employees') {
+  getDeptStat(deptId: number, type: "employees" | "positions"): number {
+    if (type === "employees") {
       const stat = this.departmentStats[deptId];
       return stat ? stat.totalEmployees : 0;
     }
-    if (type === 'positions') {
-
+    if (type === "positions") {
       return this.allPositions.filter((p) => p.departmentId === deptId).length;
     }
     return 0;
   }
 
   loadDepartments() {
-
     this.isLoading = true;
     this.departmentService.getDepartments().subscribe({
       next: (res: any) => {
         let extracted: any[] = [];
         if (Array.isArray(res)) extracted = res;
-        else if (res?.data?.items && Array.isArray(res.data.items))
-          extracted = res.data.items;
+        else if (res?.data?.items && Array.isArray(res.data.items)) extracted = res.data.items;
         else if (res?.data && Array.isArray(res.data)) extracted = res.data;
         else if (res?.$values) extracted = res.$values;
 
@@ -6262,21 +5378,18 @@ export class DepartmentsComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching departments:', err);
+        console.error("Error fetching departments:", err);
         this.isLoading = false;
       },
     });
   }
 
   viewDetails(dept: any) {
-
     this.selectedDepartment = dept;
     const stats = this.departmentStats[dept.id] || { totalEmployees: 0 };
     this.selectedDepartment.stats = stats;
 
-    const deptPositions = this.allPositions.filter(
-      (p) => p.departmentId === dept.id,
-    );
+    const deptPositions = this.allPositions.filter((p) => p.departmentId === dept.id);
     this.selectedDepartment.totalPositions = deptPositions.length;
 
     this.deptEmployees = this.allEmployees
@@ -6291,11 +5404,11 @@ export class DepartmentsComponent implements OnInit {
     this.filteredDeptEmployees = [...this.deptEmployees];
 
     this.uniquePositions = deptPositions.map((p) => p.title).filter(Boolean);
-    this.searchEmpQuery = '';
-    this.selectedPositionFilter = '';
+    this.searchEmpQuery = "";
+    this.selectedPositionFilter = "";
 
     setTimeout(() => {
-      const modalElement = document.getElementById('deptDetailsModal');
+      const modalElement = document.getElementById("deptDetailsModal");
       if (modalElement) {
         this.detailsModal = new bootstrap.Modal(modalElement);
         this.detailsModal.show();
@@ -6304,23 +5417,18 @@ export class DepartmentsComponent implements OnInit {
   }
 
   filterDeptEmployees() {
-
     this.filteredDeptEmployees = this.deptEmployees.filter((emp) => {
       let matchesSearch = true;
       if (this.searchEmpQuery) {
         const query = this.searchEmpQuery.toLowerCase();
-        const fullName =
-          `${emp.firstName || ''} ${emp.lastName || ''}`.toLowerCase();
+        const fullName = `${emp.firstName || ""} ${emp.lastName || ""}`.toLowerCase();
         const idStr = String(emp.id);
         matchesSearch = fullName.includes(query) || idStr.includes(query);
       }
 
       let matchesPos = true;
       if (this.selectedPositionFilter) {
-
-        const pos = this.allPositions.find(
-          (p) => p.title === this.selectedPositionFilter,
-        );
+        const pos = this.allPositions.find((p) => p.title === this.selectedPositionFilter);
         if (pos) {
           matchesPos = emp.positionId === pos.id;
         } else {
@@ -6336,7 +5444,7 @@ export class DepartmentsComponent implements OnInit {
     this.isEditMode = false;
     this.currentDepartmentId = null;
     this.addForm.reset();
-    const modalElement = document.getElementById('addDeptModal');
+    const modalElement = document.getElementById("addDeptModal");
     if (modalElement) {
       this.addModalInstance = new bootstrap.Modal(modalElement);
       this.addModalInstance.show();
@@ -6348,7 +5456,7 @@ export class DepartmentsComponent implements OnInit {
     this.currentDepartmentId = dept.id;
     this.addForm.patchValue({ name: dept.name });
 
-    const modalElement = document.getElementById('addDeptModal');
+    const modalElement = document.getElementById("addDeptModal");
     if (modalElement) {
       this.addModalInstance = new bootstrap.Modal(modalElement);
       this.addModalInstance.show();
@@ -6356,9 +5464,8 @@ export class DepartmentsComponent implements OnInit {
   }
 
   saveDepartment() {
-
     if (this.addForm.invalid) {
-      Swal.fire('Warning', 'Please enter a valid department name.', 'warning');
+      Swal.fire("Warning", "Please enter a valid department name.", "warning");
       return;
     }
 
@@ -6366,45 +5473,29 @@ export class DepartmentsComponent implements OnInit {
     const payload = this.addForm.getRawValue();
 
     if (this.isEditMode && this.currentDepartmentId) {
-      this.departmentService
-        .updateDepartment(this.currentDepartmentId, payload)
-        .subscribe({
-          next: () => {
-            this.isSubmitting = false;
-            this.addModalInstance.hide();
-            Swal.fire('Success', 'Department updated successfully!', 'success');
-            this.loadDepartments();
-          },
-          error: (err) => {
-            this.isSubmitting = false;
-            Swal.fire(
-              'Error',
-              getFriendlyErrorMessage(
-                err,
-                'Failed to update department. Please try again.',
-              ),
-              'error',
-            );
-          },
-        });
+      this.departmentService.updateDepartment(this.currentDepartmentId, payload).subscribe({
+        next: () => {
+          this.isSubmitting = false;
+          this.addModalInstance.hide();
+          Swal.fire("Success", "Department updated successfully!", "success");
+          this.loadDepartments();
+        },
+        error: (err) => {
+          this.isSubmitting = false;
+          Swal.fire("Error", getFriendlyErrorMessage(err, "Failed to update department. Please try again."), "error");
+        },
+      });
     } else {
       this.departmentService.addDepartment(payload).subscribe({
         next: () => {
           this.isSubmitting = false;
           this.addModalInstance.hide();
-          Swal.fire('Success', 'Department added successfully!', 'success');
+          Swal.fire("Success", "Department added successfully!", "success");
           this.loadDepartments();
         },
         error: (err) => {
           this.isSubmitting = false;
-          Swal.fire(
-            'Error',
-            getFriendlyErrorMessage(
-              err,
-              'Failed to add department. Please try again.',
-            ),
-            'error',
-          );
+          Swal.fire("Error", getFriendlyErrorMessage(err, "Failed to add department. Please try again."), "error");
         },
       });
     }
@@ -6412,30 +5503,23 @@ export class DepartmentsComponent implements OnInit {
 
   deleteDepartment(id: number) {
     Swal.fire({
-      title: 'Are you sure?',
+      title: "Are you sure?",
       text: "This department and all associated data might be affected. You won't be able to revert this!",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#dc3545',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: "#dc3545",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Delete",
     }).then((result) => {
       if (result.isConfirmed) {
         this.departmentService.deleteDepartment(id).subscribe({
           next: () => {
-            Swal.fire('Deleted!', 'Department has been deleted.', 'success');
+            Swal.fire("Deleted!", "Department has been deleted.", "success");
             this.loadDepartments();
           },
           error: (err) => {
-            console.error('Delete error:', err);
-            Swal.fire(
-              'Error!',
-              getFriendlyErrorMessage(
-                err,
-                'Failed to delete department. It may have employees assigned to it.',
-              ),
-              'error',
-            );
+            console.error("Delete error:", err);
+            Swal.fire("Error!", getFriendlyErrorMessage(err, "Failed to delete department. It may have employees assigned to it."), "error");
           },
         });
       }
@@ -6444,52 +5528,35 @@ export class DepartmentsComponent implements OnInit {
 
   exportToExcel() {
     if (this.departmentsList.length === 0) {
-      Swal.fire('No Data', 'There are no departments to export.', 'info');
+      Swal.fire("No Data", "There are no departments to export.", "info");
       return;
     }
 
-    const headers = ['ID', 'Department Name', 'Total Employees', 'Positions'];
-    const data = this.departmentsList.map(dept => [
-      `#${dept.id}`,
-      dept.name,
-      this.getDeptStat(dept.id, 'employees'),
-      this.getDeptStat(dept.id, 'positions')
-    ]);
+    const headers = ["ID", "Department Name", "Total Employees", "Positions"];
+    const data = this.departmentsList.map((dept) => [`#${dept.id}`, dept.name, this.getDeptStat(dept.id, "employees"), this.getDeptStat(dept.id, "positions")]);
 
-    this.excelExportService.exportTableToExcel(headers, data, 'Departments');
+    this.excelExportService.exportTableToExcel(headers, data, "Departments");
   }
 
   exportToPDF() {
     if (this.departmentsList.length === 0) {
-      Swal.fire('No Data', 'There are no departments to export.', 'info');
+      Swal.fire("No Data", "There are no departments to export.", "info");
       return;
     }
 
-    const headers = ['ID', 'Department Name', 'Total Employees', 'Positions'];
-    const data = this.departmentsList.map(dept => [
-      `#${dept.id}`,
-      dept.name,
-      this.getDeptStat(dept.id, 'employees'),
-      this.getDeptStat(dept.id, 'positions')
-    ]);
+    const headers = ["ID", "Department Name", "Total Employees", "Positions"];
+    const data = this.departmentsList.map((dept) => [`#${dept.id}`, dept.name, this.getDeptStat(dept.id, "employees"), this.getDeptStat(dept.id, "positions")]);
 
-    this.pdfExportService.generateTableReport(
-      'Departments Directory',
-      headers,
-      data,
-      'Departments_Report'
-    );
+    this.pdfExportService.generateTableReport("Departments Directory", headers, data, "Departments_Report");
   }
 }
-
 ```
 
 ### File: src\app\features\employee-form\employee-form.component.html
+
 ```html
 <div class="form-page-wrapper">
   <div class="form-container">
-
-    
     <div class="form-header-card">
       <div class="d-flex align-items-center gap-3">
         <div class="header-icon-wrap" [class.edit-mode]="isEditMode">
@@ -6497,18 +5564,12 @@ export class DepartmentsComponent implements OnInit {
         </div>
         <div>
           <h2 class="form-title mb-0">{{ isEditMode ? 'Edit Employee Profile' : 'Add New Employee' }}</h2>
-          <p class="form-subtitle mb-0">
-            {{ isEditMode ? 'Update employee information and employment details' : 'Link a registered user to a new
-            employee profile' }}
-          </p>
+          <p class="form-subtitle mb-0">{{ isEditMode ? 'Update employee information and employment details' : 'Link a registered user to a new employee profile' }}</p>
         </div>
       </div>
-      <a routerLink="/employees" class="btn-back">
-        <i class="bi bi-arrow-left me-1"></i> Back
-      </a>
+      <a routerLink="/employees" class="btn-back"> <i class="bi bi-arrow-left me-1"></i> Back </a>
     </div>
 
-    
     @if (isLoading && isEditMode) {
     <div class="form-body-card">
       <div class="skeleton-wrap">
@@ -6529,12 +5590,8 @@ export class DepartmentsComponent implements OnInit {
         </div>
       </div>
     </div>
-    }
-
-    @if (!isLoading || !isEditMode) {
+    } @if (!isLoading || !isEditMode) {
     <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
-
-      
       @if (!isEditMode && employeeForm.get('userId')?.value) {
       <div class="linked-user-banner">
         <div class="linked-user-avatar">
@@ -6548,29 +5605,19 @@ export class DepartmentsComponent implements OnInit {
           <i class="bi bi-check-circle-fill"></i>
         </div>
       </div>
-      }
-
-      
-      @if (isEditMode && linkedUserInfo) {
+      } @if (isEditMode && linkedUserInfo) {
       <div class="linked-account-card">
         <div class="lac-icon">
           <i class="bi bi-person-badge-fill"></i>
         </div>
         <div class="lac-body">
           <div class="lac-title">Linked User Account</div>
-          <div class="lac-detail">
-            <i class="bi bi-person me-1 text-muted"></i>{{ linkedUserInfo.username }}
-          </div>
-          <div class="lac-detail">
-            <i class="bi bi-envelope me-1 text-muted"></i>{{ linkedUserInfo.email }}
-          </div>
+          <div class="lac-detail"><i class="bi bi-person me-1 text-muted"></i>{{ linkedUserInfo.username }}</div>
+          <div class="lac-detail"><i class="bi bi-envelope me-1 text-muted"></i>{{ linkedUserInfo.email }}</div>
         </div>
         <span class="lac-badge">{{ linkedUserInfo.role }}</span>
       </div>
-      }
-
-      
-      @if (!isEditMode) {
+      } @if (!isEditMode) {
       <div class="form-section">
         <div class="section-header">
           <i class="bi bi-link-45deg"></i>
@@ -6583,12 +5630,8 @@ export class DepartmentsComponent implements OnInit {
               <i class="bi bi-person-lock text-primary"></i>
               Select Registered User <span class="text-danger">*</span>
             </label>
-            <select class="form-select field-input" formControlName="userId"
-              [class.is-invalid]="employeeForm.get('userId')?.invalid && employeeForm.get('userId')?.touched">
-              <option value="" disabled selected>
-                {{ unassignedUsers.length === 0 ? 'No unlinked Employee accounts found...' : 'Choose a registered
-                user...' }}
-              </option>
+            <select class="form-select field-input" formControlName="userId" [class.is-invalid]="employeeForm.get('userId')?.invalid && employeeForm.get('userId')?.touched">
+              <option value="" disabled selected>{{ unassignedUsers.length === 0 ? 'No unlinked Employee accounts found...' : 'Choose a registered user...' }}</option>
               @for (user of unassignedUsers; track user.id) {
               <option [value]="user.id">{{ user.username }} — {{ user.email }}</option>
               }
@@ -6596,12 +5639,10 @@ export class DepartmentsComponent implements OnInit {
             <div class="invalid-feedback">Please select a user account to link.</div>
             <small class="field-hint">
               <i class="bi bi-info-circle me-1"></i>
-              Only Employee accounts that are not yet linked to a profile are shown.
-              Email will be auto-filled from the selected account.
+              Only Employee accounts that are not yet linked to a profile are shown. Email will be auto-filled from the selected account.
             </small>
           </div>
 
-          
           <div class="col-12">
             <label class="field-label">
               <i class="bi bi-envelope text-primary"></i>
@@ -6609,8 +5650,7 @@ export class DepartmentsComponent implements OnInit {
             </label>
             <div class="readonly-field-wrap">
               <i class="bi bi-envelope-fill readonly-icon"></i>
-              <input type="email" class="form-control field-input readonly-field" formControlName="email"
-                placeholder="Auto-filled when you select a user above" readonly>
+              <input type="email" class="form-control field-input readonly-field" formControlName="email" placeholder="Auto-filled when you select a user above" readonly />
             </div>
             <small class="field-hint">
               <i class="bi bi-magic me-1"></i>
@@ -6621,7 +5661,6 @@ export class DepartmentsComponent implements OnInit {
       </div>
       }
 
-      
       <div class="form-section">
         <div class="section-header">
           <i class="bi bi-person-vcard"></i>
@@ -6633,8 +5672,7 @@ export class DepartmentsComponent implements OnInit {
               <i class="bi bi-person text-primary"></i>
               First Name <span class="text-danger">*</span>
             </label>
-            <input type="text" class="form-control field-input" formControlName="firstName" placeholder="e.g. Mohammad"
-              [class.is-invalid]="employeeForm.get('firstName')?.invalid && employeeForm.get('firstName')?.touched">
+            <input type="text" class="form-control field-input" formControlName="firstName" placeholder="e.g. Mohammad" [class.is-invalid]="employeeForm.get('firstName')?.invalid && employeeForm.get('firstName')?.touched" />
             <div class="invalid-feedback">First name is required.</div>
           </div>
           <div class="col-md-6">
@@ -6642,14 +5680,12 @@ export class DepartmentsComponent implements OnInit {
               <i class="bi bi-person text-primary"></i>
               Last Name <span class="text-danger">*</span>
             </label>
-            <input type="text" class="form-control field-input" formControlName="lastName" placeholder="e.g. Al-Ahmad"
-              [class.is-invalid]="employeeForm.get('lastName')?.invalid && employeeForm.get('lastName')?.touched">
+            <input type="text" class="form-control field-input" formControlName="lastName" placeholder="e.g. Al-Ahmad" [class.is-invalid]="employeeForm.get('lastName')?.invalid && employeeForm.get('lastName')?.touched" />
             <div class="invalid-feedback">Last name is required.</div>
           </div>
         </div>
       </div>
 
-      
       <div class="form-section">
         <div class="section-header">
           <i class="bi bi-person-bounding-box"></i>
@@ -6658,43 +5694,33 @@ export class DepartmentsComponent implements OnInit {
         </div>
         <div class="row g-3">
           <div class="col-12 d-flex flex-column align-items-center">
-            
-            
             <div class="position-relative mb-3" style="width: 120px; height: 120px;">
-              <img *ngIf="picturePreviewUrl" [src]="picturePreviewUrl" 
-                   class="rounded-circle object-fit-cover w-100 h-100 border shadow-sm" alt="Profile Preview">
-              <div *ngIf="!picturePreviewUrl" 
-                   class="rounded-circle bg-light d-flex align-items-center justify-content-center w-100 h-100 border shadow-sm text-secondary">
+              <img *ngIf="picturePreviewUrl" [src]="picturePreviewUrl" class="rounded-circle object-fit-cover w-100 h-100 border shadow-sm" alt="Profile Preview" />
+              <div *ngIf="!picturePreviewUrl" class="rounded-circle bg-light d-flex align-items-center justify-content-center w-100 h-100 border shadow-sm text-secondary">
                 <i class="bi bi-person-fill fs-1"></i>
               </div>
-              
-              
-              <div class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow" 
-                   style="width: 32px; height: 32px; cursor: pointer;"
-                   onclick="document.getElementById('profilePicInput').click()">
+
+              <div class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow" style="width: 32px; height: 32px; cursor: pointer;" onclick="document.getElementById('profilePicInput').click()">
                 <i class="bi bi-camera-fill"></i>
               </div>
             </div>
 
-            <input type="file" id="profilePicInput" class="d-none" accept="image/*" (change)="onFileSelected($event)">
-            
+            <input type="file" id="profilePicInput" class="d-none" accept="image/*" (change)="onFileSelected($event)" />
+
             <small class="text-muted text-center mt-1">
-              Click the camera icon to upload or change picture.<br>
+              Click the camera icon to upload or change picture.<br />
               <i class="bi bi-info-circle me-1"></i>Max size: 5MB. Formats: JPG, PNG.
             </small>
-
           </div>
         </div>
       </div>
 
-      
       <div class="form-section">
         <div class="section-header">
           <i class="bi bi-telephone-fill"></i>
           <span>Contact Details</span>
         </div>
         <div class="row g-3">
-          
           @if (isEditMode) {
           <div class="col-md-6">
             <label class="field-label">
@@ -6703,11 +5729,9 @@ export class DepartmentsComponent implements OnInit {
             </label>
             <div class="readonly-field-wrap">
               <i class="bi bi-envelope-fill readonly-icon"></i>
-              <input type="email" class="form-control field-input readonly-field" formControlName="email" readonly>
+              <input type="email" class="form-control field-input readonly-field" formControlName="email" readonly />
             </div>
-            <small class="field-hint">
-              <i class="bi bi-lock-fill me-1"></i>Email is linked to the user account and cannot be changed here.
-            </small>
+            <small class="field-hint"> <i class="bi bi-lock-fill me-1"></i>Email is linked to the user account and cannot be changed here. </small>
           </div>
           }
           <div [class]="isEditMode ? 'col-md-6' : 'col-12'">
@@ -6715,21 +5739,15 @@ export class DepartmentsComponent implements OnInit {
               <i class="bi bi-telephone text-primary"></i>
               Phone Number <span class="text-danger">*</span>
             </label>
-            <input type="text" class="form-control field-input" formControlName="phoneNumber" placeholder="0791234567"
-              maxlength="10" inputmode="numeric"
-              [class.is-invalid]="employeeForm.get('phoneNumber')?.invalid && employeeForm.get('phoneNumber')?.touched">
-            @if (employeeForm.get('phoneNumber')?.touched) {
-            @if (employeeForm.get('phoneNumber')?.errors?.['required']) {
-            <div class="invalid-feedback d-block">
-              <i class="bi bi-exclamation-circle me-1"></i>رقم الهاتف مطلوب.
-            </div>
+            <input type="text" class="form-control field-input" formControlName="phoneNumber" placeholder="0791234567" maxlength="10" inputmode="numeric" [class.is-invalid]="employeeForm.get('phoneNumber')?.invalid && employeeForm.get('phoneNumber')?.touched" />
+            @if (employeeForm.get('phoneNumber')?.touched) { @if (employeeForm.get('phoneNumber')?.errors?.['required']) {
+            <div class="invalid-feedback d-block"><i class="bi bi-exclamation-circle me-1"></i>رقم الهاتف مطلوب.</div>
             } @else if (employeeForm.get('phoneNumber')?.errors?.['pattern']) {
             <div class="invalid-feedback d-block">
               <i class="bi bi-exclamation-triangle me-1"></i>
               رقم الهاتف يجب أن يتكون من 10 أرقام فقط بدون مسافات أو رموز.
             </div>
-            }
-            }
+            } }
             <small class="field-hint">
               <i class="bi bi-info-circle me-1"></i>
               أدخل 10 أرقام فقط — مثال: 0791234567
@@ -6738,7 +5756,6 @@ export class DepartmentsComponent implements OnInit {
         </div>
       </div>
 
-      
       <div class="form-section">
         <div class="section-header">
           <i class="bi bi-briefcase-fill"></i>
@@ -6750,8 +5767,7 @@ export class DepartmentsComponent implements OnInit {
               <i class="bi bi-calendar-date text-primary"></i>
               Hire Date <span class="text-danger">*</span>
             </label>
-            <input type="date" class="form-control field-input" formControlName="hireDate"
-              [class.is-invalid]="employeeForm.get('hireDate')?.invalid && employeeForm.get('hireDate')?.touched">
+            <input type="date" class="form-control field-input" formControlName="hireDate" [class.is-invalid]="employeeForm.get('hireDate')?.invalid && employeeForm.get('hireDate')?.touched" />
             <div class="invalid-feedback">Hire date is required.</div>
           </div>
           <div class="col-md-4">
@@ -6759,8 +5775,7 @@ export class DepartmentsComponent implements OnInit {
               <i class="bi bi-building text-primary"></i>
               Department <span class="text-danger">*</span>
             </label>
-            <select class="form-select field-input" formControlName="departmentId"
-              [class.is-invalid]="employeeForm.get('departmentId')?.invalid && employeeForm.get('departmentId')?.touched">
+            <select class="form-select field-input" formControlName="departmentId" [class.is-invalid]="employeeForm.get('departmentId')?.invalid && employeeForm.get('departmentId')?.touched">
               <option value="" disabled selected>Select department...</option>
               @for (dept of departments; track dept.id) {
               <option [value]="dept.id">{{ dept.name }}</option>
@@ -6773,12 +5788,8 @@ export class DepartmentsComponent implements OnInit {
               <i class="bi bi-person-badge text-primary"></i>
               Job Position <span class="text-danger">*</span>
             </label>
-            <select class="form-select field-input" formControlName="positionId"
-              [class.is-invalid]="employeeForm.get('positionId')?.invalid && employeeForm.get('positionId')?.touched">
-              <option value="" disabled selected>
-                {{ departments.length === 0 ? 'Select a department first...' : positions.length === 0 ? 'Select
-                department first...' : 'Select position...' }}
-              </option>
+            <select class="form-select field-input" formControlName="positionId" [class.is-invalid]="employeeForm.get('positionId')?.invalid && employeeForm.get('positionId')?.touched">
+              <option value="" disabled selected>{{ departments.length === 0 ? 'Select a department first...' : positions.length === 0 ? 'Select department first...' : 'Select position...' }}</option>
               @for (pos of positions; track pos.id) {
               <option [value]="pos.id">{{ pos.title }}</option>
               }
@@ -6794,7 +5805,6 @@ export class DepartmentsComponent implements OnInit {
         </div>
       </div>
 
-      
       @if (isEditMode) {
       <div class="form-section" style="border-left: 4px solid #f59e0b;">
         <div class="section-header" style="color: #d97706;">
@@ -6808,14 +5818,10 @@ export class DepartmentsComponent implements OnInit {
               New Password <span class="text-muted fw-normal">(Optional)</span>
             </label>
             <div class="position-relative">
-              <input type="password" class="form-control field-input" formControlName="password"
-                placeholder="Enter new password to reset..."
-                [class.is-invalid]="employeeForm.get('password')?.invalid && employeeForm.get('password')?.touched">
+              <input type="password" class="form-control field-input" formControlName="password" placeholder="Enter new password to reset..." [class.is-invalid]="employeeForm.get('password')?.invalid && employeeForm.get('password')?.touched" />
             </div>
             @if (employeeForm.get('password')?.touched && employeeForm.get('password')?.errors?.['minlength']) {
-            <div class="invalid-feedback d-block">
-              <i class="bi bi-exclamation-circle me-1"></i>Password must be at least 6 characters.
-            </div>
+            <div class="invalid-feedback d-block"><i class="bi bi-exclamation-circle me-1"></i>Password must be at least 6 characters.</div>
             }
             <small class="field-hint">
               <i class="bi bi-shield-lock me-1"></i>
@@ -6827,50 +5833,40 @@ export class DepartmentsComponent implements OnInit {
       }
 
       <div class="form-actions">
-        <a routerLink="/employees" class="btn btn-cancel">
-          <i class="bi bi-x-lg me-2"></i>Cancel
-        </a>
+        <a routerLink="/employees" class="btn btn-cancel"> <i class="bi bi-x-lg me-2"></i>Cancel </a>
         <button type="submit" class="btn btn-submit" [disabled]="isLoading || employeeForm.invalid">
           @if (isLoading) {
           <span class="spinner-border spinner-border-sm me-2"></span>
-          {{ isEditMode ? 'Saving Changes...' : 'Creating Profile...' }}
-          } @else {
+          {{ isEditMode ? 'Saving Changes...' : 'Creating Profile...' }} } @else {
           <i class="bi me-2" [class.bi-check2-circle]="!isEditMode" [class.bi-floppy-fill]="isEditMode"></i>
-          {{ isEditMode ? 'Save Changes' : 'Create Employee Profile' }}
-          }
+          {{ isEditMode ? 'Save Changes' : 'Create Employee Profile' }} }
         </button>
       </div>
-
     </form>
     }
-
   </div>
 </div>
 ```
 
 ### File: src\app\features\employee-form\employee-form.component.ts
+
 ```typescript
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  ReactiveFormsModule,
-  FormGroup,
-  FormControl,
-  Validators,
-} from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { EmployeeService } from '../../core/services/employee.service';
-import { DepartmentService } from '../../core/services/department.service';
-import { PositionService } from '../../core/services/position.service';
-import { AuthService } from '../../core/services/auth.service';
-import Swal from 'sweetalert2';
+import { Component, OnInit, inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { ReactiveFormsModule, FormGroup, FormControl, Validators } from "@angular/forms";
+import { Router, RouterLink } from "@angular/router";
+import { EmployeeService } from "../../core/services/employee.service";
+import { DepartmentService } from "../../core/services/department.service";
+import { PositionService } from "../../core/services/position.service";
+import { AuthService } from "../../core/services/auth.service";
+import Swal from "sweetalert2";
 
 @Component({
-  selector: 'app-employee-form',
+  selector: "app-employee-form",
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
-  templateUrl: './employee-form.component.html',
-  styleUrl: './employee-form.component.css',
+  templateUrl: "./employee-form.component.html",
+  styleUrl: "./employee-form.component.css",
 })
 export class EmployeeFormComponent implements OnInit {
   private employeeService = inject(EmployeeService);
@@ -6886,44 +5882,34 @@ export class EmployeeFormComponent implements OnInit {
   positions: any[] = [];
   unassignedUsers: any[] = [];
 
-  linkedUserInfo: { username: string; email: string; role: string; profilePictureUrl: string | null } | null =
-    null;
+  linkedUserInfo: { username: string; email: string; role: string; profilePictureUrl: string | null } | null = null;
 
   selectedPictureFile: File | null = null;
   picturePreviewUrl: string | null = null;
 
   employeeForm = new FormGroup({
-    firstName: new FormControl('', Validators.required),
-    lastName: new FormControl('', Validators.required),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    phoneNumber: new FormControl('', [
-      Validators.required,
-      Validators.pattern(/^[0-9]{10}$/),
-    ]),
-    hireDate: new FormControl('', Validators.required),
-    departmentId: new FormControl('', Validators.required),
-    positionId: new FormControl(
-      { value: '', disabled: true },
-      Validators.required,
-    ),
-    userId: new FormControl('', Validators.required),
-    password: new FormControl('', [Validators.minLength(6)]),
+    firstName: new FormControl("", Validators.required),
+    lastName: new FormControl("", Validators.required),
+    email: new FormControl("", [Validators.required, Validators.email]),
+    phoneNumber: new FormControl("", [Validators.required, Validators.pattern(/^[0-9]{10}$/)]),
+    hireDate: new FormControl("", Validators.required),
+    departmentId: new FormControl("", Validators.required),
+    positionId: new FormControl({ value: "", disabled: true }, Validators.required),
+    userId: new FormControl("", Validators.required),
+    password: new FormControl("", [Validators.minLength(6)]),
   });
 
   ngOnInit() {
-
     const state = window.history.state;
 
     if (state && state.editMode && state.employeeId) {
-
       this.isEditMode = true;
       this.currentEmployeeId = state.employeeId;
       this.loadEmployeeDetails(this.currentEmployeeId!);
 
-      this.employeeForm.get('userId')?.disable();
-      this.employeeForm.get('email')?.disable();
+      this.employeeForm.get("userId")?.disable();
+      this.employeeForm.get("email")?.disable();
     } else {
-
       if (state && (state.userId || state.email)) {
         this.employeeForm.patchValue({
           userId: state.userId,
@@ -6931,25 +5917,23 @@ export class EmployeeFormComponent implements OnInit {
         });
       }
 
-      this.employeeForm.get('email')?.disable();
+      this.employeeForm.get("email")?.disable();
 
       this.loadUnassignedUsers();
 
-      this.employeeForm.get('userId')?.valueChanges.subscribe((selectedId) => {
-        const user = this.unassignedUsers.find(
-          (u) => String(u.id) === String(selectedId),
-        );
+      this.employeeForm.get("userId")?.valueChanges.subscribe((selectedId) => {
+        const user = this.unassignedUsers.find((u) => String(u.id) === String(selectedId));
         if (user) {
-          this.employeeForm.get('email')?.setValue(user.email);
+          this.employeeForm.get("email")?.setValue(user.email);
         }
       });
     }
 
     this.loadDepartments();
 
-    this.employeeForm.get('departmentId')?.valueChanges.subscribe((deptId) => {
+    this.employeeForm.get("departmentId")?.valueChanges.subscribe((deptId) => {
       if (deptId) {
-        this.employeeForm.get('positionId')?.enable();
+        this.employeeForm.get("positionId")?.enable();
         this.loadPositions(Number(deptId));
       }
     });
@@ -6964,49 +5948,40 @@ export class EmployeeFormComponent implements OnInit {
 
         if (profile.departmentId) {
           this.loadPositions(profile.departmentId);
-          this.employeeForm.get('positionId')?.enable();
+          this.employeeForm.get("positionId")?.enable();
         }
 
         this.employeeForm.patchValue({
-          firstName: profile.firstName || profile.fullName?.split(' ')[0] || '',
-          lastName:
-            profile.lastName ||
-            profile.fullName?.split(' ').slice(1).join(' ') ||
-            '',
-          email: profile.email || '',
-          phoneNumber: profile.phoneNumber || profile.phone || '',
-          hireDate: profile.hireDate
-            ? new Date(profile.hireDate).toISOString().split('T')[0]
-            : '',
-          departmentId: profile.departmentId || '',
-          positionId: profile.positionId || '',
-          userId: profile.userId || '',
+          firstName: profile.firstName || profile.fullName?.split(" ")[0] || "",
+          lastName: profile.lastName || profile.fullName?.split(" ").slice(1).join(" ") || "",
+          email: profile.email || "",
+          phoneNumber: profile.phoneNumber || profile.phone || "",
+          hireDate: profile.hireDate ? new Date(profile.hireDate).toISOString().split("T")[0] : "",
+          departmentId: profile.departmentId || "",
+          positionId: profile.positionId || "",
+          userId: profile.userId || "",
         });
 
         this.linkedUserInfo = {
-          username:
-            profile.fullName ||
-            `${profile.firstName || ''} ${profile.lastName || ''}`.trim() ||
-            'Employee',
-          email: profile.email || '',
-          role: profile.positionTitle || profile.departmentName || 'Employee',
-          profilePictureUrl: profile.profilePictureUrl || null
+          username: profile.fullName || `${profile.firstName || ""} ${profile.lastName || ""}`.trim() || "Employee",
+          email: profile.email || "",
+          role: profile.positionTitle || profile.departmentName || "Employee",
+          profilePictureUrl: profile.profilePictureUrl || null,
         };
-        
+
         if (profile.profilePictureUrl) {
           this.picturePreviewUrl = profile.profilePictureUrl;
         }
       },
       error: (err) => {
         this.isLoading = false;
-        console.error('Error fetching employee', err);
-        Swal.fire('Error', 'Failed to load employee details', 'error');
+        console.error("Error fetching employee", err);
+        Swal.fire("Error", "Failed to load employee details", "error");
       },
     });
   }
 
   loadDepartments() {
-
     this.departmentService.getDepartments().subscribe({
       next: (res: any) => {
         this.departments = Array.isArray(res) ? res : res?.data || [];
@@ -7015,46 +5990,44 @@ export class EmployeeFormComponent implements OnInit {
   }
 
   loadUnassignedUsers() {
-
     this.authService.getUnassignedEmployeeUsers().subscribe({
       next: (res: any) => {
         this.unassignedUsers = res?.items ?? (Array.isArray(res) ? res : []);
       },
       error: (err) => {
-        console.error('Failed to load unassigned users:', err);
+        console.error("Failed to load unassigned users:", err);
       },
     });
   }
 
   loadPositions(deptId: number) {
-
     this.positionService.getPositionsByDepartment(deptId).subscribe({
       next: (res: any) => {
         this.positions = Array.isArray(res) ? res : res?.data || [];
-        this.employeeForm.get('positionId')?.setValue('');
+        this.employeeForm.get("positionId")?.setValue("");
       },
     });
   }
 
   get displayEmail(): string {
-    return this.employeeForm.getRawValue().email || '';
+    return this.employeeForm.getRawValue().email || "";
   }
 
   private parseBackendError(err: any): string {
     const body = err?.error;
 
-    if (!body) return 'An unexpected error occurred. Please try again.';
+    if (!body) return "An unexpected error occurred. Please try again.";
 
-    if (body.errors && typeof body.errors === 'object') {
+    if (body.errors && typeof body.errors === "object") {
       const fieldLabels: Record<string, string> = {
-        PhoneNumber: 'Phone Number',
-        FirstName: 'First Name',
-        LastName: 'Last Name',
-        Email: 'Email',
-        HireDate: 'Hire Date',
-        DepartmentId: 'Department',
-        PositionId: 'Position',
-        UserId: 'User Account',
+        PhoneNumber: "Phone Number",
+        FirstName: "First Name",
+        LastName: "Last Name",
+        Email: "Email",
+        HireDate: "Hire Date",
+        DepartmentId: "Department",
+        PositionId: "Position",
+        UserId: "User Account",
       };
 
       const messages: string[] = [];
@@ -7065,21 +6038,21 @@ export class EmployeeFormComponent implements OnInit {
           messages.push(`• ${label}: ${msg}`);
         }
       }
-      if (messages.length) return messages.join('\n');
+      if (messages.length) return messages.join("\n");
     }
 
     if (body.message) return body.message;
     if (body.title) return body.title;
-    if (typeof body === 'string') return body;
+    if (typeof body === "string") return body;
 
-    return 'An error occurred while submitting. Please try again.';
+    return "An error occurred while submitting. Please try again.";
   }
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        Swal.fire('Error', 'File size exceeds 5MB limit', 'error');
+        Swal.fire("Error", "File size exceeds 5MB limit", "error");
         return;
       }
       this.selectedPictureFile = file;
@@ -7094,21 +6067,21 @@ export class EmployeeFormComponent implements OnInit {
   onSubmit() {
     if (this.employeeForm.invalid) {
       this.employeeForm.markAllAsTouched();
-      const phone = this.employeeForm.get('phoneNumber');
-      if (phone?.errors?.['pattern']) {
+      const phone = this.employeeForm.get("phoneNumber");
+      if (phone?.errors?.["pattern"]) {
         Swal.fire({
-          icon: 'warning',
-          title: 'Invalid Phone Number',
-          text: 'Phone number must be exactly 10 digits (numbers only, no spaces or symbols).',
-          confirmButtonText: 'OK',
+          icon: "warning",
+          title: "Invalid Phone Number",
+          text: "Phone number must be exactly 10 digits (numbers only, no spaces or symbols).",
+          confirmButtonText: "OK",
         });
         return;
       }
       Swal.fire({
-        icon: 'warning',
-        title: 'Missing Information',
-        text: 'Please make sure all required fields are filled in correctly.',
-        confirmButtonText: 'OK',
+        icon: "warning",
+        title: "Missing Information",
+        text: "Please make sure all required fields are filled in correctly.",
+        confirmButtonText: "OK",
       });
       return;
     }
@@ -7120,9 +6093,7 @@ export class EmployeeFormComponent implements OnInit {
       ...rawValues,
       departmentId: Number(rawValues.departmentId),
       positionId: Number(rawValues.positionId),
-      hireDate: rawValues.hireDate
-        ? new Date(rawValues.hireDate).toISOString()
-        : new Date().toISOString(),
+      hireDate: rawValues.hireDate ? new Date(rawValues.hireDate).toISOString() : new Date().toISOString(),
     };
 
     if (this.isEditMode && rawValues.password) {
@@ -7138,12 +6109,12 @@ export class EmployeeFormComponent implements OnInit {
           this.isLoading = false;
           const msg = this.parseBackendError(err);
           Swal.fire({
-            icon: 'error',
-            title: 'Update Failed',
+            icon: "error",
+            title: "Update Failed",
             text: msg,
-            confirmButtonText: 'OK',
+            confirmButtonText: "OK",
           });
-          console.error('Update error:', err);
+          console.error("Update error:", err);
         },
       });
     } else {
@@ -7155,12 +6126,12 @@ export class EmployeeFormComponent implements OnInit {
           this.isLoading = false;
           const msg = this.parseBackendError(err);
           Swal.fire({
-            icon: 'error',
-            title: 'Failed to Add Employee',
+            icon: "error",
+            title: "Failed to Add Employee",
             text: msg,
-            confirmButtonText: 'OK',
+            confirmButtonText: "OK",
           });
-          console.error('Add error:', err);
+          console.error("Add error:", err);
         },
       });
     }
@@ -7171,424 +6142,375 @@ export class EmployeeFormComponent implements OnInit {
       this.authService.adminUpdateProfilePicture(userId, this.selectedPictureFile).subscribe({
         next: () => {
           this.isLoading = false;
-          Swal.fire('Success', 'Employee saved with new profile picture successfully', 'success');
-          this.router.navigate(['/employees']);
+          Swal.fire("Success", "Employee saved with new profile picture successfully", "success");
+          this.router.navigate(["/employees"]);
         },
         error: () => {
           this.isLoading = false;
-          Swal.fire('Warning', 'Employee saved, but failed to upload picture.', 'warning');
-          this.router.navigate(['/employees']);
-        }
+          Swal.fire("Warning", "Employee saved, but failed to upload picture.", "warning");
+          this.router.navigate(["/employees"]);
+        },
       });
     } else {
       this.isLoading = false;
-      Swal.fire('Success', 'Employee saved successfully', 'success');
-      this.router.navigate(['/employees']);
+      Swal.fire("Success", "Employee saved successfully", "success");
+      this.router.navigate(["/employees"]);
     }
   }
 }
-
 ```
 
 ### File: src\app\features\employees\employees.component.html
+
 ```html
-
-
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-    <div class="d-flex align-items-center">
-        <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
-            <i class="bi bi-people-fill fs-4"></i>
-        </div>
-        <div>
-            <h2 class="fw-bold text-dark mb-1">{{ 'Employee Management' | t }}</h2>
-            <p class="text-muted mb-0 small">{{ 'Manage and track all company employees' | t }}</p>
-        </div>
+  <div class="d-flex align-items-center">
+    <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+      <i class="bi bi-people-fill fs-4"></i>
     </div>
-    <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
-        <div class="input-group shadow-sm" style="max-width: 350px; min-width: 200px; flex: 1;">
-            <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-            <input type="text" class="form-control border-start-0 ps-0"
-                placeholder="{{ 'Search employees...' | t }}"
-                [(ngModel)]="searchQuery"
-                (input)="filterEmployees()">
-        </div>
-
-        <div class="dropdown">
-            <button class="btn btn-outline-secondary shadow-sm" type="button"
-                data-bs-toggle="dropdown" aria-expanded="false" title="Filter Employees">
-                <i class="bi bi-funnel-fill"></i>
-            </button>
-            <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4" style="width: 250px;">
-                <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">Filter Options</h6>
-                <div class="mb-3">
-                    <label class="form-label small fw-semibold text-muted mb-1">{{ 'Department' | t }}</label>
-                    <select class="form-select form-select-sm" [(ngModel)]="selectedDepartment" (change)="filterEmployees()">
-                        <option value>All Departments</option>
-                        @for (dept of uniqueDepartments; track dept) {
-                        <option [value]="dept">{{ dept }}</option>
-                        }
-                    </select>
-                </div>
-                <div class="mb-2">
-                    <label class="form-label small fw-semibold text-muted mb-1">{{ 'Status' | t }}</label>
-                    <select class="form-select form-select-sm" [(ngModel)]="selectedStatus" (change)="filterEmployees()">
-                        <option value>All Statuses</option>
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        @if (isAdminOrHR) {
-        <div class="d-flex gap-2">
-            <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
-                <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i>
-                <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
-            </button>
-            <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
-                <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i>
-                <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
-            </button>
-        </div>
-        <button class="btn btn-primary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" routerLink="/employee-form" title="Add Employee">
-            <i class="bi bi-person-plus-fill" [class.me-md-1]="true"></i>
-            <span class="d-none d-md-inline">{{ 'Add Employee' | t }}</span>
-        </button>
-        }
+    <div>
+      <h2 class="fw-bold text-dark mb-1">{{ 'Employee Management' | t }}</h2>
+      <p class="text-muted mb-0 small">{{ 'Manage and track all company employees' | t }}</p>
     </div>
+  </div>
+  <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
+    <div class="input-group shadow-sm" style="max-width: 350px; min-width: 200px; flex: 1;">
+      <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+      <input type="text" class="form-control border-start-0 ps-0" placeholder="{{ 'Search employees...' | t }}" [(ngModel)]="searchQuery" (input)="filterEmployees()" />
+    </div>
+
+    <div class="dropdown">
+      <button class="btn btn-outline-secondary shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Filter Employees">
+        <i class="bi bi-funnel-fill"></i>
+      </button>
+      <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4" style="width: 250px;">
+        <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">Filter Options</h6>
+        <div class="mb-3">
+          <label class="form-label small fw-semibold text-muted mb-1">{{ 'Department' | t }}</label>
+          <select class="form-select form-select-sm" [(ngModel)]="selectedDepartment" (change)="filterEmployees()">
+            <option value>All Departments</option>
+            @for (dept of uniqueDepartments; track dept) {
+            <option [value]="dept">{{ dept }}</option>
+            }
+          </select>
+        </div>
+        <div class="mb-2">
+          <label class="form-label small fw-semibold text-muted mb-1">{{ 'Status' | t }}</label>
+          <select class="form-select form-select-sm" [(ngModel)]="selectedStatus" (change)="filterEmployees()">
+            <option value>All Statuses</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    @if (isAdminOrHR) {
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
+        <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i>
+        <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
+      </button>
+      <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
+        <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i>
+        <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
+      </button>
+    </div>
+    <button class="btn btn-primary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" routerLink="/employee-form" title="Add Employee">
+      <i class="bi bi-person-plus-fill" [class.me-md-1]="true"></i>
+      <span class="d-none d-md-inline">{{ 'Add Employee' | t }}</span>
+    </button>
+    }
+  </div>
 </div>
 
 @if (isLoading) {
 <div class="text-center my-5">
-    <div class="spinner-border text-primary" role="status"></div>
-    <p class="mt-2 text-muted">Fetching data from server...</p>
+  <div class="spinner-border text-primary" role="status"></div>
+  <p class="mt-2 text-muted">Fetching data from server...</p>
 </div>
 } @else {
 <div class="card shadow-sm border-0">
-    <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0 text-nowrap">
-            <thead class="table-light">
-                <tr class="text-muted small text-uppercase" style="letter-spacing: 0.5px;">
-                    <th class="py-3 px-4 fw-semibold text-muted border-bottom-0">ID</th>
-                    <th class="py-3 px-4 fw-semibold text-muted border-bottom-0">{{ 'Employee' | t }}</th>
-                    <th class="py-3 px-4 fw-semibold text-muted border-bottom-0">{{ 'Email' | t }}</th>
-                    <th class="py-3 px-4 fw-semibold text-muted border-bottom-0">{{ 'Department' | t }}</th>
-                    <th class="py-3 px-4 fw-semibold text-muted border-bottom-0 text-center">{{ 'Status' | t }}</th>
-                    @if (isAdminOrHR) {
-                    <th class="py-3 px-4 fw-semibold text-muted border-bottom-0 text-end">{{ 'Actions' | t }}</th>
-                    }
-                </tr>
-            </thead>
-            <tbody>
-                @for (emp of paginatedEmployees; track emp.id) {
-                <tr>
-                    <td data-label="ID" class="py-3 px-4 fw-bold text-dark">#{{ emp.id }}</td>
-                    <td data-label="Full Name" class="py-3 px-4 fw-bold text-dark">
-                        <div class="d-flex align-items-center">
-                            
-                            <div class="me-3 flex-shrink-0" style="width: 36px; height: 36px;">
-                                <img *ngIf="emp.profilePictureUrl"
-                                    [src]="emp.profilePictureUrl"
-                                    class="rounded-circle object-fit-cover w-100 h-100 border shadow-sm"
-                                    alt="Profile">
-                                <div *ngIf="!emp.profilePictureUrl"
-                                    class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold rounded-circle d-flex align-items-center justify-content-center w-100 h-100"
-                                    style="font-size: 14px;">
-                                    {{ emp.firstName ? emp.firstName.charAt(0).toUpperCase() : 'U' }}
-                                </div>
-                            </div>
-                            {{ emp.firstName }} {{ emp.lastName }}
-                        </div>
-                    </td>
-                    <td data-label="Email" class="py-3 px-4 text-muted">{{ emp.email }}</td>
-                    <td data-label="Department" class="py-3 px-4">{{ emp.departmentName || emp.departmentId || '—' }}</td>
-                    <td data-label="Status" class="py-3 px-4 text-center">
-                        <span class="status-badge" [ngClass]="emp.isActive ? 'status-active' : 'status-inactive'">
-                            <i class="bi" [ngClass]="emp.isActive ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
-                            {{ emp.isActive ? ('Active' | t) : ('Inactive' | t) }}
-                        </span>
-                    </td>
-                    @if (isAdminOrHR) {
-                    <td data-label="Actions" class="py-3 px-4 text-end text-nowrap actions-cell">
-                        <button class="btn btn-outline-info btn-sm me-2" title="Details" (click)="viewFullDetails(emp)">
-                            <i class="bi bi-file-earmark-person"></i>
-                        </button>
-                        @if (isAdminOrHR) {
-                        <button class="btn btn-sm btn-outline-secondary me-2" title="Download Report" (click)="downloadEmployeeReport(emp)">
-                            <i class="bi bi-file-earmark-pdf"></i>
-                        </button>
-                        <button class="btn btn-outline-primary btn-sm" title="Edit" (click)="editEmployee(emp.id)">
-                            <i class="bi bi-pencil-square"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger ms-2" title="Delete" (click)="onDelete(emp.id)">
-                            <i class="bi bi-trash3"></i>
-                        </button>
-                        }
-                    </td>
-                    }
-                </tr>
-                } @empty {
-                <tr>
-                    <td [colSpan]="isAdminOrHR ? 6 : 5" class="text-center py-5">
-                        <div class="d-flex flex-column align-items-center">
-                            <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                                <i class="bi bi-people text-secondary fs-1"></i>
-                            </div>
-                            <h5 class="fw-bold text-dark mb-1">{{ 'No Employees Found' | t }}</h5>
-                            <p class="text-muted small mb-0">Try adjusting your filters or search query.</p>
-                        </div>
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0 text-nowrap">
+      <thead class="table-light">
+        <tr class="text-muted small text-uppercase" style="letter-spacing: 0.5px;">
+          <th class="py-3 px-4 fw-semibold text-muted border-bottom-0">ID</th>
+          <th class="py-3 px-4 fw-semibold text-muted border-bottom-0">{{ 'Employee' | t }}</th>
+          <th class="py-3 px-4 fw-semibold text-muted border-bottom-0">{{ 'Email' | t }}</th>
+          <th class="py-3 px-4 fw-semibold text-muted border-bottom-0">{{ 'Department' | t }}</th>
+          <th class="py-3 px-4 fw-semibold text-muted border-bottom-0 text-center">{{ 'Status' | t }}</th>
+          @if (isAdminOrHR) {
+          <th class="py-3 px-4 fw-semibold text-muted border-bottom-0 text-end">{{ 'Actions' | t }}</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (emp of paginatedEmployees; track emp.id) {
+        <tr>
+          <td data-label="ID" class="py-3 px-4 fw-bold text-dark">#{{ emp.id }}</td>
+          <td data-label="Full Name" class="py-3 px-4 fw-bold text-dark">
+            <div class="d-flex align-items-center">
+              <div class="me-3 flex-shrink-0" style="width: 36px; height: 36px;">
+                <img *ngIf="emp.profilePictureUrl" [src]="emp.profilePictureUrl" class="rounded-circle object-fit-cover w-100 h-100 border shadow-sm" alt="Profile" />
+                <div *ngIf="!emp.profilePictureUrl" class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold rounded-circle d-flex align-items-center justify-content-center w-100 h-100" style="font-size: 14px;">{{ emp.firstName ? emp.firstName.charAt(0).toUpperCase() : 'U' }}</div>
+              </div>
+              {{ emp.firstName }} {{ emp.lastName }}
+            </div>
+          </td>
+          <td data-label="Email" class="py-3 px-4 text-muted">{{ emp.email }}</td>
+          <td data-label="Department" class="py-3 px-4">{{ emp.departmentName || emp.departmentId || '—' }}</td>
+          <td data-label="Status" class="py-3 px-4 text-center">
+            <span class="status-badge" [ngClass]="emp.isActive ? 'status-active' : 'status-inactive'">
+              <i class="bi" [ngClass]="emp.isActive ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+              {{ emp.isActive ? ('Active' | t) : ('Inactive' | t) }}
+            </span>
+          </td>
+          @if (isAdminOrHR) {
+          <td data-label="Actions" class="py-3 px-4 text-end text-nowrap actions-cell">
+            <button class="btn btn-outline-info btn-sm me-2" title="Details" (click)="viewFullDetails(emp)">
+              <i class="bi bi-file-earmark-person"></i>
+            </button>
+            @if (isAdminOrHR) {
+            <button class="btn btn-sm btn-outline-secondary me-2" title="Download Report" (click)="downloadEmployeeReport(emp)">
+              <i class="bi bi-file-earmark-pdf"></i>
+            </button>
+            <button class="btn btn-outline-primary btn-sm" title="Edit" (click)="editEmployee(emp.id)">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger ms-2" title="Delete" (click)="onDelete(emp.id)">
+              <i class="bi bi-trash3"></i>
+            </button>
+            }
+          </td>
+          }
+        </tr>
+        } @empty {
+        <tr>
+          <td [colSpan]="isAdminOrHR ? 6 : 5" class="text-center py-5">
+            <div class="d-flex flex-column align-items-center">
+              <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                <i class="bi bi-people text-secondary fs-1"></i>
+              </div>
+              <h5 class="fw-bold text-dark mb-1">{{ 'No Employees Found' | t }}</h5>
+              <p class="text-muted small mb-0">Try adjusting your filters or search query.</p>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 
-    
-    @if (employeesList.length > 0) {
-    <div class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-        <small class="text-muted fw-medium">
-            Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, employeesList.length) }} of {{ employeesList.length }} entries
-        </small>
-        <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
-            <li class="page-item" [class.disabled]="currentPage === 1">
-                <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
-            </li>
-            <li class="page-item active">
-                <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
-            </li>
-            <li class="page-item" [class.disabled]="currentPage === totalPages">
-                <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
-            </li>
-        </ul>
-    </div>
-    }
+  @if (employeesList.length > 0) {
+  <div class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+    <small class="text-muted fw-medium"> Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, employeesList.length) }} of {{ employeesList.length }} entries </small>
+    <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
+      </li>
+      <li class="page-item active">
+        <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
+      </li>
+    </ul>
+  </div>
+  }
 </div>
 }
 
 <div class="modal fade" id="employeeDetailsModal" tabindex="-1" aria-labelledby="employeeDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-
-            <div class="modal-header border-0 p-0">
-                <div class="emp-modal-header w-100 p-4 d-flex align-items-center gap-3">
-                    
-                    <div class="emp-modal-avatar" [class.p-0]="selectedEmployeeProfile?.profilePictureUrl" style="overflow: hidden;">
-                        <img *ngIf="selectedEmployeeProfile?.profilePictureUrl"
-                            [src]="selectedEmployeeProfile.profilePictureUrl"
-                            class="w-100 h-100 object-fit-cover"
-                            alt="Profile Picture">
-                        <span *ngIf="!selectedEmployeeProfile?.profilePictureUrl">
-                            {{ getEmpInitials(selectedEmployeeProfile) }}
-                        </span>
-                    </div>
-                    <div>
-                        <h4 class="fw-bold text-white mb-0">
-                            {{ selectedEmployeeProfile?.fullName || (selectedEmployeeProfile?.firstName + ' ' + selectedEmployeeProfile?.lastName) }}
-                        </h4>
-                        <span class="badge bg-white text-primary mt-1 px-3 py-2 rounded-pill shadow-sm">
-                            {{ selectedEmployeeProfile?.positionTitle || 'Employee' }}
-                        </span>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white ms-auto shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-            </div>
-
-            <div class="modal-body p-4">
-                @if (selectedEmployeeProfile?.isLoadingDetails) {
-                <div class="text-center py-4">
-                    <div class="spinner-border text-primary" role="status"></div>
-                    <p class="mt-2 text-muted">Loading full details...</p>
-                </div>
-                }
-                @if (selectedEmployeeProfile && !selectedEmployeeProfile?.isLoadingDetails) {
-
-                <h6 class="detail-section-title">
-                    <i class="bi bi-person-lines-fill text-primary me-2"></i>Personal Information
-                </h6>
-                <div class="row g-3 mb-4">
-                    <div class="col-md-6">
-                        <div class="detail-item">
-                            <span class="detail-label"><i class="bi bi-envelope me-1"></i>Email</span>
-                            <span class="detail-value">{{ selectedEmployeeProfile?.email || '—' }}</span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="detail-item">
-                            <span class="detail-label"><i class="bi bi-telephone me-1"></i>Phone</span>
-                            <span class="detail-value">{{ selectedEmployeeProfile?.phone || selectedEmployeeProfile?.phoneNumber || 'N/A' }}</span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="detail-item">
-                            <span class="detail-label"><i class="bi bi-hash me-1"></i>Employee ID</span>
-                            <span class="detail-value fw-bold text-primary">#{{ selectedEmployeeProfile?.id }}</span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="detail-item">
-                            <span class="detail-label"><i class="bi bi-calendar-check me-1"></i>Hire Date</span>
-                            <span class="detail-value">{{ selectedEmployeeProfile?.hireDate | date:'mediumDate' }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <h6 class="detail-section-title">
-                    <i class="bi bi-briefcase-fill text-success me-2"></i>Employment Details
-                </h6>
-                <div class="row g-3 mb-4">
-                    <div class="col-md-6">
-                        <div class="detail-item">
-                            <span class="detail-label"><i class="bi bi-building me-1"></i>Department</span>
-                            <span class="detail-value">{{ selectedEmployeeProfile?.departmentName || '—' }}</span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="detail-item">
-                            <span class="detail-label"><i class="bi bi-person-badge me-1"></i>Position</span>
-                            <span class="detail-value">{{ selectedEmployeeProfile?.positionTitle || '—' }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <h6 class="detail-section-title">
-                    <i class="bi bi-activity text-warning me-2"></i>Account Status
-                </h6>
-                <div class="d-flex gap-3 flex-wrap">
-                    <span class="status-badge" [ngClass]="selectedEmployeeProfile?.isActive !== false ? 'status-active' : 'status-inactive'">
-                        <i class="bi me-1"
-                            [class.bi-check-circle-fill]="selectedEmployeeProfile?.isActive !== false"
-                            [class.bi-x-circle-fill]="selectedEmployeeProfile?.isActive === false"></i>
-                        {{ selectedEmployeeProfile?.isActive !== false ? 'Active' : 'Inactive' }}
-                    </span>
-                </div>
-
-                }
-            </div>
-
-            <div class="modal-footer border-0 bg-light d-flex justify-content-between align-items-center">
-                <span class="text-muted small">
-                    <i class="bi bi-shield-lock-fill me-1 text-secondary"></i>Confidential Employee Record
-                </span>
-                <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
-                        <i class="bi bi-x-lg me-1"></i> {{ 'Close' | t }}
-                    </button>
-                    @if (isAdminOrHR) {
-                    <button type="button" class="btn btn-outline-danger rounded-pill px-4"
-                        [disabled]="isGeneratingReport"
-                        (click)="downloadEmployeeReport(selectedEmployeeProfile)">
-                        @if (isGeneratingReport) {
-                        <span class="spinner-border spinner-border-sm me-2"></span>{{ 'Loading...' | t }}
-                        } @else {
-                        <i class="bi bi-file-earmark-pdf-fill me-1"></i> {{ 'Download Report' | t }}
-                        }
-                    </button>
-                    <button type="button" class="btn btn-primary rounded-pill px-4"
-                        (click)="editEmployee(selectedEmployeeProfile?.id); detailsModal?.hide()">
-                        <i class="bi bi-pencil-square me-1"></i> Edit Employee
-                    </button>
-                    }
-                </div>
-            </div>
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+      <div class="modal-header border-0 p-0">
+        <div class="emp-modal-header w-100 p-4 d-flex align-items-center gap-3">
+          <div class="emp-modal-avatar" [class.p-0]="selectedEmployeeProfile?.profilePictureUrl" style="overflow: hidden;">
+            <img *ngIf="selectedEmployeeProfile?.profilePictureUrl" [src]="selectedEmployeeProfile.profilePictureUrl" class="w-100 h-100 object-fit-cover" alt="Profile Picture" />
+            <span *ngIf="!selectedEmployeeProfile?.profilePictureUrl"> {{ getEmpInitials(selectedEmployeeProfile) }} </span>
+          </div>
+          <div>
+            <h4 class="fw-bold text-white mb-0">{{ selectedEmployeeProfile?.fullName || (selectedEmployeeProfile?.firstName + ' ' + selectedEmployeeProfile?.lastName) }}</h4>
+            <span class="badge bg-white text-primary mt-1 px-3 py-2 rounded-pill shadow-sm"> {{ selectedEmployeeProfile?.positionTitle || 'Employee' }} </span>
+          </div>
+          <button type="button" class="btn-close btn-close-white ms-auto shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+      </div>
+
+      <div class="modal-body p-4">
+        @if (selectedEmployeeProfile?.isLoadingDetails) {
+        <div class="text-center py-4">
+          <div class="spinner-border text-primary" role="status"></div>
+          <p class="mt-2 text-muted">Loading full details...</p>
+        </div>
+        } @if (selectedEmployeeProfile && !selectedEmployeeProfile?.isLoadingDetails) {
+
+        <h6 class="detail-section-title"><i class="bi bi-person-lines-fill text-primary me-2"></i>Personal Information</h6>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <div class="detail-item">
+              <span class="detail-label"><i class="bi bi-envelope me-1"></i>Email</span>
+              <span class="detail-value">{{ selectedEmployeeProfile?.email || '—' }}</span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="detail-item">
+              <span class="detail-label"><i class="bi bi-telephone me-1"></i>Phone</span>
+              <span class="detail-value">{{ selectedEmployeeProfile?.phone || selectedEmployeeProfile?.phoneNumber || 'N/A' }}</span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="detail-item">
+              <span class="detail-label"><i class="bi bi-hash me-1"></i>Employee ID</span>
+              <span class="detail-value fw-bold text-primary">#{{ selectedEmployeeProfile?.id }}</span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="detail-item">
+              <span class="detail-label"><i class="bi bi-calendar-check me-1"></i>Hire Date</span>
+              <span class="detail-value">{{ selectedEmployeeProfile?.hireDate | date:'mediumDate' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <h6 class="detail-section-title"><i class="bi bi-briefcase-fill text-success me-2"></i>Employment Details</h6>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <div class="detail-item">
+              <span class="detail-label"><i class="bi bi-building me-1"></i>Department</span>
+              <span class="detail-value">{{ selectedEmployeeProfile?.departmentName || '—' }}</span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="detail-item">
+              <span class="detail-label"><i class="bi bi-person-badge me-1"></i>Position</span>
+              <span class="detail-value">{{ selectedEmployeeProfile?.positionTitle || '—' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <h6 class="detail-section-title"><i class="bi bi-activity text-warning me-2"></i>Account Status</h6>
+        <div class="d-flex gap-3 flex-wrap">
+          <span class="status-badge" [ngClass]="selectedEmployeeProfile?.isActive !== false ? 'status-active' : 'status-inactive'">
+            <i class="bi me-1" [class.bi-check-circle-fill]="selectedEmployeeProfile?.isActive !== false" [class.bi-x-circle-fill]="selectedEmployeeProfile?.isActive === false"></i>
+            {{ selectedEmployeeProfile?.isActive !== false ? 'Active' : 'Inactive' }}
+          </span>
+        </div>
+
+        }
+      </div>
+
+      <div class="modal-footer border-0 bg-light d-flex justify-content-between align-items-center">
+        <span class="text-muted small"> <i class="bi bi-shield-lock-fill me-1 text-secondary"></i>Confidential Employee Record </span>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal"><i class="bi bi-x-lg me-1"></i> {{ 'Close' | t }}</button>
+          @if (isAdminOrHR) {
+          <button type="button" class="btn btn-outline-danger rounded-pill px-4" [disabled]="isGeneratingReport" (click)="downloadEmployeeReport(selectedEmployeeProfile)">
+            @if (isGeneratingReport) {
+            <span class="spinner-border spinner-border-sm me-2"></span>{{ 'Loading...' | t }} } @else { <i class="bi bi-file-earmark-pdf-fill me-1"></i> {{ 'Download Report' | t }} }
+          </button>
+          <button type="button" class="btn btn-primary rounded-pill px-4" (click)="editEmployee(selectedEmployeeProfile?.id); detailsModal?.hide()"><i class="bi bi-pencil-square me-1"></i> Edit Employee</button>
+          }
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <style>
-.emp-modal-header {
-  background: linear-gradient(135deg, #4361ee, #3a0ca3);
-}
+  .emp-modal-header {
+    background: linear-gradient(135deg, #4361ee, #3a0ca3);
+  }
 
-.emp-modal-avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.2);
-  border: 2px solid rgba(255,255,255,0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  font-weight: 800;
-  color: #fff;
-  flex-shrink: 0;
-  line-height: 1;
-}
+  .emp-modal-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #fff;
+    flex-shrink: 0;
+    line-height: 1;
+  }
 
-.detail-section-title {
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: #6c757d;
-  border-bottom: 1px solid #f0f2f5;
-  padding-bottom: 0.5rem;
-  margin-bottom: 0.75rem;
-}
+  .detail-section-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #6c757d;
+    border-bottom: 1px solid #f0f2f5;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
 
-.detail-item {
-  background: #f8fafc;
-  border: 1px solid #e8ecf0;
-  border-radius: 10px;
-  padding: 0.75rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
+  .detail-item {
+    background: #f8fafc;
+    border: 1px solid #e8ecf0;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
 
-.detail-label {
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #8592a3;
-  font-weight: 600;
-}
+  .detail-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #8592a3;
+    font-weight: 600;
+  }
 
-.detail-value {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #1a202c;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-}
+  .detail-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1a202c;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
 
-.cursor-pointer {
-  cursor: pointer;
-}
+  .cursor-pointer {
+    cursor: pointer;
+  }
 </style>
-
 ```
 
 ### File: src\app\features\employees\employees.component.ts
-```typescript
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterLink, Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { forkJoin, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { EmployeeService } from '../../core/services/employee.service';
-import { AuthService } from '../../core/services/auth.service';
-import { AttendanceService } from '../../core/services/attendance.service';
-import { LeaveService } from '../../core/services/leave.service';
-import { SalaryService } from '../../core/services/salary.service';
-import Swal from 'sweetalert2';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 
-import { TranslatePipe } from '../../core/pipes/translate.pipe';
-import { PdfExportService } from '../../core/services/pdf-export.service';
-import { ExcelExportService } from '../../core/services/excel-export.service';
+```typescript
+import { Component, OnInit, inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterLink, Router } from "@angular/router";
+import { FormsModule } from "@angular/forms";
+import { forkJoin, of } from "rxjs";
+import { catchError } from "rxjs/operators";
+import { EmployeeService } from "../../core/services/employee.service";
+import { AuthService } from "../../core/services/auth.service";
+import { AttendanceService } from "../../core/services/attendance.service";
+import { LeaveService } from "../../core/services/leave.service";
+import { SalaryService } from "../../core/services/salary.service";
+import Swal from "sweetalert2";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
+import { TranslatePipe } from "../../core/pipes/translate.pipe";
+import { PdfExportService } from "../../core/services/pdf-export.service";
+import { ExcelExportService } from "../../core/services/excel-export.service";
 
 declare var bootstrap: any;
 
 @Component({
-  selector: 'app-employees',
+  selector: "app-employees",
   standalone: true,
   imports: [CommonModule, RouterLink, FormsModule, TranslatePipe],
-  templateUrl: './employees.component.html',
+  templateUrl: "./employees.component.html",
 })
 export class EmployeesComponent implements OnInit {
   private router = inject(Router);
@@ -7608,9 +6530,9 @@ export class EmployeesComponent implements OnInit {
   isAdminOrHR: boolean = false;
   selectedEmployeeProfile: any = null;
 
-  searchQuery: string = '';
-  selectedDepartment: string = '';
-  selectedStatus: string = '';
+  searchQuery: string = "";
+  selectedDepartment: string = "";
+  selectedStatus: string = "";
   uniqueDepartments: string[] = [];
 
   detailsModal: any;
@@ -7637,7 +6559,7 @@ export class EmployeesComponent implements OnInit {
     return Math.min(a, b);
   }
 
-  showToast(message: string, icon: 'success' | 'error' | 'warning' | 'info') {
+  showToast(message: string, icon: "success" | "error" | "warning" | "info") {
     Swal.fire({
       icon: icon,
       title: message,
@@ -7648,7 +6570,6 @@ export class EmployeesComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
     this.loadEmployees();
@@ -7657,110 +6578,76 @@ export class EmployeesComponent implements OnInit {
   getRoleBadgeClass(roleId: number): string {
     switch (roleId) {
       case 1:
-        return 'bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25';
+        return "bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25";
       case 2:
-        return 'bg-warning bg-opacity-10 text-dark border border-warning border-opacity-25';
+        return "bg-warning bg-opacity-10 text-dark border border-warning border-opacity-25";
       default:
-        return 'bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25';
+        return "bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25";
     }
   }
 
   exportToExcel() {
     if (this.employeesList.length === 0) {
-      Swal.fire('No Data', 'There are no employees to export.', 'info');
+      Swal.fire("No Data", "There are no employees to export.", "info");
       return;
     }
 
-    const headers = [
-      'ID',
-      'First Name',
-      'Last Name',
-      'Email',
-      'Phone',
-      'Address',
-      'Status',
-      'Role ID',
-    ];
+    const headers = ["ID", "First Name", "Last Name", "Email", "Phone", "Address", "Status", "Role ID"];
 
-    const data = this.employeesList.map((emp) => [
-      emp.id,
-      emp.firstName || '',
-      emp.lastName || '',
-      emp.email || '',
-      emp.phoneNumber || 'N/A',
-      emp.address || 'N/A',
-      emp.isActive ? 'Active' : 'Inactive',
-      emp.roleId || 'N/A',
-    ]);
+    const data = this.employeesList.map((emp) => [emp.id, emp.firstName || "", emp.lastName || "", emp.email || "", emp.phoneNumber || "N/A", emp.address || "N/A", emp.isActive ? "Active" : "Inactive", emp.roleId || "N/A"]);
 
-    this.excelExportService.exportTableToExcel(headers, data, 'Employees');
+    this.excelExportService.exportTableToExcel(headers, data, "Employees");
   }
 
   getEmpInitials(emp: any): string {
-    const name =
-      emp?.fullName ||
-      `${emp?.firstName || ''} ${emp?.lastName || ''}`.trim() ||
-      'E';
+    const name = emp?.fullName || `${emp?.firstName || ""} ${emp?.lastName || ""}`.trim() || "E";
     return name
-      .split(' ')
-      .map((w: string) => w[0] || '')
-      .join('')
+      .split(" ")
+      .map((w: string) => w[0] || "")
+      .join("")
       .toUpperCase()
       .slice(0, 2);
   }
 
   loadEmployees() {
-
     this.isLoading = true;
     this.employeeService.getEmployees().subscribe({
       next: (data) => {
         this.allEmployeesList = data;
         this.employeesList = [...this.allEmployeesList];
 
-        const depts = data
-          .map((e: any) => e.departmentName || e.departmentId)
-          .filter(Boolean);
+        const depts = data.map((e: any) => e.departmentName || e.departmentId).filter(Boolean);
         this.uniqueDepartments = Array.from(new Set(depts)) as string[];
 
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching employees:', err);
+        console.error("Error fetching employees:", err);
         this.isLoading = false;
       },
     });
   }
 
   filterEmployees() {
-
     this.employeesList = this.allEmployeesList.filter((emp) => {
       let matchesSearch = true;
       if (this.searchQuery) {
         const query = this.searchQuery.toLowerCase();
-        const fullName =
-          `${emp.firstName || ''} ${emp.lastName || ''}`.toLowerCase();
+        const fullName = `${emp.firstName || ""} ${emp.lastName || ""}`.toLowerCase();
         const idStr = String(emp.id);
-        const deptStr = String(
-          emp.departmentName || emp.departmentId || '',
-        ).toLowerCase();
+        const deptStr = String(emp.departmentName || emp.departmentId || "").toLowerCase();
 
-        matchesSearch =
-          fullName.includes(query) ||
-          idStr.includes(query) ||
-          deptStr.includes(query);
+        matchesSearch = fullName.includes(query) || idStr.includes(query) || deptStr.includes(query);
       }
 
       let matchesDept = true;
       if (this.selectedDepartment) {
-        matchesDept =
-          (emp.departmentName || String(emp.departmentId)) ===
-          this.selectedDepartment;
+        matchesDept = (emp.departmentName || String(emp.departmentId)) === this.selectedDepartment;
       }
 
       let matchesStatus = true;
       if (this.selectedStatus) {
-        matchesStatus =
-          this.selectedStatus === 'Active' ? emp.isActive : !emp.isActive;
+        matchesStatus = this.selectedStatus === "Active" ? emp.isActive : !emp.isActive;
       }
 
       return matchesSearch && matchesDept && matchesStatus;
@@ -7771,30 +6658,28 @@ export class EmployeesComponent implements OnInit {
 
   onDelete(id: number) {
     Swal.fire({
-      title: 'Are you sure?',
+      title: "Are you sure?",
       text: "You won't be able to revert this!",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#dc3545',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: "#dc3545",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Delete",
     }).then((result) => {
       if (result.isConfirmed) {
         this.employeeService.deleteEmployee(id).subscribe({
           next: () => {
-            this.employeesList = this.employeesList.filter(
-              (emp) => emp.id !== id,
-            );
+            this.employeesList = this.employeesList.filter((emp) => emp.id !== id);
 
             if (this.currentPage > this.totalPages) {
               this.currentPage = this.totalPages;
             }
 
-            this.showToast('Employee deleted successfully', 'success');
+            this.showToast("Employee deleted successfully", "success");
           },
           error: (err) => {
-            console.error('Error deleting employee:', err);
-            this.showToast('Failed to delete employee', 'error');
+            console.error("Error deleting employee:", err);
+            this.showToast("Failed to delete employee", "error");
           },
         });
       }
@@ -7802,10 +6687,9 @@ export class EmployeesComponent implements OnInit {
   }
 
   viewFullDetails(emp: any) {
-
     this.selectedEmployeeProfile = { ...emp, isLoadingDetails: true };
 
-    const modalElement = document.getElementById('employeeDetailsModal');
+    const modalElement = document.getElementById("employeeDetailsModal");
     if (modalElement) {
       this.detailsModal = new bootstrap.Modal(modalElement);
       this.detailsModal.show();
@@ -7826,46 +6710,30 @@ export class EmployeesComponent implements OnInit {
   }
 
   editEmployee(id: number) {
-    this.router.navigate(['/employee-form'], {
+    this.router.navigate(["/employee-form"], {
       state: { editMode: true, employeeId: id },
     });
   }
 
   downloadEmployeeReport(emp: any) {
-
     if (!emp) return;
 
     this.isGeneratingReport = true;
-    const empName =
-      `${emp.firstName || ''} ${emp.lastName || ''}`.trim() ||
-      `Employee #${emp.id}`;
+    const empName = `${emp.firstName || ""} ${emp.lastName || ""}`.trim() || `Employee #${emp.id}`;
 
     forkJoin({
-      attendance: this.attendanceService
-        .getAllAttendance()
-        .pipe(catchError(() => of([]))),
+      attendance: this.attendanceService.getAllAttendance().pipe(catchError(() => of([]))),
       leaves: this.leaveService.getAllLeaves().pipe(catchError(() => of([]))),
-      salaries: this.salaryService
-        .getAllSalaries()
-        .pipe(catchError(() => of([]))),
+      salaries: this.salaryService.getAllSalaries().pipe(catchError(() => of([]))),
     }).subscribe(({ attendance, leaves, salaries }) => {
       this.isGeneratingReport = false;
 
       const empAttendance = attendance
         .filter((a: any) => a.employeeId === emp.id)
-        .sort(
-          (a: any, b: any) =>
-            new Date(b.date).getTime() - new Date(a.date).getTime(),
-        )
+        .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())
         .slice(0, 15);
 
-      const empLeaves = leaves
-        .filter((l: any) => l.employeeId === emp.id)
-        .sort(
-          (a: any, b: any) =>
-            new Date(b.startDate || 0).getTime() -
-            new Date(a.startDate || 0).getTime(),
-        );
+      const empLeaves = leaves.filter((l: any) => l.employeeId === emp.id).sort((a: any, b: any) => new Date(b.startDate || 0).getTime() - new Date(a.startDate || 0).getTime());
 
       const empSalaries = salaries
         .filter((s: any) => s.employeeId === emp.id)
@@ -7874,130 +6742,96 @@ export class EmployeesComponent implements OnInit {
           return b.month - a.month;
         });
 
-      this.buildEmployeePDF(
-        emp,
-        empName,
-        empAttendance,
-        empLeaves,
-        empSalaries,
-      );
+      this.buildEmployeePDF(emp, empName, empAttendance, empLeaves, empSalaries);
     });
   }
 
-  private buildEmployeePDF(
-    emp: any,
-    empName: string,
-    attendance: any[],
-    leaves: any[],
-    salaries: any[],
-  ) {
+  private buildEmployeePDF(emp: any, empName: string, attendance: any[], leaves: any[], salaries: any[]) {
     const doc = new jsPDF();
     const pageW = doc.internal.pageSize.getWidth();
     const today = new Date();
-    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
 
     const leaveTypeMap: any = {
-      0: 'Annual',
-      1: 'Sick',
-      2: 'Emergency',
-      3: 'Unpaid',
-      Annual: 'Annual',
-      Sick: 'Sick',
-      Emergency: 'Emergency',
-      Unpaid: 'Unpaid',
+      0: "Annual",
+      1: "Sick",
+      2: "Emergency",
+      3: "Unpaid",
+      Annual: "Annual",
+      Sick: "Sick",
+      Emergency: "Emergency",
+      Unpaid: "Unpaid",
     };
     const statusMap: any = {
-      0: 'Pending',
-      1: 'Approved',
-      2: 'Rejected',
-      Pending: 'Pending',
-      Approved: 'Approved',
-      Rejected: 'Rejected',
+      0: "Pending",
+      1: "Approved",
+      2: "Rejected",
+      Pending: "Pending",
+      Approved: "Approved",
+      Rejected: "Rejected",
     };
 
     doc.setFillColor(67, 97, 238);
-    doc.rect(0, 0, pageW, 38, 'F');
+    doc.rect(0, 0, pageW, 38, "F");
 
-    doc.setFont('helvetica', 'bold');
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(18);
     doc.setTextColor(255, 255, 255);
-    doc.text('Kawadir HRMS', 14, 14);
+    doc.text("Kawadir HRMS", 14, 14);
 
     doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.text('Employee Monthly Report', 14, 22);
+    doc.setFont("helvetica", "normal");
+    doc.text("Employee Monthly Report", 14, 22);
     doc.text(`Generated: ${todayStr}`, 14, 29);
 
     doc.setFillColor(248, 249, 252);
-    doc.roundedRect(10, 44, pageW - 20, 38, 3, 3, 'F');
+    doc.roundedRect(10, 44, pageW - 20, 38, 3, 3, "F");
     doc.setDrawColor(225, 228, 240);
-    doc.roundedRect(10, 44, pageW - 20, 38, 3, 3, 'S');
+    doc.roundedRect(10, 44, pageW - 20, 38, 3, 3, "S");
 
-    doc.setFont('helvetica', 'bold');
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(14);
     doc.setTextColor(30, 30, 50);
     doc.text(empName, 18, 55);
 
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
     doc.setTextColor(100, 100, 120);
     doc.text(`Employee ID: #${emp.id}`, 18, 62);
-    doc.text(`Department: ${emp.departmentName || '—'}`, 18, 68);
-    doc.text(`Position: ${emp.positionTitle || '—'}`, 18, 74);
+    doc.text(`Department: ${emp.departmentName || "—"}`, 18, 68);
+    doc.text(`Position: ${emp.positionTitle || "—"}`, 18, 74);
 
-    const hireDate = emp.hireDate ? emp.hireDate.split('T')[0] : '—';
+    const hireDate = emp.hireDate ? emp.hireDate.split("T")[0] : "—";
     doc.text(`Hire Date: ${hireDate}`, pageW / 2, 62);
-    doc.text(`Email: ${emp.email || '—'}`, pageW / 2, 68);
-    doc.text(
-      `Status: ${emp.isActive !== false ? 'Active' : 'Inactive'}`,
-      pageW / 2,
-      74,
-    );
+    doc.text(`Email: ${emp.email || "—"}`, pageW / 2, 68);
+    doc.text(`Status: ${emp.isActive !== false ? "Active" : "Inactive"}`, pageW / 2, 74);
 
     let curY = 90;
 
-    doc.setFont('helvetica', 'bold');
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(10);
     doc.setTextColor(67, 97, 238);
-    doc.text('SALARY HISTORY', 14, curY);
+    doc.text("SALARY HISTORY", 14, curY);
     doc.setDrawColor(67, 97, 238);
     doc.setLineWidth(0.5);
     doc.line(14, curY + 2, pageW - 14, curY + 2);
 
     if (salaries.length === 0) {
-      doc.setFont('helvetica', 'italic');
+      doc.setFont("helvetica", "italic");
       doc.setFontSize(9);
       doc.setTextColor(150, 150, 150);
-      doc.text('No salary records found.', 18, curY + 10);
+      doc.text("No salary records found.", 18, curY + 10);
       curY += 18;
     } else {
       autoTable(doc, {
         startY: curY + 6,
-        head: [
-          [
-            'Month',
-            'Year',
-            'Base ($)',
-            'Allowances ($)',
-            'Deductions ($)',
-            'Net Pay ($)',
-          ],
-        ],
-        body: salaries
-          .slice(0, 6)
-          .map((s: any) => [
-            s.month,
-            s.year,
-            `$${s.baseAmount ?? '—'}`,
-            `+$${s.allowances ?? 0}`,
-            `-$${s.deductions ?? 0}`,
-            `$${s.netAmount ?? '—'}`,
-          ]),
-        theme: 'grid',
+        head: [["Month", "Year", "Base ($)", "Allowances ($)", "Deductions ($)", "Net Pay ($)"]],
+        body: salaries.slice(0, 6).map((s: any) => [s.month, s.year, `$${s.baseAmount ?? "—"}`, `+$${s.allowances ?? 0}`, `-$${s.deductions ?? 0}`, `$${s.netAmount ?? "—"}`]),
+        theme: "grid",
         headStyles: {
           fillColor: [240, 243, 255],
           textColor: [50, 50, 80],
-          fontStyle: 'bold',
+          fontStyle: "bold",
           fontSize: 8,
         },
         bodyStyles: { fontSize: 8 },
@@ -8012,35 +6846,29 @@ export class EmployeesComponent implements OnInit {
       curY = 20;
     }
 
-    doc.setFont('helvetica', 'bold');
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(10);
     doc.setTextColor(25, 135, 84);
-    doc.text('RECENT ATTENDANCE (Last 15 Records)', 14, curY);
+    doc.text("RECENT ATTENDANCE (Last 15 Records)", 14, curY);
     doc.setDrawColor(25, 135, 84);
     doc.line(14, curY + 2, pageW - 14, curY + 2);
 
     if (attendance.length === 0) {
-      doc.setFont('helvetica', 'italic');
+      doc.setFont("helvetica", "italic");
       doc.setFontSize(9);
       doc.setTextColor(150, 150, 150);
-      doc.text('No attendance records found.', 18, curY + 10);
+      doc.text("No attendance records found.", 18, curY + 10);
       curY += 18;
     } else {
       autoTable(doc, {
         startY: curY + 6,
-        head: [['Date', 'Clock In', 'Clock Out', 'Hours', 'Status']],
-        body: attendance.map((a: any) => [
-          a.date ? a.date.split('T')[0] : '—',
-          a.clockIn || '—',
-          a.clockOut && a.clockOut !== '00:00:00' ? a.clockOut : '—',
-          a.totalHours || '—',
-          a.clockOut && a.clockOut !== '00:00:00' ? 'Completed' : 'Working',
-        ]),
-        theme: 'grid',
+        head: [["Date", "Clock In", "Clock Out", "Hours", "Status"]],
+        body: attendance.map((a: any) => [a.date ? a.date.split("T")[0] : "—", a.clockIn || "—", a.clockOut && a.clockOut !== "00:00:00" ? a.clockOut : "—", a.totalHours || "—", a.clockOut && a.clockOut !== "00:00:00" ? "Completed" : "Working"]),
+        theme: "grid",
         headStyles: {
           fillColor: [232, 248, 240],
           textColor: [20, 80, 50],
-          fontStyle: 'bold',
+          fontStyle: "bold",
           fontSize: 8,
         },
         bodyStyles: { fontSize: 8 },
@@ -8055,35 +6883,29 @@ export class EmployeesComponent implements OnInit {
       curY = 20;
     }
 
-    doc.setFont('helvetica', 'bold');
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(10);
     doc.setTextColor(220, 53, 69);
-    doc.text('LEAVE REQUESTS', 14, curY);
+    doc.text("LEAVE REQUESTS", 14, curY);
     doc.setDrawColor(220, 53, 69);
     doc.line(14, curY + 2, pageW - 14, curY + 2);
 
     if (leaves.length === 0) {
-      doc.setFont('helvetica', 'italic');
+      doc.setFont("helvetica", "italic");
       doc.setFontSize(9);
       doc.setTextColor(150, 150, 150);
-      doc.text('No leave requests found.', 18, curY + 10);
+      doc.text("No leave requests found.", 18, curY + 10);
       curY += 18;
     } else {
       autoTable(doc, {
         startY: curY + 6,
-        head: [['Type', 'Start Date', 'End Date', 'Days', 'Status']],
-        body: leaves.map((l: any) => [
-          leaveTypeMap[l.leaveType] || l.leaveType,
-          l.startDate ? l.startDate.split('T')[0] : '—',
-          l.endDate ? l.endDate.split('T')[0] : '—',
-          l.totalDays ?? '—',
-          statusMap[l.status] || l.status,
-        ]),
-        theme: 'grid',
+        head: [["Type", "Start Date", "End Date", "Days", "Status"]],
+        body: leaves.map((l: any) => [leaveTypeMap[l.leaveType] || l.leaveType, l.startDate ? l.startDate.split("T")[0] : "—", l.endDate ? l.endDate.split("T")[0] : "—", l.totalDays ?? "—", statusMap[l.status] || l.status]),
+        theme: "grid",
         headStyles: {
           fillColor: [255, 240, 242],
           textColor: [100, 20, 30],
-          fontStyle: 'bold',
+          fontStyle: "bold",
           fontSize: 8,
         },
         bodyStyles: { fontSize: 8 },
@@ -8098,543 +6920,439 @@ export class EmployeesComponent implements OnInit {
       curY = 20;
     }
 
-    const approvedLeaves = leaves.filter(
-      (l: any) => l.status === 1 || l.status === 'Approved',
-    );
-    const totalLeaveDays = approvedLeaves.reduce(
-      (acc: number, l: any) => acc + (l.totalDays || 0),
-      0,
-    );
-    const completedSessions = attendance.filter(
-      (a: any) => a.clockOut && a.clockOut !== '00:00:00',
-    ).length;
+    const approvedLeaves = leaves.filter((l: any) => l.status === 1 || l.status === "Approved");
+    const totalLeaveDays = approvedLeaves.reduce((acc: number, l: any) => acc + (l.totalDays || 0), 0);
+    const completedSessions = attendance.filter((a: any) => a.clockOut && a.clockOut !== "00:00:00").length;
     const latestSalary = salaries[0];
 
     doc.setFillColor(240, 243, 255);
-    doc.roundedRect(10, curY, pageW - 20, 32, 3, 3, 'F');
-    doc.setFont('helvetica', 'bold');
+    doc.roundedRect(10, curY, pageW - 20, 32, 3, 3, "F");
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(9);
     doc.setTextColor(67, 97, 238);
-    doc.text('REPORT SUMMARY', 18, curY + 8);
-    doc.setFont('helvetica', 'normal');
+    doc.text("REPORT SUMMARY", 18, curY + 8);
+    doc.setFont("helvetica", "normal");
     doc.setFontSize(8.5);
     doc.setTextColor(50, 50, 80);
-    doc.text(
-      `Total Attendance Records: ${attendance.length}   |   Completed Sessions: ${completedSessions}`,
-      18,
-      curY + 16,
-    );
-    doc.text(
-      `Total Approved Leave Days: ${totalLeaveDays}   |   Latest Net Salary: $${latestSalary?.netAmount ?? 'N/A'}`,
-      18,
-      curY + 23,
-    );
+    doc.text(`Total Attendance Records: ${attendance.length}   |   Completed Sessions: ${completedSessions}`, 18, curY + 16);
+    doc.text(`Total Approved Leave Days: ${totalLeaveDays}   |   Latest Net Salary: $${latestSalary?.netAmount ?? "N/A"}`, 18, curY + 23);
 
     const pageCount = (doc.internal as any).getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
-      doc.setFont('helvetica', 'normal');
+      doc.setFont("helvetica", "normal");
       doc.setFontSize(8);
       doc.setTextColor(180, 180, 180);
-      doc.text(
-        'Confidential – Kawadir HRMS – System Generated Report',
-        14,
-        doc.internal.pageSize.getHeight() - 8,
-      );
-      doc.text(
-        `Page ${i} of ${pageCount}`,
-        pageW - 30,
-        doc.internal.pageSize.getHeight() - 8,
-      );
+      doc.text("Confidential – Kawadir HRMS – System Generated Report", 14, doc.internal.pageSize.getHeight() - 8);
+      doc.text(`Page ${i} of ${pageCount}`, pageW - 30, doc.internal.pageSize.getHeight() - 8);
     }
 
-    const fileName = `Report_${empName.replace(/ /g, '_')}_${todayStr}.pdf`;
+    const fileName = `Report_${empName.replace(/ /g, "_")}_${todayStr}.pdf`;
     doc.save(fileName);
   }
 
   exportToPDF() {
     if (this.employeesList.length === 0) {
-      Swal.fire('No Data', 'There are no employees to export.', 'info');
+      Swal.fire("No Data", "There are no employees to export.", "info");
       return;
     }
 
-    const headers = ['ID', 'Name', 'Email', 'Phone', 'Department', 'Status'];
-    const data = this.employeesList.map(emp => [
-      `#${emp.id}`,
-      `${emp.firstName || ''} ${emp.lastName || ''}`.trim(),
-      emp.email || 'N/A',
-      emp.phoneNumber || 'N/A',
-      emp.departmentName || 'N/A',
-      emp.isActive ? 'Active' : 'Inactive'
-    ]);
+    const headers = ["ID", "Name", "Email", "Phone", "Department", "Status"];
+    const data = this.employeesList.map((emp) => [`#${emp.id}`, `${emp.firstName || ""} ${emp.lastName || ""}`.trim(), emp.email || "N/A", emp.phoneNumber || "N/A", emp.departmentName || "N/A", emp.isActive ? "Active" : "Inactive"]);
 
     const additionalInfo = [
-      { label: 'Total Employees', value: String(this.employeesList.length) },
-      { label: 'Active Employees', value: String(this.employeesList.filter(e => e.isActive).length) },
-      { label: 'Filtered Department', value: this.selectedDepartment ? this.selectedDepartment : 'All' }
+      { label: "Total Employees", value: String(this.employeesList.length) },
+      { label: "Active Employees", value: String(this.employeesList.filter((e) => e.isActive).length) },
+      { label: "Filtered Department", value: this.selectedDepartment ? this.selectedDepartment : "All" },
     ];
 
-    this.pdfExportService.generateTableReport(
-      'Employees Directory',
-      headers,
-      data,
-      'Employees_Report',
-      additionalInfo
-    );
+    this.pdfExportService.generateTableReport("Employees Directory", headers, data, "Employees_Report", additionalInfo);
   }
 }
-
 ```
 
 ### File: src\app\features\leave\leave.component.html
+
 ```html
 <div class="page-container p-4">
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div class="d-flex align-items-center">
+      <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+        <i class="bi bi-calendar2-check-fill fs-4"></i>
+      </div>
+      <div>
+        <h2 class="fw-bold text-dark mb-1">{{ isAdminOrHR ? ('All Leave Requests' | t) : ('My Leave Requests' | t) }}</h2>
+        <p class="text-muted small mb-0">{{ 'Manage and track time-off requests effectively' | t }}</p>
+      </div>
+    </div>
+    <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
+      <div class="input-group shadow-sm" style="max-width: 350px; min-width: 200px; flex: 1;">
+        <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control border-start-0 ps-0" placeholder="{{ 'Search by name, ID, or reason...' | t }}" [(ngModel)]="leaveSearchQuery" (input)="filterLeavesLocal()" />
+      </div>
 
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <div class="d-flex align-items-center">
-            <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
-                <i class="bi bi-calendar2-check-fill fs-4"></i>
-            </div>
-            <div>
-                <h2 class="fw-bold text-dark mb-1">{{ isAdminOrHR ? ('All Leave Requests' | t) : ('My Leave Requests' | t) }}</h2>
-                <p class="text-muted small mb-0">{{ 'Manage and track time-off requests effectively' | t }}</p>
-            </div>
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Filter Leaves">
+          <i class="bi bi-funnel-fill"></i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4" style="width: 250px;">
+          <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">{{ 'Filter Options' | t }}</h6>
+
+          <div class="mb-3">
+            <label class="form-label small fw-semibold text-muted mb-1">{{ 'Leave Type' | t }}</label>
+            <select class="form-select form-select-sm" [(ngModel)]="selectedLeaveType" (change)="filterLeavesLocal()">
+              <option value="">{{ 'All Types' | t }}</option>
+              <option *ngFor="let type of leaveTypes" [value]="type.name">{{ type.name }}</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-semibold text-muted mb-1">{{ 'Status' | t }}</label>
+            <select class="form-select form-select-sm" [(ngModel)]="selectedLeaveStatus" (change)="filterLeavesLocal()">
+              <option value="">{{ 'All Statuses' | t }}</option>
+              <option value="Pending">{{ 'Pending' | t }}</option>
+              <option value="Approved">{{ 'Approved' | t }}</option>
+              <option value="Rejected">{{ 'Rejected' | t }}</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-semibold text-muted mb-1">{{ 'Year' | t }}</label>
+            <select class="form-select form-select-sm" [(ngModel)]="selectedYear" (change)="filterLeaves()">
+              <option value="">{{ 'All Years' | t }}</option>
+              <option *ngFor="let yr of uniqueYears" [value]="yr">{{ yr }}</option>
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label small fw-semibold text-muted mb-1">{{ 'Month' | t }}</label>
+            <select class="form-select form-select-sm" [(ngModel)]="selectedMonth" (change)="filterLeaves()">
+              <option value="">{{ 'All Months' | t }}</option>
+              <option value="1">{{ 'January' | t }}</option>
+              <option value="2">{{ 'February' | t }}</option>
+              <option value="3">{{ 'March' | t }}</option>
+              <option value="4">{{ 'April' | t }}</option>
+              <option value="5">{{ 'May' | t }}</option>
+              <option value="6">{{ 'June' | t }}</option>
+              <option value="7">{{ 'July' | t }}</option>
+              <option value="8">{{ 'August' | t }}</option>
+              <option value="9">{{ 'September' | t }}</option>
+              <option value="10">{{ 'October' | t }}</option>
+              <option value="11">{{ 'November' | t }}</option>
+              <option value="12">{{ 'December' | t }}</option>
+            </select>
+          </div>
         </div>
-        <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
-            <div class="input-group shadow-sm" style="max-width: 350px; min-width: 200px; flex: 1;">
-                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                <input type="text" class="form-control border-start-0 ps-0" 
-                    placeholder="{{ 'Search by name, ID, or reason...' | t }}"
-                    [(ngModel)]="leaveSearchQuery" 
-                    (input)="filterLeaves()">
-            </div>
+      </div>
 
-            <div class="dropdown">
-                <button class="btn btn-outline-secondary shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Filter Leaves">
-                    <i class="bi bi-funnel-fill"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4" style="width: 250px;">
-                    <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">{{ 'Filter Options' | t }}</h6>
-                    
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold text-muted mb-1">{{ 'Leave Type' | t }}</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="selectedLeaveType" (change)="filterLeaves()">
-                            <option value="">{{ 'All Types' | t }}</option>
-                            <option *ngFor="let type of leaveTypes" [value]="type.name">{{ type.name }}</option>
-                        </select>
-                    </div>
-                    
-                    <div class="mb-2">
-                        <label class="form-label small fw-semibold text-muted mb-1">{{ 'Status' | t }}</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="selectedLeaveStatus" (change)="filterLeaves()">
-                            <option value="">{{ 'All Statuses' | t }}</option>
-                            <option value="Pending">{{ 'Pending' | t }}</option>
-                            <option value="Approved">{{ 'Approved' | t }}</option>
-                            <option value="Rejected">{{ 'Rejected' | t }}</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
+      <div class="d-flex gap-2">
+        <button *ngIf="isAdminOrHR" class="btn btn-outline-dark px-3 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="openSettingsModal()" title="Leave Settings"><i class="bi bi-gear-fill" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'Settings' | t }}</span></button>
+        <button class="btn btn-outline-danger px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="exportToPDF()" title="Export to PDF"><i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span></button>
+        <button class="btn btn-outline-success px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="exportToExcel()" title="Export to Excel"><i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span></button>
+      </div>
 
-            <div class="d-flex gap-2">
-                <button *ngIf="isAdminOrHR" class="btn btn-outline-dark px-3 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="openSettingsModal()" title="Leave Settings">
-                    <i class="bi bi-gear-fill" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'Settings' | t }}</span>
-                </button>
-                <button class="btn btn-outline-danger px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="exportToPDF()" title="Export to PDF">
-                    <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
-                </button>
-                <button class="btn btn-outline-success px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="exportToExcel()" title="Export to Excel">
-                    <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
-                </button>
-            </div>
+      <button *ngIf="!isAdmin" class="btn btn-primary px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="openModal()"><i class="bi bi-send-plus" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'Request Leave' | t }}</span></button>
+    </div>
+  </div>
 
-            <button *ngIf="!isAdminOrHR"
-                class="btn btn-primary px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
-                (click)="openModal()">
-                <i class="bi bi-send-plus" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'Request Leave' | t }}</span>
-            </button>
+  <div class="row mb-4 g-3" *ngIf="!isAdmin">
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-4 bg-primary bg-opacity-10 position-relative overflow-hidden h-100">
+        <div class="position-absolute end-0 top-0 h-100 w-50" style="background: linear-gradient(90deg, transparent, rgba(13, 110, 253, 0.05)); z-index: 0;"></div>
+        <div class="card-body d-flex align-items-center p-3 position-relative" style="z-index: 1;">
+          <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm me-3" style="width: 45px; height: 45px; flex-shrink: 0;">
+            <i class="bi bi-airplane-engines-fill fs-5"></i>
+          </div>
+          <div>
+            <p class="text-primary small mb-0 fw-bold text-uppercase" style="letter-spacing: 0.5px;">{{ 'Annual' | t }}</p>
+            <h4 class="mb-0 fw-bold text-dark">{{ annualLeaveBalance }} <span class="fs-6 fw-normal text-muted">{{ 'Days' | t }}</span></h4>
+          </div>
         </div>
+      </div>
     </div>
 
-    
-    <div class="row mb-4 g-3" *ngIf="!isAdminOrHR">
-        
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm rounded-4 bg-primary bg-opacity-10 position-relative overflow-hidden h-100">
-                <div class="position-absolute end-0 top-0 h-100 w-50" style="background: linear-gradient(90deg, transparent, rgba(13, 110, 253, 0.05)); z-index: 0;"></div>
-                <div class="card-body d-flex align-items-center p-3 position-relative" style="z-index: 1;">
-                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm me-3" style="width: 45px; height: 45px; flex-shrink: 0;">
-                        <i class="bi bi-airplane-engines-fill fs-5"></i>
-                    </div>
-                    <div>
-                        <p class="text-primary small mb-0 fw-bold text-uppercase" style="letter-spacing: 0.5px;">{{ 'Annual' | t }}</p>
-                        <h4 class="mb-0 fw-bold text-dark">{{ annualLeaveBalance }} <span class="fs-6 fw-normal text-muted">{{ 'Days' | t }}</span></h4>
-                    </div>
-                </div>
-            </div>
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-4 bg-success bg-opacity-10 position-relative overflow-hidden h-100">
+        <div class="position-absolute end-0 top-0 h-100 w-50" style="background: linear-gradient(90deg, transparent, rgba(25, 135, 84, 0.05)); z-index: 0;"></div>
+        <div class="card-body d-flex align-items-center p-3 position-relative" style="z-index: 1;">
+          <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm me-3" style="width: 45px; height: 45px; flex-shrink: 0;">
+            <i class="bi bi-heart-pulse-fill fs-5" style="margin-top: 2px; margin-left: 1px;"></i>
+          </div>
+          <div>
+            <p class="text-success small mb-0 fw-bold text-uppercase" style="letter-spacing: 0.5px;">{{ 'Sick' | t }}</p>
+            <h4 class="mb-0 fw-bold text-dark">{{ sickLeaveBalance }} <span class="fs-6 fw-normal text-muted">{{ 'Days' | t }}</span></h4>
+          </div>
         </div>
-
-        
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm rounded-4 bg-success bg-opacity-10 position-relative overflow-hidden h-100">
-                <div class="position-absolute end-0 top-0 h-100 w-50" style="background: linear-gradient(90deg, transparent, rgba(25, 135, 84, 0.05)); z-index: 0;"></div>
-                <div class="card-body d-flex align-items-center p-3 position-relative" style="z-index: 1;">
-                    <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm me-3" style="width: 45px; height: 45px; flex-shrink: 0;">
-                        <i class="bi bi-heart-pulse-fill fs-5" style="margin-top: 2px; margin-left: 1px;"></i>
-                    </div>
-                    <div>
-                        <p class="text-success small mb-0 fw-bold text-uppercase" style="letter-spacing: 0.5px;">{{ 'Sick' | t }}</p>
-                        <h4 class="mb-0 fw-bold text-dark">{{ sickLeaveBalance }} <span class="fs-6 fw-normal text-muted">{{ 'Days' | t }}</span></h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm rounded-4 bg-danger bg-opacity-10 position-relative overflow-hidden h-100">
-                <div class="position-absolute end-0 top-0 h-100 w-50" style="background: linear-gradient(90deg, transparent, rgba(220, 53, 69, 0.05)); z-index: 0;"></div>
-                <div class="card-body d-flex align-items-center p-3 position-relative" style="z-index: 1;">
-                    <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm me-3" style="width: 45px; height: 45px; flex-shrink: 0;">
-                        <i class="bi bi-exclamation-triangle-fill fs-5"></i>
-                    </div>
-                    <div>
-                        <p class="text-danger small mb-0 fw-bold text-uppercase" style="letter-spacing: 0.5px;">{{ 'Emergency' | t }}</p>
-                        <h4 class="mb-0 fw-bold text-dark">{{ emergencyLeaveBalance }} <span class="fs-6 fw-normal text-muted">{{ 'Days' | t }}</span></h4>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0 text-nowrap">
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-4 bg-danger bg-opacity-10 position-relative overflow-hidden h-100">
+        <div class="position-absolute end-0 top-0 h-100 w-50" style="background: linear-gradient(90deg, transparent, rgba(220, 53, 69, 0.05)); z-index: 0;"></div>
+        <div class="card-body d-flex align-items-center p-3 position-relative" style="z-index: 1;">
+          <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm me-3" style="width: 45px; height: 45px; flex-shrink: 0;">
+            <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+          </div>
+          <div>
+            <p class="text-danger small mb-0 fw-bold text-uppercase" style="letter-spacing: 0.5px;">{{ 'Emergency' | t }}</p>
+            <h4 class="mb-0 fw-bold text-dark">{{ emergencyLeaveBalance }} <span class="fs-6 fw-normal text-muted">{{ 'Days' | t }}</span></h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-                <thead class="bg-light text-muted small text-uppercase"
-                    style="letter-spacing: 0.5px;">
-                    <tr>
-                        <th *ngIf="isAdminOrHR" class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Employee' | t }}</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Leave Type' | t }}</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Duration' | t }}</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Reason' | t }}</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold text-center">{{ 'Status' | t }}</th>
-                        <th *ngIf="isAdminOrHR"
-                            class="py-3 px-4 border-bottom-0 fw-semibold text-end">{{ 'Actions' | t }}</th>
-                    </tr>
-                </thead>
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0 text-nowrap">
+        <thead class="bg-light text-muted small text-uppercase" style="letter-spacing: 0.5px;">
+          <tr>
+            <th *ngIf="isAdminOrHR" class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Employee' | t }}</th>
+            <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Leave Type' | t }}</th>
+            <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Duration' | t }}</th>
+            <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Reason' | t }}</th>
+            <th class="py-3 px-4 border-bottom-0 fw-semibold text-center">{{ 'Status' | t }}</th>
+            <th *ngIf="isAdminOrHR" class="py-3 px-4 border-bottom-0 fw-semibold text-end">{{ 'Actions' | t }}</th>
+          </tr>
+        </thead>
 
-                <tbody class="border-top-0">
+        <tbody class="border-top-0">
+          <tr *ngIf="isLoading">
+            <td [colSpan]="isAdminOrHR ? 6 : 5" class="text-center py-5 text-muted no-data-td">
+              <span class="spinner-border spinner-border-sm me-2"></span>
+              {{ 'Loading requests...' | t }}
+            </td>
+          </tr>
 
-                    <tr *ngIf="isLoading">
-                        <td [colSpan]="isAdminOrHR ? 6 : 5" class="text-center py-5 text-muted no-data-td">
-                            <span
-                                class="spinner-border spinner-border-sm me-2"></span>
-                            {{ 'Loading requests...' | t }}
-                        </td>
-                    </tr>
+          <tr *ngIf="!isLoading && leavesList.length === 0">
+            <td [colSpan]="isAdminOrHR ? 7 : 6" class="text-center py-5 no-data-td">
+              <div class="d-flex flex-column align-items-center">
+                <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                  <i class="bi bi-airplane-engines text-secondary fs-1"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-1">{{ 'No Leave Requests' | t }}</h5>
+                <p class="text-muted small mb-0">{{ 'No leave data available matching your search criteria.' | t }}</p>
+              </div>
+            </td>
+          </tr>
 
-                    <tr *ngIf="!isLoading && leavesList.length === 0">
-                        <td [colSpan]="isAdminOrHR ? 7 : 6" class="text-center py-5 no-data-td">
-                            <div class="d-flex flex-column align-items-center">
-                                <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                                    <i class="bi bi-airplane-engines text-secondary fs-1"></i>
-                                </div>
-                                <h5 class="fw-bold text-dark mb-1">{{ 'No Leave Requests' | t }}</h5>
-                                <p class="text-muted small mb-0">{{ 'No leave data available matching your search criteria.' | t }}</p>
-                            </div>
-                        </td>
-                    </tr>
+          <tr *ngFor="let leave of paginatedLeaves">
+            <td *ngIf="isAdminOrHR" data-label="Employee" class="py-3 px-3">
+              <div class="d-flex align-items-center">
+                <ng-container *ngIf="leave.employeeProfilePictureUrl; else noLeavePic">
+                  <img [src]="leave.employeeProfilePictureUrl" alt="User" class="rounded-circle me-2 object-fit-cover shadow-sm" style="width: 32px; height: 32px; border: 2px solid #fff;" />
+                </ng-container>
+                <ng-template #noLeavePic>
+                  <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 13px;">{{ leave.employeeName ? leave.employeeName.charAt(0).toUpperCase() : 'U' }}</div>
+                </ng-template>
+                <span class="fw-semibold text-dark">{{ leave.employeeName }}</span>
+              </div>
+            </td>
+            <td data-label="Leave Type" class="py-3 px-4 fw-bold text-dark">
+              <div class="d-flex align-items-center">
+                <div class="rounded-circle p-2 me-3 bg-secondary bg-opacity-10 text-secondary d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                  <i class="bi bi-journal-text"></i>
+                </div>
+                {{ getLeaveTypeText(leave.leaveType) }}
+              </div>
+            </td>
 
-                    <tr *ngFor="let leave of paginatedLeaves">
-                        <td *ngIf="isAdminOrHR" data-label="Employee" class="py-3 px-3">
-                            <div class="d-flex align-items-center">
-                                <ng-container *ngIf="leave.employeeProfilePictureUrl; else noLeavePic">
-                                    <img [src]="leave.employeeProfilePictureUrl" alt="User" class="rounded-circle me-2 object-fit-cover shadow-sm" style="width: 32px; height: 32px; border: 2px solid #fff;">
-                                </ng-container>
-                                <ng-template #noLeavePic>
-                                    <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center"
-                                        style="width: 32px; height: 32px; font-size: 13px;">
-                                        {{ leave.employeeName ? leave.employeeName.charAt(0).toUpperCase() : 'U' }}
-                                    </div>
-                                </ng-template>
-                                <span class="fw-semibold text-dark">{{ leave.employeeName }}</span>
-                            </div>
-                        </td>
-                        <td data-label="Leave Type" class="py-3 px-4 fw-bold text-dark">
-                            <div class="d-flex align-items-center">
-                                <div
-                                    class="rounded-circle p-2 me-3 bg-secondary bg-opacity-10 text-secondary d-flex align-items-center justify-content-center"
-                                    style="width: 35px; height: 35px;">
-                                    <i class="bi bi-journal-text"></i>
-                                </div>
-                                {{ getLeaveTypeText(leave.leaveType) }}
-                            </div>
-                        </td>
+            <td data-label="Duration" class="py-3 px-4">
+              <div class="fw-medium text-dark">{{ leave.startDate | date:'MMM dd' }} <i class="bi bi-arrow-right text-muted mx-1"></i> {{ leave.endDate | date:'MMM dd, yyyy' }}</div>
+            </td>
 
-                        <td data-label="Duration" class="py-3 px-4">
-                            <div class="fw-medium text-dark">{{ leave.startDate
-                                | date:'MMM dd' }} <i
-                                    class="bi bi-arrow-right text-muted mx-1"></i>
-                                {{ leave.endDate | date:'MMM dd, yyyy' }}</div>
-                        </td>
+            <td data-label="Reason" class="py-3 px-4 text-secondary">
+              <div class="d-flex align-items-center gap-2">
+                <span class="d-inline-block text-truncate" style="max-width: 150px;" [title]="leave.reason"> {{ leave.reason || ('No reason provided' | t) }} </span>
+                <button *ngIf="leave.reason" class="btn btn-sm btn-link text-primary p-0 m-0 border-0" (click)="showReason(leave.reason)" title="View Full Reason">
+                  <i class="bi bi-chat-text-fill"></i>
+                </button>
+                <a *ngIf="leave.attachmentUrl" [href]="leave.attachmentUrl" target="_blank" class="btn btn-sm btn-link text-success p-0 m-0 border-0 ms-1" title="View Attachment">
+                  <i class="bi bi-paperclip fs-5"></i>
+                </a>
+              </div>
+            </td>
 
-                        <td data-label="Reason" class="py-3 px-4 text-secondary">
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="d-inline-block text-truncate"
-                                    style="max-width: 150px;"
-                                    [title]="leave.reason">
-                                    {{ leave.reason || ('No reason provided' | t) }}
-                                </span>
-                                <button *ngIf="leave.reason" class="btn btn-sm btn-link text-primary p-0 m-0 border-0" (click)="showReason(leave.reason)" title="View Full Reason">
-                                    <i class="bi bi-chat-text-fill"></i>
-                                </button>
-                                <a *ngIf="leave.attachmentUrl" [href]="leave.attachmentUrl" target="_blank" class="btn btn-sm btn-link text-success p-0 m-0 border-0 ms-1" title="View Attachment">
-                                    <i class="bi bi-paperclip fs-5"></i>
-                                </a>
-                            </div>
-                        </td>
-
-                        <td data-label="Status" class="py-3 px-4 text-center">
-                            <span class="status-badge"
-                                [ngClass]="{
+            <td data-label="Status" class="py-3 px-4 text-center">
+              <span
+                class="status-badge"
+                [ngClass]="{
                                   'status-approved': getStatusText(leave.status) === 'Approved',
                                   'status-pending': getStatusText(leave.status) === 'Pending',
                                   'status-rejected': getStatusText(leave.status) === 'Rejected'
-                                }">
-                                <i class="bi me-1"
-                                    [ngClass]="{
+                                }"
+              >
+                <i
+                  class="bi me-1"
+                  [ngClass]="{
          'bi-check-circle-fill': getStatusText(leave.status) === 'Approved',
          'bi-hourglass-split': getStatusText(leave.status) === 'Pending',
          'bi-x-circle-fill': getStatusText(leave.status) === 'Rejected'
-       }"></i>
-                                {{ getStatusText(leave.status) }}
-                            </span>
-                            <div *ngIf="getStatusText(leave.status) === 'Rejected' && leave.rejectionReason"
-                                class="mt-2 text-center">
-                                <button class="btn btn-light text-danger rounded-circle shadow-sm p-0"
-                                    (click)="showRejectionReason(leave.rejectionReason)"
-                                    title="View Rejection Reason"
-                                    style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;">
-                                    <i class="bi bi-chat-left-text-fill" style="font-size: 14px;"></i>
-                                </button>
-                            </div>
-                        </td>
+       }"
+                ></i>
+                {{ getStatusText(leave.status) }}
+              </span>
+              <div *ngIf="getStatusText(leave.status) === 'Rejected' && leave.rejectionReason" class="mt-2 text-center">
+                <button class="btn btn-light text-danger rounded-circle shadow-sm p-0" (click)="showRejectionReason(leave.rejectionReason)" title="View Rejection Reason" style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;">
+                  <i class="bi bi-chat-left-text-fill" style="font-size: 14px;"></i>
+                </button>
+              </div>
+            </td>
 
-                        <td *ngIf="isAdminOrHR" data-label="Actions" class="py-3 px-4 text-end actions-cell">
-                            <div
-                                *ngIf="getStatusText(leave.status) === 'Pending'"
-                                class="d-flex justify-content-end gap-2">
-                                <button
-                                    class="btn btn-sm btn-success rounded-3 shadow-sm px-3"
-                                    (click)="changeStatus(leave.id, 1)">
-                                    {{ 'Approve' | t }}
-                                </button>
-                                <button
-                                    class="btn btn-sm btn-outline-danger rounded-3 px-3"
-                                    (click)="changeStatus(leave.id, 2)">
-                                    {{ 'Reject' | t }}
-                                </button>
-                            </div>
-                            <span
-                                *ngIf="getStatusText(leave.status) !== 'Pending'"
-                                class="text-muted small">{{ 'Processed' | t }}</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        
-        <div *ngIf="leavesList.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <small class="text-muted fw-medium">
-                {{ 'Showing' | t }} {{ (currentPage - 1) * itemsPerPage + 1 }} {{ 'to' | t }} {{ getMathMin(currentPage * itemsPerPage, leavesList.length) }} {{ 'of' | t }} {{ leavesList.length }} {{ 'entries' | t }}
-            </small>
-            <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
-                <li class="page-item" [class.disabled]="currentPage === 1">
-                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">{{ 'Previous' | t }}</a>
-                </li>
-                <li class="page-item active">
-                    <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
-                </li>
-                <li class="page-item" [class.disabled]="currentPage === totalPages">
-                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">{{ 'Next' | t }}</a>
-                </li>
-            </ul>
-        </div>
+            <td *ngIf="isAdminOrHR" data-label="Actions" class="py-3 px-4 text-end actions-cell">
+              <div *ngIf="getStatusText(leave.status) === 'Pending'" class="d-flex justify-content-end gap-2">
+                <button class="btn btn-sm btn-success rounded-3 shadow-sm px-3" (click)="changeStatus(leave.id, 1)">{{ 'Approve' | t }}</button>
+                <button class="btn btn-sm btn-outline-danger rounded-3 px-3" (click)="changeStatus(leave.id, 2)">{{ 'Reject' | t }}</button>
+              </div>
+              <span *ngIf="getStatusText(leave.status) !== 'Pending'" class="text-muted small">{{ 'Processed' | t }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+
+    <div *ngIf="leavesList.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+      <small class="text-muted fw-medium"> {{ 'Showing' | t }} {{ (currentPage - 1) * itemsPerPage + 1 }} {{ 'to' | t }} {{ getMathMin(currentPage * itemsPerPage, leavesList.length) }} {{ 'of' | t }} {{ leavesList.length }} {{ 'entries' | t }} </small>
+      <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">{{ 'Previous' | t }}</a>
+        </li>
+        <li class="page-item active">
+          <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">{{ 'Next' | t }}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>
 
 <div class="modal fade" id="leaveModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow rounded-4">
-            <div class="modal-header border-bottom-0 pt-4 px-4">
-                <h5 class="modal-title fw-bold text-dark"><i
-                        class="bi bi-send-plus text-primary me-2"></i>New Leave
-                    Request</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow rounded-4">
+      <div class="modal-header border-bottom-0 pt-4 px-4">
+        <h5 class="modal-title fw-bold text-dark"><i class="bi bi-send-plus text-primary me-2"></i>New Leave Request</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form #leaveForm="ngForm">
+          <div class="mb-4">
+            <label class="form-label fw-semibold text-secondary small">Leave Type *</label>
+            <select class="form-select bg-light border-0" name="leaveType" [(ngModel)]="leaveData.leaveType" required>
+              <option *ngFor="let type of leaveTypes" [value]="type.id">{{ type.name }}</option>
+            </select>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-6">
+              <label class="form-label fw-semibold text-secondary small">Start Date *</label>
+              <input type="date" class="form-control bg-light border-0" name="startDate" [(ngModel)]="leaveData.startDate" [min]="getToday()" required />
             </div>
-            <div class="modal-body p-4">
-                <form #leaveForm="ngForm">
-
-                    <div class="mb-4">
-                        <label
-                            class="form-label fw-semibold text-secondary small">Leave
-                            Type *</label>
-                        <select class="form-select bg-light border-0"
-                            name="leaveType" [(ngModel)]="leaveData.leaveType"
-                            required>
-                            <option *ngFor="let type of leaveTypes"
-                                [value]="type.id">{{ type.name }}</option>
-                        </select>
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="col-6">
-                            <label
-                                class="form-label fw-semibold text-secondary small">Start
-                                Date *</label>
-                            <input type="date"
-                                class="form-control bg-light border-0"
-                                name="startDate"
-                                [(ngModel)]="leaveData.startDate"
-                                [min]="getToday()" required>
-                        </div>
-                        <div class="col-6">
-                            <label
-                                class="form-label fw-semibold text-secondary small">End
-                                Date *</label>
-                            <input type="date"
-                                class="form-control bg-light border-0"
-                                name="endDate" [(ngModel)]="leaveData.endDate"
-                                [min]="leaveData.startDate || getToday()" required>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label
-                            class="form-label fw-semibold text-secondary small">Reason
-                            *</label>
-                        <textarea class="form-control bg-light border-0"
-                            name="reason" [(ngModel)]="leaveData.reason"
-                            rows="3" required
-                            placeholder="Explain why you need this leave..."></textarea>
-                    </div>
-
-                    <div class="mb-2">
-                        <label class="form-label fw-semibold text-secondary small">Medical Excuse / Attachment (Optional)</label>
-                        <input type="file" class="form-control bg-light border-0" (change)="onFileSelected($event)" accept="image/*,.pdf">
-                    </div>
-
-                </form>
+            <div class="col-6">
+              <label class="form-label fw-semibold text-secondary small">End Date *</label>
+              <input type="date" class="form-control bg-light border-0" name="endDate" [(ngModel)]="leaveData.endDate" [min]="leaveData.startDate || getToday()" required />
             </div>
-            <div class="modal-footer border-top-0 pb-4 px-4">
-                <button type="button"
-                    class="btn btn-light px-4 rounded-3 fw-semibold"
-                    data-bs-dismiss="modal">Cancel</button>
-                <button type="button"
-                    class="btn btn-primary px-4 rounded-3 fw-semibold"
-                    (click)="submitLeaveRequest()"
-                    [disabled]="leaveForm.invalid || isProcessing">
-                    <span *ngIf="isProcessing"
-                        class="spinner-border spinner-border-sm me-2"></span>
-                    Submit Request
-                </button>
-            </div>
-        </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-secondary small">Reason *</label>
+            <textarea class="form-control bg-light border-0" name="reason" [(ngModel)]="leaveData.reason" rows="3" required placeholder="Explain why you need this leave..."></textarea>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label fw-semibold text-secondary small">Medical Excuse / Attachment (Optional)</label>
+            <input type="file" class="form-control bg-light border-0" (change)="onFileSelected($event)" accept="image/*,.pdf" />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer border-top-0 pb-4 px-4">
+        <button type="button" class="btn btn-light px-4 rounded-3 fw-semibold" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary px-4 rounded-3 fw-semibold" (click)="submitLeaveRequest()" [disabled]="leaveForm.invalid || isProcessing">
+          <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2"></span>
+          Submit Request
+        </button>
+      </div>
     </div>
+  </div>
 </div>
-
 
 <div class="modal fade" id="settingsModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow rounded-4">
-            <div class="modal-header border-bottom-0 pt-4 px-4 bg-light">
-                <h5 class="modal-title fw-bold text-dark"><i class="bi bi-gear-fill text-dark me-2"></i>{{ 'Leave Automated Reset Settings' | t }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow rounded-4">
+      <div class="modal-header border-bottom-0 pt-4 px-4 bg-light">
+        <h5 class="modal-title fw-bold text-dark"><i class="bi bi-gear-fill text-dark me-2"></i>{{ 'Leave Automated Reset Settings' | t }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form #settingsForm="ngForm">
+          <h6 class="fw-bold text-primary mb-3">{{ 'Reset Date Schedule' | t }}</h6>
+          <div class="row mb-4">
+            <div class="col-6">
+              <label class="form-label fw-semibold text-secondary small">{{ 'Reset Month' | t }} *</label>
+              <input type="number" class="form-control bg-light border-0" name="resetMonth" [(ngModel)]="leaveSettings.resetMonth" required min="1" max="12" [disabled]="!isAdmin" />
             </div>
-            <div class="modal-body p-4">
-                
-                <div class="alert alert-info border-0 shadow-sm rounded-3 d-flex align-items-center mb-4">
-                    <i class="bi bi-info-circle-fill fs-4 me-3"></i>
-                    <p class="mb-0 small">
-                        {{ 'These settings control the background system that automatically resets all employees\' leave balances. It runs daily and triggers only on the configured Month and Day.' | t }}
-                    </p>
-                </div>
-
-                <form #settingsForm="ngForm">
-                    <h6 class="fw-bold text-primary mb-3">{{ 'Reset Date Schedule' | t }}</h6>
-                    <div class="row mb-4">
-                        <div class="col-6">
-                            <label class="form-label fw-semibold text-secondary small">{{ 'Reset Month' | t }} *</label>
-                            <input type="number" class="form-control bg-light border-0" name="resetMonth" [(ngModel)]="leaveSettings.resetMonth" required min="1" max="12" [disabled]="!isAdmin">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label fw-semibold text-secondary small">{{ 'Reset Day' | t }} *</label>
-                            <input type="number" class="form-control bg-light border-0" name="resetDay" [(ngModel)]="leaveSettings.resetDay" required min="1" max="31" [disabled]="!isAdmin">
-                        </div>
-                    </div>
-
-                    <h6 class="fw-bold text-success mb-3">{{ 'Default Balances (Days)' | t }}</h6>
-                    <div class="row mb-3">
-                        <div class="col-4">
-                            <label class="form-label fw-semibold text-secondary small">{{ 'Annual' | t }} *</label>
-                            <input type="number" class="form-control bg-light border-0" name="defaultAnnual" [(ngModel)]="leaveSettings.defaultAnnualLeave" required min="0" [disabled]="!isAdmin">
-                        </div>
-                        <div class="col-4">
-                            <label class="form-label fw-semibold text-secondary small">{{ 'Sick' | t }} *</label>
-                            <input type="number" class="form-control bg-light border-0" name="defaultSick" [(ngModel)]="leaveSettings.defaultSickLeave" required min="0" [disabled]="!isAdmin">
-                        </div>
-                        <div class="col-4">
-                            <label class="form-label fw-semibold text-secondary small">{{ 'Emergency' | t }} *</label>
-                            <input type="number" class="form-control bg-light border-0" name="defaultEmergency" [(ngModel)]="leaveSettings.defaultEmergencyLeave" required min="0" [disabled]="!isAdmin">
-                        </div>
-                    </div>
-
-                    <div class="mt-4 text-muted small" *ngIf="leaveSettings.lastResetDate">
-                        <i class="bi bi-clock-history me-1"></i> {{ 'Last automatic reset was on:' | t }} <strong>{{ leaveSettings.lastResetDate | date:'mediumDate' }}</strong>
-                    </div>
-
-                </form>
+            <div class="col-6">
+              <label class="form-label fw-semibold text-secondary small">{{ 'Reset Day' | t }} *</label>
+              <input type="number" class="form-control bg-light border-0" name="resetDay" [(ngModel)]="leaveSettings.resetDay" required min="1" max="31" [disabled]="!isAdmin" />
             </div>
-            <div class="modal-footer border-top-0 pb-4 px-4 bg-light">
-                <button type="button" class="btn btn-light px-4 rounded-3 fw-semibold border shadow-sm" data-bs-dismiss="modal">{{ 'Close' | t }}</button>
-                <button *ngIf="isAdmin" type="button" class="btn btn-primary px-4 rounded-3 fw-semibold shadow-sm" (click)="saveSettings()" [disabled]="settingsForm.invalid || isSavingSettings">
-                    <span *ngIf="isSavingSettings" class="spinner-border spinner-border-sm me-2"></span>
-                    {{ 'Save Settings' | t }}
-                </button>
+          </div>
+
+          <h6 class="fw-bold text-success mb-3">{{ 'Default Balances (Days)' | t }}</h6>
+          <div class="row mb-3">
+            <div class="col-4">
+              <label class="form-label fw-semibold text-secondary small">{{ 'Annual' | t }} *</label>
+              <input type="number" class="form-control bg-light border-0" name="defaultAnnual" [(ngModel)]="leaveSettings.defaultAnnualLeave" required min="0" [disabled]="!isAdmin" />
             </div>
-        </div>
+            <div class="col-4">
+              <label class="form-label fw-semibold text-secondary small">{{ 'Sick' | t }} *</label>
+              <input type="number" class="form-control bg-light border-0" name="defaultSick" [(ngModel)]="leaveSettings.defaultSickLeave" required min="0" [disabled]="!isAdmin" />
+            </div>
+            <div class="col-4">
+              <label class="form-label fw-semibold text-secondary small">{{ 'Emergency' | t }} *</label>
+              <input type="number" class="form-control bg-light border-0" name="defaultEmergency" [(ngModel)]="leaveSettings.defaultEmergencyLeave" required min="0" [disabled]="!isAdmin" />
+            </div>
+          </div>
+
+          <div class="mt-4 text-muted small" *ngIf="leaveSettings.lastResetDate"><i class="bi bi-clock-history me-1"></i> {{ 'Last automatic reset was on:' | t }} <strong>{{ leaveSettings.lastResetDate | date:'mediumDate' }}</strong></div>
+        </form>
+      </div>
+      <div class="modal-footer border-top-0 pb-4 px-4 bg-light">
+        <button type="button" class="btn btn-light px-4 rounded-3 fw-semibold border shadow-sm" data-bs-dismiss="modal">{{ 'Close' | t }}</button>
+        <button *ngIf="isAdmin" type="button" class="btn btn-primary px-4 rounded-3 fw-semibold shadow-sm" (click)="saveSettings()" [disabled]="settingsForm.invalid || isSavingSettings">
+          <span *ngIf="isSavingSettings" class="spinner-border spinner-border-sm me-2"></span>
+          {{ 'Save Settings' | t }}
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 
-<style>
-</style>
-
+<style></style>
 ```
 
 ### File: src\app\features\leave\leave.component.ts
+
 ```typescript
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { LeaveService } from '../../core/services/leave.service';
-import { LeaveSettingService, LeaveSetting } from '../../core/services/leave-setting.service';
-import { AuthService } from '../../core/services/auth.service';
-import Swal from 'sweetalert2';
-import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
-import { TranslatePipe } from '../../core/pipes/translate.pipe';
-import { ExcelExportService } from '../../core/services/excel-export.service';
-import { PdfExportService } from '../../core/services/pdf-export.service';
+import { Component, OnInit, inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { LeaveService } from "../../core/services/leave.service";
+import { LeaveSettingService, LeaveSetting } from "../../core/services/leave-setting.service";
+import { AuthService } from "../../core/services/auth.service";
+import Swal from "sweetalert2";
+import { getFriendlyErrorMessage } from "../../core/utils/error-handler.util";
+import { TranslatePipe } from "../../core/pipes/translate.pipe";
+import { ExcelExportService } from "../../core/services/excel-export.service";
+import { PdfExportService } from "../../core/services/pdf-export.service";
 
 declare var bootstrap: any;
 
 @Component({
-  selector: 'app-leave',
+  selector: "app-leave",
   standalone: true,
   imports: [CommonModule, FormsModule, TranslatePipe],
-  templateUrl: './leave.component.html',
+  templateUrl: "./leave.component.html",
 })
 export class LeaveComponent implements OnInit {
   private leaveService = inject(LeaveService);
@@ -8646,9 +7364,13 @@ export class LeaveComponent implements OnInit {
   allLeavesList: any[] = [];
   leavesList: any[] = [];
 
-  leaveSearchQuery: string = '';
-  selectedLeaveStatus: string = '';
-  selectedLeaveType: string = '';
+  leaveSearchQuery: string = "";
+  selectedLeaveStatus: string = "";
+  selectedLeaveType: string = "";
+  selectedMonth: string = "";
+  selectedYear: string = "";
+
+  uniqueYears: number[] = [];
 
   isLoading: boolean = true;
   isProcessing: boolean = false;
@@ -8666,7 +7388,7 @@ export class LeaveComponent implements OnInit {
     resetDay: 1,
     defaultAnnualLeave: 14,
     defaultSickLeave: 14,
-    defaultEmergencyLeave: 3
+    defaultEmergencyLeave: 3,
   };
   isSavingSettings: boolean = false;
   isAdmin: boolean = false;
@@ -8695,9 +7417,9 @@ export class LeaveComponent implements OnInit {
 
   leaveData = {
     leaveType: 0,
-    startDate: '',
-    endDate: '',
-    reason: '',
+    startDate: "",
+    endDate: "",
+    reason: "",
   };
 
   selectedFile: File | null = null;
@@ -8710,10 +7432,10 @@ export class LeaveComponent implements OnInit {
   }
 
   leaveTypes = [
-    { id: 0, name: 'Annual' },
-    { id: 1, name: 'Sick' },
-    { id: 2, name: 'Emergency' },
-    { id: 3, name: 'Unpaid' },
+    { id: 0, name: "Annual" },
+    { id: 1, name: "Sick" },
+    { id: 2, name: "Emergency" },
+    { id: 3, name: "Unpaid" },
   ];
 
   ngOnInit() {
@@ -8733,15 +7455,13 @@ export class LeaveComponent implements OnInit {
           this.leaveSettings = res;
         }
       },
-      error: (err) => console.error('Failed to load leave settings', err)
+      error: (err) => console.error("Failed to load leave settings", err),
     });
   }
 
   openSettingsModal() {
     if (!this.settingsModal) {
-      this.settingsModal = new bootstrap.Modal(
-        document.getElementById('settingsModal')
-      );
+      this.settingsModal = new bootstrap.Modal(document.getElementById("settingsModal"));
     }
     this.settingsModal.show();
   }
@@ -8753,35 +7473,34 @@ export class LeaveComponent implements OnInit {
       next: () => {
         this.isSavingSettings = false;
         this.settingsModal.hide();
-        Swal.fire('Success', 'Leave settings updated successfully', 'success');
+        Swal.fire("Success", "Leave settings updated successfully", "success");
       },
       error: (err) => {
         this.isSavingSettings = false;
-        Swal.fire('Error', getFriendlyErrorMessage(err), 'error');
-      }
+        Swal.fire("Error", getFriendlyErrorMessage(err), "error");
+      },
     });
   }
 
   loadBalances() {
-    if (!this.isAdminOrHR) {
+    if (!this.isAdmin) {
       this.authService.getMe().subscribe({
         next: (res) => {
           this.annualLeaveBalance = res?.annualLeaveBalance ?? 0;
           this.sickLeaveBalance = res?.sickLeaveBalance ?? 0;
           this.emergencyLeaveBalance = res?.emergencyLeaveBalance ?? 0;
         },
-        error: (err) => console.error('Error fetching balances:', err)
+        error: (err) => console.error("Error fetching balances:", err),
       });
     }
   }
 
   loadLeaves() {
-
     this.isLoading = true;
+    const m = this.selectedMonth ? Number(this.selectedMonth) : undefined;
+    const y = this.selectedYear ? Number(this.selectedYear) : undefined;
 
-    const request = this.isAdminOrHR
-      ? this.leaveService.getAllLeaves()
-      : this.leaveService.getMyLeaves();
+    const request = this.isAdminOrHR ? this.leaveService.getAllLeaves(m, y) : this.leaveService.getMyLeaves(m, y);
 
     request.subscribe({
       next: (res: any) => {
@@ -8796,27 +7515,19 @@ export class LeaveComponent implements OnInit {
         }
 
         this.allLeavesList = extracted;
-        this.leavesList = [...this.allLeavesList];
 
-        if (this.isAdminOrHR && this.leavesList.length > 0) {
-          this.leavesList.sort((a, b) => {
-            const statusA = this.getStatusText(a.status);
-            const statusB = this.getStatusText(b.status);
-
-            if (statusA === 'Pending' && statusB !== 'Pending') return -1;
-            if (statusA !== 'Pending' && statusB === 'Pending') return 1;
-
-            return (
-              new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
-            );
-          });
+        if (!m && !y) {
+          const years = this.allLeavesList.map((s) => new Date(s.startDate).getFullYear()).filter((y) => !isNaN(y));
+          this.uniqueYears = Array.from(new Set(years)).sort().reverse() as number[];
         }
-        
-        
+
+        this.leavesList = [...this.allLeavesList];
+        this.filterLeavesLocal();
+
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching leaves:', err);
+        console.error("Error fetching leaves:", err);
         this.isLoading = false;
         this.leavesList = [];
       },
@@ -8824,30 +7535,27 @@ export class LeaveComponent implements OnInit {
   }
 
   filterLeaves() {
+    this.loadLeaves();
+  }
 
+  filterLeavesLocal() {
     this.leavesList = this.allLeavesList.filter((l) => {
       let matchesSearch = true;
       if (this.leaveSearchQuery) {
         const query = this.leaveSearchQuery.toLowerCase();
-        const empName = (l.employeeName || '').toLowerCase();
-        const empId = String(l.employeeId || '');
-        const reason = (l.reason || '').toLowerCase();
-        matchesSearch =
-          empName.includes(query) ||
-          empId.includes(query) ||
-          reason.includes(query);
+        const empName = (l.employeeName || "").toLowerCase();
+        const empId = String(l.employeeId || "");
+        const reason = (l.reason || "").toLowerCase();
+        matchesSearch = empName.includes(query) || empId.includes(query) || reason.includes(query);
       }
 
       let matchesStatus = true;
       if (this.selectedLeaveStatus) {
-        matchesStatus =
-          this.getStatusText(l.status).toLowerCase() ===
-          this.selectedLeaveStatus.toLowerCase();
+        matchesStatus = this.getStatusText(l.status).toLowerCase() === this.selectedLeaveStatus.toLowerCase();
       }
 
       let matchesType = true;
       if (this.selectedLeaveType) {
-
         const leaveTypeName = this.getLeaveTypeText(l.leaveType).toLowerCase();
         matchesType = leaveTypeName === this.selectedLeaveType.toLowerCase();
       }
@@ -8861,57 +7569,49 @@ export class LeaveComponent implements OnInit {
         if (this.isAdminOrHR) {
           const statusA = this.getStatusText(a.status);
           const statusB = this.getStatusText(b.status);
-          if (statusA === 'Pending' && statusB !== 'Pending') return -1;
-          if (statusA !== 'Pending' && statusB === 'Pending') return 1;
+          if (statusA === "Pending" && statusB !== "Pending") return -1;
+          if (statusA !== "Pending" && statusB === "Pending") return 1;
         }
-        return (
-          new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
-        );
+        return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
       });
     }
   }
 
   getStatusText(statusCode: any): string {
-
-    if (typeof statusCode === 'string' && isNaN(Number(statusCode))) {
+    if (typeof statusCode === "string" && isNaN(Number(statusCode))) {
       return statusCode;
     }
 
-    if (statusCode === 0 || statusCode === '0') return 'Pending';
-    if (statusCode === 1 || statusCode === '1') return 'Approved';
-    if (statusCode === 2 || statusCode === '2') return 'Rejected';
-    return statusCode?.toString() || 'Unknown';
+    if (statusCode === 0 || statusCode === "0") return "Pending";
+    if (statusCode === 1 || statusCode === "1") return "Approved";
+    if (statusCode === 2 || statusCode === "2") return "Rejected";
+    return statusCode?.toString() || "Unknown";
   }
 
   getLeaveTypeText(typeCode: any): string {
-
-    if (typeof typeCode === 'string' && isNaN(Number(typeCode))) {
-      const found = this.leaveTypes.find(
-        (t) => t.name.toLowerCase() === typeCode.toLowerCase(),
-      );
-      return found
-        ? found.name
-        : typeCode.charAt(0).toUpperCase() + typeCode.slice(1);
+    if (typeof typeCode === "string" && isNaN(Number(typeCode))) {
+      const found = this.leaveTypes.find((t) => t.name.toLowerCase() === typeCode.toLowerCase());
+      return found ? found.name : typeCode.charAt(0).toUpperCase() + typeCode.slice(1);
     }
 
     const type = this.leaveTypes.find((t) => t.id === Number(typeCode));
-    return type ? type.name : typeCode != null ? String(typeCode) : 'Unknown';
+    return type ? type.name : typeCode != null ? String(typeCode) : "Unknown";
   }
 
   showRejectionReason(reason: string) {
     Swal.fire({
-      icon: 'info',
-      title: 'Rejection Reason',
-      text: reason || 'No additional reason provided.',
-      confirmButtonText: 'Close',
-      confirmButtonColor: '#3085d6'
+      icon: "info",
+      title: "Rejection Reason",
+      text: reason || "No additional reason provided.",
+      confirmButtonText: "Close",
+      confirmButtonColor: "#3085d6",
     });
   }
 
   openModal() {
-    this.leaveData = { leaveType: 0, startDate: '', endDate: '', reason: '' };
+    this.leaveData = { leaveType: 0, startDate: "", endDate: "", reason: "" };
     this.selectedFile = null;
-    const modalEl = document.getElementById('leaveModal');
+    const modalEl = document.getElementById("leaveModal");
     if (modalEl) {
       let modalInstance = bootstrap.Modal.getInstance(modalEl);
       if (!modalInstance) {
@@ -8923,22 +7623,17 @@ export class LeaveComponent implements OnInit {
   }
 
   getToday(): string {
-    return new Date().toISOString().split('T')[0];
+    return new Date().toISOString().split("T")[0];
   }
 
   submitLeaveRequest() {
-
     if (this.leaveData.startDate < this.getToday()) {
-      Swal.fire('Invalid Date', 'Start Date cannot be in the past.', 'warning');
+      Swal.fire("Invalid Date", "Start Date cannot be in the past.", "warning");
       return;
     }
 
     if (this.leaveData.endDate < this.leaveData.startDate) {
-      Swal.fire(
-        'Invalid Date',
-        'End Date cannot be before the Start Date.',
-        'warning',
-      );
+      Swal.fire("Invalid Date", "End Date cannot be before the Start Date.", "warning");
       return;
     }
 
@@ -8947,41 +7642,36 @@ export class LeaveComponent implements OnInit {
     const diffTime = Math.abs(end.getTime() - start.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
-    
     const selectedType = Number(this.leaveData.leaveType);
     let availableBalance = 0;
-    let typeName = '';
+    let typeName = "";
 
     if (selectedType === 0) {
       availableBalance = this.annualLeaveBalance;
-      typeName = 'annual';
+      typeName = "annual";
     } else if (selectedType === 1) {
       availableBalance = this.sickLeaveBalance;
-      typeName = 'sick';
+      typeName = "sick";
     } else if (selectedType === 2) {
       availableBalance = this.emergencyLeaveBalance;
-      typeName = 'emergency';
+      typeName = "emergency";
     }
 
     if (selectedType !== 3 && diffDays > availableBalance) {
-      Swal.fire(
-        'Insufficient Balance', 
-        `You are requesting ${diffDays} days, but you only have ${availableBalance} ${typeName} leave days remaining.`, 
-        'warning'
-      );
+      Swal.fire("Insufficient Balance", `You are requesting ${diffDays} days, but you only have ${availableBalance} ${typeName} leave days remaining.`, "warning");
       return;
     }
 
     this.isProcessing = true;
-    
+
     const formData = new FormData();
-    formData.append('leaveType', this.leaveData.leaveType.toString());
-    formData.append('startDate', new Date(this.leaveData.startDate).toISOString());
-    formData.append('endDate', new Date(this.leaveData.endDate).toISOString());
-    formData.append('reason', this.leaveData.reason);
-    
+    formData.append("leaveType", this.leaveData.leaveType.toString());
+    formData.append("startDate", new Date(this.leaveData.startDate).toISOString());
+    formData.append("endDate", new Date(this.leaveData.endDate).toISOString());
+    formData.append("reason", this.leaveData.reason);
+
     if (this.selectedFile) {
-      formData.append('attachment', this.selectedFile);
+      formData.append("attachment", this.selectedFile);
     }
 
     this.leaveService.applyLeave(formData).subscribe({
@@ -8989,8 +7679,8 @@ export class LeaveComponent implements OnInit {
         this.isProcessing = false;
         this.leaveModal.hide();
         Swal.fire({
-          icon: 'success',
-          title: 'Success',
+          icon: "success",
+          title: "Success",
           showConfirmButton: false,
           timer: 1500,
         });
@@ -8998,33 +7688,25 @@ export class LeaveComponent implements OnInit {
       },
       error: (err) => {
         this.isProcessing = false;
-        Swal.fire(
-          'Error',
-          getFriendlyErrorMessage(
-            err,
-            'Failed to submit leave request. Please try again.',
-          ),
-          'warning',
-        );
+        Swal.fire("Error", getFriendlyErrorMessage(err, "Failed to submit leave request. Please try again."), "warning");
       },
     });
   }
 
   changeStatus(id: number, newStatusCode: number) {
-
     if (newStatusCode === 2) {
       Swal.fire({
-        title: 'Reject Leave Request',
-        text: 'Please provide a reason for rejection:',
-        input: 'textarea',
-        inputPlaceholder: 'Type your reason here...',
+        title: "Reject Leave Request",
+        text: "Please provide a reason for rejection:",
+        input: "textarea",
+        inputPlaceholder: "Type your reason here...",
         showCancelButton: true,
-        confirmButtonText: 'Reject',
-        cancelButtonText: 'Cancel',
-        confirmButtonColor: '#dc3545',
+        confirmButtonText: "Reject",
+        cancelButtonText: "Cancel",
+        confirmButtonColor: "#dc3545",
         inputValidator: (value) => {
-          if (!value || value.trim() === '') {
-            return 'You need to write a rejection reason!';
+          if (!value || value.trim() === "") {
+            return "You need to write a rejection reason!";
           }
           return null;
         },
@@ -9038,181 +7720,139 @@ export class LeaveComponent implements OnInit {
     }
   }
 
-  private executeStatusChange(
-    id: number,
-    newStatusCode: number,
-    rejectionReason?: string,
-  ) {
-    this.leaveService
-      .updateLeaveStatus(id, newStatusCode, rejectionReason)
-      .subscribe({
-        next: () => {
-          Swal.fire('Updated!', 'Status changed.', 'success');
-          this.loadLeaves();
-        },
-        error: (err) => {
-          console.error('Status update error:', err);
-          Swal.fire(
-            'Error!',
-            getFriendlyErrorMessage(
-              err,
-              'Failed to update leave status. Please try again.',
-            ),
-            'error',
-          );
-        },
-      });
+  private executeStatusChange(id: number, newStatusCode: number, rejectionReason?: string) {
+    this.leaveService.updateLeaveStatus(id, newStatusCode, rejectionReason).subscribe({
+      next: () => {
+        Swal.fire("Updated!", "Status changed.", "success");
+        this.loadLeaves();
+      },
+      error: (err) => {
+        console.error("Status update error:", err);
+        Swal.fire("Error!", getFriendlyErrorMessage(err, "Failed to update leave status. Please try again."), "error");
+      },
+    });
   }
 
   showReason(reason: string) {
     if (!reason) return;
     Swal.fire({
-      title: 'Leave Reason',
+      title: "Leave Reason",
       text: reason,
-      icon: 'info',
-      confirmButtonText: 'Close',
-      confirmButtonColor: '#0d6efd'
+      icon: "info",
+      confirmButtonText: "Close",
+      confirmButtonColor: "#0d6efd",
     });
   }
 
   exportToExcel() {
     this.excelExportService.exportTableToExcel(
-      ['Employee', 'Type', 'Start Date', 'End Date', 'Days', 'Status'],
-      this.leavesList.map(l => [
-        l.employeeName || `Emp #${l.employeeId}`,
-        this.getLeaveTypeText(l.leaveType),
-        new Date(l.startDate).toLocaleDateString(),
-        new Date(l.endDate).toLocaleDateString(),
-        l.totalDays || 0,
-        this.getStatusText(l.status)
-      ]),
-      'Leave_Records'
+      ["Employee", "Type", "Start Date", "End Date", "Days", "Status"],
+      this.leavesList.map((l) => [l.employeeName || `Emp #${l.employeeId}`, this.getLeaveTypeText(l.leaveType), new Date(l.startDate).toLocaleDateString(), new Date(l.endDate).toLocaleDateString(), l.totalDays || 0, this.getStatusText(l.status)]),
+      "Leave_Records",
     );
   }
 
   exportToPDF() {
-    const headers = ['Employee', 'Type', 'Start Date', 'End Date', 'Days', 'Status'];
-    
-    const rows = this.leavesList.map(l => [
-      l.employeeName || `Emp #${l.employeeId}`,
-      this.getLeaveTypeText(l.leaveType),
-      new Date(l.startDate).toLocaleDateString(),
-      new Date(l.endDate).toLocaleDateString(),
-      l.totalDays || 0,
-      this.getStatusText(l.status)
-    ]);
-    
-    this.pdfExportService.generateTableReport('Leave Records Report', headers, rows, 'Leave_Records');
+    const headers = ["Employee", "Type", "Start Date", "End Date", "Days", "Status"];
+
+    const rows = this.leavesList.map((l) => [l.employeeName || `Emp #${l.employeeId}`, this.getLeaveTypeText(l.leaveType), new Date(l.startDate).toLocaleDateString(), new Date(l.endDate).toLocaleDateString(), l.totalDays || 0, this.getStatusText(l.status)]);
+
+    this.pdfExportService.generateTableReport("Leave Records Report", headers, rows, "Leave_Records");
   }
 }
-
 ```
 
 ### File: src\app\features\leave-form\leave-form.component.html
+
 ```html
 <div class="container mt-4" style="max-width: 600px;">
-    <div class="card shadow-sm border-0 rounded-3">
-        <div class="card-header bg-white border-0 pt-4 pb-0 px-4">
-            <h3 class="fw-bold text-secondary mb-0">Apply for Leave</h3>
-        </div>
-
-        <div class="card-body p-4">
-            <form [formGroup]="leaveForm" (ngSubmit)="onSubmit()">
-
-                <div class="mb-3">
-                    <label class="form-label fw-bold text-muted small">Leave
-                        Type</label>
-                    <select class="form-select bg-light" formControlName="leaveType">
-                        <option value="" disabled selected>Select Leave
-                            Type</option>
-                        
-                        <option value="0">Annual</option>
-                        <option value="1">Sick</option>
-                        <option value="2">Emergency</option>
-                        <option value="3">Unpaid</option>
-                    </select>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold text-muted small">Start
-                            Date</label>
-                        <input type="date" class="form-control bg-light" formControlName="startDate">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold text-muted small">End
-                            Date</label>
-                        <input type="date" class="form-control bg-light" formControlName="endDate">
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label fw-bold text-muted small">Reason</label>
-                    <textarea class="form-control bg-light" formControlName="reason" rows="3"
-                        placeholder="Explain your reason..."></textarea>
-                </div>
-
-                <div class="d-flex justify-content-end gap-2">
-                    <a routerLink="/leave" class="btn btn-light px-4 fw-bold text-muted">Cancel</a>
-                    <button type="submit" class="btn btn-primary px-5 fw-bold" [disabled]="isLoading">
-                        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
-                        {{ isLoading ? loadingMessage : 'Submit Request' }}
-                    </button>
-                </div>
-
-            </form>
-        </div>
+  <div class="card shadow-sm border-0 rounded-3">
+    <div class="card-header bg-white border-0 pt-4 pb-0 px-4">
+      <h3 class="fw-bold text-secondary mb-0">Apply for Leave</h3>
     </div>
+
+    <div class="card-body p-4">
+      <form [formGroup]="leaveForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label class="form-label fw-bold text-muted small">Leave Type</label>
+          <select class="form-select bg-light" formControlName="leaveType">
+            <option value="" disabled selected>Select Leave Type</option>
+
+            <option value="0">Annual</option>
+            <option value="1">Sick</option>
+            <option value="2">Emergency</option>
+            <option value="3">Unpaid</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold text-muted small">Start Date</label>
+            <input type="date" class="form-control bg-light" formControlName="startDate" />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold text-muted small">End Date</label>
+            <input type="date" class="form-control bg-light" formControlName="endDate" />
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-bold text-muted small">Reason</label>
+          <textarea class="form-control bg-light" formControlName="reason" rows="3" placeholder="Explain your reason..."></textarea>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+          <a routerLink="/leave" class="btn btn-light px-4 fw-bold text-muted">Cancel</a>
+          <button type="submit" class="btn btn-primary px-5 fw-bold" [disabled]="isLoading">
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+            {{ isLoading ? loadingMessage : 'Submit Request' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 ```
 
 ### File: src\app\features\leave-form\leave-form.component.ts
+
 ```typescript
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  ReactiveFormsModule,
-  FormGroup,
-  FormControl,
-  Validators,
-} from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { LeaveService } from '../../core/services/leave.service';
-import Swal from 'sweetalert2';
+import { Component, inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { ReactiveFormsModule, FormGroup, FormControl, Validators } from "@angular/forms";
+import { Router, RouterLink } from "@angular/router";
+import { LeaveService } from "../../core/services/leave.service";
+import Swal from "sweetalert2";
 
 @Component({
-  selector: 'app-leave-form',
+  selector: "app-leave-form",
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
-  templateUrl: './leave-form.component.html',
+  templateUrl: "./leave-form.component.html",
 })
 export class LeaveFormComponent {
   private leaveService = inject(LeaveService);
   private router = inject(Router);
 
   isLoading = false;
-  loadingMessage = 'Submitting...';
+  loadingMessage = "Submitting...";
   private slowWarningTimer: any;
 
   leaveForm = new FormGroup({
-    leaveType: new FormControl('', Validators.required),
-    startDate: new FormControl('', Validators.required),
-    endDate: new FormControl('', Validators.required),
-    reason: new FormControl('', [
-      Validators.required,
-      Validators.minLength(5),
-      Validators.maxLength(500),
-    ]),
+    leaveType: new FormControl("", Validators.required),
+    startDate: new FormControl("", Validators.required),
+    endDate: new FormControl("", Validators.required),
+    reason: new FormControl("", [Validators.required, Validators.minLength(5), Validators.maxLength(500)]),
   });
 
   onSubmit() {
     if (this.leaveForm.invalid) {
       this.leaveForm.markAllAsTouched();
       Swal.fire({
-        icon: 'warning',
-        title: 'Validation Error',
-        text: 'Please fill all required fields. Note: Reason must be at least 5 characters long.',
-        confirmButtonColor: '#0d6efd',
+        icon: "warning",
+        title: "Validation Error",
+        text: "Please fill all required fields. Note: Reason must be at least 5 characters long.",
+        confirmButtonColor: "#0d6efd",
       });
       return;
     }
@@ -9221,7 +7861,6 @@ export class LeaveFormComponent {
     const formValue = this.leaveForm.value;
 
     const newLeave = {
-
       leaveType: Number(formValue.leaveType),
       startDate: new Date(formValue.startDate!).toISOString(),
       endDate: new Date(formValue.endDate!).toISOString(),
@@ -9229,302 +7868,262 @@ export class LeaveFormComponent {
     };
 
     this.slowWarningTimer = setTimeout(() => {
-      this.loadingMessage = 'Server is starting up, please wait a moment...';
+      this.loadingMessage = "Server is starting up, please wait a moment...";
     }, 6000);
 
     this.leaveService.applyLeave(newLeave).subscribe({
       next: (res) => {
         clearTimeout(this.slowWarningTimer);
         this.isLoading = false;
-        Swal.fire({ icon: 'success', title: 'Done!', text: 'Leave request submitted successfully.', timer: 2000, showConfirmButton: false });
-        this.router.navigate(['/leave']);
+        Swal.fire({ icon: "success", title: "Done!", text: "Leave request submitted successfully.", timer: 2000, showConfirmButton: false });
+        this.router.navigate(["/leave"]);
       },
       error: (err) => {
         clearTimeout(this.slowWarningTimer);
         this.isLoading = false;
-        Swal.fire('Error', 'Could not submit leave request. Please try again.', 'error');
+        Swal.fire("Error", "Could not submit leave request. Please try again.", "error");
       },
     });
   }
 }
-
 ```
 
 ### File: src\app\features\meetings\meetings.component.html
+
 ```html
 <div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div class="d-flex align-items-center">
-            <div class="icon-box bg-secondary bg-opacity-10 text-secondary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
-                <i class="bi bi-calendar-event fs-4"></i>
-            </div>
-            <div>
-                <h2 class="fw-bold text-dark mb-1 h3">{{ 'Meetings & Interviews' | t }}</h2>
-                <p class="text-muted small mb-0">{{ 'Manage schedules and appointments' | t }}</p>
-            </div>
-        </div>
-        <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
-                    <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> 
-                    <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
-                </button>
-                <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
-                    <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i> 
-                    <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
-                </button>
-            </div>
-            <button *ngIf="isHrOrAdmin" class="btn btn-primary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="openAddModal()">
-                <i class="bi bi-plus-lg" [class.me-md-1]="true"></i> 
-                <span class="d-none d-md-inline">{{ 'Schedule Meeting' | t }}</span>
-            </button>
-        </div>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex align-items-center">
+      <div class="icon-box bg-secondary bg-opacity-10 text-secondary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+        <i class="bi bi-calendar-event fs-4"></i>
+      </div>
+      <div>
+        <h2 class="fw-bold text-dark mb-1 h3">{{ 'Meetings & Interviews' | t }}</h2>
+        <p class="text-muted small mb-0">{{ 'Manage schedules and appointments' | t }}</p>
+      </div>
     </div>
+    <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
+          <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i>
+          <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
+        </button>
+        <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
+          <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i>
+          <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
+        </button>
+      </div>
+      <button *ngIf="isHrOrAdmin" class="btn btn-primary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="openAddModal()">
+        <i class="bi bi-plus-lg" [class.me-md-1]="true"></i>
+        <span class="d-none d-md-inline">{{ 'Schedule Meeting' | t }}</span>
+      </button>
+    </div>
+  </div>
 
-    
-    <div class="card shadow-sm border-0 rounded-4">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="bg-light text-muted small text-uppercase">
-                        <tr>
-                            <th class="ps-4">{{ 'Title' | t }}</th>
-                            <th>{{ 'Organizer' | t }}</th>
-                            <th>{{ 'Employee' | t }}</th>
-                            <th>{{ 'Date & Time' | t }}</th>
-                            <th>{{ 'Status' | t }}</th>
-                            <th class="text-end pe-4">{{ 'Actions' | t }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (isLoading) {
-                        <tr>
-                            <td colspan="6" class="text-center py-5">
-                                <div class="spinner-border text-dark" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                            </td>
-                        </tr>
-                        } @else {
-                        @for (meeting of meetings; track meeting.id) {
-                        <tr>
-                            <td class="ps-4">
-                                <div class="fw-bold text-dark">{{ meeting.title }}</div>
-                                <div class="small text-muted text-truncate" style="max-width: 250px;">{{ meeting.reason || meeting.notes }}</div>
-                            </td>
-                            <td>
-                                <span class="fw-medium text-dark">{{ meeting.organizerName || 'System' }}</span>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <ng-container *ngIf="meeting.employeeProfilePictureUrl; else noMeetPic">
-                                        <img [src]="meeting.employeeProfilePictureUrl" alt="User" class="rounded-circle me-2 object-fit-cover shadow-sm" style="width: 32px; height: 32px; border: 2px solid #fff;">
-                                    </ng-container>
-                                    <ng-template #noMeetPic>
-                                        <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center"
-                                            style="width: 32px; height: 32px; font-size: 13px;">
-                                            {{ meeting.employeeName ? meeting.employeeName.charAt(0).toUpperCase() : 'U' }}
-                                        </div>
-                                    </ng-template>
-                                    <span class="fw-medium text-dark">{{ meeting.employeeName }}</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div><i class="bi bi-calendar-event text-muted me-2"></i>{{ meeting.scheduledAt | date:'mediumDate' }}</div>
-                                <div class="small text-muted"><i class="bi bi-clock me-2"></i>{{ meeting.scheduledAt | date:'shortTime' }} <span *ngIf="meeting.durationMinutes">({{ meeting.durationMinutes }} min)</span></div>
-                            </td>
-                            <td>
-                                <span class="badge rounded-pill px-3 py-2" [ngClass]="getStatusBadgeClass(meeting.status)">
-                                    {{ getStatusLabel(meeting.status) | t }}
-                                </span>
-                            </td>
-                            <td class="text-end pe-4">
-                                <div class="d-flex align-items-center justify-content-end gap-2">
-                                    
-                                    <ng-container *ngIf="isHrOrAdmin && meeting.status === 'Scheduled'">
-                                        <button
-                                            class="btn btn-success btn-sm rounded-pill d-inline-flex align-items-center gap-1 px-3"
-                                            (click)="updateStatus(meeting.id, MeetingStatus.Completed)"
-                                            title="Mark Completed">
-                                            <i class="bi bi-check2-circle"></i>
-                                            <span class="small">Done</span>
-                                        </button>
-                                        <button
-                                            class="btn btn-danger btn-sm rounded-pill d-inline-flex align-items-center gap-1 px-3"
-                                            (click)="updateStatus(meeting.id, MeetingStatus.Cancelled)"
-                                            title="Cancel Meeting">
-                                            <i class="bi bi-slash-circle"></i>
-                                            <span class="small">Cancel</span>
-                                        </button>
-                                    </ng-container>
-                                    
-                                    <a *ngIf="meeting.meetLink && meeting.status === 'Scheduled'"
-                                        [href]="meeting.meetLink" target="_blank"
-                                        class="btn btn-outline-primary btn-sm rounded-pill d-inline-flex align-items-center gap-1 px-3"
-                                        title="Join Meeting">
-                                        <i class="bi bi-camera-video"></i>
-                                        <span class="small">Join</span>
-                                    </a>
-                                    
-                                    <span *ngIf="meeting.status !== 'Scheduled'" class="text-muted small fst-italic">—</span>
-                                </div>
-                            </td>
-                        </tr>
-                        } @empty {
-                        <tr>
-                            <td colspan="6" class="text-center py-5 text-muted">
-                                <i class="bi bi-calendar2-x fs-1 d-block mb-3 text-light-gray"></i>
-                                {{ 'No meetings found.' | t }}
-                            </td>
-                        </tr>
-                        }
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="bg-light text-muted small text-uppercase">
+            <tr>
+              <th class="ps-4">{{ 'Title' | t }}</th>
+              <th>{{ 'Organizer' | t }}</th>
+              <th>{{ 'Employee' | t }}</th>
+              <th>{{ 'Date & Time' | t }}</th>
+              <th>{{ 'Status' | t }}</th>
+              <th class="text-end pe-4">{{ 'Actions' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (isLoading) {
+            <tr>
+              <td colspan="6" class="text-center py-5">
+                <div class="spinner-border text-dark" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </td>
+            </tr>
+            } @else { @for (meeting of meetings; track meeting.id) {
+            <tr>
+              <td class="ps-4">
+                <div class="fw-bold text-dark">{{ meeting.title }}</div>
+                <div class="small text-muted text-truncate" style="max-width: 250px;">{{ meeting.reason || meeting.notes }}</div>
+              </td>
+              <td>
+                <span class="fw-medium text-dark">{{ meeting.organizerName || 'System' }}</span>
+              </td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <ng-container *ngIf="meeting.employeeProfilePictureUrl; else noMeetPic">
+                    <img [src]="meeting.employeeProfilePictureUrl" alt="User" class="rounded-circle me-2 object-fit-cover shadow-sm" style="width: 32px; height: 32px; border: 2px solid #fff;" />
+                  </ng-container>
+                  <ng-template #noMeetPic>
+                    <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 13px;">{{ meeting.employeeName ? meeting.employeeName.charAt(0).toUpperCase() : 'U' }}</div>
+                  </ng-template>
+                  <span class="fw-medium text-dark">{{ meeting.employeeName }}</span>
+                </div>
+              </td>
+              <td>
+                <div><i class="bi bi-calendar-event text-muted me-2"></i>{{ meeting.scheduledAt | date:'mediumDate' }}</div>
+                <div class="small text-muted"><i class="bi bi-clock me-2"></i>{{ meeting.scheduledAt | date:'shortTime' }} <span *ngIf="meeting.durationMinutes">({{ meeting.durationMinutes }} min)</span></div>
+              </td>
+              <td>
+                <span class="badge rounded-pill px-3 py-2" [ngClass]="getStatusBadgeClass(meeting.status)"> {{ getStatusLabel(meeting.status) | t }} </span>
+              </td>
+              <td class="text-end pe-4">
+                <div class="d-flex align-items-center justify-content-end gap-2">
+                  <ng-container *ngIf="isHrOrAdmin && meeting.status === 'Scheduled'">
+                    <button class="btn btn-success btn-sm rounded-pill d-inline-flex align-items-center gap-1 px-3" (click)="updateStatus(meeting.id, MeetingStatus.Completed)" title="Mark Completed">
+                      <i class="bi bi-check2-circle"></i>
+                      <span class="small">Done</span>
+                    </button>
+                    <button class="btn btn-danger btn-sm rounded-pill d-inline-flex align-items-center gap-1 px-3" (click)="updateStatus(meeting.id, MeetingStatus.Cancelled)" title="Cancel Meeting">
+                      <i class="bi bi-slash-circle"></i>
+                      <span class="small">Cancel</span>
+                    </button>
+                  </ng-container>
+
+                  <a *ngIf="meeting.meetLink && meeting.status === 'Scheduled'" [href]="meeting.meetLink" target="_blank" class="btn btn-outline-primary btn-sm rounded-pill d-inline-flex align-items-center gap-1 px-3" title="Join Meeting">
+                    <i class="bi bi-camera-video"></i>
+                    <span class="small">Join</span>
+                  </a>
+
+                  <span *ngIf="meeting.status !== 'Scheduled'" class="text-muted small fst-italic">—</span>
+                </div>
+              </td>
+            </tr>
+            } @empty {
+            <tr>
+              <td colspan="6" class="text-center py-5 text-muted">
+                <i class="bi bi-calendar2-x fs-1 d-block mb-3 text-light-gray"></i>
+                {{ 'No meetings found.' | t }}
+              </td>
+            </tr>
+            } }
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
 </div>
 
 <div class="modal fade" id="addMeetingModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow rounded-4">
-            <div class="modal-header bg-light border-0 rounded-top-4">
-                <h5 class="modal-title fw-bold text-dark">{{ 'Schedule Meeting' | t }}</h5>
-                <button type="button" class="btn-close" (click)="closeModal('addMeetingModal')"></button>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow rounded-4">
+      <div class="modal-header bg-light border-0 rounded-top-4">
+        <h5 class="modal-title fw-bold text-dark">{{ 'Schedule Meeting' | t }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal('addMeetingModal')"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label class="form-label fw-bold text-secondary">{{ 'Title / Subject' | t }} <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" formControlName="title" placeholder="e.g., Performance Review" />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold text-secondary">{{ 'Employee' | t }} <span class="text-danger">*</span></label>
+
+            <div class="d-flex gap-2 mb-2">
+              <input type="text" class="form-control form-control-sm" placeholder="Search employee..." [(ngModel)]="employeeSearchQuery" [ngModelOptions]="{standalone: true}" />
+              <select class="form-select form-select-sm" [(ngModel)]="selectedDepartmentFilter" [ngModelOptions]="{standalone: true}">
+                <option value="">All Departments</option>
+                <option *ngFor="let dept of uniqueDepartments" [value]="dept">{{ dept }}</option>
+              </select>
             </div>
-            <div class="modal-body p-4">
-                <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
-                    
-                    <div class="mb-3">
-                        <label class="form-label fw-bold text-secondary">{{ 'Title / Subject' | t }} <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" formControlName="title" placeholder="e.g., Performance Review">
-                    </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold text-secondary">{{ 'Employee' | t }} <span class="text-danger">*</span></label>
-                        
-                        
-                        <div class="d-flex gap-2 mb-2">
-                            <input type="text" class="form-control form-control-sm" placeholder="Search employee..." [(ngModel)]="employeeSearchQuery" [ngModelOptions]="{standalone: true}">
-                            <select class="form-select form-select-sm" [(ngModel)]="selectedDepartmentFilter" [ngModelOptions]="{standalone: true}">
-                                <option value="">All Departments</option>
-                                <option *ngFor="let dept of uniqueDepartments" [value]="dept">{{ dept }}</option>
-                            </select>
-                        </div>
-                        
-                        
-                        <div class="form-check mb-2 bg-light p-2 rounded border">
-                            <input class="form-check-input ms-1" type="checkbox" id="selectAllMeet"
-                                [checked]="isAllFilteredSelected"
-                                (change)="selectAllFilteredEmployees($event)" style="cursor: pointer;">
-                            <label class="form-check-label fw-bold text-dark ms-2" for="selectAllMeet" style="cursor: pointer;">
-                                Select All Filtered Employees
-                            </label>
-                        </div>
-
-                        <div class="border rounded p-2 overflow-auto" style="max-height: 250px; background: #fff; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);">
-                            <div class="form-check mb-2" *ngFor="let emp of filteredEmployees">
-                                <input class="form-check-input" type="checkbox" [id]="'empMeet' + emp.id"
-                                    [checked]="addForm.get('employeeIds')?.value?.includes(emp.id)"
-                                    (change)="toggleEmployeeForMeeting(emp.id)" style="cursor: pointer;">
-                                <label class="form-check-label w-100 d-flex align-items-center" [for]="'empMeet' + emp.id" style="cursor: pointer;">
-                                    <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 10px;">
-                                        {{ emp.firstName.charAt(0).toUpperCase() }}
-                                    </div>
-                                    <span class="fw-medium text-dark">{{ emp.firstName }} {{ emp.lastName }}</span>
-                                    <span class="ms-auto badge bg-light text-secondary border">{{ emp.departmentName }} | {{ emp.positionTitle || 'No Position' }}</span>
-                                </label>
-                            </div>
-                            <div *ngIf="filteredEmployees.length === 0" class="text-center text-muted small py-2">
-                                No employees found.
-                            </div>
-                        </div>
-                        <small class="text-muted d-block mt-1">{{ 'Select one or more employees to schedule a group meeting' | t }}</small>
-                    </div>
-
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold text-secondary">{{ 'Date' | t }} <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-calendar-event text-primary"></i></span>
-                                <input type="date" class="form-control border-start-0" formControlName="meetingDate" style="color-scheme: light;">
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold text-secondary">{{ 'Time' | t }} <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-clock text-primary"></i></span>
-                                <input type="time" class="form-control border-start-0" formControlName="meetingTime" style="color-scheme: light;">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold text-secondary">{{ 'Duration' | t }} <span class="text-danger">*</span></label>
-                        <select class="form-select" formControlName="durationMinutes">
-                            <option value="15">15 Minutes</option>
-                            <option value="30">30 Minutes</option>
-                            <option value="45">45 Minutes</option>
-                            <option value="60">1 Hour</option>
-                            <option value="90">1.5 Hours</option>
-                            <option value="120">2 Hours</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label fw-bold text-secondary">{{ 'Reason / Notes' | t }} <span class="text-danger">*</span></label>
-                        <textarea class="form-control" rows="3" formControlName="reason"
-                            placeholder="Describe the reason for the meeting (min. 10 characters)..."
-                            [class.is-invalid]="addForm.get('reason')?.invalid && addForm.get('reason')?.touched"></textarea>
-                        <div class="invalid-feedback">
-                            @if (addForm.get('reason')?.errors?.['required']) {
-                                Reason is required.
-                            } @else if (addForm.get('reason')?.errors?.['minlength']) {
-                                Reason must be at least 10 characters.
-                            }
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-end gap-2">
-                        <button type="button" class="btn btn-light rounded-pill px-4" (click)="closeModal('addMeetingModal')">{{ 'Cancel' | t }}</button>
-                        <button type="submit" class="btn btn-dark rounded-pill px-4" [disabled]="addForm.invalid || isSubmitting">
-                            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
-                            {{ 'Schedule' | t }}
-                        </button>
-                    </div>
-                </form>
+            <div class="form-check mb-2 bg-light p-2 rounded border">
+              <input class="form-check-input ms-1" type="checkbox" id="selectAllMeet" [checked]="isAllFilteredSelected" (change)="selectAllFilteredEmployees($event)" style="cursor: pointer;" />
+              <label class="form-check-label fw-bold text-dark ms-2" for="selectAllMeet" style="cursor: pointer;"> Select All Filtered Employees </label>
             </div>
-        </div>
+
+            <div class="border rounded p-2 overflow-auto" style="max-height: 250px; background: #fff; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);">
+              <div class="form-check mb-2" *ngFor="let emp of filteredEmployees">
+                <input class="form-check-input" type="checkbox" [id]="'empMeet' + emp.id" [checked]="addForm.get('employeeIds')?.value?.includes(emp.id)" (change)="toggleEmployeeForMeeting(emp.id)" style="cursor: pointer;" />
+                <label class="form-check-label w-100 d-flex align-items-center" [for]="'empMeet' + emp.id" style="cursor: pointer;">
+                  <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 10px;">{{ emp.firstName.charAt(0).toUpperCase() }}</div>
+                  <span class="fw-medium text-dark">{{ emp.firstName }} {{ emp.lastName }}</span>
+                  <span class="ms-auto badge bg-light text-secondary border">{{ emp.departmentName }} | {{ emp.positionTitle || 'No Position' }}</span>
+                </label>
+              </div>
+              <div *ngIf="filteredEmployees.length === 0" class="text-center text-muted small py-2">No employees found.</div>
+            </div>
+            <small class="text-muted d-block mt-1">{{ 'Select one or more employees to schedule a group meeting' | t }}</small>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold text-secondary">{{ 'Date' | t }} <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text bg-white border-end-0"><i class="bi bi-calendar-event text-primary"></i></span>
+                <input type="date" class="form-control border-start-0" formControlName="meetingDate" style="color-scheme: light;" />
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold text-secondary">{{ 'Time' | t }} <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text bg-white border-end-0"><i class="bi bi-clock text-primary"></i></span>
+                <input type="time" class="form-control border-start-0" formControlName="meetingTime" style="color-scheme: light;" />
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold text-secondary">{{ 'Duration' | t }} <span class="text-danger">*</span></label>
+            <select class="form-select" formControlName="durationMinutes">
+              <option value="15">15 Minutes</option>
+              <option value="30">30 Minutes</option>
+              <option value="45">45 Minutes</option>
+              <option value="60">1 Hour</option>
+              <option value="90">1.5 Hours</option>
+              <option value="120">2 Hours</option>
+            </select>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-bold text-secondary">{{ 'Reason / Notes' | t }} <span class="text-danger">*</span></label>
+            <textarea class="form-control" rows="3" formControlName="reason" placeholder="Describe the reason for the meeting (min. 10 characters)..." [class.is-invalid]="addForm.get('reason')?.invalid && addForm.get('reason')?.touched"></textarea>
+            <div class="invalid-feedback">@if (addForm.get('reason')?.errors?.['required']) { Reason is required. } @else if (addForm.get('reason')?.errors?.['minlength']) { Reason must be at least 10 characters. }</div>
+          </div>
+
+          <div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-light rounded-pill px-4" (click)="closeModal('addMeetingModal')">{{ 'Cancel' | t }}</button>
+            <button type="submit" class="btn btn-dark rounded-pill px-4" [disabled]="addForm.invalid || isSubmitting">
+              <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+              {{ 'Schedule' | t }}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
-
 ```
 
 ### File: src\app\features\meetings\meetings.component.ts
+
 ```typescript
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MeetingService } from '../../core/services/meeting.service';
-import { EmployeeService } from '../../core/services/employee.service';
-import { AuthService } from '../../core/services/auth.service';
-import Swal from 'sweetalert2';
-import { Meeting, MeetingStatus, CreateMeetingDto } from '../../core/models/meeting.model';
-import { TranslatePipe } from '../../core/pipes/translate.pipe';
-import { Observable } from 'rxjs';
-import { ExcelExportService } from '../../core/services/excel-export.service';
-import { PdfExportService } from '../../core/services/pdf-export.service';
+import { Component, OnInit, inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from "@angular/forms";
+import { MeetingService } from "../../core/services/meeting.service";
+import { EmployeeService } from "../../core/services/employee.service";
+import { AuthService } from "../../core/services/auth.service";
+import Swal from "sweetalert2";
+import { Meeting, MeetingStatus, CreateMeetingDto } from "../../core/models/meeting.model";
+import { TranslatePipe } from "../../core/pipes/translate.pipe";
+import { Observable } from "rxjs";
+import { ExcelExportService } from "../../core/services/excel-export.service";
+import { PdfExportService } from "../../core/services/pdf-export.service";
 
 declare var bootstrap: any;
 
 @Component({
-  selector: 'app-meetings',
+  selector: "app-meetings",
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe],
-  templateUrl: './meetings.component.html',
-  styleUrls: ['./meetings.component.css']
+  templateUrl: "./meetings.component.html",
+  styleUrls: ["./meetings.component.css"],
 })
 export class MeetingsComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -9546,58 +8145,56 @@ export class MeetingsComponent implements OnInit {
   pageNumber = 1;
   pageSize = 100;
 
-  employeeSearchQuery: string = '';
-  selectedDepartmentFilter: string = '';
+  employeeSearchQuery: string = "";
+  selectedDepartmentFilter: string = "";
 
   get uniqueDepartments(): string[] {
-    const depts = this.employees.map(e => e.departmentName).filter(d => !!d);
+    const depts = this.employees.map((e) => e.departmentName).filter((d) => !!d);
     return Array.from(new Set(depts));
   }
 
   get filteredEmployees(): any[] {
-    return this.employees.filter(emp => {
-      const matchesSearch = this.employeeSearchQuery ? 
-        `${emp.firstName} ${emp.lastName}`.toLowerCase().includes(this.employeeSearchQuery.toLowerCase()) : true;
-      const matchesDept = this.selectedDepartmentFilter ? 
-        emp.departmentName === this.selectedDepartmentFilter : true;
+    return this.employees.filter((emp) => {
+      const matchesSearch = this.employeeSearchQuery ? `${emp.firstName} ${emp.lastName}`.toLowerCase().includes(this.employeeSearchQuery.toLowerCase()) : true;
+      const matchesDept = this.selectedDepartmentFilter ? emp.departmentName === this.selectedDepartmentFilter : true;
       return matchesSearch && matchesDept;
     });
   }
 
   get isAllFilteredSelected(): boolean {
-    const currentSelected = this.addForm.get('employeeIds')?.value || [];
+    const currentSelected = this.addForm.get("employeeIds")?.value || [];
     if (this.filteredEmployees.length === 0) return false;
-    return this.filteredEmployees.every(emp => currentSelected.includes(emp.id));
+    return this.filteredEmployees.every((emp) => currentSelected.includes(emp.id));
   }
 
   selectAllFilteredEmployees(event: any) {
     const isChecked = event.target.checked;
-    const currentSelected = new Set(this.addForm.get('employeeIds')?.value || []);
-    
-    this.filteredEmployees.forEach(emp => {
+    const currentSelected = new Set(this.addForm.get("employeeIds")?.value || []);
+
+    this.filteredEmployees.forEach((emp) => {
       if (isChecked) {
         currentSelected.add(emp.id);
       } else {
         currentSelected.delete(emp.id);
       }
     });
-    
-    this.addForm.get('employeeIds')?.setValue(Array.from(currentSelected));
+
+    this.addForm.get("employeeIds")?.setValue(Array.from(currentSelected));
   }
 
   constructor() {
     this.addForm = this.fb.group({
       employeeIds: [[], Validators.required],
-      title: ['', [Validators.required, Validators.maxLength(200)]],
-      reason: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]],
-      meetingDate: ['', Validators.required],
-      meetingTime: ['', Validators.required],
-      durationMinutes: [30, [Validators.required, Validators.min(15)]]
+      title: ["", [Validators.required, Validators.maxLength(200)]],
+      reason: ["", [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]],
+      meetingDate: ["", Validators.required],
+      meetingTime: ["", Validators.required],
+      durationMinutes: [30, [Validators.required, Validators.min(15)]],
     });
   }
 
   ngOnInit(): void {
-    if (this.userRole === 'Admin' || this.userRole === 'HR') {
+    if (this.userRole === "Admin" || this.userRole === "HR") {
       this.loadAllMeetings();
       this.loadEmployees();
     } else {
@@ -9606,7 +8203,7 @@ export class MeetingsComponent implements OnInit {
   }
 
   get isHrOrAdmin(): boolean {
-    return this.userRole === 'Admin' || this.userRole === 'HR';
+    return this.userRole === "Admin" || this.userRole === "HR";
   }
 
   loadAllMeetings() {
@@ -9618,8 +8215,8 @@ export class MeetingsComponent implements OnInit {
       },
       error: () => {
         this.isLoading = false;
-        Swal.fire('Error', 'Failed to load meetings', 'error');
-      }
+        Swal.fire("Error", "Failed to load meetings", "error");
+      },
     });
   }
 
@@ -9632,20 +8229,20 @@ export class MeetingsComponent implements OnInit {
       },
       error: () => {
         this.isLoading = false;
-        Swal.fire('Error', 'Failed to load your meetings', 'error');
-      }
+        Swal.fire("Error", "Failed to load your meetings", "error");
+      },
     });
   }
 
   loadEmployees() {
-    this.employeeService.getEmployees().subscribe(res => {
+    this.employeeService.getEmployees().subscribe((res) => {
       this.employees = res;
     });
   }
 
   openAddModal() {
     this.addForm.reset({ durationMinutes: 30 });
-    const modalEl = document.getElementById('addMeetingModal');
+    const modalEl = document.getElementById("addMeetingModal");
     if (modalEl) {
       const modal = new bootstrap.Modal(modalEl);
       modal.show();
@@ -9667,24 +8264,23 @@ export class MeetingsComponent implements OnInit {
 
     this.isSubmitting = true;
     const formValues = this.addForm.value;
-    
 
     const combinedDateTime = new Date(`${formValues.meetingDate}T${formValues.meetingTime}`);
-    
+
     const dto: CreateMeetingDto = {
       title: formValues.title,
       reason: formValues.reason,
       employeeIds: formValues.employeeIds,
       scheduledAt: combinedDateTime.toISOString(),
       durationMinutes: formValues.durationMinutes,
-      notes: formValues.reason
+      notes: formValues.reason,
     };
 
     this.meetingService.create(dto).subscribe({
       next: () => {
         this.isSubmitting = false;
-        this.closeModal('addMeetingModal');
-        Swal.fire('Success', 'Meeting scheduled successfully', 'success');
+        this.closeModal("addMeetingModal");
+        Swal.fire("Success", "Meeting scheduled successfully", "success");
         if (this.isHrOrAdmin) {
           this.loadAllMeetings();
         } else {
@@ -9693,19 +8289,19 @@ export class MeetingsComponent implements OnInit {
       },
       error: (err) => {
         this.isSubmitting = false;
-        Swal.fire('Error', err.error?.message || 'Failed to schedule meeting', 'error');
-      }
+        Swal.fire("Error", err.error?.message || "Failed to schedule meeting", "error");
+      },
     });
   }
 
   updateStatus(id: number, status: MeetingStatus) {
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to update the status of this meeting?',
-      icon: 'question',
+      title: "Are you sure?",
+      text: "Do you want to update the status of this meeting?",
+      icon: "question",
       showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No'
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
     }).then((result) => {
       if (result.isConfirmed) {
         let updateObservable: Observable<void>;
@@ -9719,7 +8315,7 @@ export class MeetingsComponent implements OnInit {
 
         updateObservable.subscribe({
           next: () => {
-            Swal.fire('Updated!', 'Meeting status updated.', 'success');
+            Swal.fire("Updated!", "Meeting status updated.", "success");
             if (this.isHrOrAdmin) {
               this.loadAllMeetings();
             } else {
@@ -9727,97 +8323,86 @@ export class MeetingsComponent implements OnInit {
             }
           },
           error: () => {
-            Swal.fire('Error', 'Failed to update status', 'error');
-          }
+            Swal.fire("Error", "Failed to update status", "error");
+          },
         });
       }
     });
   }
 
   toggleEmployeeForMeeting(empId: number) {
-    const currentSelected = this.addForm.get('employeeIds')?.value || [];
+    const currentSelected = this.addForm.get("employeeIds")?.value || [];
     const index = currentSelected.indexOf(empId);
     if (index > -1) {
       currentSelected.splice(index, 1);
     } else {
       currentSelected.push(empId);
     }
-    this.addForm.get('employeeIds')?.setValue(currentSelected);
+    this.addForm.get("employeeIds")?.setValue(currentSelected);
   }
 
   getStatusBadgeClass(status: any): string {
     const s = String(status);
     switch (s) {
-      case '0':
-      case 'Scheduled': return 'bg-primary';
-      case '1':
-      case 'Completed': return 'bg-success';
-      case '2':
-      case 'Cancelled': return 'bg-danger';
-      default: return 'bg-secondary';
+      case "0":
+      case "Scheduled":
+        return "bg-primary";
+      case "1":
+      case "Completed":
+        return "bg-success";
+      case "2":
+      case "Cancelled":
+        return "bg-danger";
+      default:
+        return "bg-secondary";
     }
   }
 
   getStatusLabel(status: any): string {
     const s = String(status);
     switch (s) {
-      case '0':
-      case 'Scheduled': return 'Scheduled';
-      case '1':
-      case 'Completed': return 'Completed';
-      case '2':
-      case 'Cancelled': return 'Cancelled';
-      default: return 'Unknown';
+      case "0":
+      case "Scheduled":
+        return "Scheduled";
+      case "1":
+      case "Completed":
+        return "Completed";
+      case "2":
+      case "Cancelled":
+        return "Cancelled";
+      default:
+        return "Unknown";
     }
   }
 
   exportToExcel() {
     if (this.meetings.length === 0) {
-      Swal.fire('No Data', 'There are no meetings to export.', 'info');
+      Swal.fire("No Data", "There are no meetings to export.", "info");
       return;
     }
 
-    const headers = ['ID', 'Title', 'Date & Time', 'Employee', 'Status', 'Duration (Min)'];
-    const data = this.meetings.map(m => [
-      `#${m.id}`,
-      m.title,
-      new Date(m.scheduledAt).toLocaleString(),
-      m.employeeName || 'N/A',
-      this.getStatusLabel(m.status),
-      m.durationMinutes
-    ]);
+    const headers = ["ID", "Title", "Date & Time", "Employee", "Status", "Duration (Min)"];
+    const data = this.meetings.map((m) => [`#${m.id}`, m.title, new Date(m.scheduledAt).toLocaleString(), m.employeeName || "N/A", this.getStatusLabel(m.status), m.durationMinutes]);
 
-    this.excelExportService.exportTableToExcel(headers, data, 'Meetings');
+    this.excelExportService.exportTableToExcel(headers, data, "Meetings");
   }
 
   exportToPDF() {
     if (this.meetings.length === 0) {
-      Swal.fire('No Data', 'There are no meetings to export.', 'info');
+      Swal.fire("No Data", "There are no meetings to export.", "info");
       return;
     }
 
-    const headers = ['ID', 'Title', 'Date & Time', 'Employee', 'Status', 'Duration (Min)'];
-    const data = this.meetings.map(m => [
-      `#${m.id}`,
-      m.title,
-      new Date(m.scheduledAt).toLocaleString(),
-      m.employeeName || 'N/A',
-      this.getStatusLabel(m.status),
-      m.durationMinutes || '—'
-    ]);
+    const headers = ["ID", "Title", "Date & Time", "Employee", "Status", "Duration (Min)"];
+    const data = this.meetings.map((m) => [`#${m.id}`, m.title, new Date(m.scheduledAt).toLocaleString(), m.employeeName || "N/A", this.getStatusLabel(m.status), m.durationMinutes || "—"]);
 
-    this.pdfExportService.generateTableReport(
-      'Meetings & Interviews Report',
-      headers,
-      data,
-      'Meetings_Report'
-    );
+    this.pdfExportService.generateTableReport("Meetings & Interviews Report", headers, data, "Meetings_Report");
   }
 }
-
 ```
 
 ### File: src\app\features\my-profile\my-profile.component.html
+
 ```html
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
   <div class="d-flex align-items-center">
@@ -9829,9 +8414,7 @@ export class MeetingsComponent implements OnInit {
       <p class="text-muted mb-0 small">{{ 'View and manage your personal account details' | t }}</p>
     </div>
   </div>
-  <button class="btn btn-primary shadow-sm rounded-pill px-4 fw-semibold" (click)="openEditModal()" *ngIf="!isLoading">
-    <i class="bi bi-pencil-square me-2"></i>{{ 'Edit Profile' | t }}
-  </button>
+  <button class="btn btn-primary shadow-sm rounded-pill px-4 fw-semibold" (click)="openEditModal()" *ngIf="!isLoading"><i class="bi bi-pencil-square me-2"></i>{{ 'Edit Profile' | t }}</button>
 </div>
 
 @if (isLoading) {
@@ -9839,77 +8422,59 @@ export class MeetingsComponent implements OnInit {
   <div class="spinner-border text-primary" role="status"></div>
   <p class="mt-2 text-muted">Loading your profile...</p>
 </div>
-}
-
-@else if (isAdmin) {
+} @else if (isAdmin) {
 <div class="row g-4">
-  
   <div class="col-md-4">
     <div class="card shadow-sm border-0 h-100 text-center p-4">
       <div class="mb-3 text-center">
         <div class="position-relative d-inline-block">
           <div class="profile-avatar mx-auto admin-avatar-bg">
-            <img *ngIf="profilePicUrl" [src]="profilePicUrl" alt="Profile" class="w-100 h-100 rounded-circle object-fit-cover">
+            <img *ngIf="profilePicUrl" [src]="profilePicUrl" alt="Profile" class="w-100 h-100 rounded-circle object-fit-cover" />
             <span *ngIf="!profilePicUrl">{{ initials }}</span>
           </div>
           <label class="upload-btn position-absolute bottom-0 end-0 bg-white rounded-circle shadow-sm border border-2 border-light d-flex align-items-center justify-content-center text-primary transition-all" style="width: 32px; height: 32px; cursor: pointer; transform: translate(10%, 10%); z-index: 2;" title="{{ 'Change Picture' | t }}">
             <i class="bi bi-camera-fill" *ngIf="!isUploadingPic"></i>
             <span class="spinner-border spinner-border-sm" *ngIf="isUploadingPic"></span>
-            <input type="file" class="d-none" accept="image/*" (change)="onFileSelected($event)" [disabled]="isUploadingPic">
+            <input type="file" class="d-none" accept="image/*" (change)="onFileSelected($event)" [disabled]="isUploadingPic" />
           </label>
         </div>
       </div>
-      
-      
+
       <div *ngIf="pendingProfilePicUrl" class="mx-auto mb-3 text-center">
         <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
-          <span class="badge bg-warning text-dark rounded-pill px-3 py-1">
-            <i class="bi bi-clock-history me-1"></i>{{ 'Pending Approval' | t }}
-          </span>
+          <span class="badge bg-warning text-dark rounded-pill px-3 py-1"> <i class="bi bi-clock-history me-1"></i>{{ 'Pending Approval' | t }} </span>
         </div>
-        <img [src]="pendingProfilePicUrl" alt="Pending" class="rounded-circle object-fit-cover shadow-sm border border-2 border-warning" style="width: 50px; height: 50px;">
+        <img [src]="pendingProfilePicUrl" alt="Pending" class="rounded-circle object-fit-cover shadow-sm border border-2 border-warning" style="width: 50px; height: 50px;" />
         <p class="text-muted small mt-1 mb-0">{{ 'Awaiting HR review' | t }}</p>
       </div>
 
       <h4 class="fw-bold text-dark mb-1">{{ userName }}</h4>
       <p class="text-muted mb-1">{{ userRole }}</p>
       <p class="text-muted small mb-3">{{ userEmail }}</p>
-      <span
-        class="badge rounded-pill px-3 py-2 bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">
-        <i class="bi bi-shield-fill-check me-1"></i> System Admin
-      </span>
+      <span class="badge rounded-pill px-3 py-2 bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25"> <i class="bi bi-shield-fill-check me-1"></i> System Admin </span>
     </div>
   </div>
 
-  
   <div class="col-md-8">
     <div class="card shadow-sm border-0 h-100">
       <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
-        <h5 class="fw-bold text-secondary">
-          <i class="bi bi-person-lines-fill me-2 text-primary"></i>{{ 'Account Details' | t }}
-        </h5>
+        <h5 class="fw-bold text-secondary"><i class="bi bi-person-lines-fill me-2 text-primary"></i>{{ 'Account Details' | t }}</h5>
       </div>
       <div class="card-body p-4">
         <div class="row g-4">
           <div class="col-md-6">
-            <label class="text-muted small text-uppercase fw-bold">
-              <i class="bi bi-envelope me-1"></i> {{ 'Email Address' | t }}
-            </label>
+            <label class="text-muted small text-uppercase fw-bold"> <i class="bi bi-envelope me-1"></i> {{ 'Email Address' | t }} </label>
             <p class="fw-semibold text-dark fs-5 mb-0">{{ userEmail || '—' }}</p>
           </div>
           <div class="col-md-6">
-            <label class="text-muted small text-uppercase fw-bold">
-              <i class="bi bi-person-badge me-1"></i> {{ 'Role' | t }}
-            </label>
+            <label class="text-muted small text-uppercase fw-bold"> <i class="bi bi-person-badge me-1"></i> {{ 'Role' | t }} </label>
             <p class="fw-semibold text-dark fs-5 mb-0">{{ userRole }}</p>
           </div>
         </div>
 
-        <hr class="my-4 text-muted opacity-25">
+        <hr class="my-4 text-muted opacity-25" />
 
-        <h5 class="fw-bold text-secondary mb-3">
-          <i class="bi bi-shield-check me-2 text-primary"></i>{{ 'Permissions' | t }}
-        </h5>
+        <h5 class="fw-bold text-secondary mb-3"><i class="bi bi-shield-check me-2 text-primary"></i>{{ 'Permissions' | t }}</h5>
         <div class="row g-3">
           <div class="col-md-4">
             <div class="bg-light rounded-3 p-3 d-flex align-items-center gap-2">
@@ -9934,89 +8499,67 @@ export class MeetingsComponent implements OnInit {
     </div>
   </div>
 </div>
-}
-
-@else if (profile) {
+} @else if (profile) {
 <div class="row g-4">
   <div class="col-md-4">
     <div class="card shadow-sm border-0 h-100 text-center p-4">
       <div class="mb-3 text-center">
         <div class="position-relative d-inline-block">
           <div class="profile-avatar mx-auto">
-            <img *ngIf="profilePicUrl" [src]="profilePicUrl" alt="Profile" class="w-100 h-100 rounded-circle object-fit-cover">
+            <img *ngIf="profilePicUrl" [src]="profilePicUrl" alt="Profile" class="w-100 h-100 rounded-circle object-fit-cover" />
             <span *ngIf="!profilePicUrl">{{ getProfileInitials() }}</span>
           </div>
           <label class="upload-btn position-absolute bottom-0 end-0 bg-white rounded-circle shadow-sm border border-2 border-light d-flex align-items-center justify-content-center text-primary transition-all" style="width: 32px; height: 32px; cursor: pointer; transform: translate(10%, 10%); z-index: 2;" title="{{ 'Change Picture' | t }}">
             <i class="bi bi-camera-fill" *ngIf="!isUploadingPic"></i>
             <span class="spinner-border spinner-border-sm" *ngIf="isUploadingPic"></span>
-            <input type="file" class="d-none" accept="image/*" (change)="onFileSelected($event)" [disabled]="isUploadingPic">
+            <input type="file" class="d-none" accept="image/*" (change)="onFileSelected($event)" [disabled]="isUploadingPic" />
           </label>
         </div>
       </div>
 
-      
       <div *ngIf="pendingProfilePicUrl" class="mx-auto mb-3 text-center">
         <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
-          <span class="badge bg-warning text-dark rounded-pill px-3 py-1">
-            <i class="bi bi-clock-history me-1"></i>{{ 'Pending Approval' | t }}
-          </span>
+          <span class="badge bg-warning text-dark rounded-pill px-3 py-1"> <i class="bi bi-clock-history me-1"></i>{{ 'Pending Approval' | t }} </span>
         </div>
-        <img [src]="pendingProfilePicUrl" alt="Pending" class="rounded-circle object-fit-cover shadow-sm border border-2 border-warning" style="width: 50px; height: 50px;">
+        <img [src]="pendingProfilePicUrl" alt="Pending" class="rounded-circle object-fit-cover shadow-sm border border-2 border-warning" style="width: 50px; height: 50px;" />
         <p class="text-muted small mt-1 mb-0">{{ 'Awaiting HR review' | t }}</p>
       </div>
 
       <h4 class="fw-bold text-dark mb-1">{{ profile.fullName }}</h4>
       <p class="text-muted mb-3">{{ profile.positionTitle || 'Employee' }}</p>
-      <span
-        class="badge rounded-pill px-3 py-2 bg-success bg-opacity-10 text-success border border-success border-opacity-25">
-        <i class="bi bi-check-circle-fill me-1"></i> Active
-      </span>
+      <span class="badge rounded-pill px-3 py-2 bg-success bg-opacity-10 text-success border border-success border-opacity-25"> <i class="bi bi-check-circle-fill me-1"></i> Active </span>
     </div>
   </div>
 
   <div class="col-md-8">
     <div class="card shadow-sm border-0 h-100">
       <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
-        <h5 class="fw-bold text-secondary">
-          <i class="bi bi-person-lines-fill me-2 text-primary"></i>{{ 'Personal Details' | t }}
-        </h5>
+        <h5 class="fw-bold text-secondary"><i class="bi bi-person-lines-fill me-2 text-primary"></i>{{ 'Personal Details' | t }}</h5>
       </div>
       <div class="card-body p-4">
         <div class="row g-4">
           <div class="col-md-6">
-            <label class="text-muted small text-uppercase fw-bold">
-              <i class="bi bi-envelope me-1"></i> {{ 'Email Address' | t }}
-            </label>
+            <label class="text-muted small text-uppercase fw-bold"> <i class="bi bi-envelope me-1"></i> {{ 'Email Address' | t }} </label>
             <p class="fw-semibold text-dark fs-5 mb-0">{{ profile.email || '—' }}</p>
           </div>
           <div class="col-md-6">
-            <label class="text-muted small text-uppercase fw-bold">
-              <i class="bi bi-telephone me-1"></i> {{ 'Phone' | t }}
-            </label>
-            
-            <p class="fw-semibold text-dark fs-5 mb-0">
-              {{ profile.phone || profile.phoneNumber || 'N/A' }}
-            </p>
+            <label class="text-muted small text-uppercase fw-bold"> <i class="bi bi-telephone me-1"></i> {{ 'Phone' | t }} </label>
+
+            <p class="fw-semibold text-dark fs-5 mb-0">{{ profile.phone || profile.phoneNumber || 'N/A' }}</p>
           </div>
           <div class="col-md-6">
-            <label class="text-muted small text-uppercase fw-bold">
-              <i class="bi bi-building me-1"></i> {{ 'Department' | t }}
-            </label>
+            <label class="text-muted small text-uppercase fw-bold"> <i class="bi bi-building me-1"></i> {{ 'Department' | t }} </label>
             <p class="fw-semibold text-dark fs-5 mb-0">{{ profile.departmentName || 'N/A' }}</p>
           </div>
           <div class="col-md-6">
-            <label class="text-muted small text-uppercase fw-bold">
-              <i class="bi bi-calendar2-check me-1"></i> {{ 'Hire Date' | t }}
-            </label>
+            <label class="text-muted small text-uppercase fw-bold"> <i class="bi bi-calendar2-check me-1"></i> {{ 'Hire Date' | t }} </label>
             <p class="fw-semibold text-dark fs-5 mb-0">{{ profile.hireDate | date:'longDate' }}</p>
           </div>
         </div>
 
-        <hr class="my-4 text-muted opacity-25">
+        <hr class="my-4 text-muted opacity-25" />
 
-        <h5 class="fw-bold text-secondary mb-3">
-          <i class="bi bi-clock-history me-2 text-info"></i>{{ 'Status' | t }}
-        </h5>
+        <h5 class="fw-bold text-secondary mb-3"><i class="bi bi-clock-history me-2 text-info"></i>{{ 'Status' | t }}</h5>
         <div class="row">
           <div class="col-md-6">
             <div class="bg-light rounded-3 p-3 d-flex align-items-center">
@@ -10032,9 +8575,7 @@ export class MeetingsComponent implements OnInit {
     </div>
   </div>
 </div>
-}
-
-@else if (!isLoading && !profile && !isAdmin) {
+} @else if (!isLoading && !profile && !isAdmin) {
 <div class="alert alert-warning d-flex align-items-center rounded-3" role="alert">
   <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
   <div>
@@ -10048,52 +8589,39 @@ export class MeetingsComponent implements OnInit {
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg rounded-4">
       <div class="modal-header border-bottom-0 pt-4 pb-0 px-4">
-        <h5 class="fw-bold text-dark"><i class="bi bi-person-lines-fill text-primary me-2"></i>{{ 'Edit Profile' | t }}
-        </h5>
+        <h5 class="fw-bold text-dark"><i class="bi bi-person-lines-fill text-primary me-2"></i>{{ 'Edit Profile' | t }}</h5>
         <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body p-4">
-        
         <h6 class="fw-bold text-secondary mb-3 small text-uppercase">{{ 'Contact Information' | t }}</h6>
         <div class="mb-3">
           <label class="form-label text-muted small fw-semibold">Email Address</label>
-          <input type="email" class="form-control bg-light border-0 py-2" [(ngModel)]="editData.email"
-            placeholder="name@example.com">
+          <input type="email" class="form-control bg-light border-0 py-2" [(ngModel)]="editData.email" placeholder="name@example.com" />
         </div>
         <div class="mb-4" *ngIf="profile">
           <label class="form-label text-muted small fw-semibold">{{ 'Phone' | t }}</label>
-          <input type="text" class="form-control bg-light border-0 py-2" [(ngModel)]="editData.phone"
-            placeholder="e.g. +123456789">
+          <input type="text" class="form-control bg-light border-0 py-2" [(ngModel)]="editData.phone" placeholder="e.g. +123456789" />
         </div>
 
-        <hr class="my-4 text-muted opacity-25">
+        <hr class="my-4 text-muted opacity-25" />
 
-        
         <h6 class="fw-bold text-secondary mb-3 small text-uppercase">{{ 'Change Password' | t }}</h6>
         <div class="mb-3">
           <label class="form-label text-muted small fw-semibold">{{ 'Current Password' | t }}</label>
-          <input type="password" class="form-control bg-light border-0 py-2" [(ngModel)]="pwdData.oldPassword"
-            placeholder="••••••••">
+          <input type="password" class="form-control bg-light border-0 py-2" [(ngModel)]="pwdData.oldPassword" placeholder="••••••••" />
         </div>
         <div class="mb-3">
           <label class="form-label text-muted small fw-semibold">{{ 'New Password' | t }}</label>
-          <input type="password" class="form-control bg-light border-0 py-2" [(ngModel)]="pwdData.newPassword"
-            placeholder="Min. 6 characters">
+          <input type="password" class="form-control bg-light border-0 py-2" [(ngModel)]="pwdData.newPassword" placeholder="Min. 6 characters" />
         </div>
         <div class="mb-3">
           <label class="form-label text-muted small fw-semibold">{{ 'Confirm New Password' | t }}</label>
-          <input type="password" class="form-control bg-light border-0 py-2" [(ngModel)]="pwdData.confirmNewPassword"
-            placeholder="Repeat new password">
+          <input type="password" class="form-control bg-light border-0 py-2" [(ngModel)]="pwdData.confirmNewPassword" placeholder="Repeat new password" />
         </div>
       </div>
       <div class="modal-footer border-top-0 pb-4 px-4">
-        <button type="button" class="btn btn-light px-4 rounded-pill" data-bs-dismiss="modal">{{ 'Cancel' | t
-          }}</button>
-        <button type="button" class="btn btn-primary px-4 rounded-pill fw-semibold shadow-sm" (click)="saveProfile()"
-          [disabled]="isUpdatingProfile || isChangingPwd">
-          <span *ngIf="isUpdatingProfile || isChangingPwd" class="spinner-border spinner-border-sm me-2"></span> {{
-          'Save Changes' | t }}
-        </button>
+        <button type="button" class="btn btn-light px-4 rounded-pill" data-bs-dismiss="modal">{{ 'Cancel' | t }}</button>
+        <button type="button" class="btn btn-primary px-4 rounded-pill fw-semibold shadow-sm" (click)="saveProfile()" [disabled]="isUpdatingProfile || isChangingPwd"><span *ngIf="isUpdatingProfile || isChangingPwd" class="spinner-border spinner-border-sm me-2"></span> {{ 'Save Changes' | t }}</button>
       </div>
     </div>
   </div>
@@ -10123,7 +8651,7 @@ export class MeetingsComponent implements OnInit {
     background-color: #f8f9fa !important;
     transform: translate(10%, 10%) scale(1.1) !important;
   }
-  
+
   .object-fit-cover {
     object-fit: cover;
   }
@@ -10131,24 +8659,25 @@ export class MeetingsComponent implements OnInit {
 ```
 
 ### File: src\app\features\my-profile\my-profile.component.ts
-```typescript
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { EmployeeService } from '../../core/services/employee.service';
-import { AuthService } from '../../core/services/auth.service';
-import Swal from 'sweetalert2';
-import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
 
-import { TranslatePipe } from '../../core/pipes/translate.pipe';
+```typescript
+import { Component, OnInit, inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { EmployeeService } from "../../core/services/employee.service";
+import { AuthService } from "../../core/services/auth.service";
+import Swal from "sweetalert2";
+import { getFriendlyErrorMessage } from "../../core/utils/error-handler.util";
+
+import { TranslatePipe } from "../../core/pipes/translate.pipe";
 
 declare var bootstrap: any;
 
 @Component({
-  selector: 'app-my-profile',
+  selector: "app-my-profile",
   standalone: true,
   imports: [CommonModule, FormsModule, TranslatePipe],
-  templateUrl: './my-profile.component.html',
+  templateUrl: "./my-profile.component.html",
 })
 export class MyProfileComponent implements OnInit {
   private employeeService = inject(EmployeeService);
@@ -10157,12 +8686,12 @@ export class MyProfileComponent implements OnInit {
   profile: any = null;
   isLoading: boolean = true;
   isAdmin: boolean = false;
-  userName: string = '';
-  userRole: string = '';
-  userEmail: string = '';
+  userName: string = "";
+  userRole: string = "";
+  userEmail: string = "";
 
-  editData = { email: '', phone: '' };
-  pwdData = { oldPassword: '', newPassword: '', confirmNewPassword: '' };
+  editData = { email: "", phone: "" };
+  pwdData = { oldPassword: "", newPassword: "", confirmNewPassword: "" };
   isUpdatingProfile = false;
   isChangingPwd = false;
   isUploadingPic = false;
@@ -10170,22 +8699,16 @@ export class MyProfileComponent implements OnInit {
   pendingProfilePicUrl: string | null = null;
 
   ngOnInit() {
-
     this.isAdmin = this.authService.isAdmin();
-    this.userName = localStorage.getItem('user_name') || 'User';
-    this.userRole = localStorage.getItem('user_role') || 'Employee';
+    this.userName = localStorage.getItem("user_name") || "User";
+    this.userRole = localStorage.getItem("user_role") || "Employee";
 
     if (this.isAdmin) {
-      const token = localStorage.getItem('jwt_token');
+      const token = localStorage.getItem("jwt_token");
       if (token) {
         try {
-          const payload = JSON.parse(atob(token.split('.')[1]));
-          this.userEmail =
-            payload['email'] ||
-            payload[
-              'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
-            ] ||
-            '';
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          this.userEmail = payload["email"] || payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"] || "";
         } catch {}
       }
       this.isLoading = false;
@@ -10194,7 +8717,7 @@ export class MyProfileComponent implements OnInit {
     }
 
     this.profilePicUrl = this.authService.getCurrentUserProfilePic();
-    window.addEventListener('profile_pic_updated', () => {
+    window.addEventListener("profile_pic_updated", () => {
       this.profilePicUrl = this.authService.getCurrentUserProfilePic();
     });
 
@@ -10204,31 +8727,30 @@ export class MyProfileComponent implements OnInit {
           this.pendingProfilePicUrl = me.pendingProfilePictureUrl;
         }
       },
-      error: () => {}
+      error: () => {},
     });
   }
 
   get initials(): string {
     return this.userName
-      .split(' ')
+      .split(" ")
       .map((w) => w[0])
-      .join('')
+      .join("")
       .toUpperCase()
       .slice(0, 2);
   }
 
   getProfileInitials(): string {
-    const name = this.profile?.fullName || this.userName || 'U';
+    const name = this.profile?.fullName || this.userName || "U";
     return name
-      .split(' ')
-      .map((w: string) => w[0] || '')
-      .join('')
+      .split(" ")
+      .map((w: string) => w[0] || "")
+      .join("")
       .toUpperCase()
       .slice(0, 2);
   }
 
   loadMyProfile() {
-
     this.isLoading = true;
     this.employeeService.getMyProfile().subscribe({
       next: (res: any) => {
@@ -10236,7 +8758,7 @@ export class MyProfileComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching my profile:', err);
+        console.error("Error fetching my profile:", err);
         this.isLoading = false;
       },
     });
@@ -10245,14 +8767,13 @@ export class MyProfileComponent implements OnInit {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+      const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
       if (!allowedTypes.includes(file.type)) {
-        Swal.fire('Invalid File', 'Please upload a JPG, PNG, WebP or GIF image.', 'error');
+        Swal.fire("Invalid File", "Please upload a JPG, PNG, WebP or GIF image.", "error");
         return;
       }
       if (file.size > 5 * 1024 * 1024) {
-        Swal.fire('File Too Large', 'Image must be smaller than 5MB.', 'error');
+        Swal.fire("File Too Large", "Image must be smaller than 5MB.", "error");
         return;
       }
 
@@ -10260,28 +8781,28 @@ export class MyProfileComponent implements OnInit {
       this.authService.uploadProfilePicture(file).subscribe({
         next: (res) => {
           this.isUploadingPic = false;
-          
-          if (res?.message && res.message.includes('approval')) {
+
+          if (res?.message && res.message.includes("approval")) {
             this.pendingProfilePicUrl = res?.data ?? null;
             Swal.fire({
-              icon: 'info',
-              title: 'Picture Submitted!',
+              icon: "info",
+              title: "Picture Submitted!",
               html: `<p>Your profile picture has been submitted for review.</p>
                      <p class="text-muted small mt-2">An HR manager will review and approve it shortly. You will be notified once it\'s approved.</p>`,
-              confirmButtonText: 'Got it!',
-              confirmButtonColor: '#4361ee',
+              confirmButtonText: "Got it!",
+              confirmButtonColor: "#4361ee",
             });
           } else {
             this.profilePicUrl = res?.data ?? null;
             this.pendingProfilePicUrl = null;
             if (this.profilePicUrl) {
-              localStorage.setItem('user_profile_pic', this.profilePicUrl);
-              window.dispatchEvent(new Event('profile_pic_updated'));
+              localStorage.setItem("user_profile_pic", this.profilePicUrl);
+              window.dispatchEvent(new Event("profile_pic_updated"));
             }
             Swal.fire({
-              icon: 'success',
-              title: 'Picture Updated!',
-              text: 'Your profile picture has been updated successfully.',
+              icon: "success",
+              title: "Picture Updated!",
+              text: "Your profile picture has been updated successfully.",
               timer: 2000,
               showConfirmButton: false,
             });
@@ -10289,30 +8810,24 @@ export class MyProfileComponent implements OnInit {
         },
         error: (err) => {
           this.isUploadingPic = false;
-          Swal.fire(
-            'Error',
-            getFriendlyErrorMessage(err, 'Failed to upload profile picture.'),
-            'error'
-          );
-        }
+          Swal.fire("Error", getFriendlyErrorMessage(err, "Failed to upload profile picture."), "error");
+        },
       });
     }
   }
 
   openEditModal() {
-    this.editData.email = this.profile?.email || this.userEmail || '';
-    this.editData.phone =
-      this.profile?.phone || this.profile?.phoneNumber || '';
-    this.pwdData = { oldPassword: '', newPassword: '', confirmNewPassword: '' };
+    this.editData.email = this.profile?.email || this.userEmail || "";
+    this.editData.phone = this.profile?.phone || this.profile?.phoneNumber || "";
+    this.pwdData = { oldPassword: "", newPassword: "", confirmNewPassword: "" };
 
-    const modalEl = document.getElementById('editProfileModal');
+    const modalEl = document.getElementById("editProfileModal");
     if (modalEl) {
       new bootstrap.Modal(modalEl).show();
     }
   }
 
   saveProfile() {
-
     let requestsPending = 0;
     let hasError = false;
 
@@ -10334,25 +8849,14 @@ export class MyProfileComponent implements OnInit {
             this.isChangingPwd = false;
             hasError = true;
             requestsPending--;
-            Swal.fire(
-              'Error',
-              getFriendlyErrorMessage(
-                err,
-                'Failed to change password. Please check your current password and try again.',
-              ),
-              'error',
-            );
+            Swal.fire("Error", getFriendlyErrorMessage(err, "Failed to change password. Please check your current password and try again."), "error");
             this.checkDone(requestsPending, hasError);
           },
         });
     }
 
-    const emailChanged =
-      this.editData.email !== (this.profile?.email || this.userEmail);
-    const phoneChanged =
-      this.profile &&
-      this.editData.phone !==
-        (this.profile?.phone || this.profile?.phoneNumber);
+    const emailChanged = this.editData.email !== (this.profile?.email || this.userEmail);
+    const phoneChanged = this.profile && this.editData.phone !== (this.profile?.phone || this.profile?.phoneNumber);
 
     if (emailChanged || phoneChanged) {
       if (this.profile && this.profile.id) {
@@ -10366,37 +8870,26 @@ export class MyProfileComponent implements OnInit {
           phoneNumber: this.editData.phone,
         };
 
-        this.employeeService
-          .updateEmployee(this.profile.id, updatedEmp)
-          .subscribe({
-            next: () => {
-              this.isUpdatingProfile = false;
-              this.profile.email = this.editData.email;
-              this.profile.phone = this.editData.phone;
-              this.userEmail = this.editData.email;
+        this.employeeService.updateEmployee(this.profile.id, updatedEmp).subscribe({
+          next: () => {
+            this.isUpdatingProfile = false;
+            this.profile.email = this.editData.email;
+            this.profile.phone = this.editData.phone;
+            this.userEmail = this.editData.email;
 
-              requestsPending--;
-              this.checkDone(requestsPending, hasError);
-            },
-            error: (err) => {
-              this.isUpdatingProfile = false;
-              hasError = true;
-              requestsPending--;
-              Swal.fire(
-                'Error',
-                getFriendlyErrorMessage(
-                  err,
-                  'Failed to update profile. Please try again.',
-                ),
-                'error',
-              );
-              this.checkDone(requestsPending, hasError);
-            },
-          });
+            requestsPending--;
+            this.checkDone(requestsPending, hasError);
+          },
+          error: (err) => {
+            this.isUpdatingProfile = false;
+            hasError = true;
+            requestsPending--;
+            Swal.fire("Error", getFriendlyErrorMessage(err, "Failed to update profile. Please try again."), "error");
+            this.checkDone(requestsPending, hasError);
+          },
+        });
       } else {
-
         this.userEmail = this.editData.email;
-
       }
     }
 
@@ -10412,7 +8905,7 @@ export class MyProfileComponent implements OnInit {
   }
 
   private closeModalAndShowSuccess() {
-    const modalEl = document.getElementById('editProfileModal');
+    const modalEl = document.getElementById("editProfileModal");
     if (modalEl) {
       const modalInstance = bootstrap.Modal.getInstance(modalEl);
       if (modalInstance) {
@@ -10420,280 +8913,272 @@ export class MyProfileComponent implements OnInit {
       }
     }
     Swal.fire({
-      icon: 'success',
-      title: 'Profile Updated',
-      text: 'Your profile has been updated successfully.',
+      icon: "success",
+      title: "Profile Updated",
+      text: "Your profile has been updated successfully.",
       timer: 2000,
       showConfirmButton: false,
     });
   }
 }
-
 ```
 
 ### File: src\app\features\payroll-adjustments\payroll-adjustments.component.html
+
 ```html
 <div class="page-container p-4">
-    <div
-        class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <div class="d-flex align-items-center">
-            <div
-                class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3"
-                style="width: 48px; height: 48px;">
-                <i class="bi bi-wallet2 fs-4"></i>
-            </div>
-            <div>
-                <h2 class="fw-bold text-dark mb-1">{{ 'Bonus & Penalty' | t
-                    }}</h2>
-                <p class="text-muted small mb-0">{{
-                    'Manage employee deductions and allowances before payroll' |
-                    t }}</p>
-            </div>
-        </div>
-        <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
-                    <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> 
-                    <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
-                </button>
-                <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
-                    <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i> 
-                    <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
-                </button>
-            </div>
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div class="d-flex align-items-center">
+      <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+        <i class="bi bi-wallet2 fs-4"></i>
+      </div>
+      <div>
+        <h2 class="fw-bold text-dark mb-1">{{ 'Bonus & Penalty' | t }}</h2>
+        <p class="text-muted small mb-0">{{ 'Manage employee deductions and allowances before payroll' | t }}</p>
+      </div>
+    </div>
+    <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
+          <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i>
+          <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
+        </button>
+        <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
+          <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i>
+          <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
+        </button>
+      </div>
+      @if (isAdminOrHR) {
+      <button class="btn btn-primary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="openAddModal()">
+        <i class="bi bi-plus-lg" [class.me-md-1]="true"></i>
+        <span class="d-none d-md-inline">{{ 'Add Adjustment' | t }}</span>
+      </button>
+      }
+    </div>
+  </div>
+
+  <div class="row mb-4 align-items-end">
+    <div class="col-md-3">
+      <label class="form-label text-muted small fw-bold">{{ 'Month' | t }}</label>
+      <select class="form-select" [(ngModel)]="filterMonth" (change)="onFilterChange()">
+        <option value="">{{ 'All Months' | t }}</option>
+        <option *ngFor="let m of months" [value]="m.value">{{ m.label }}</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label text-muted small fw-bold">{{ 'Year' | t }}</label>
+      <input type="number" class="form-control" [(ngModel)]="filterYear" (change)="onFilterChange()" placeholder="e.g. 2026" />
+    </div>
+  </div>
+
+  @if (isLoading) {
+  <div class="text-center my-5 py-5">
+    <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;"></div>
+    <p class="text-muted fw-medium fs-5">Fetching adjustments...</p>
+  </div>
+  } @else {
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="bg-light">
+          <tr>
+            <th class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0">ID</th>
+            <th class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0">Employee</th>
+            <th class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0">Type</th>
+            <th class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0">Amount</th>
+            <th class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0">Target Month</th>
+            <th class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0">Status</th>
+            <th class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0">Reason</th>
             @if (isAdminOrHR) {
-            <button
-                class="btn btn-primary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap"
-                (click)="openAddModal()">
-                <i class="bi bi-plus-lg" [class.me-md-1]="true"></i> 
-                <span class="d-none d-md-inline">{{ 'Add Adjustment' | t }}</span>
-            </button>
+            <th class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0 text-end">Actions</th>
             }
-        </div>
+          </tr>
+        </thead>
+        <tbody class="border-top-0">
+          @for (adj of adjustments; track adj.id) {
+          <tr>
+            <td class="py-3 px-4 fw-bold text-secondary">#{{ adj.id }}</td>
+            <td class="py-3 px-4 fw-bold text-dark">
+              <div class="d-flex align-items-center">
+                <ng-container *ngIf="adj.employeeProfilePictureUrl; else noAdjPic">
+                  <img [src]="adj.employeeProfilePictureUrl" alt="User" class="rounded-circle me-3 object-fit-cover shadow-sm flex-shrink-0" style="width: 35px; height: 35px; border: 2px solid #fff;" />
+                </ng-container>
+                <ng-template #noAdjPic>
+                  <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-3 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px; font-size: 13px;">{{ (adj.employeeName || getEmployeeName(adj.employeeId)).charAt(0) }}</div>
+                </ng-template>
+                {{ adj.employeeName || getEmployeeName(adj.employeeId) }}
+              </div>
+            </td>
+            <td class="py-3 px-4">
+              @if (adj.type === 0) {
+              <span class="badge bg-danger bg-opacity-10 text-danger px-2 py-1 rounded-2 fw-semibold">Penalty</span>
+              } @else {
+              <span class="badge bg-success bg-opacity-10 text-success px-2 py-1 rounded-2 fw-semibold">Bonus</span>
+              }
+            </td>
+            <td class="py-3 px-4 fw-bold" [class.text-danger]="adj.type === 0" [class.text-success]="adj.type === 1">{{ adj.type === 0 ? '-' : '+' }}{{ adj.amount | number:'1.2-2' }} JD</td>
+            <td class="py-3 px-4 text-muted">
+              <span class="fw-semibold">{{ adj.date | date:'MMM yyyy' }}</span>
+            </td>
+            <td class="py-3 px-4">
+              @if (adj.isApplied) {
+              <span class="badge rounded-pill px-3 py-2" style="background-color:#d1fae5; color:#065f46; font-size:0.78rem;"> <i class="bi bi-check-circle-fill me-1"></i>Applied & Paid </span>
+              } @else {
+              <span class="badge rounded-pill px-3 py-2" style="background-color:#fef3c7; color:#92400e; font-size:0.78rem;"> <i class="bi bi-hourglass-split me-1"></i>Pending </span>
+              }
+            </td>
+            <td class="py-3 px-4 text-muted text-wrap">{{ adj.reason }}</td>
+            @if (isAdminOrHR) {
+            <td class="py-3 px-4 text-end">
+              <button class="btn btn-light btn-sm rounded-circle shadow-none text-danger d-inline-flex align-items-center justify-content-center p-0" style="width: 32px; height: 32px;" [disabled]="adj.isApplied" (click)="deleteAdjustment(adj.id)" title="Delete Adjustment">
+                <i class="bi bi-trash3"></i>
+              </button>
+            </td>
+            }
+          </tr>
+          } @empty {
+          <tr>
+            <td colspan="7" class="text-center py-5">
+              <div class="text-muted d-flex flex-column align-items-center">
+                <i class="bi bi-inbox fs-1 mb-3 text-black-50"></i>
+                <span class="fw-medium fs-5">No adjustments found.</span>
+                <p class="small mt-1">Add a penalty or bonus to see it listed here.</p>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
     </div>
-
-    @if (isLoading) {
-    <div class="text-center my-5 py-5">
-        <div class="spinner-border text-primary mb-3" role="status"
-            style="width: 3rem; height: 3rem;"></div>
-        <p class="text-muted fw-medium fs-5">Fetching adjustments...</p>
-    </div>
-    } @else {
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="bg-light">
-                    <tr>
-                        <th
-                            class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0">ID</th>
-                        <th
-                            class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0">Employee</th>
-                        <th
-                            class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0">Type</th>
-                        <th
-                            class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0">Amount</th>
-                        <th
-                            class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0">Date</th>
-                        <th
-                            class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0">Reason</th>
-                        @if (isAdminOrHR) {
-                        <th
-                            class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0 text-end">Actions</th>
-                        }
-                    </tr>
-                </thead>
-                <tbody class="border-top-0">
-                    @for (adj of adjustments; track adj.id) {
-                    <tr>
-                        <td class="py-3 px-4 fw-bold text-secondary">#{{ adj.id
-                            }}</td>
-                        <td class="py-3 px-4 fw-bold text-dark">
-                            <div class="d-flex align-items-center">
-                                <ng-container *ngIf="adj.employeeProfilePictureUrl; else noAdjPic">
-                                    <img [src]="adj.employeeProfilePictureUrl" alt="User" class="rounded-circle me-3 object-fit-cover shadow-sm flex-shrink-0" style="width: 35px; height: 35px; border: 2px solid #fff;">
-                                </ng-container>
-                                <ng-template #noAdjPic>
-                                    <div
-                                        class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-3 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                                        style="width: 35px; height: 35px; font-size: 13px;">
-                                        {{ (adj.employeeName ||
-                                        getEmployeeName(adj.employeeId)).charAt(0)
-                                        }}
-                                    </div>
-                                </ng-template>
-                                {{ adj.employeeName ||
-                                getEmployeeName(adj.employeeId) }}
-                            </div>
-                        </td>
-                        <td class="py-3 px-4">
-                            @if (adj.type === 0) {
-                            <span
-                                class="badge bg-danger bg-opacity-10 text-danger px-2 py-1 rounded-2 fw-semibold">Penalty</span>
-                            } @else {
-                            <span
-                                class="badge bg-success bg-opacity-10 text-success px-2 py-1 rounded-2 fw-semibold">Bonus</span>
-                            }
-                        </td>
-                        <td class="py-3 px-4 fw-bold"
-                            [class.text-danger]="adj.type === 0"
-                            [class.text-success]="adj.type === 1">
-                            {{ adj.type === 0 ? '-' : '+' }}{{ adj.amount |
-                            number:'1.2-2' }} JD
-                        </td>
-                        <td class="py-3 px-4 text-muted">{{ adj.date |
-                            date:'mediumDate' }}</td>
-                        <td class="py-3 px-4 text-muted text-wrap">
-                            {{ adj.reason }}
-                        </td>
-                        @if (isAdminOrHR) {
-                        <td class="py-3 px-4 text-end">
-                            <button
-                                class="btn btn-light btn-sm rounded-circle shadow-none text-danger d-inline-flex align-items-center justify-content-center p-0"
-                                style="width: 32px; height: 32px;"
-                                [disabled]="adj.isApplied"
-                                (click)="deleteAdjustment(adj.id)"
-                                title="Delete Adjustment">
-                                <i class="bi bi-trash3"></i>
-                            </button>
-                        </td>
-                        }
-                    </tr>
-                    } @empty {
-                    <tr>
-                        <td colspan="7" class="text-center py-5">
-                            <div
-                                class="text-muted d-flex flex-column align-items-center">
-                                <i
-                                    class="bi bi-inbox fs-1 mb-3 text-black-50"></i>
-                                <span class="fw-medium fs-5">No adjustments
-                                    found.</span>
-                                <p class="small mt-1">Add a penalty or bonus to
-                                    see it listed here.</p>
-                            </div>
-                        </td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-    }
+  </div>
+  }
 </div>
 
-<div class="modal fade" id="addAdjustmentModal" tabindex="-1"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
-            <div class="modal-header border-bottom bg-light">
-                <h5 class="modal-title text-primary fw-bold">
-                    <i class="bi bi-plus-circle me-2"></i> {{ 'Add Adjustment' |
-                    t }}
-                </h5>
-                <button type="button" class="btn-close shadow-none"
-                    data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal fade" id="addAdjustmentModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header border-bottom bg-light">
+        <h5 class="modal-title text-primary fw-bold"><i class="bi bi-plus-circle me-2"></i> {{ 'Add Adjustment' | t }}</h5>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form [formGroup]="addForm" (ngSubmit)="saveAdjustment()">
+        <div class="modal-body p-4">
+          <div class="mb-3 border-bottom pb-3">
+            <label class="form-label fw-bold text-secondary d-block">{{ 'Apply To' | t }} <span class="text-danger">*</span></label>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" formControlName="targetType" value="individual" id="targetIndividual" />
+              <label class="form-check-label" for="targetIndividual">Specific Employee</label>
             </div>
-            <form [formGroup]="addForm" (ngSubmit)="saveAdjustment()">
-                <div class="modal-body p-4">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold text-secondary">{{
-                            'Employee' | t }} <span
-                                class="text-danger">*</span></label>
-                        <select class="form-select" formControlName="employeeId"
-                            [class.is-invalid]="addForm.get('employeeId')?.invalid && addForm.get('employeeId')?.touched">
-                            <option value disabled selected>Select
-                                Employee</option>
-                            <option *ngFor="let emp of employees"
-                                [value]="emp.id">{{ emp.firstName }} {{
-                                emp.lastName }} (ID: {{emp.id}})</option>
-                        </select>
-                        <div class="invalid-feedback">Please select an
-                            employee.</div>
-                    </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" formControlName="targetType" value="department" id="targetDepartment" />
+              <label class="form-check-label" for="targetDepartment">Specific Department</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" formControlName="targetType" value="all" id="targetAll" />
+              <label class="form-check-label" for="targetAll">All Employees</label>
+            </div>
+          </div>
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold text-secondary">{{
-                                'Type' | t }} <span
-                                    class="text-danger">*</span></label>
-                            <select class="form-select" formControlName="type">
-                                <option *ngFor="let t of adjustmentTypes"
-                                    [ngValue]="t.value">{{ t.label }}</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold text-secondary">{{
-                                'Amount (JD)' | t }} <span
-                                    class="text-danger">*</span></label>
-                            <input type="number" class="form-control"
-                                formControlName="amount" min="0.01" step="0.01"
-                                placeholder="0.00"
-                                [class.is-invalid]="addForm.get('amount')?.invalid && addForm.get('amount')?.touched">
-                            <div class="invalid-feedback">Valid amount is
-                                required.</div>
-                        </div>
-                    </div>
+          <div class="mb-3" *ngIf="addForm.get('targetType')?.value === 'individual'">
+            <label class="form-label fw-bold text-secondary">{{ 'Employee' | t }} <span class="text-danger">*</span></label>
+            <select class="form-select" formControlName="employeeId" [class.is-invalid]="addForm.get('employeeId')?.invalid && addForm.get('employeeId')?.touched">
+              <option value disabled selected>Select Employee</option>
+              <option *ngFor="let emp of employees" [value]="emp.id">{{ emp.firstName }} {{ emp.lastName }} (ID: {{emp.id}})</option>
+            </select>
+            <div class="invalid-feedback">Please select an employee.</div>
+          </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold text-secondary">{{
-                            'Reason' | t }} <span
-                                class="text-danger">*</span></label>
-                        <textarea class="form-control" formControlName="reason"
-                            rows="3"
-                            placeholder="e.g. Late for work, Outstanding performance..."
-                            [class.is-invalid]="addForm.get('reason')?.invalid && addForm.get('reason')?.touched"></textarea>
-                        <div class="invalid-feedback">Reason is required.</div>
-                    </div>
-                </div>
-                <div class="modal-footer bg-light border-top-0">
-                    <button type="button" class="btn btn-light px-4 border"
-                        data-bs-dismiss="modal" [disabled]="isSubmitting">{{
-                        'Cancel' | t }}</button>
-                    <button type="submit" class="btn btn-primary px-4"
-                        [disabled]="addForm.invalid || isSubmitting">
-                        @if (isSubmitting) {
-                        <span class="spinner-border spinner-border-sm me-2"
-                            role="status" aria-hidden="true"></span> Saving...
-                        } @else {
-                        <i class="bi bi-save me-1"></i> {{ 'Save Adjustment' | t
-                        }}
-                        }
-                    </button>
-                </div>
-            </form>
+          <div class="mb-3" *ngIf="addForm.get('targetType')?.value === 'department'">
+            <label class="form-label fw-bold text-secondary">{{ 'Department' | t }} <span class="text-danger">*</span></label>
+            <select class="form-select" formControlName="departmentId">
+              <option value disabled selected>Select Department</option>
+              <option *ngFor="let dept of departments" [value]="dept.id">{{ dept.name }}</option>
+            </select>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold text-secondary">{{ 'Type' | t }} <span class="text-danger">*</span></label>
+              <select class="form-select" formControlName="type">
+                <option *ngFor="let t of adjustmentTypes" [ngValue]="t.value">{{ t.label }}</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold text-secondary">{{ 'Amount (JD)' | t }} <span class="text-danger">*</span></label>
+              <input type="number" class="form-control" formControlName="amount" min="0.01" step="0.01" placeholder="0.00" [class.is-invalid]="addForm.get('amount')?.invalid && addForm.get('amount')?.touched" />
+              <div class="invalid-feedback">Valid amount is required.</div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-6">
+              <label class="form-label fw-bold text-secondary">Target Month <span class="text-danger">*</span></label>
+              <select class="form-select" formControlName="targetMonth">
+                <option *ngFor="let m of months" [value]="m.value">{{ m.label }}</option>
+              </select>
+            </div>
+            <div class="col-6">
+              <label class="form-label fw-bold text-secondary">Target Year <span class="text-danger">*</span></label>
+              <select class="form-select" formControlName="targetYear">
+                <option [value]="2023">2023</option>
+                <option [value]="2024">2024</option>
+                <option [value]="2025">2025</option>
+                <option [value]="2026">2026</option>
+                <option [value]="2027">2027</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold text-secondary">{{ 'Reason' | t }} <span class="text-danger">*</span></label>
+            <textarea class="form-control" formControlName="reason" rows="3" placeholder="e.g. Late for work, Outstanding performance..." [class.is-invalid]="addForm.get('reason')?.invalid && addForm.get('reason')?.touched"></textarea>
+            <div class="invalid-feedback">Reason is required.</div>
+          </div>
         </div>
+        <div class="modal-footer bg-light border-top-0">
+          <button type="button" class="btn btn-light px-4 border" data-bs-dismiss="modal" [disabled]="isSubmitting">{{ 'Cancel' | t }}</button>
+          <button type="submit" class="btn btn-primary px-4" [disabled]="addForm.invalid || isSubmitting">
+            @if (isSubmitting) {
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Saving... } @else { <i class="bi bi-save me-1"></i> {{ 'Save Adjustment' | t }} }
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
-
 ```
 
 ### File: src\app\features\payroll-adjustments\payroll-adjustments.component.ts
+
 ```typescript
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { PayrollAdjustmentService } from '../../core/services/payroll-adjustments.service';
-import { EmployeeService } from '../../core/services/employee.service';
-import { AuthService } from '../../core/services/auth.service';
-import Swal from 'sweetalert2';
-import { AdjustmentType, PayrollAdjustmentDto } from '../../core/models/payroll-adjustment.model';
-import { TranslatePipe } from '../../core/pipes/translate.pipe';
-import { PdfExportService } from '../../core/services/pdf-export.service';
-import { ExcelExportService } from '../../core/services/excel-export.service';
-import { Router } from '@angular/router';
+import { Component, OnInit, inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from "@angular/forms";
+import { PayrollAdjustmentService } from "../../core/services/payroll-adjustments.service";
+import { EmployeeService } from "../../core/services/employee.service";
+import { DepartmentService } from "../../core/services/department.service";
+import { AuthService } from "../../core/services/auth.service";
+import Swal from "sweetalert2";
+import { AdjustmentType, PayrollAdjustmentDto } from "../../core/models/payroll-adjustment.model";
+import { TranslatePipe } from "../../core/pipes/translate.pipe";
+import { PdfExportService } from "../../core/services/pdf-export.service";
+import { ExcelExportService } from "../../core/services/excel-export.service";
+import { Router } from "@angular/router";
 
 declare var bootstrap: any;
 
 @Component({
-  selector: 'app-payroll-adjustments',
+  selector: "app-payroll-adjustments",
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe],
-  templateUrl: './payroll-adjustments.component.html',
-  styleUrls: ['./payroll-adjustments.component.css']
+  templateUrl: "./payroll-adjustments.component.html",
+  styleUrls: ["./payroll-adjustments.component.css"],
 })
 export class PayrollAdjustmentsComponent implements OnInit {
   private fb = inject(FormBuilder);
   private adjustmentService = inject(PayrollAdjustmentService);
   private employeeService = inject(EmployeeService);
+  private departmentService = inject(DepartmentService);
   private authService = inject(AuthService);
   private pdfExportService = inject(PdfExportService);
   private excelExportService = inject(ExcelExportService);
@@ -10701,44 +9186,86 @@ export class PayrollAdjustmentsComponent implements OnInit {
 
   adjustments: PayrollAdjustmentDto[] = [];
   employees: any[] = [];
+  departments: any[] = [];
   isLoading = false;
   isSubmitting = false;
   isAdminOrHR = false;
 
   addForm: FormGroup;
   adjustmentTypes = [
-    { value: AdjustmentType.Penalty, label: 'Penalty (Deduction)' },
-    { value: AdjustmentType.Bonus, label: 'Bonus (Allowance)' }
+    { value: AdjustmentType.Penalty, label: "Penalty (Deduction)" },
+    { value: AdjustmentType.Bonus, label: "Bonus (Allowance)" },
   ];
 
   pageNumber = 1;
   pageSize = 100;
   totalItems = 0;
 
+  filterMonth: number | "" = "";
+  filterYear: number | "" = new Date().getFullYear();
+
+  months = [
+    { value: 1, label: "January" },
+    { value: 2, label: "February" },
+    { value: 3, label: "March" },
+    { value: 4, label: "April" },
+    { value: 5, label: "May" },
+    { value: 6, label: "June" },
+    { value: 7, label: "July" },
+    { value: 8, label: "August" },
+    { value: 9, label: "September" },
+    { value: 10, label: "October" },
+    { value: 11, label: "November" },
+    { value: 12, label: "December" },
+  ];
+
   constructor() {
+    const now = new Date();
     this.addForm = this.fb.group({
-      employeeId: ['', Validators.required],
+      targetType: ["individual", Validators.required],
+      employeeId: [""],
+      departmentId: [""],
       type: [AdjustmentType.Penalty, Validators.required],
-      amount: ['', [Validators.required, Validators.min(0.01)]],
-      reason: ['', [Validators.required, Validators.maxLength(250)]]
+      amount: ["", [Validators.required, Validators.min(0.01)]],
+      reason: ["", [Validators.required, Validators.maxLength(500)]],
+      targetMonth: [now.getMonth() + 1, [Validators.required, Validators.min(1), Validators.max(12)]],
+      targetYear: [now.getFullYear(), [Validators.required, Validators.min(2000), Validators.max(2100)]],
     });
   }
 
   ngOnInit(): void {
     this.isAdminOrHR = this.authService.isAdminOrHR();
-    
+
     this.loadAdjustments();
     if (this.isAdminOrHR) {
       this.loadEmployees();
+      this.loadDepartments();
     }
+  }
+
+  onFilterChange() {
+    this.pageNumber = 1;
+    this.loadAdjustments();
+  }
+
+  loadDepartments() {
+    this.departmentService.getDepartments().subscribe({
+      next: (res: any) => {
+        let extracted = [];
+        if (Array.isArray(res)) extracted = res;
+        else if (res?.data && Array.isArray(res.data)) extracted = res.data;
+        this.departments = extracted;
+      },
+    });
   }
 
   loadAdjustments() {
     this.isLoading = true;
-    
-    const request = this.isAdminOrHR 
-      ? this.adjustmentService.getAll(this.pageNumber, this.pageSize)
-      : this.adjustmentService.getMyAdjustments(this.pageNumber, this.pageSize);
+
+    const m = this.filterMonth ? Number(this.filterMonth) : undefined;
+    const y = this.filterYear ? Number(this.filterYear) : undefined;
+
+    const request = this.isAdminOrHR ? this.adjustmentService.getAll(this.pageNumber, this.pageSize, m, y) : this.adjustmentService.getMyAdjustments(this.pageNumber, this.pageSize, m, y);
 
     request.subscribe({
       next: (res: any) => {
@@ -10747,7 +9274,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
         else if (res?.items && Array.isArray(res.items)) extracted = res.items;
         else if (res?.data?.items && Array.isArray(res.data.items)) extracted = res.data.items;
         else if (res?.data && Array.isArray(res.data)) extracted = res.data;
-        
+
         this.adjustments = extracted;
         this.totalItems = res?.totalCount || res?.data?.totalCount || 0;
         this.isLoading = false;
@@ -10755,10 +9282,10 @@ export class PayrollAdjustmentsComponent implements OnInit {
       error: (err: any) => {
         console.error(err);
         if (err.status !== 401 && err.status !== 403) {
-          Swal.fire('Error', 'Failed to load adjustments', 'error');
+          Swal.fire("Error", "Failed to load adjustments", "error");
         }
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -10773,13 +9300,19 @@ export class PayrollAdjustmentsComponent implements OnInit {
       },
       error: (err: any) => {
         console.error(err);
-      }
+      },
     });
   }
 
   openAddModal() {
-    this.addForm.reset({ type: AdjustmentType.Penalty });
-    const modalElement = document.getElementById('addAdjustmentModal');
+    const now = new Date();
+    this.addForm.reset({
+      targetType: "individual",
+      type: AdjustmentType.Penalty,
+      targetMonth: now.getMonth() + 1,
+      targetYear: now.getFullYear(),
+    });
+    const modalElement = document.getElementById("addAdjustmentModal");
     if (modalElement) {
       const modal = new bootstrap.Modal(modalElement);
       modal.show();
@@ -10794,13 +9327,43 @@ export class PayrollAdjustmentsComponent implements OnInit {
 
     this.isSubmitting = true;
     const dto = this.addForm.value;
+    const target = dto.targetType;
 
-    this.adjustmentService.create(dto).subscribe({
-      next: () => {
-        Swal.fire('Success', 'Adjustment created successfully', 'success');
+    let request;
+    if (target === "individual") {
+      if (!dto.employeeId) {
+        Swal.fire("Error", "Please select an employee", "error");
+        this.isSubmitting = false;
+        return;
+      }
+      request = this.adjustmentService.create({
+        employeeId: Number(dto.employeeId),
+        type: dto.type,
+        amount: dto.amount,
+        reason: dto.reason,
+        month: dto.targetMonth,
+        year: dto.targetYear,
+      });
+    } else {
+      const bulkDto: any = {
+        type: dto.type,
+        amount: dto.amount,
+        reason: dto.reason,
+        month: dto.targetMonth,
+        year: dto.targetYear,
+      };
+      if (target === "department" && dto.departmentId) {
+        bulkDto.departmentId = Number(dto.departmentId);
+      }
+      request = this.adjustmentService.createBulk(bulkDto);
+    }
+
+    request.subscribe({
+      next: (res: any) => {
+        Swal.fire("Success", res?.message || "Adjustment created successfully", "success");
         this.loadAdjustments();
         this.isSubmitting = false;
-        const modalElement = document.getElementById('addAdjustmentModal');
+        const modalElement = document.getElementById("addAdjustmentModal");
         if (modalElement) {
           const modal = bootstrap.Modal.getInstance(modalElement);
           modal?.hide();
@@ -10808,100 +9371,90 @@ export class PayrollAdjustmentsComponent implements OnInit {
       },
       error: (err: any) => {
         console.error(err);
-        Swal.fire('Error', 'Failed to create adjustment', 'error');
+        Swal.fire("Error", "Failed to create adjustment", "error");
         this.isSubmitting = false;
-      }
+      },
     });
   }
 
   deleteAdjustment(id: number) {
     Swal.fire({
-      title: 'Are you sure?',
+      title: "Are you sure?",
       text: "You won't be able to revert this!",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#dc3545',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonColor: "#dc3545",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Delete",
     }).then((result) => {
       if (result.isConfirmed) {
         this.adjustmentService.delete(id).subscribe({
           next: () => {
-            Swal.fire('Deleted!', 'Adjustment has been deleted.', 'success');
+            Swal.fire("Deleted!", "Adjustment has been deleted.", "success");
             this.loadAdjustments();
           },
           error: (err: any) => {
             console.error(err);
-            Swal.fire('Error!', 'Failed to delete adjustment. It may have already been applied.', 'error');
-          }
+            Swal.fire("Error!", "Failed to delete adjustment. It may have already been applied.", "error");
+          },
         });
       }
     });
   }
 
   getEmployeeName(id: number): string {
-    const emp = this.employees.find(e => e.id === id);
+    const emp = this.employees.find((e) => e.id === id);
     return emp ? `${emp.firstName} ${emp.lastName}` : `Unknown (#${id})`;
   }
 
   exportToPDF() {
     if (this.adjustments.length === 0) {
-      Swal.fire('No Data', 'There are no adjustments to export.', 'info');
+      Swal.fire("No Data", "There are no adjustments to export.", "info");
       return;
     }
 
-    const headers = ['ID', 'Employee', 'Type', 'Amount', 'Reason', 'Applied'];
-    const data = this.adjustments.map(adj => [
-      `#${adj.id}`,
-      this.isAdminOrHR ? this.getEmployeeName(adj.employeeId) : `Emp #${adj.employeeId}`,
-      adj.type === 0 ? 'Penalty' : 'Bonus',
-      `JD ${adj.amount.toFixed(2)}`,
-      adj.reason || '—',
-      adj.isApplied ? 'Yes' : 'No'
-    ]);
+    const headers = ["ID", "Employee", "Type", "Amount", "Reason", "Applied"];
+    const data = this.adjustments.map((adj) => [`#${adj.id}`, this.isAdminOrHR ? this.getEmployeeName(adj.employeeId) : `Emp #${adj.employeeId}`, adj.type === 0 ? "Penalty" : "Bonus", `JD ${adj.amount.toFixed(2)}`, adj.reason || "—", adj.isApplied ? "Yes" : "No"]);
 
     const additionalInfo = [
-      { label: 'Total Adjustments', value: String(this.adjustments.length) },
-      { label: 'Total Penalties', value: `JD ${this.adjustments.filter(a => a.type === 0).reduce((sum, a) => sum + a.amount, 0).toFixed(2)}` },
-      { label: 'Total Bonuses', value: `JD ${this.adjustments.filter(a => a.type === 1).reduce((sum, a) => sum + a.amount, 0).toFixed(2)}` }
+      { label: "Total Adjustments", value: String(this.adjustments.length) },
+      {
+        label: "Total Penalties",
+        value: `JD ${this.adjustments
+          .filter((a) => a.type === 0)
+          .reduce((sum, a) => sum + a.amount, 0)
+          .toFixed(2)}`,
+      },
+      {
+        label: "Total Bonuses",
+        value: `JD ${this.adjustments
+          .filter((a) => a.type === 1)
+          .reduce((sum, a) => sum + a.amount, 0)
+          .toFixed(2)}`,
+      },
     ];
 
-    this.pdfExportService.generateTableReport(
-      'Payroll Adjustments Report',
-      headers,
-      data,
-      'Adjustments_Report',
-      additionalInfo
-    );
+    this.pdfExportService.generateTableReport("Payroll Adjustments Report", headers, data, "Adjustments_Report", additionalInfo);
   }
 
   exportToExcel() {
     if (this.adjustments.length === 0) {
-      Swal.fire('No Data', 'There are no adjustments to export.', 'info');
+      Swal.fire("No Data", "There are no adjustments to export.", "info");
       return;
     }
 
-    const headers = ['ID', 'Employee', 'Type', 'Amount', 'Reason', 'Applied'];
-    const data = this.adjustments.map(adj => [
-      `#${adj.id}`,
-      this.isAdminOrHR ? this.getEmployeeName(adj.employeeId) : `Emp #${adj.employeeId}`,
-      adj.type === 0 ? 'Penalty' : 'Bonus',
-      `JD ${adj.amount.toFixed(2)}`,
-      adj.reason || '—',
-      adj.isApplied ? 'Yes' : 'No'
-    ]);
+    const headers = ["ID", "Employee", "Type", "Amount", "Reason", "Applied"];
+    const data = this.adjustments.map((adj) => [`#${adj.id}`, this.isAdminOrHR ? this.getEmployeeName(adj.employeeId) : `Emp #${adj.employeeId}`, adj.type === 0 ? "Penalty" : "Bonus", `JD ${adj.amount.toFixed(2)}`, adj.reason || "—", adj.isApplied ? "Yes" : "No"]);
 
-    this.excelExportService.exportTableToExcel(headers, data, 'Adjustments');
+    this.excelExportService.exportTableToExcel(headers, data, "Adjustments");
   }
 }
-
 ```
 
 ### File: src\app\features\pending-approvals\pending-approvals.component.html
+
 ```html
 <div class="page-wrapper">
-
-  
   <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
     <div class="d-flex align-items-center gap-3">
       <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
@@ -10913,29 +9466,25 @@ export class PayrollAdjustmentsComponent implements OnInit {
       </div>
     </div>
     <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
-        <div class="d-flex gap-2">
-            <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
-                <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> 
-                <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
-            </button>
-            <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
-                <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i> 
-                <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
-            </button>
-        </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
+          <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i>
+          <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
+        </button>
+        <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
+          <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i>
+          <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
+        </button>
+      </div>
     </div>
   </div>
 
-  
   @if (isLoading) {
   <div class="text-center py-5">
     <div class="spinner-border text-warning" role="status"></div>
     <p class="mt-3 text-muted">Loading pending requests...</p>
   </div>
-  }
-
-  
-  @else if (pendingPictures.length === 0) {
+  } @else if (pendingPictures.length === 0) {
   <div class="card border-0 shadow-sm rounded-4 text-center py-5">
     <div class="d-flex flex-column align-items-center gap-3">
       <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
@@ -10945,10 +9494,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
       <p class="text-muted small mb-0">{{ 'There are no pending profile picture requests at this time.' | t }}</p>
     </div>
   </div>
-  }
-
-  
-  @else {
+  } @else {
   <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
     <div class="card-header bg-white border-0 p-3 d-flex justify-content-between align-items-center">
       <span class="fw-semibold text-dark">
@@ -10971,13 +9517,9 @@ export class PayrollAdjustmentsComponent implements OnInit {
         <tbody>
           @for (pic of pendingPictures; track pic.userId) {
           <tr class="border-top">
-            
             <td class="ps-4 py-3">
               <div class="d-flex align-items-center gap-3">
-                <div class="rounded-circle bg-primary bg-opacity-10 text-primary fw-bold d-flex align-items-center justify-content-center flex-shrink-0"
-                  style="width: 40px; height: 40px; font-size: 14px;">
-                  {{ (pic.username || 'E').charAt(0).toUpperCase() }}
-                </div>
+                <div class="rounded-circle bg-primary bg-opacity-10 text-primary fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 40px; height: 40px; font-size: 14px;">{{ (pic.username || 'E').charAt(0).toUpperCase() }}</div>
                 <div>
                   <div class="fw-semibold text-dark">{{ pic.username }}</div>
                   <small class="text-muted">{{ pic.email }}</small>
@@ -10985,45 +9527,27 @@ export class PayrollAdjustmentsComponent implements OnInit {
               </div>
             </td>
 
-            
             <td class="py-3">
               <div class="d-flex align-items-center gap-2">
-                <img *ngIf="pic.currentProfilePictureUrl"
-                  [src]="pic.currentProfilePictureUrl"
-                  class="rounded-circle object-fit-cover border shadow-sm"
-                  style="width: 52px; height: 52px;"
-                  alt="Current">
-                <div *ngIf="!pic.currentProfilePictureUrl"
-                  class="rounded-circle bg-secondary bg-opacity-15 text-secondary d-flex align-items-center justify-content-center"
-                  style="width: 52px; height: 52px;">
+                <img *ngIf="pic.currentProfilePictureUrl" [src]="pic.currentProfilePictureUrl" class="rounded-circle object-fit-cover border shadow-sm" style="width: 52px; height: 52px;" alt="Current" />
+                <div *ngIf="!pic.currentProfilePictureUrl" class="rounded-circle bg-secondary bg-opacity-15 text-secondary d-flex align-items-center justify-content-center" style="width: 52px; height: 52px;">
                   <i class="bi bi-person-fill fs-5"></i>
                 </div>
                 <span *ngIf="!pic.currentProfilePictureUrl" class="text-muted small fst-italic">No picture</span>
               </div>
             </td>
 
-            
             <td class="py-3">
               <div class="d-flex align-items-center gap-2">
-                <img [src]="pic.pendingProfilePictureUrl"
-                  class="rounded-circle object-fit-cover border border-2 border-warning shadow"
-                  style="width: 60px; height: 60px;"
-                  alt="Pending">
-                <span class="badge bg-warning text-dark rounded-pill px-2 py-1" style="font-size: 10px;">
-                  <i class="bi bi-clock me-1"></i>Pending
-                </span>
+                <img [src]="pic.pendingProfilePictureUrl" class="rounded-circle object-fit-cover border border-2 border-warning shadow" style="width: 60px; height: 60px;" alt="Pending" />
+                <span class="badge bg-warning text-dark rounded-pill px-2 py-1" style="font-size: 10px;"> <i class="bi bi-clock me-1"></i>Pending </span>
               </div>
             </td>
 
-            
             <td class="py-3 pe-4 text-end">
               <div class="d-flex gap-2 justify-content-end">
-                <button class="btn btn-success btn-sm px-3 shadow-sm" (click)="approve(pic.userId)">
-                  <i class="bi bi-check-lg me-1"></i>{{ 'Approve' | t }}
-                </button>
-                <button class="btn btn-outline-danger btn-sm px-3" (click)="reject(pic.userId)">
-                  <i class="bi bi-x-lg me-1"></i>{{ 'Reject' | t }}
-                </button>
+                <button class="btn btn-success btn-sm px-3 shadow-sm" (click)="approve(pic.userId)"><i class="bi bi-check-lg me-1"></i>{{ 'Approve' | t }}</button>
+                <button class="btn btn-outline-danger btn-sm px-3" (click)="reject(pic.userId)"><i class="bi bi-x-lg me-1"></i>{{ 'Reject' | t }}</button>
               </div>
             </td>
           </tr>
@@ -11033,33 +9557,32 @@ export class PayrollAdjustmentsComponent implements OnInit {
     </div>
   </div>
   }
-
 </div>
 
 <style>
-.page-wrapper {
-  padding: 1.5rem;
-}
+  .page-wrapper {
+    padding: 1.5rem;
+  }
 </style>
-
 ```
 
 ### File: src\app\features\pending-approvals\pending-approvals.component.ts
-```typescript
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { AuthService } from '../../core/services/auth.service';
-import { TranslatePipe } from '../../core/pipes/translate.pipe';
-import Swal from 'sweetalert2';
 
-import { ExcelExportService } from '../../core/services/excel-export.service';
-import { PdfExportService } from '../../core/services/pdf-export.service';
+```typescript
+import { Component, OnInit, inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { AuthService } from "../../core/services/auth.service";
+import { TranslatePipe } from "../../core/pipes/translate.pipe";
+import Swal from "sweetalert2";
+
+import { ExcelExportService } from "../../core/services/excel-export.service";
+import { PdfExportService } from "../../core/services/pdf-export.service";
 
 @Component({
-  selector: 'app-pending-approvals',
+  selector: "app-pending-approvals",
   standalone: true,
   imports: [CommonModule, TranslatePipe],
-  templateUrl: './pending-approvals.component.html',
+  templateUrl: "./pending-approvals.component.html",
 })
 export class PendingApprovalsComponent implements OnInit {
   private authService = inject(AuthService);
@@ -11089,22 +9612,22 @@ export class PendingApprovalsComponent implements OnInit {
 
   approve(userId: number) {
     Swal.fire({
-      title: 'Approve Picture?',
-      text: 'This will replace the employee\'s current profile picture.',
-      icon: 'question',
+      title: "Approve Picture?",
+      text: "This will replace the employee's current profile picture.",
+      icon: "question",
       showCancelButton: true,
-      confirmButtonColor: '#198754',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, Approve',
-      cancelButtonText: 'Cancel',
+      confirmButtonColor: "#198754",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Yes, Approve",
+      cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
         this.authService.approveProfilePicture(userId).subscribe({
           next: () => {
-            Swal.fire({ icon: 'success', title: 'Approved!', text: 'Profile picture has been approved and applied.', timer: 2000, showConfirmButton: false });
+            Swal.fire({ icon: "success", title: "Approved!", text: "Profile picture has been approved and applied.", timer: 2000, showConfirmButton: false });
             this.load();
           },
-          error: () => Swal.fire('Error', 'Failed to approve picture.', 'error'),
+          error: () => Swal.fire("Error", "Failed to approve picture.", "error"),
         });
       }
     });
@@ -11112,22 +9635,22 @@ export class PendingApprovalsComponent implements OnInit {
 
   reject(userId: number) {
     Swal.fire({
-      title: 'Reject Picture?',
-      text: 'The employee will be notified that their picture was rejected.',
-      icon: 'warning',
+      title: "Reject Picture?",
+      text: "The employee will be notified that their picture was rejected.",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#dc3545',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, Reject',
-      cancelButtonText: 'Cancel',
+      confirmButtonColor: "#dc3545",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Yes, Reject",
+      cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
         this.authService.rejectProfilePicture(userId).subscribe({
           next: () => {
-            Swal.fire({ icon: 'success', title: 'Rejected', text: 'Profile picture request has been rejected.', timer: 2000, showConfirmButton: false });
+            Swal.fire({ icon: "success", title: "Rejected", text: "Profile picture request has been rejected.", timer: 2000, showConfirmButton: false });
             this.load();
           },
-          error: () => Swal.fire('Error', 'Failed to reject picture.', 'error'),
+          error: () => Swal.fire("Error", "Failed to reject picture.", "error"),
         });
       }
     });
@@ -11135,397 +9658,305 @@ export class PendingApprovalsComponent implements OnInit {
 
   exportToExcel() {
     if (this.pendingPictures.length === 0) {
-      Swal.fire('No Data', 'There are no pending approvals to export.', 'info');
+      Swal.fire("No Data", "There are no pending approvals to export.", "info");
       return;
     }
 
-    const headers = ['User ID', 'Name', 'Email', 'Upload Date'];
-    const data = this.pendingPictures.map(p => [
-      `#${p.userId}`,
-      `${p.firstName} ${p.lastName}`,
-      p.email,
-      new Date(p.uploadedAt).toLocaleString()
-    ]);
+    const headers = ["User ID", "Name", "Email", "Upload Date"];
+    const data = this.pendingPictures.map((p) => [`#${p.userId}`, `${p.firstName} ${p.lastName}`, p.email, new Date(p.uploadedAt).toLocaleString()]);
 
-    this.excelExportService.exportTableToExcel(headers, data, 'Pending_Profile_Pictures');
+    this.excelExportService.exportTableToExcel(headers, data, "Pending_Profile_Pictures");
   }
 
   exportToPDF() {
     if (this.pendingPictures.length === 0) {
-      Swal.fire('No Data', 'There are no pending approvals to export.', 'info');
+      Swal.fire("No Data", "There are no pending approvals to export.", "info");
       return;
     }
 
-    const headers = ['User ID', 'Name', 'Email', 'Upload Date'];
-    const data = this.pendingPictures.map(p => [
-      `#${p.userId}`,
-      `${p.firstName || p.username || ''} ${p.lastName || ''}`.trim() || '—',
-      p.email || '—',
-      p.uploadedAt ? new Date(p.uploadedAt).toLocaleString() : '—'
-    ]);
+    const headers = ["User ID", "Name", "Email", "Upload Date"];
+    const data = this.pendingPictures.map((p) => [`#${p.userId}`, `${p.firstName || p.username || ""} ${p.lastName || ""}`.trim() || "—", p.email || "—", p.uploadedAt ? new Date(p.uploadedAt).toLocaleString() : "—"]);
 
-    this.pdfExportService.generateTableReport(
-      'Pending Profile Pictures',
-      headers,
-      data,
-      'Pending_Profile_Pictures_Report'
-    );
+    this.pdfExportService.generateTableReport("Pending Profile Pictures", headers, data, "Pending_Profile_Pictures_Report");
   }
 }
-
 ```
 
 ### File: src\app\features\positions\positions.component.html
+
 ```html
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-    <div class="d-flex align-items-center">
-        <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
-            <i class="bi bi-briefcase-fill fs-4"></i>
-        </div>
-        <div>
-            <h2 class="fw-bold text-dark mb-1">{{ 'Job Positions' | t }}</h2>
-            <p class="text-muted mb-0 small">{{ 'Manage company job titles and roles' | t }}</p>
-        </div>
+  <div class="d-flex align-items-center">
+    <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+      <i class="bi bi-briefcase-fill fs-4"></i>
     </div>
-    <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
-        <div class="d-flex gap-2">
-            <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
-                <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> 
-                <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
-            </button>
-            <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
-                <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i> 
-                <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
-            </button>
-        </div>
-        <button class="btn btn-primary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="openModal()">
-            <i class="bi bi-plus-lg" [class.me-md-1]="true"></i> 
-            <span class="d-none d-md-inline">{{ 'Add Position' | t }}</span>
-        </button>
+    <div>
+      <h2 class="fw-bold text-dark mb-1">{{ 'Job Positions' | t }}</h2>
+      <p class="text-muted mb-0 small">{{ 'Manage company job titles and roles' | t }}</p>
     </div>
-</div>
-
-@if (isLoading) {
-<div class="text-center my-5">
-    <div class="spinner-border text-primary" role="status"></div>
-    <p class="mt-2 text-muted">Synchronizing with server...</p>
-</div>
-} @else {
-<div class="card shadow-sm border-0">
-    <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0 text-center text-nowrap">
-            <thead class="table-light text-uppercase small fw-bold">
-                <tr>
-                    <th>ID</th>
-                    <th>{{ 'Job Title' | t }}</th>
-                    <th>{{ 'Department' | t }}</th>
-                    <th>{{ 'Salary Range (Min - Max)' | t }}</th>
-                    <th>{{ 'Actions' | t }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (pos of positionsList; track pos.id) {
-                <tr>
-                    <td data-label="ID" class="text-muted fw-bold">#{{ pos.id }}</td>
-                    <td data-label="Job Title" class="fw-bold text-dark">{{ pos.title }}</td>
-                    <td data-label="Department">
-                        <span
-                            class="badge bg-light text-secondary border px-3 py-2 fw-semibold shadow-sm" style="font-size: 0.85rem;">
-                            {{ getDepartmentName(pos.departmentId) }}
-                        </span>
-                    </td>
-                    <td data-label="Salary Range" class="fw-semibold text-secondary">
-                        {{ pos.salaryMin | currency }} -
-                        <span class="text-success">{{ pos.salaryMax | currency
-                            }}</span>
-                    </td>
-                    <td data-label="Actions" class="actions-cell">
-                        <button
-                            class="btn btn-sm btn-outline-primary me-2 border-0 shadow-none"
-                            (click)="openModal(pos)">
-                            <i class="bi bi-pencil-square"></i>
-                        </button>
-                        <button
-                            class="btn btn-sm btn-outline-danger border-0 shadow-none"
-                            (click)="onDelete(pos.id)">
-                            <i class="bi bi-trash3"></i>
-                        </button>
-                    </td>
-                </tr>
-                } @empty {
-                <tr>
-                    <td colspan="5" class="text-center py-5 text-muted no-data-td">
-                        <i
-                            class="bi bi-briefcase fs-1 d-block mb-2 opacity-25"></i>
-                        {{ 'No positions defined in the system.' | t }}
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
+  </div>
+  <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
+        <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i>
+        <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
+      </button>
+      <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
+        <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i>
+        <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
+      </button>
     </div>
-</div>
-}
-
-<div class="modal fade" id="positionModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
-            <div
-                class="modal-header border-bottom border-primary border-4 bg-light">
-                <h5 class="modal-title text-primary fw-bold">
-                    <i class="bi" [class.bi-plus-circle]="!isEditMode"
-                        [class.bi-pencil-square]="isEditMode"></i>
-                    {{ isEditMode ? ('Modify Position' | t) : ('Create New Position' | t) }}
-                </h5>
-                <button type="button" class="btn-close shadow-none"
-                    data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <div class="modal-body p-4">
-                <form #positionForm="ngForm">
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <label
-                                class="fw-bold mb-1 small text-uppercase text-muted">Job
-                                Title</label>
-                            <input type="text" class="form-control" name="title"
-                                [(ngModel)]="positionData.title" required
-                                placeholder="e.g. Software Engineer">
-                        </div>
-
-                        <div class="col-12">
-                            <label
-                                class="fw-bold mb-1 small text-uppercase text-muted">Department
-                                Assignment</label>
-                            <select class="form-select" name="deptId"
-                                [(ngModel)]="positionData.departmentId"
-                                required>
-                                <option [ngValue]="null" disabled
-                                    selected>Select target department</option>
-                                @for (dept of departmentsList; track dept.id) {
-                                <option [ngValue]="dept.id">{{ dept.name
-                                    }}</option>
-                                }
-                            </select>
-                        </div>
-
-                        <div class="col-6 mt-4">
-                            <label
-                                class="fw-bold mb-1 small text-uppercase text-muted">Minimum
-                                Salary</label>
-                            <input type="number" class="form-control"
-                                name="sMin" [(ngModel)]="positionData.salaryMin"
-                                min="0" required>
-                        </div>
-
-                        <div class="col-6 mt-4">
-                            <label
-                                class="fw-bold mb-1 small text-uppercase text-muted">Maximum
-                                Salary</label>
-                            <input type="number" class="form-control"
-                                name="sMax" [(ngModel)]="positionData.salaryMax"
-                                min="0" required>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <div class="modal-footer bg-light border-top-0">
-                <button type="button" class="btn btn-secondary px-4 fw-bold"
-                    data-bs-dismiss="modal">Cancel</button>
-                <button type="button"
-                    class="btn btn-primary px-4 fw-bold shadow-sm"
-                    (click)="savePosition()"
-                    [disabled]="positionForm.invalid || isProcessing">
-                    @if(isProcessing) { <span
-                        class="spinner-border spinner-border-sm me-2"></span> }
-                    Confirm Action
-                </button>
-<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-    <div class="d-flex align-items-center">
-        <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
-            <i class="bi bi-briefcase-fill fs-4"></i>
-        </div>
-        <div>
-            <h2 class="fw-bold text-dark mb-1">{{ 'Job Positions' | t }}</h2>
-            <p class="text-muted mb-0 small">{{ 'Manage company job titles and roles' | t }}</p>
-        </div>
-    </div>
-    <button class="btn btn-primary shadow-sm fw-bold px-3 px-md-4"
-        (click)="openModal()">
-        <i class="bi bi-plus-lg" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'Add Position' | t }}</span>
+    <button class="btn btn-primary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="openModal()">
+      <i class="bi bi-plus-lg" [class.me-md-1]="true"></i>
+      <span class="d-none d-md-inline">{{ 'Add Position' | t }}</span>
     </button>
+  </div>
 </div>
 
 @if (isLoading) {
 <div class="text-center my-5">
-    <div class="spinner-border text-primary" role="status"></div>
-    <p class="mt-2 text-muted">Synchronizing with server...</p>
+  <div class="spinner-border text-primary" role="status"></div>
+  <p class="mt-2 text-muted">Synchronizing with server...</p>
 </div>
 } @else {
 <div class="card shadow-sm border-0">
-    <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0 text-center text-nowrap">
-            <thead class="table-light text-uppercase small fw-bold">
-                <tr>
-                    <th>ID</th>
-                    <th>{{ 'Job Title' | t }}</th>
-                    <th>{{ 'Department' | t }}</th>
-                    <th>{{ 'Salary Range (Min - Max)' | t }}</th>
-                    <th>{{ 'Actions' | t }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (pos of positionsList; track pos.id) {
-                <tr>
-                    <td data-label="ID" class="text-muted fw-bold">#{{ pos.id }}</td>
-                    <td data-label="Job Title" class="fw-bold text-dark">{{ pos.title }}</td>
-                    <td data-label="Department">
-                        <span
-                            class="badge bg-light text-secondary border px-3 py-2 fw-semibold shadow-sm" style="font-size: 0.85rem;">
-                            {{ getDepartmentName(pos.departmentId) }}
-                        </span>
-                    </td>
-                    <td data-label="Salary Range" class="fw-semibold text-secondary">
-                        {{ pos.salaryMin | currency }} -
-                        <span class="text-success">{{ pos.salaryMax | currency
-                            }}</span>
-                    </td>
-                    <td data-label="Actions" class="actions-cell">
-                        <button
-                            class="btn btn-sm btn-outline-primary me-2 border-0 shadow-none"
-                            (click)="openModal(pos)">
-                            <i class="bi bi-pencil-square"></i>
-                        </button>
-                        <button
-                            class="btn btn-sm btn-outline-danger border-0 shadow-none"
-                            (click)="onDelete(pos.id)">
-                            <i class="bi bi-trash3"></i>
-                        </button>
-                    </td>
-                </tr>
-                } @empty {
-                <tr>
-                    <td colspan="5" class="text-center py-5 text-muted no-data-td">
-                        <i
-                            class="bi bi-briefcase fs-1 d-block mb-2 opacity-25"></i>
-                        {{ 'No positions defined in the system.' | t }}
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0 text-center text-nowrap">
+      <thead class="table-light text-uppercase small fw-bold">
+        <tr>
+          <th>ID</th>
+          <th>{{ 'Job Title' | t }}</th>
+          <th>{{ 'Department' | t }}</th>
+          <th>{{ 'Salary Range (Min - Max)' | t }}</th>
+          <th>{{ 'Actions' | t }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (pos of positionsList; track pos.id) {
+        <tr>
+          <td data-label="ID" class="text-muted fw-bold">#{{ pos.id }}</td>
+          <td data-label="Job Title" class="fw-bold text-dark">{{ pos.title }}</td>
+          <td data-label="Department">
+            <span class="badge bg-light text-secondary border px-3 py-2 fw-semibold shadow-sm" style="font-size: 0.85rem;"> {{ getDepartmentName(pos.departmentId) }} </span>
+          </td>
+          <td data-label="Salary Range" class="fw-semibold text-secondary">
+            {{ pos.salaryMin | currency }} -
+            <span class="text-success">{{ pos.salaryMax | currency }}</span>
+          </td>
+          <td data-label="Actions" class="actions-cell">
+            <button class="btn btn-sm btn-outline-primary me-2 border-0 shadow-none" (click)="openModal(pos)">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger border-0 shadow-none" (click)="onDelete(pos.id)">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="5" class="text-center py-5 text-muted no-data-td">
+            <i class="bi bi-briefcase fs-1 d-block mb-2 opacity-25"></i>
+            {{ 'No positions defined in the system.' | t }}
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </div>
 }
 
 <div class="modal fade" id="positionModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
-            <div
-                class="modal-header border-bottom border-primary border-4 bg-light">
-                <h5 class="modal-title text-primary fw-bold">
-                    <i class="bi" [class.bi-plus-circle]="!isEditMode"
-                        [class.bi-pencil-square]="isEditMode"></i>
-                    {{ isEditMode ? ('Modify Position' | t) : ('Create New Position' | t) }}
-                </h5>
-                <button type="button" class="btn-close shadow-none"
-                    data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header border-bottom border-primary border-4 bg-light">
+        <h5 class="modal-title text-primary fw-bold">
+          <i class="bi" [class.bi-plus-circle]="!isEditMode" [class.bi-pencil-square]="isEditMode"></i>
+          {{ isEditMode ? ('Modify Position' | t) : ('Create New Position' | t) }}
+        </h5>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body p-4">
+        <form #positionForm="ngForm">
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="fw-bold mb-1 small text-uppercase text-muted">Job Title</label>
+              <input type="text" class="form-control" name="title" [(ngModel)]="positionData.title" required placeholder="e.g. Software Engineer" />
             </div>
 
-            <div class="modal-body p-4">
-                <form #positionForm="ngForm">
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <label
-                                class="fw-bold mb-1 small text-uppercase text-muted">Job
-                                Title</label>
-                            <input type="text" class="form-control" name="title"
-                                [(ngModel)]="positionData.title" required
-                                placeholder="e.g. Software Engineer">
-                        </div>
-
-                        <div class="col-12">
-                            <label
-                                class="fw-bold mb-1 small text-uppercase text-muted">Department
-                                Assignment</label>
-                            <select class="form-select" name="deptId"
-                                [(ngModel)]="positionData.departmentId"
-                                required>
-                                <option [ngValue]="null" disabled
-                                    selected>Select target department</option>
-                                @for (dept of departmentsList; track dept.id) {
-                                <option [ngValue]="dept.id">{{ dept.name
-                                    }}</option>
-                                }
-                            </select>
-                        </div>
-
-                        <div class="col-6 mt-4">
-                            <label
-                                class="fw-bold mb-1 small text-uppercase text-muted">Minimum
-                                Salary</label>
-                            <input type="number" class="form-control"
-                                name="sMin" [(ngModel)]="positionData.salaryMin"
-                                min="0" required>
-                        </div>
-
-                        <div class="col-6 mt-4">
-                            <label
-                                class="fw-bold mb-1 small text-uppercase text-muted">Maximum
-                                Salary</label>
-                            <input type="number" class="form-control"
-                                name="sMax" [(ngModel)]="positionData.salaryMax"
-                                min="0" required>
-                        </div>
-                    </div>
-                </form>
+            <div class="col-12">
+              <label class="fw-bold mb-1 small text-uppercase text-muted">Department Assignment</label>
+              <select class="form-select" name="deptId" [(ngModel)]="positionData.departmentId" required>
+                <option [ngValue]="null" disabled selected>Select target department</option>
+                @for (dept of departmentsList; track dept.id) {
+                <option [ngValue]="dept.id">{{ dept.name }}</option>
+                }
+              </select>
             </div>
 
-            <div class="modal-footer bg-light border-top-0">
-                <button type="button" class="btn btn-secondary px-4 fw-bold"
-                    data-bs-dismiss="modal">Cancel</button>
-                <button type="button"
-                    class="btn btn-primary px-4 fw-bold shadow-sm"
-                    (click)="savePosition()"
-                    [disabled]="positionForm.invalid || isProcessing">
-                    @if(isProcessing) { <span
-                        class="spinner-border spinner-border-sm me-2"></span> }
-                    Confirm Action
-                </button>
+            <div class="col-6 mt-4">
+              <label class="fw-bold mb-1 small text-uppercase text-muted">Minimum Salary</label>
+              <input type="number" class="form-control" name="sMin" [(ngModel)]="positionData.salaryMin" min="0" required />
             </div>
+
+            <div class="col-6 mt-4">
+              <label class="fw-bold mb-1 small text-uppercase text-muted">Maximum Salary</label>
+              <input type="number" class="form-control" name="sMax" [(ngModel)]="positionData.salaryMax" min="0" required />
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer bg-light border-top-0">
+        <button type="button" class="btn btn-secondary px-4 fw-bold" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary px-4 fw-bold shadow-sm" (click)="savePosition()" [disabled]="positionForm.invalid || isProcessing">@if(isProcessing) { <span class="spinner-border spinner-border-sm me-2"></span> } Confirm Action</button>
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+          <div class="d-flex align-items-center">
+            <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+              <i class="bi bi-briefcase-fill fs-4"></i>
+            </div>
+            <div>
+              <h2 class="fw-bold text-dark mb-1">{{ 'Job Positions' | t }}</h2>
+              <p class="text-muted mb-0 small">{{ 'Manage company job titles and roles' | t }}</p>
+            </div>
+          </div>
+          <button class="btn btn-primary shadow-sm fw-bold px-3 px-md-4" (click)="openModal()"><i class="bi bi-plus-lg" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'Add Position' | t }}</span></button>
         </div>
+
+        @if (isLoading) {
+        <div class="text-center my-5">
+          <div class="spinner-border text-primary" role="status"></div>
+          <p class="mt-2 text-muted">Synchronizing with server...</p>
+        </div>
+        } @else {
+        <div class="card shadow-sm border-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 text-center text-nowrap">
+              <thead class="table-light text-uppercase small fw-bold">
+                <tr>
+                  <th>ID</th>
+                  <th>{{ 'Job Title' | t }}</th>
+                  <th>{{ 'Department' | t }}</th>
+                  <th>{{ 'Salary Range (Min - Max)' | t }}</th>
+                  <th>{{ 'Actions' | t }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (pos of positionsList; track pos.id) {
+                <tr>
+                  <td data-label="ID" class="text-muted fw-bold">#{{ pos.id }}</td>
+                  <td data-label="Job Title" class="fw-bold text-dark">{{ pos.title }}</td>
+                  <td data-label="Department">
+                    <span class="badge bg-light text-secondary border px-3 py-2 fw-semibold shadow-sm" style="font-size: 0.85rem;"> {{ getDepartmentName(pos.departmentId) }} </span>
+                  </td>
+                  <td data-label="Salary Range" class="fw-semibold text-secondary">
+                    {{ pos.salaryMin | currency }} -
+                    <span class="text-success">{{ pos.salaryMax | currency }}</span>
+                  </td>
+                  <td data-label="Actions" class="actions-cell">
+                    <button class="btn btn-sm btn-outline-primary me-2 border-0 shadow-none" (click)="openModal(pos)">
+                      <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger border-0 shadow-none" (click)="onDelete(pos.id)">
+                      <i class="bi bi-trash3"></i>
+                    </button>
+                  </td>
+                </tr>
+                } @empty {
+                <tr>
+                  <td colspan="5" class="text-center py-5 text-muted no-data-td">
+                    <i class="bi bi-briefcase fs-1 d-block mb-2 opacity-25"></i>
+                    {{ 'No positions defined in the system.' | t }}
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+        }
+
+        <div class="modal fade" id="positionModal" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+              <div class="modal-header border-bottom border-primary border-4 bg-light">
+                <h5 class="modal-title text-primary fw-bold">
+                  <i class="bi" [class.bi-plus-circle]="!isEditMode" [class.bi-pencil-square]="isEditMode"></i>
+                  {{ isEditMode ? ('Modify Position' | t) : ('Create New Position' | t) }}
+                </h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <div class="modal-body p-4">
+                <form #positionForm="ngForm">
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label class="fw-bold mb-1 small text-uppercase text-muted">Job Title</label>
+                      <input type="text" class="form-control" name="title" [(ngModel)]="positionData.title" required placeholder="e.g. Software Engineer" />
+                    </div>
+
+                    <div class="col-12">
+                      <label class="fw-bold mb-1 small text-uppercase text-muted">Department Assignment</label>
+                      <select class="form-select" name="deptId" [(ngModel)]="positionData.departmentId" required>
+                        <option [ngValue]="null" disabled selected>Select target department</option>
+                        @for (dept of departmentsList; track dept.id) {
+                        <option [ngValue]="dept.id">{{ dept.name }}</option>
+                        }
+                      </select>
+                    </div>
+
+                    <div class="col-6 mt-4">
+                      <label class="fw-bold mb-1 small text-uppercase text-muted">Minimum Salary</label>
+                      <input type="number" class="form-control" name="sMin" [(ngModel)]="positionData.salaryMin" min="0" required />
+                    </div>
+
+                    <div class="col-6 mt-4">
+                      <label class="fw-bold mb-1 small text-uppercase text-muted">Maximum Salary</label>
+                      <input type="number" class="form-control" name="sMax" [(ngModel)]="positionData.salaryMax" min="0" required />
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <div class="modal-footer bg-light border-top-0">
+                <button type="button" class="btn btn-secondary px-4 fw-bold" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary px-4 fw-bold shadow-sm" (click)="savePosition()" [disabled]="positionForm.invalid || isProcessing">@if(isProcessing) { <span class="spinner-border spinner-border-sm me-2"></span> } Confirm Action</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <style></style>
+      </div>
     </div>
+  </div>
 </div>
-
-<style>
-
-</style>
-
 ```
 
 ### File: src\app\features\positions\positions.component.ts
+
 ```typescript
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { PositionService } from '../../core/services/position.service';
-import { DepartmentService } from '../../core/services/department.service';
-import Swal from 'sweetalert2';
+import { Component, OnInit, inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { PositionService } from "../../core/services/position.service";
+import { DepartmentService } from "../../core/services/department.service";
+import Swal from "sweetalert2";
 
-import { TranslatePipe } from '../../core/pipes/translate.pipe';
-import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
+import { TranslatePipe } from "../../core/pipes/translate.pipe";
+import { getFriendlyErrorMessage } from "../../core/utils/error-handler.util";
 
-import { ExcelExportService } from '../../core/services/excel-export.service';
-import { PdfExportService } from '../../core/services/pdf-export.service';
+import { ExcelExportService } from "../../core/services/excel-export.service";
+import { PdfExportService } from "../../core/services/pdf-export.service";
 
 declare var bootstrap: any;
 
 @Component({
-  selector: 'app-positions',
+  selector: "app-positions",
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe],
-  templateUrl: './positions.component.html',
+  templateUrl: "./positions.component.html",
 })
 export class PositionsComponent implements OnInit {
   private positionService = inject(PositionService);
@@ -11543,31 +9974,28 @@ export class PositionsComponent implements OnInit {
   currentPositionId: number | null = null;
 
   positionData = {
-    title: '',
+    title: "",
     departmentId: null as number | null,
     salaryMin: 0,
     salaryMax: 0,
   };
 
   ngOnInit() {
-
     this.loadDepartments();
     this.loadPositions();
   }
 
   loadDepartments() {
-
     this.departmentService.getDepartments().subscribe({
       next: (res: any) => {
         const extracted = Array.isArray(res) ? res : res?.data || [];
         this.departmentsList = Array.isArray(extracted) ? extracted : [];
       },
-      error: (err) => console.error('Error fetching departments:', err),
+      error: (err) => console.error("Error fetching departments:", err),
     });
   }
 
   loadPositions() {
-
     this.isLoading = true;
     this.positionService.getPositions().subscribe({
       next: (res: any) => {
@@ -11576,7 +10004,7 @@ export class PositionsComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching positions:', err);
+        console.error("Error fetching positions:", err);
         this.isLoading = false;
       },
     });
@@ -11588,7 +10016,6 @@ export class PositionsComponent implements OnInit {
   }
 
   openModal(position: any = null) {
-
     if (position) {
       this.isEditMode = true;
       this.currentPositionId = position.id;
@@ -11602,14 +10029,14 @@ export class PositionsComponent implements OnInit {
       this.isEditMode = false;
       this.currentPositionId = null;
       this.positionData = {
-        title: '',
+        title: "",
         departmentId: null,
         salaryMin: 0,
         salaryMax: 0,
       };
     }
 
-    const modalEl = document.getElementById('positionModal');
+    const modalEl = document.getElementById("positionModal");
     if (modalEl) {
       let modalInstance = bootstrap.Modal.getInstance(modalEl);
       if (!modalInstance) {
@@ -11621,44 +10048,40 @@ export class PositionsComponent implements OnInit {
   }
 
   savePosition() {
-
     this.isProcessing = true;
 
     if (this.isEditMode && this.currentPositionId) {
-      this.positionService
-        .updatePosition(this.currentPositionId, this.positionData)
-        .subscribe({
-          next: () => this.handleSuccess('Position updated successfully'),
-          error: (err) => this.handleError(err),
-        });
+      this.positionService.updatePosition(this.currentPositionId, this.positionData).subscribe({
+        next: () => this.handleSuccess("Position updated successfully"),
+        error: (err) => this.handleError(err),
+      });
     } else {
       this.positionService.createPosition(this.positionData).subscribe({
-        next: () => this.handleSuccess('Position created successfully'),
+        next: () => this.handleSuccess("Position created successfully"),
         error: (err) => this.handleError(err),
       });
     }
   }
 
   onDelete(id: number) {
-
     Swal.fire({
-      title: 'Are you sure?',
+      title: "Are you sure?",
       text: "You won't be able to revert this!",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#dc3545',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: "#dc3545",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Delete",
     }).then((result) => {
       if (result.isConfirmed) {
         this.positionService.deletePosition(id).subscribe({
           next: () => {
-            Swal.fire('Deleted!', 'Position has been deleted.', 'success');
+            Swal.fire("Deleted!", "Position has been deleted.", "success");
             this.loadPositions();
           },
           error: (err) => {
-            console.error('Delete error:', err);
-            Swal.fire('Error!', 'Failed to delete position.', 'error');
+            console.error("Delete error:", err);
+            Swal.fire("Error!", "Failed to delete position.", "error");
           },
         });
       }
@@ -11669,7 +10092,7 @@ export class PositionsComponent implements OnInit {
     this.isProcessing = false;
     this.positionModal.hide();
     Swal.fire({
-      icon: 'success',
+      icon: "success",
       title: message,
       showConfirmButton: false,
       timer: 1500,
@@ -11679,406 +10102,440 @@ export class PositionsComponent implements OnInit {
 
   private handleError(err: any) {
     this.isProcessing = false;
-    console.error('Position save error:', err);
-    Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to save position data.'), 'error');
+    console.error("Position save error:", err);
+    Swal.fire("Error", getFriendlyErrorMessage(err, "Failed to save position data."), "error");
   }
 
   exportToExcel() {
     if (this.positionsList.length === 0) {
-      Swal.fire('No Data', 'There are no positions to export.', 'info');
+      Swal.fire("No Data", "There are no positions to export.", "info");
       return;
     }
 
-    const headers = ['ID', 'Title', 'Department', 'Salary Min', 'Salary Max'];
-    const data = this.positionsList.map(pos => [
-      `#${pos.id}`,
-      pos.title,
-      pos.departmentName || 'N/A',
-      `${pos.salaryMin} JD`,
-      `${pos.salaryMax} JD`
-    ]);
+    const headers = ["ID", "Title", "Department", "Salary Min", "Salary Max"];
+    const data = this.positionsList.map((pos) => [`#${pos.id}`, pos.title, pos.departmentName || "N/A", `${pos.salaryMin} JD`, `${pos.salaryMax} JD`]);
 
-    this.excelExportService.exportTableToExcel(headers, data, 'Positions');
+    this.excelExportService.exportTableToExcel(headers, data, "Positions");
   }
 
   exportToPDF() {
     if (this.positionsList.length === 0) {
-      Swal.fire('No Data', 'There are no positions to export.', 'info');
+      Swal.fire("No Data", "There are no positions to export.", "info");
       return;
     }
 
-    const headers = ['ID', 'Title', 'Department', 'Salary Min', 'Salary Max'];
-    const data = this.positionsList.map(pos => [
-      `#${pos.id}`,
-      pos.title,
-      pos.departmentName || 'N/A',
-      `${pos.salaryMin} $`,
-      `${pos.salaryMax} $`
-    ]);
+    const headers = ["ID", "Title", "Department", "Salary Min", "Salary Max"];
+    const data = this.positionsList.map((pos) => [`#${pos.id}`, pos.title, pos.departmentName || "N/A", `${pos.salaryMin} $`, `${pos.salaryMax} $`]);
 
-    this.pdfExportService.generateTableReport(
-      'Positions Directory',
-      headers,
-      data,
-      'Positions_Report'
-    );
+    this.pdfExportService.generateTableReport("Positions Directory", headers, data, "Positions_Report");
   }
 }
-
 ```
 
 ### File: src\app\features\salary\salary.component.html
+
 ```html
 <div class="page-container p-4">
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div class="d-flex align-items-center">
+      <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+        <i class="bi bi-cash-stack fs-4"></i>
+      </div>
+      <div>
+        <h2 class="fw-bold text-dark mb-1">{{ 'Salaries' | t }}</h2>
+        <p class="text-muted small mb-0">{{ 'View and manage employee payroll records' | t }}</p>
+      </div>
+    </div>
+    <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
+      <div class="input-group shadow-sm" style="max-width: 350px; min-width: 200px; flex: 1;">
+        <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control border-start-0 ps-0" placeholder="{{ 'Search by name, ID, or amount...' | t }}" [(ngModel)]="salarySearchQuery" (input)="filterSalariesLocal()" />
+      </div>
 
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <div class="d-flex align-items-center">
-            <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
-                <i class="bi bi-cash-stack fs-4"></i>
-            </div>
-            <div>
-                <h2 class="fw-bold text-dark mb-1">{{ 'Salaries' | t }}</h2>
-                <p class="text-muted small mb-0">{{ 'View and manage employee payroll records' | t }}</p>
-            </div>
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Filter Salaries">
+          <i class="bi bi-funnel-fill"></i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4" style="width: 250px;">
+          <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">{{ 'Filter Options' | t }}</h6>
+
+          <div class="mb-3">
+            <label class="form-label small fw-semibold text-muted mb-1">{{ 'Year' | t }}</label>
+            <select class="form-select form-select-sm" [(ngModel)]="selectedYear" (change)="filterSalaries()">
+              <option value="">{{ 'All Years' | t }}</option>
+              <option *ngFor="let yr of uniqueYears" [value]="yr">{{ yr }}</option>
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label small fw-semibold text-muted mb-1">{{ 'Month' | t }}</label>
+            <select class="form-select form-select-sm" [(ngModel)]="selectedMonth" (change)="filterSalaries()">
+              <option value="">{{ 'All Months' | t }}</option>
+              <option value="1">{{ 'January' | t }}</option>
+              <option value="2">{{ 'February' | t }}</option>
+              <option value="3">{{ 'March' | t }}</option>
+              <option value="4">{{ 'April' | t }}</option>
+              <option value="5">{{ 'May' | t }}</option>
+              <option value="6">{{ 'June' | t }}</option>
+              <option value="7">{{ 'July' | t }}</option>
+              <option value="8">{{ 'August' | t }}</option>
+              <option value="9">{{ 'September' | t }}</option>
+              <option value="10">{{ 'October' | t }}</option>
+              <option value="11">{{ 'November' | t }}</option>
+              <option value="12">{{ 'December' | t }}</option>
+            </select>
+          </div>
         </div>
-        <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
-            <div class="input-group shadow-sm" style="max-width: 350px; min-width: 200px; flex: 1;">
-                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                <input type="text" class="form-control border-start-0 ps-0"
-                    placeholder="{{ 'Search by name, ID, or amount...' | t }}" [(ngModel)]="salarySearchQuery"
-                    (input)="filterSalaries()">
-            </div>
+      </div>
 
-            <div class="dropdown">
-                <button class="btn btn-outline-secondary shadow-sm" type="button" data-bs-toggle="dropdown"
-                    aria-expanded="false" title="Filter Salaries">
-                    <i class="bi bi-funnel-fill"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4" style="width: 250px;">
-                    <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">{{ 'Filter Options' | t }}</h6>
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-danger px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="exportToPDF()" title="Export to PDF">
+          <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i>
+          <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
+        </button>
+        <button class="btn btn-outline-success px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="exportToExcel()" title="Export to Excel">
+          <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i>
+          <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
+        </button>
+      </div>
 
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold text-muted mb-1">{{ 'Year' | t }}</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="selectedYear"
-                            (change)="filterSalaries()">
-                            <option value="">{{ 'All Years' | t }}</option>
-                            <option *ngFor="let yr of uniqueYears" [value]="yr">{{ yr }}</option>
-                        </select>
-                    </div>
+      <button *ngIf="isAdminOrHR && !isAdmin" class="btn btn-outline-primary px-3 px-md-4 py-2 rounded-3 shadow-sm text-nowrap" (click)="toggleViewAll()" [title]="isViewingAll ? ('My Salaries' | t) : ('View All' | t)">
+        <i class="bi" [ngClass]="isViewingAll ? 'bi-person' : 'bi-people'" [class.me-md-1]="true"></i>
+        <span class="d-none d-md-inline">{{ isViewingAll ? ('My Salaries' | t) : ('View All' | t) }}</span>
+      </button>
 
-                    <div class="mb-2">
-                        <label class="form-label small fw-semibold text-muted mb-1">{{ 'Month' | t }}</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="selectedMonth"
-                            (change)="filterSalaries()">
-                            <option value="">{{ 'All Months' | t }}</option>
-                            <option value="1">{{ 'January' | t }}</option>
-                            <option value="2">{{ 'February' | t }}</option>
-                            <option value="3">{{ 'March' | t }}</option>
-                            <option value="4">{{ 'April' | t }}</option>
-                            <option value="5">{{ 'May' | t }}</option>
-                            <option value="6">{{ 'June' | t }}</option>
-                            <option value="7">{{ 'July' | t }}</option>
-                            <option value="8">{{ 'August' | t }}</option>
-                            <option value="9">{{ 'September' | t }}</option>
-                            <option value="10">{{ 'October' | t }}</option>
-                            <option value="11">{{ 'November' | t }}</option>
-                            <option value="12">{{ 'December' | t }}</option>
-                        </select>
-                    </div>
+      <button *ngIf="isAdmin" class="btn btn-warning px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap text-dark" (click)="generatePayroll()" [title]="'Generate Payroll' | t">
+        <i class="bi bi-magic" [class.me-md-1]="true"></i>
+        <span class="d-none d-md-inline">{{ 'Generate Payroll' | t }}</span>
+      </button>
+      <button *ngIf="isAdmin" class="btn btn-primary px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="openModal()" [title]="'Add Salary' | t">
+        <i class="bi bi-plus-lg" [class.me-md-1]="true"></i>
+        <span class="d-none d-md-inline">{{ 'Add Salary' | t }}</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0 text-nowrap">
+        <thead class="bg-light text-muted small text-uppercase" style="letter-spacing: 0.5px;">
+          <tr>
+            <th *ngIf="isAdminOrHR && isViewingAll" class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Employee' | t }}</th>
+            <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Month' | t }}/{{ 'Year' | t }}</th>
+            <th class="py-3 px-3 border-bottom-0 fw-semibold">{{ 'Base Salary' | t }}</th>
+            <th class="py-3 px-3 border-bottom-0 fw-semibold text-success">{{ 'Allowances' | t }}</th>
+            <th class="py-3 px-3 border-bottom-0 fw-semibold text-danger">{{ 'Deductions' | t }}</th>
+            <th class="py-3 px-3 border-bottom-0 fw-semibold text-primary">{{ 'Net Pay' | t }}</th>
+            <th class="py-3 px-4 border-bottom-0 fw-semibold text-end text-nowrap">{{ 'Actions' | t }}</th>
+          </tr>
+        </thead>
+
+        <tbody class="border-top-0">
+          <tr *ngIf="isLoading">
+            <td colspan="7" class="text-center py-5 text-muted no-data-td">
+              <span class="spinner-border spinner-border-sm me-2"></span>
+              {{ 'Loading...' | t }}
+            </td>
+          </tr>
+
+          <tr *ngIf="!isLoading && salariesList.length === 0">
+            <td [colSpan]="(isAdminOrHR && isViewingAll) ? 7 : 6" class="text-center py-5 no-data-td">
+              <div class="d-flex flex-column align-items-center">
+                <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                  <i class="bi bi-wallet2 text-secondary fs-1"></i>
                 </div>
-            </div>
+                <h5 class="fw-bold text-dark mb-1">{{ 'No Data' | t }}</h5>
+                <p class="text-muted small mb-0">{{ 'No Data' | t }}</p>
+              </div>
+            </td>
+          </tr>
 
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-danger px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="exportToPDF()" title="Export to PDF">
-                    <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> 
-                    <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
-                </button>
-                <button class="btn btn-outline-success px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="exportToExcel()" title="Export to Excel">
-                    <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i> 
-                    <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
-                </button>
-            </div>
+          <tr *ngFor="let salary of paginatedSalaries">
+            <td *ngIf="isAdminOrHR && isViewingAll" data-label="Employee" class="py-3 px-4">
+              <div class="d-flex align-items-center">
+                <ng-container *ngIf="salary.employeeProfilePictureUrl; else noSalaryPic">
+                  <img [src]="salary.employeeProfilePictureUrl" alt="User" class="rounded-circle me-2 object-fit-cover shadow-sm" style="width: 32px; height: 32px; border: 2px solid #fff;" />
+                </ng-container>
+                <ng-template #noSalaryPic>
+                  <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 13px;">{{ salary.employeeName ? salary.employeeName.charAt(0).toUpperCase() : 'U' }}</div>
+                </ng-template>
+                <span class="fw-bold text-dark">{{ salary.employeeName || '#' + salary.employeeId }}</span>
+              </div>
+            </td>
+            <td data-label="Period" class="py-3 px-4">
+              <span class="badge bg-light text-dark border">{{ salary.month | number:'2.0' }} / {{ salary.year }}</span>
+              <div class="text-muted mt-1" style="font-size: 0.7rem;">Eff: {{ salary.effectiveDate | date:'dd MMM yyyy' }}</div>
+            </td>
+            <td data-label="Base Salary" class="py-3 px-3 text-secondary">${{ salary.baseAmount }}</td>
+            <td data-label="Allowances" class="py-3 px-3 text-success fw-medium">+${{ salary.allowances }}</td>
+            <td data-label="Deductions" class="py-3 px-3 text-danger fw-medium">-${{ salary.deductions }}</td>
+            <td data-label="Net Pay" class="py-3 px-3">
+              <span class="fw-bold text-primary fs-6">${{ salary.netAmount }}</span>
+              <div class="text-muted" style="font-size: 0.7rem;">Before Deductions: ${{ salary.grossAmount }}</div>
+            </td>
 
-            <button *ngIf="isAdminOrHR && !isAdmin" class="btn btn-outline-primary px-3 px-md-4 py-2 rounded-3 shadow-sm text-nowrap"
-                (click)="toggleViewAll()" [title]="isViewingAll ? ('My Salaries' | t) : ('View All' | t)">
-                <i class="bi" [ngClass]="isViewingAll ? 'bi-person' : 'bi-people'" [class.me-md-1]="true"></i> 
-                <span class="d-none d-md-inline">{{ isViewingAll ? ('My Salaries' | t) : ('View All' | t) }}</span>
-            </button>
-
-            <button *ngIf="isAdmin" class="btn btn-primary px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
-                (click)="openModal()" [title]="'Add Salary' | t">
-                <i class="bi bi-plus-lg" [class.me-md-1]="true"></i> 
-                <span class="d-none d-md-inline">{{ 'Add Salary' | t }}</span>
-            </button>
-        </div>
+            <td data-label="Actions" class="py-3 px-4 text-end text-nowrap actions-cell">
+              <button class="btn btn-sm btn-outline-danger rounded-circle shadow-sm me-2" (click)="downloadPayslip(salary)" title="Download Payslip (PDF)">
+                <i class="bi bi-file-earmark-pdf-fill"></i>
+              </button>
+              <button *ngIf="isAdmin" class="btn btn-sm btn-light text-primary rounded-circle shadow-sm" (click)="openModal(salary)" title="Edit Record">
+                <i class="bi bi-pencil-square"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0 text-nowrap">
-
-                <thead class="bg-light text-muted small text-uppercase" style="letter-spacing: 0.5px;">
-                    <tr>
-                        <th *ngIf="isAdminOrHR && isViewingAll" class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Employee' | t }}</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Month' | t }}/{{ 'Year' | t }}</th>
-                        <th class="py-3 px-3 border-bottom-0 fw-semibold">{{ 'Base Salary' | t }}</th>
-                        <th class="py-3 px-3 border-bottom-0 fw-semibold text-success">{{ 'Allowances' | t }}</th>
-                        <th class="py-3 px-3 border-bottom-0 fw-semibold text-danger">{{ 'Deductions' | t }}</th>
-                        <th class="py-3 px-3 border-bottom-0 fw-semibold text-primary">{{ 'Net Pay' | t }}</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold text-end text-nowrap">{{ 'Actions' | t }}</th>
-                    </tr>
-                </thead>
-
-                <tbody class="border-top-0">
-
-                    <tr *ngIf="isLoading">
-                        <td colspan="7" class="text-center py-5 text-muted no-data-td">
-                            <span class="spinner-border spinner-border-sm me-2"></span>
-                            {{ 'Loading...' | t }}
-                        </td>
-                    </tr>
-
-                    <tr *ngIf="!isLoading && salariesList.length === 0">
-                        <td [colSpan]="(isAdminOrHR && isViewingAll) ? 7 : 6" class="text-center py-5 no-data-td">
-                            <div class="d-flex flex-column align-items-center">
-                                <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center"
-                                    style="width: 80px; height: 80px;">
-                                    <i class="bi bi-wallet2 text-secondary fs-1"></i>
-                                </div>
-                                <h5 class="fw-bold text-dark mb-1">{{ 'No Data' | t }}</h5>
-                                <p class="text-muted small mb-0">{{ 'No Data' | t }}</p>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr *ngFor="let salary of paginatedSalaries">
-                        
-                        <td *ngIf="isAdminOrHR && isViewingAll" data-label="Employee" class="py-3 px-4">
-                            <div class="d-flex align-items-center">
-                                <ng-container *ngIf="salary.employeeProfilePictureUrl; else noSalaryPic">
-                                    <img [src]="salary.employeeProfilePictureUrl" alt="User" class="rounded-circle me-2 object-fit-cover shadow-sm" style="width: 32px; height: 32px; border: 2px solid #fff;">
-                                </ng-container>
-                                <ng-template #noSalaryPic>
-                                    <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center"
-                                        style="width: 32px; height: 32px; font-size: 13px;">
-                                        {{ salary.employeeName ? salary.employeeName.charAt(0).toUpperCase() : 'U' }}
-                                    </div>
-                                </ng-template>
-                                <span class="fw-bold text-dark">{{ salary.employeeName || '#' + salary.employeeId }}</span>
-                            </div>
-                        </td>
-                        <td data-label="Period" class="py-3 px-4">
-                            <span class="badge bg-light text-dark border">{{
-                                salary.month | number:'2.0' }} / {{ salary.year
-                                }}</span>
-                            <div class="text-muted mt-1" style="font-size: 0.7rem;">Eff: {{
-                                salary.effectiveDate | date:'dd MMM yyyy'
-                                }}</div>
-                        </td>
-                        <td data-label="Base Salary" class="py-3 px-3 text-secondary">${{ salary.baseAmount }}</td>
-                        <td data-label="Allowances" class="py-3 px-3 text-success fw-medium">+${{ salary.allowances }}
-                        </td>
-                        <td data-label="Deductions" class="py-3 px-3 text-danger fw-medium">-${{ salary.deductions }}
-                        </td>
-                        <td data-label="Net Pay" class="py-3 px-3">
-                            <span class="fw-bold text-primary fs-6">${{ salary.netAmount }}</span>
-                            <div class="text-muted" style="font-size: 0.7rem;">Before Deductions: ${{ salary.grossAmount
-                                }}</div>
-                        </td>
-                        
-                        <td data-label="Actions" class="py-3 px-4 text-end text-nowrap actions-cell">
-                            <button class="btn btn-sm btn-outline-danger rounded-circle shadow-sm me-2"
-                                (click)="downloadPayslip(salary)" title="Download Payslip (PDF)">
-                                <i class="bi bi-file-earmark-pdf-fill"></i>
-                            </button>
-                            <button *ngIf="isAdmin" class="btn btn-sm btn-light text-primary rounded-circle shadow-sm"
-                                (click)="openModal(salary)" title="Edit Record">
-                                <i class="bi bi-pencil-square"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        
-        <div *ngIf="salariesList.length > 0"
-            class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <small class="text-muted fw-medium">
-                Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage,
-                salariesList.length) }} of {{ salariesList.length }} entries
-            </small>
-            <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
-                <li class="page-item" [class.disabled]="currentPage === 1">
-                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
-                </li>
-                <li class="page-item active">
-                    <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
-                </li>
-                <li class="page-item" [class.disabled]="currentPage === totalPages">
-                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
-                </li>
-            </ul>
-        </div>
+    <div *ngIf="salariesList.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+      <small class="text-muted fw-medium"> Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, salariesList.length) }} of {{ salariesList.length }} entries </small>
+      <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
+        </li>
+        <li class="page-item active">
+          <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
+        </li>
+      </ul>
     </div>
+  </div>
 </div>
 
 <div class="modal fade" id="salaryModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow rounded-4">
-            <div class="modal-header border-bottom-0 pt-4 pb-0 px-4">
-                <h5 class="modal-title fw-bold text-dark">
-                    <i class="bi"
-                        [ngClass]="isEditMode ? 'bi-pencil-square text-primary' : 'bi-plus-circle text-primary'"></i>
-                    {{ isEditMode ? ' Edit Salary Record' : ' Add New Salary' }}
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-4">
-                <form #salaryForm="ngForm">
-
-                    <div class="mb-4 position-relative">
-                        <label class="form-label fw-semibold text-secondary small">Employee <span
-                                class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-person"></i></span>
-                            <input type="text" class="form-control bg-light border-start-0" name="employeeSearchText"
-                                [(ngModel)]="employeeSearchText" (ngModelChange)="onEmployeeSearchChange($event)"
-                                (focus)="showEmployeeDropdown = true" (blur)="hideDropdownWithDelay()"
-                                autocomplete="off" required placeholder="Search by name or ID...">
-                        </div>
-
-                        
-                        <div class="dropdown-menu w-100 shadow-lg border-0 rounded-4 mt-2 py-2"
-                            [class.show]="showEmployeeDropdown"
-                            style="position: absolute; top: 100%; left: 0; max-height: 250px; overflow-y: auto; z-index: 1050;">
-
-                            <ng-container *ngIf="filteredEmployeesList.length > 0; else noEmployees">
-                                <button type="button"
-                                    class="dropdown-item d-flex justify-content-between align-items-center py-2 px-3 border-bottom border-light"
-                                    *ngFor="let emp of filteredEmployeesList" (mousedown)="selectEmployee(emp)"
-                                    style="transition: background-color 0.2s;">
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold"
-                                            style="width: 36px; height: 36px; font-size: 13px;">
-                                            {{ emp.firstName[0] }}{{ emp.lastName[0] }}
-                                        </div>
-                                        <div class="d-flex flex-column">
-                                            <span class="fw-semibold text-dark" style="font-size: 14px;">{{
-                                                emp.firstName }} {{ emp.lastName }}</span>
-                                        </div>
-                                    </div>
-                                    <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3 py-2"
-                                        style="font-size: 11px;">ID: {{ emp.id }}</span>
-                                </button>
-                            </ng-container>
-
-                            <ng-template #noEmployees>
-                                <div class="text-center py-4 text-muted">
-                                    <i class="bi bi-search mb-2 fs-4 text-black-50"></i>
-                                    <p class="mb-0 small fw-semibold">No employees found.</p>
-                                </div>
-                            </ng-template>
-                        </div>
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="col-6">
-                            <label class="form-label fw-semibold text-secondary small">Month
-                                <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control bg-light border-0" name="month"
-                                [(ngModel)]="salaryData.month" required min="1" max="12">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label fw-semibold text-secondary small">Year
-                                <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control bg-light border-0" name="year"
-                                [(ngModel)]="salaryData.year" required min="2000">
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label fw-semibold text-secondary small">Base
-                            Salary ($) <span class="text-danger">*</span></label>
-                        <input type="number" class="form-control form-control-lg bg-light border-0" name="baseAmount"
-                            [(ngModel)]="salaryData.baseAmount" required min="0">
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="col-6">
-                            <label class="form-label fw-semibold text-success small">Allowances
-                                (+) <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control border-success border-opacity-25 bg-light"
-                                name="allowances" [(ngModel)]="salaryData.allowances" required min="0">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label fw-semibold text-danger small">Deductions
-                                (-) <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control border-danger border-opacity-25 bg-light"
-                                name="deductions" [(ngModel)]="salaryData.deductions" required min="0">
-                        </div>
-                    </div>
-
-                    <div class="mb-2">
-                        <label class="form-label fw-semibold text-secondary small">Effective
-                            Date <span class="text-danger">*</span></label>
-                        <input type="date" class="form-control bg-light border-0" name="effectiveDate"
-                            [(ngModel)]="salaryData.effectiveDate" required>
-                    </div>
-
-                </form>
-            </div>
-            <div class="modal-footer border-top-0 pb-4 px-4">
-                <button type="button" class="btn btn-light px-4 rounded-3 fw-semibold"
-                    data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary px-4 rounded-3 fw-semibold" (click)="saveSalary()"
-                    [disabled]="salaryForm.invalid || isProcessing || !salaryData.employeeId">
-                    <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2"></span>
-                    {{ isProcessing ? 'Saving...' : 'Save Record' }}
-                </button>
-            </div>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow rounded-4">
+      <div class="modal-header border-bottom-0 pt-4 pb-0 px-4">
+        <h5 class="modal-title fw-bold text-dark">
+          <i class="bi" [ngClass]="isEditMode ? 'bi-pencil-square text-primary' : 'bi-plus-circle text-primary'"></i>
+          {{ isEditMode ? ' Edit Salary Record' : ' Add New Salary' }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="alert alert-info py-2 d-flex align-items-center mb-4" role="alert" style="font-size: 0.85rem;">
+          <i class="bi bi-info-circle-fill me-2 fs-5"></i>
+          <div>Standard allowances and unapplied adjustments (bonuses/penalties) will be automatically calculated and applied by the system.</div>
         </div>
+        <form #salaryForm="ngForm">
+          <div class="mb-4 position-relative">
+            <label class="form-label fw-semibold text-secondary small">Employee <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-light border-end-0"><i class="bi bi-person"></i></span>
+              <input type="text" class="form-control bg-light border-start-0" name="employeeSearchText" [(ngModel)]="employeeSearchText" (ngModelChange)="onEmployeeSearchChange($event)" (focus)="showEmployeeDropdown = true" (blur)="hideDropdownWithDelay()" autocomplete="off" required placeholder="Search by name or ID..." />
+            </div>
+
+            <div class="dropdown-menu w-100 shadow-lg border-0 rounded-4 mt-2 py-2" [class.show]="showEmployeeDropdown" style="position: absolute; top: 100%; left: 0; max-height: 250px; overflow-y: auto; z-index: 1050;">
+              <ng-container *ngIf="filteredEmployeesList.length > 0; else noEmployees">
+                <button type="button" class="dropdown-item d-flex justify-content-between align-items-center py-2 px-3 border-bottom border-light" *ngFor="let emp of filteredEmployeesList" (mousedown)="selectEmployee(emp)" style="transition: background-color 0.2s;">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 36px; height: 36px; font-size: 13px;">{{ emp.firstName[0] }}{{ emp.lastName[0] }}</div>
+                    <div class="d-flex flex-column">
+                      <span class="fw-semibold text-dark" style="font-size: 14px;">{{ emp.firstName }} {{ emp.lastName }}</span>
+                    </div>
+                  </div>
+                  <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3 py-2" style="font-size: 11px;">ID: {{ emp.id }}</span>
+                </button>
+              </ng-container>
+
+              <ng-template #noEmployees>
+                <div class="text-center py-4 text-muted">
+                  <i class="bi bi-search mb-2 fs-4 text-black-50"></i>
+                  <p class="mb-0 small fw-semibold">No employees found.</p>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-6">
+              <label class="form-label fw-semibold text-secondary small">Month <span class="text-danger">*</span></label>
+              <input type="number" class="form-control bg-light border-0" name="month" [(ngModel)]="salaryData.month" required min="1" max="12" />
+            </div>
+            <div class="col-6">
+              <label class="form-label fw-semibold text-secondary small">Year <span class="text-danger">*</span></label>
+              <input type="number" class="form-control bg-light border-0" name="year" [(ngModel)]="salaryData.year" required min="2000" />
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-semibold text-secondary small">Base Salary ($) <span class="text-danger">*</span></label>
+            <input type="number" class="form-control form-control-lg bg-light border-0" name="baseAmount" [(ngModel)]="salaryData.baseAmount" required min="0" />
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-6">
+              <label class="form-label fw-semibold text-success small">Additional Allowances (+) <span class="text-danger">*</span></label>
+              <input type="number" class="form-control border-success border-opacity-25 bg-light" name="allowances" [(ngModel)]="salaryData.allowances" required min="0" />
+            </div>
+            <div class="col-6">
+              <label class="form-label fw-semibold text-danger small">Additional Deductions (-) <span class="text-danger">*</span></label>
+              <input type="number" class="form-control border-danger border-opacity-25 bg-light" name="deductions" [(ngModel)]="salaryData.deductions" required min="0" />
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label fw-semibold text-secondary small">Effective Date <span class="text-danger">*</span></label>
+            <input type="date" class="form-control bg-light border-0" name="effectiveDate" [(ngModel)]="salaryData.effectiveDate" required />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer border-top-0 pb-4 px-4">
+        <button type="button" class="btn btn-light px-4 rounded-3 fw-semibold" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary px-4 rounded-3 fw-semibold" (click)="saveSalary()" [disabled]="salaryForm.invalid || isProcessing || !salaryData.employeeId">
+          <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2"></span>
+          {{ isProcessing ? 'Saving...' : 'Save Record' }}
+        </button>
+      </div>
     </div>
+  </div>
+</div>
+
+<!-- Payroll Wizard Modal -->
+<div class="modal fade" id="payrollWizardModal" tabindex="-1" aria-labelledby="payrollWizardModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+      <div class="modal-header bg-warning text-dark border-0 py-3">
+        <h5 class="modal-title fw-bold" id="payrollWizardModalLabel"><i class="bi bi-magic me-2"></i>{{ 'Payroll Wizard' | t }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body p-4 bg-light">
+        <!-- Step 1: Configuration -->
+        <div *ngIf="wizardStep === 1">
+          <h6 class="text-primary mb-3"><i class="bi bi-1-circle-fill me-2"></i>Step 1: Configuration</h6>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label fw-semibold text-secondary small">Month</label>
+              <input type="number" class="form-control" [(ngModel)]="previewMonth" min="1" max="12" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold text-secondary small">Year</label>
+              <input type="number" class="form-control" [(ngModel)]="previewYear" min="2000" max="2100" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold text-secondary small">Department (Optional)</label>
+              <select class="form-select" [(ngModel)]="previewDepartmentId">
+                <option [ngValue]="null">All Departments</option>
+                <option *ngFor="let d of departments" [ngValue]="d.id">{{ d.name }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Preview -->
+        <div *ngIf="wizardStep === 2">
+          <h6 class="text-success mb-3">
+            <i class="bi bi-2-circle-fill me-2"></i>Step 2: Preview & Confirm
+            <button class="btn btn-sm btn-outline-secondary float-end" (click)="wizardStep = 1"><i class="bi bi-arrow-left"></i> Back</button>
+          </h6>
+
+          <div *ngIf="isPreviewLoading" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+
+          <div *ngIf="!isPreviewLoading && previewData">
+            <div class="table-responsive" style="max-height: 300px;">
+              <table class="table table-sm table-hover align-middle">
+                <thead class="table-light sticky-top">
+                  <tr>
+                    <th>Employee</th>
+                    <th>Department</th>
+                    <th>Base</th>
+                    <th>Allowances</th>
+                    <th>Deductions</th>
+                    <th class="text-end">Net Pay</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let s of previewData.salaries">
+                    <td>{{ s.employeeName }}</td>
+                    <td><span class="badge bg-secondary">{{ s.departmentName }}</span></td>
+                    <td>{{ s.baseAmount | currency:'JD ' }}</td>
+                    <td class="text-success">+{{ s.allowances | currency:'JD ' }}</td>
+                    <td class="text-danger">-{{ s.deductions | currency:'JD ' }}</td>
+                    <td class="text-end fw-bold">{{ s.netAmount | currency:'JD ' }}</td>
+                  </tr>
+                  <tr *ngIf="previewData.salaries?.length === 0">
+                    <td colspan="6" class="text-center text-muted py-3">No pending salaries found for this selection.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="mt-4 p-3 bg-white rounded-3 shadow-sm border border-success">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <h6 class="mb-0 text-muted">Total Employees</h6>
+                  <h4 class="mb-0 fw-bold">{{ previewData.employeeCount }}</h4>
+                </div>
+                <div class="text-end">
+                  <h6 class="mb-0 text-muted">Total Payroll Cost</h6>
+                  <h3 class="mb-0 fw-bold text-success">{{ previewData.totalCost | currency:'JD ' }}</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer border-0 bg-light">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+        <button *ngIf="wizardStep === 1" type="button" class="btn btn-primary px-4" (click)="previewPayroll()" [disabled]="isPreviewLoading">
+          <span *ngIf="isPreviewLoading" class="spinner-border spinner-border-sm me-2"></span>
+          Preview
+        </button>
+        <button *ngIf="wizardStep === 2" type="button" class="btn btn-success px-4" (click)="confirmGeneratePayroll()" [disabled]="isPreviewLoading || previewData?.salaries?.length === 0">
+          <span *ngIf="isPreviewLoading" class="spinner-border spinner-border-sm me-2"></span>
+          <i class="bi bi-check-circle me-1"></i> Confirm & Generate
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <style>
-    .cursor-pointer {
-        cursor: pointer;
-    }
-
+  .cursor-pointer {
+    cursor: pointer;
+  }
 </style>
-
-
 ```
 
 ### File: src\app\features\salary\salary.component.ts
+
 ```typescript
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { SalaryService } from '../../core/services/salary.service';
-import { EmployeeService } from '../../core/services/employee.service';
-import { AuthService } from '../../core/services/auth.service';
-import Swal from 'sweetalert2';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import { TranslatePipe } from '../../core/pipes/translate.pipe';
-import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
-import { PdfExportService } from '../../core/services/pdf-export.service';
-import { ExcelExportService } from '../../core/services/excel-export.service';
+import { Component, OnInit, inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { SalaryService } from "../../core/services/salary.service";
+import { EmployeeService } from "../../core/services/employee.service";
+import { AuthService } from "../../core/services/auth.service";
+import { DepartmentService } from "../../core/services/department.service";
+import Swal from "sweetalert2";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { TranslatePipe } from "../../core/pipes/translate.pipe";
+import { getFriendlyErrorMessage } from "../../core/utils/error-handler.util";
+import { PdfExportService } from "../../core/services/pdf-export.service";
+import { ExcelExportService } from "../../core/services/excel-export.service";
 
 declare var bootstrap: any;
 
 @Component({
-  selector: 'app-salary',
+  selector: "app-salary",
   standalone: true,
   imports: [CommonModule, FormsModule, TranslatePipe],
-  templateUrl: './salary.component.html',
+  templateUrl: "./salary.component.html",
 })
 export class SalaryComponent implements OnInit {
   private salaryService = inject(SalaryService);
   private employeeService = inject(EmployeeService);
   private authService = inject(AuthService);
+  private departmentService = inject(DepartmentService);
   private pdfExportService = inject(PdfExportService);
   private excelExportService = inject(ExcelExportService);
 
@@ -12097,12 +10554,22 @@ export class SalaryComponent implements OnInit {
   employeesList: any[] = [];
   filteredEmployeesList: any[] = [];
   showEmployeeDropdown: boolean = false;
-  employeeSearchText: string = '';
+  employeeSearchText: string = "";
 
-  salarySearchQuery: string = '';
-  selectedYear: string = '';
-  selectedMonth: string = '';
+  salarySearchQuery: string = "";
+  selectedYear: string = "";
+  selectedMonth: string = "";
   uniqueYears: number[] = [];
+  departments: any[] = [];
+
+  // Wizard state
+  wizardStep = 1;
+  previewMonth = new Date().getMonth() + 1;
+  previewYear = new Date().getFullYear();
+  previewDepartmentId: number | null = null;
+  previewData: any = null;
+  isPreviewLoading = false;
+  payrollWizardModal: any;
 
   currentPage: number = 1;
   itemsPerPage: number = 7;
@@ -12133,25 +10600,38 @@ export class SalaryComponent implements OnInit {
     baseAmount: 0,
     allowances: 0,
     deductions: 0,
-    effectiveDate: new Date().toISOString().split('T')[0],
+    effectiveDate: new Date().toISOString().split("T")[0],
   };
 
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
-    
+
     if (this.isAdmin) {
-        this.isViewingAll = true;
+      this.isViewingAll = true;
     }
 
-    this.loadSalaries();
+    this.loadInitialData();
     if (this.isAdmin) {
       this.loadEmployees();
     }
   }
 
-  loadEmployees() {
+  loadInitialData() {
+    this.isLoading = true;
+    this.departmentService.getDepartments().subscribe({
+      next: (deps) => {
+        this.departments = deps;
+        this.loadSalaries();
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.handleError(err);
+      },
+    });
+  }
 
+  loadEmployees() {
     this.employeeService.getEmployees().subscribe({
       next: (res: any) => {
         const extractedData = Array.isArray(res) ? res : res?.data || [];
@@ -12159,7 +10639,7 @@ export class SalaryComponent implements OnInit {
         this.filteredEmployeesList = [...this.employeesList];
       },
       error: (err: any) => {
-        console.error('Error fetching employees:', err);
+        console.error("Error fetching employees:", err);
       },
     });
   }
@@ -12195,62 +10675,49 @@ export class SalaryComponent implements OnInit {
   }
 
   loadSalaries() {
-
     this.isLoading = true;
-    const request = (this.isAdminOrHR && this.isViewingAll)
-      ? this.salaryService.getAllSalaries()
-      : this.salaryService.getMySalaries();
+
+    const m = this.selectedMonth ? Number(this.selectedMonth) : undefined;
+    const y = this.selectedYear ? Number(this.selectedYear) : undefined;
+
+    const request = this.isAdminOrHR && this.isViewingAll ? this.salaryService.getAllSalaries(m, y) : this.salaryService.getMySalaries(m, y);
 
     request.subscribe({
       next: (res: any) => {
         const extractedData = Array.isArray(res) ? res : res?.data || [];
-        this.allSalariesList = Array.isArray(extractedData)
-          ? extractedData
-          : [];
+        this.allSalariesList = Array.isArray(extractedData) ? extractedData : [];
         this.salariesList = [...this.allSalariesList];
 
-        const years = this.allSalariesList
-          .map((s) => s.year)
-          .filter((y) => y != null);
-        this.uniqueYears = Array.from(new Set(years))
-          .sort()
-          .reverse() as number[];
+        if (!m && !y) {
+          const years = this.allSalariesList.map((s) => s.year).filter((y) => y != null);
+          this.uniqueYears = Array.from(new Set(years)).sort().reverse() as number[];
+        }
 
+        this.filterSalariesLocal();
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching salaries:', err);
+        console.error("Error fetching salaries:", err);
         this.isLoading = false;
       },
     });
   }
 
   filterSalaries() {
+    this.loadSalaries();
+  }
 
+  filterSalariesLocal() {
     this.salariesList = this.allSalariesList.filter((s) => {
       let matchesSearch = true;
       if (this.salarySearchQuery) {
         const query = this.salarySearchQuery.toLowerCase();
-        const empName = (s.employeeName || '').toLowerCase();
-        const empId = String(s.employeeId || '');
-        const baseAmt = String(s.baseAmount || '');
-        matchesSearch =
-          empName.includes(query) ||
-          empId.includes(query) ||
-          baseAmt.includes(query);
+        const empName = (s.employeeName || "").toLowerCase();
+        const empId = String(s.employeeId || "");
+        const baseAmt = String(s.baseAmount || "");
+        matchesSearch = empName.includes(query) || empId.includes(query) || baseAmt.includes(query);
       }
-
-      let matchesYear = true;
-      if (this.selectedYear) {
-        matchesYear = String(s.year) === this.selectedYear;
-      }
-
-      let matchesMonth = true;
-      if (this.selectedMonth) {
-        matchesMonth = String(s.month) === this.selectedMonth;
-      }
-
-      return matchesSearch && matchesYear && matchesMonth;
+      return matchesSearch;
     });
 
     if (this.salariesList.length > 0) {
@@ -12267,9 +10734,9 @@ export class SalaryComponent implements OnInit {
 
   toggleViewAll() {
     this.isViewingAll = !this.isViewingAll;
-    this.salarySearchQuery = '';
-    this.selectedYear = '';
-    this.selectedMonth = '';
+    this.salarySearchQuery = "";
+    this.selectedYear = "";
+    this.selectedMonth = "";
     this.loadSalaries();
   }
 
@@ -12284,20 +10751,14 @@ export class SalaryComponent implements OnInit {
         baseAmount: salary.baseAmount,
         allowances: salary.allowances,
         deductions: salary.deductions,
-        effectiveDate: salary.effectiveDate
-          ? salary.effectiveDate.split('T')[0]
-          : '',
+        effectiveDate: salary.effectiveDate ? salary.effectiveDate.split("T")[0] : "",
       };
       const emp = this.employeesList.find((e) => e.id === salary.employeeId);
-      this.employeeSearchText = emp
-        ? `${emp.firstName} ${emp.lastName}`
-        : salary.employeeId
-          ? String(salary.employeeId)
-          : '';
+      this.employeeSearchText = emp ? `${emp.firstName} ${emp.lastName}` : salary.employeeId ? String(salary.employeeId) : "";
     } else {
       this.isEditMode = false;
       this.currentSalaryId = null;
-      this.employeeSearchText = '';
+      this.employeeSearchText = "";
       this.salaryData = {
         employeeId: null,
         month: new Date().getMonth() + 1,
@@ -12305,22 +10766,74 @@ export class SalaryComponent implements OnInit {
         baseAmount: 0,
         allowances: 0,
         deductions: 0,
-        effectiveDate: new Date().toISOString().split('T')[0],
+        effectiveDate: new Date().toISOString().split("T")[0],
       };
     }
 
     this.filteredEmployeesList = [...this.employeesList];
     this.showEmployeeDropdown = false;
 
-    const modalEl = document.getElementById('salaryModal');
+    const modalEl = document.getElementById("salaryModal");
     if (modalEl) {
       this.salaryModal = new bootstrap.Modal(modalEl);
       this.salaryModal.show();
     }
   }
 
-  saveSalary() {
+  openWizard() {
+    this.wizardStep = 1;
+    this.previewMonth = new Date().getMonth() + 1;
+    this.previewYear = new Date().getFullYear();
+    this.previewDepartmentId = null;
+    this.previewData = null;
 
+    const modalEl = document.getElementById("payrollWizardModal");
+    if (modalEl) {
+      this.payrollWizardModal = new bootstrap.Modal(modalEl);
+      this.payrollWizardModal.show();
+    }
+  }
+
+  previewPayroll() {
+    this.isPreviewLoading = true;
+    this.salaryService.previewBatch(this.previewMonth, this.previewYear, this.previewDepartmentId).subscribe({
+      next: (res: any) => {
+        this.previewData = res?.data ?? res;
+        this.isPreviewLoading = false;
+        this.wizardStep = 2;
+      },
+      error: (err) => {
+        this.isPreviewLoading = false;
+        this.handleError(err);
+      },
+    });
+  }
+
+  confirmGeneratePayroll() {
+    this.isPreviewLoading = true;
+    this.salaryService.generateBatch(this.previewMonth, this.previewYear, this.previewDepartmentId).subscribe({
+      next: (res: any) => {
+        const count = res?.data ?? res;
+        this.isPreviewLoading = false;
+        if (this.payrollWizardModal) {
+          this.payrollWizardModal.hide();
+        }
+        Swal.fire("Success", `Generated ${count} salaries successfully.`, "success");
+        this.loadSalaries();
+      },
+      error: (err) => {
+        this.isPreviewLoading = false;
+        this.handleError(err);
+      },
+    });
+  }
+
+  generatePayroll() {
+    // We now use openWizard instead. Leaving this empty or removing it.
+    this.openWizard();
+  }
+
+  saveSalary() {
     this.isProcessing = true;
 
     const isoDate = new Date(this.salaryData.effectiveDate).toISOString();
@@ -12342,12 +10855,10 @@ export class SalaryComponent implements OnInit {
         effectiveDate: isoDate,
       };
 
-      this.salaryService
-        .updateSalary(this.currentSalaryId, updatePayload)
-        .subscribe({
-          next: () => this.handleSuccess('Salary updated successfully'),
-          error: (err) => this.handleError(err),
-        });
+      this.salaryService.updateSalary(this.currentSalaryId, updatePayload).subscribe({
+        next: () => this.handleSuccess("Salary updated successfully"),
+        error: (err) => this.handleError(err),
+      });
     } else {
       const createPayload = {
         ...this.salaryData,
@@ -12357,7 +10868,7 @@ export class SalaryComponent implements OnInit {
       };
 
       this.salaryService.createSalary(createPayload).subscribe({
-        next: () => this.handleSuccess('Salary record added successfully'),
+        next: () => this.handleSuccess("Salary record added successfully"),
         error: (err) => this.handleError(err),
       });
     }
@@ -12367,7 +10878,7 @@ export class SalaryComponent implements OnInit {
     this.isProcessing = false;
     this.salaryModal.hide();
     Swal.fire({
-      icon: 'success',
+      icon: "success",
       title: message,
       showConfirmButton: false,
       timer: 1500,
@@ -12377,311 +10888,220 @@ export class SalaryComponent implements OnInit {
 
   private handleError(err: any) {
     this.isProcessing = false;
-    console.error('Salary save error:', err);
-    Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to save salary data.'), 'error');
+    console.error("Salary save error:", err);
+    Swal.fire("Error", getFriendlyErrorMessage(err, "Failed to save salary data."), "error");
   }
 
   downloadPayslip(salary: any) {
     const empName = salary.employeeName || `Employee #${salary.employeeId}`;
     const period = `${salary.month} / ${salary.year}`;
     const effObj = new Date(salary.effectiveDate);
-    const effDate = `${effObj.getFullYear()}-${String(effObj.getMonth() + 1).padStart(2, '0')}-${String(effObj.getDate()).padStart(2, '0')}`;
-    const fileName = `Payslip_${empName.replace(/ /g, '_')}_${salary.month}_${salary.year}`;
+    const effDate = `${effObj.getFullYear()}-${String(effObj.getMonth() + 1).padStart(2, "0")}-${String(effObj.getDate()).padStart(2, "0")}`;
+    const fileName = `Payslip_${empName.replace(/ /g, "_")}_${salary.month}_${salary.year}`;
 
     const additionalInfo = [
-      { label: 'Employee Name', value: empName },
-      { label: 'Payroll Period', value: period },
-      { label: 'Effective Date', value: effDate },
-      { label: 'Net Pay', value: `${salary.netAmount} JD` }
+      { label: "Employee Name", value: empName },
+      { label: "Payroll Period", value: period },
+      { label: "Effective Date", value: effDate },
+      { label: "Net Pay", value: `${salary.netAmount} JD` },
     ];
 
     const data = [
-      ['Base Salary', `${salary.baseAmount} JD`],
-      ['Allowances', `+${salary.allowances} JD`],
-      ['Gross Salary', `${salary.grossAmount} JD`],
-      ['Deductions', `-${salary.deductions} JD`]
+      ["Base Salary", `${salary.baseAmount} JD`],
+      ["Allowances", `+${salary.allowances} JD`],
+      ["Gross Salary", `${salary.grossAmount} JD`],
+      ["Deductions", `-${salary.deductions} JD`],
     ];
 
-    this.pdfExportService.generateTableReport(
-      'Salary Payslip',
-      ['Description', 'Amount (JD)'],
-      data,
-      fileName,
-      additionalInfo
-    );
+    this.pdfExportService.generateTableReport("Salary Payslip", ["Description", "Amount (JD)"], data, fileName, additionalInfo);
   }
 
   exportToExcel() {
     if (this.salariesList.length === 0) {
-      Swal.fire('No Data', 'There are no salary records to export.', 'info');
+      Swal.fire("No Data", "There are no salary records to export.", "info");
       return;
     }
 
-    const headers = ['Employee', 'Period (Month/Year)', 'Base (JD)', 'Allowances', 'Deductions', 'Net Salary', 'Effective Date'];
-    const data = this.salariesList.map(s => [
-      s.employeeName || `#${s.employeeId}`,
-      `${s.month} / ${s.year}`,
-      s.baseAmount,
-      s.allowances,
-      s.deductions,
-      s.netAmount,
-      s.effectiveDate ? s.effectiveDate.split('T')[0] : '—'
-    ]);
+    const headers = ["Employee", "Period (Month/Year)", "Base (JD)", "Allowances", "Deductions", "Net Salary", "Effective Date"];
+    const data = this.salariesList.map((s) => [s.employeeName || `#${s.employeeId}`, `${s.month} / ${s.year}`, s.baseAmount, s.allowances, s.deductions, s.netAmount, s.effectiveDate ? s.effectiveDate.split("T")[0] : "—"]);
 
-    this.excelExportService.exportTableToExcel(headers, data, 'Salaries');
+    this.excelExportService.exportTableToExcel(headers, data, "Salaries");
   }
 
   exportToPDF() {
     if (this.salariesList.length === 0) {
-      Swal.fire('No Data', 'There are no salary records to export.', 'info');
+      Swal.fire("No Data", "There are no salary records to export.", "info");
       return;
     }
 
-    const headers = ['Employee', 'Period (Month/Year)', 'Base ($)', 'Allowances', 'Deductions', 'Net Salary', 'Effective Date'];
-    const data = this.salariesList.map(s => [
-      s.employeeName || `#${s.employeeId}`,
-      `${s.month} / ${s.year}`,
-      s.baseAmount,
-      s.allowances,
-      s.deductions,
-      s.netAmount,
-      s.effectiveDate ? s.effectiveDate.split('T')[0] : '—'
-    ]);
+    const headers = ["Employee", "Period (Month/Year)", "Base ($)", "Allowances", "Deductions", "Net Salary", "Effective Date"];
+    const data = this.salariesList.map((s) => [s.employeeName || `#${s.employeeId}`, `${s.month} / ${s.year}`, s.baseAmount, s.allowances, s.deductions, s.netAmount, s.effectiveDate ? s.effectiveDate.split("T")[0] : "—"]);
 
     const additionalInfo = [
-      { label: 'Total Records', value: String(this.salariesList.length) },
-      { label: 'Filtered Year', value: this.selectedYear ? this.selectedYear : 'All' },
-      { label: 'Filtered Month', value: this.selectedMonth ? this.selectedMonth : 'All' }
+      { label: "Total Records", value: String(this.salariesList.length) },
+      { label: "Filtered Year", value: this.selectedYear ? this.selectedYear : "All" },
+      { label: "Filtered Month", value: this.selectedMonth ? this.selectedMonth : "All" },
     ];
 
-    this.pdfExportService.generateTableReport(
-      'Salaries Report',
-      headers,
-      data,
-      'Salaries_Report',
-      additionalInfo
-    );
+    this.pdfExportService.generateTableReport("Salaries Report", headers, data, "Salaries_Report", additionalInfo);
   }
 }
-
 ```
 
 ### File: src\app\shared\header\header.component.html
+
 ```html
 <nav class="navbar navbar-expand bg-white border-bottom shadow-sm px-4 py-2 header-bar">
-    <div class="container-fluid px-2">
-        <div class="d-flex align-items-center gap-3 ms-2">
-            <button
-                class="btn btn-light border-0 shadow-none d-flex align-items-center justify-content-center p-2"
-                (click)="toggleSidebar()">
-                <i class="bi bi-list fs-4 text-primary"></i>
-            </button>
-        </div>
-
-        <ul class="navbar-nav ms-auto align-items-center flex-row gap-1">
-
-            
-            @if (pwaService.canInstall) {
-            <li class="nav-item me-3">
-                <button
-                    class="btn btn-primary btn-sm border-0 shadow-sm d-flex align-items-center gap-2 px-3 py-1"
-                    (click)="installApp()"
-                    title="Install App">
-                    <i class="bi bi-download fs-6"></i>
-                    <span class="fw-semibold d-none d-md-inline">{{ 'Install App' | t }}</span>
-                </button>
-            </li>
-            }
-
-            
-            <li class="nav-item me-3 dropdown">
-                <button
-                    class="btn btn-light btn-sm border-0 shadow-none settings-btn"
-                    id="settingsDropdown" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <i class="bi bi-gear-fill fs-5" style="color: #8b5cf6;"></i>
-                </button>
-
-                <div class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-0 settings-panel overflow-hidden"
-                    aria-labelledby="settingsDropdown"
-                    style="width: 280px;">
-
-                    
-                    <div class="p-3 border-bottom" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-gear-wide-connected text-white fs-5"></i>
-                            <span class="fw-bold text-white">{{ 'Settings' | t }}</span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="px-3 py-3 border-bottom">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="settings-icon-circle" [class.active]="settingsService.isDarkMode">
-                                    <i class="bi" [ngClass]="settingsService.isDarkMode ? 'bi-moon-stars-fill' : 'bi-sun-fill'"></i>
-                                </div>
-                                <div>
-                                    <p class="mb-0 fw-semibold small text-dark">{{ 'Theme' | t }}</p>
-                                    <p class="mb-0 text-muted" style="font-size: 0.7rem;">
-                                        {{ settingsService.isDarkMode ? ('Dark Mode' | t) : ('Light Mode' | t) }}
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="form-check form-switch mb-0">
-                                <input class="form-check-input cursor-pointer" type="checkbox" role="switch"
-                                    id="themeToggle"
-                                    [checked]="settingsService.isDarkMode"
-                                    (change)="settingsService.toggleTheme()"
-                                    style="width: 2.5em; height: 1.25em;">
-                            </div>
-                        </div>
-                    </div>
-
-                    
-                    <div class="px-3 py-3">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="settings-icon-circle lang">
-                                    <i class="bi bi-translate"></i>
-                                </div>
-                                <div>
-                                    <p class="mb-0 fw-semibold small text-dark">{{ 'Language' | t }}</p>
-                                    <p class="mb-0 text-muted" style="font-size: 0.7rem;">
-                                        {{ settingsService.language === 'ar' ? 'العربية' : 'English' }}
-                                    </p>
-                                </div>
-                            </div>
-                            <button class="btn btn-sm px-3 py-1 rounded-pill fw-semibold lang-toggle-btn"
-                                (click)="settingsService.toggleLanguage(); $event.stopPropagation()">
-                                {{ settingsService.language === 'ar' ? 'EN' : 'AR' }}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </li>
-
-            
-            <li class="nav-item dropdown" style="margin-inline-end: 0.5rem;">
-                <button
-                    class="btn btn-light btn-sm border-0 position-relative shadow-none"
-                    id="notificationDropdown" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <i class="bi bi-bell-fill fs-5" style="color: #f59e0b;"></i>
-
-                    @if (unreadCount > 0) {
-                    <span
-                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {{ unreadCount }}
-                    </span>
-                    }
-                </button>
-
-                <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-0 notification-dropdown"
-                    aria-labelledby="notificationDropdown"
-                    style="max-height: 400px; overflow-y: auto;">
-
-                    <li
-                        class="p-3 border-bottom bg-light d-flex justify-content-between align-items-center">
-                        <div>
-                            <span class="fw-bold text-dark">{{ 'Notifications' | t }}</span>
-                            @if (unreadCount > 0) {
-                            <span class="badge bg-primary rounded-pill ms-2">{{ unreadCount }} {{ 'New' | t }}</span>
-                            }
-                        </div>
-                        <div class="d-flex gap-1">
-                            <button class="btn btn-link action-icon-btn text-decoration-none p-0 text-primary" 
-                                    (click)="markAllAsRead($event)" 
-                                    [disabled]="unreadCount === 0"
-                                    [class.text-muted]="unreadCount === 0"
-                                    title="Mark all as read">
-                                <i class="bi bi-check2-all fs-6"></i>
-                            </button>
-                            <button class="btn btn-link action-icon-btn text-decoration-none p-0 text-danger" 
-                                    (click)="deleteAllNotifications($event)" 
-                                    [disabled]="notifications.length === 0"
-                                    [class.text-muted]="notifications.length === 0"
-                                    title="Delete all notifications">
-                                <i class="bi bi-trash fs-6"></i>
-                            </button>
-                        </div>
-                    </li>
-
-                    @for (note of notifications; track note.id) {
-                    <li>
-                        <a class="dropdown-item py-3 border-bottom"
-                            href="javascript:void(0)"
-                            [class.bg-light]="!note.isRead"
-                            (click)="markAsRead(note)">
-
-                            <div
-                                class="d-flex w-100 justify-content-between align-items-start mb-1">
-                                <div>
-                                    <h6 class="mb-0 fw-bold text-dark" style="font-size: 0.875rem; white-space: normal; word-break: break-word;">
-                                        {{ note.title || ('System Alert' | t) }}
-                                    </h6>
-                                    <small class="text-muted"
-                                        style="font-size: 0.75rem;">{{
-                                        note.createdAt | date:'shortTime' }}</small>
-                                </div>
-                                <button class="btn btn-link action-icon-btn text-danger p-0 ms-2" (click)="deleteNotification($event, note.id)" title="Delete">
-                                    <i class="bi bi-x-circle fs-6"></i>
-                                </button>
-                            </div>
-
-                            <p class="mb-0 text-secondary text-wrap pe-4"
-                                style="font-size: 0.85rem;">
-                                {{ note.message }}
-                            </p>
-                        </a>
-                    </li>
-                    } @empty {
-                    <li class="p-4 text-center text-muted">
-                        <i
-                            class="bi bi-bell-slash fs-3 d-block mb-2 text-light-gray"></i>
-                        {{ 'No new notifications' | t }}
-                    </li>
-                    }
-                </ul>
-            </li>
-
-            <li class="nav-item">
-                <div class="d-flex align-items-center">
-
-                </div>
-            </li>
-
-        </ul>
+  <div class="container-fluid px-2">
+    <div class="d-flex align-items-center gap-3 ms-2">
+      <button class="btn btn-light border-0 shadow-none d-flex align-items-center justify-content-center p-2" (click)="toggleSidebar()">
+        <i class="bi bi-list fs-4 text-primary"></i>
+      </button>
     </div>
+
+    <ul class="navbar-nav ms-auto align-items-center flex-row gap-1">
+      @if (pwaService.canInstall) {
+      <li class="nav-item me-3">
+        <button class="btn btn-primary btn-sm border-0 shadow-sm d-flex align-items-center gap-2 px-3 py-1" (click)="installApp()" title="Install App">
+          <i class="bi bi-download fs-6"></i>
+          <span class="fw-semibold d-none d-md-inline">{{ 'Install App' | t }}</span>
+        </button>
+      </li>
+      }
+
+      <li class="nav-item me-3 dropdown">
+        <button class="btn btn-light btn-sm border-0 shadow-none settings-btn" id="settingsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-gear-fill fs-5" style="color: #8b5cf6;"></i>
+        </button>
+
+        <div class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-0 settings-panel overflow-hidden" aria-labelledby="settingsDropdown" style="width: 280px;">
+          <div class="p-3 border-bottom" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-gear-wide-connected text-white fs-5"></i>
+              <span class="fw-bold text-white">{{ 'Settings' | t }}</span>
+            </div>
+          </div>
+
+          <div class="px-3 py-3 border-bottom">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center gap-2">
+                <div class="settings-icon-circle" [class.active]="settingsService.isDarkMode">
+                  <i class="bi" [ngClass]="settingsService.isDarkMode ? 'bi-moon-stars-fill' : 'bi-sun-fill'"></i>
+                </div>
+                <div>
+                  <p class="mb-0 fw-semibold small text-dark">{{ 'Theme' | t }}</p>
+                  <p class="mb-0 text-muted" style="font-size: 0.7rem;">{{ settingsService.isDarkMode ? ('Dark Mode' | t) : ('Light Mode' | t) }}</p>
+                </div>
+              </div>
+              <div class="form-check form-switch mb-0">
+                <input class="form-check-input cursor-pointer" type="checkbox" role="switch" id="themeToggle" [checked]="settingsService.isDarkMode" (change)="settingsService.toggleTheme()" style="width: 2.5em; height: 1.25em;" />
+              </div>
+            </div>
+          </div>
+
+          <div class="px-3 py-3">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center gap-2">
+                <div class="settings-icon-circle lang">
+                  <i class="bi bi-translate"></i>
+                </div>
+                <div>
+                  <p class="mb-0 fw-semibold small text-dark">{{ 'Language' | t }}</p>
+                  <p class="mb-0 text-muted" style="font-size: 0.7rem;">{{ settingsService.language === 'ar' ? 'العربية' : 'English' }}</p>
+                </div>
+              </div>
+              <button class="btn btn-sm px-3 py-1 rounded-pill fw-semibold lang-toggle-btn" (click)="settingsService.toggleLanguage(); $event.stopPropagation()">{{ settingsService.language === 'ar' ? 'EN' : 'AR' }}</button>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="nav-item dropdown" style="margin-inline-end: 0.5rem;">
+        <button class="btn btn-light btn-sm border-0 position-relative shadow-none" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-bell-fill fs-5" style="color: #f59e0b;"></i>
+
+          @if (unreadCount > 0) {
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"> {{ unreadCount }} </span>
+          }
+        </button>
+
+        <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-0 notification-dropdown" aria-labelledby="notificationDropdown" style="max-height: 400px; overflow-y: auto;">
+          <li class="p-3 border-bottom bg-light d-flex justify-content-between align-items-center">
+            <div>
+              <span class="fw-bold text-dark">{{ 'Notifications' | t }}</span>
+              @if (unreadCount > 0) {
+              <span class="badge bg-primary rounded-pill ms-2">{{ unreadCount }} {{ 'New' | t }}</span>
+              }
+            </div>
+            <div class="d-flex gap-1">
+              <button class="btn btn-link action-icon-btn text-decoration-none p-0 text-primary" (click)="markAllAsRead($event)" [disabled]="unreadCount === 0" [class.text-muted]="unreadCount === 0" title="Mark all as read">
+                <i class="bi bi-check2-all fs-6"></i>
+              </button>
+              <button class="btn btn-link action-icon-btn text-decoration-none p-0 text-danger" (click)="deleteAllNotifications($event)" [disabled]="notifications.length === 0" [class.text-muted]="notifications.length === 0" title="Delete all notifications">
+                <i class="bi bi-trash fs-6"></i>
+              </button>
+            </div>
+          </li>
+
+          @for (note of notifications; track note.id) {
+          <li>
+            <a class="dropdown-item py-3 border-bottom" href="javascript:void(0)" [class.bg-light]="!note.isRead" (click)="markAsRead(note)">
+              <div class="d-flex w-100 justify-content-between align-items-start mb-1">
+                <div>
+                  <h6 class="mb-0 fw-bold text-dark" style="font-size: 0.875rem; white-space: normal; word-break: break-word;">{{ note.title || ('System Alert' | t) }}</h6>
+                  <small class="text-muted" style="font-size: 0.75rem;">{{ note.createdAt | date:'shortTime' }}</small>
+                </div>
+                <button class="btn btn-link action-icon-btn text-danger p-0 ms-2" (click)="deleteNotification($event, note.id)" title="Delete">
+                  <i class="bi bi-x-circle fs-6"></i>
+                </button>
+              </div>
+
+              <p class="mb-0 text-secondary text-wrap pe-4" style="font-size: 0.85rem;">{{ note.message }}</p>
+            </a>
+          </li>
+          } @empty {
+          <li class="p-4 text-center text-muted">
+            <i class="bi bi-bell-slash fs-3 d-block mb-2 text-light-gray"></i>
+            {{ 'No new notifications' | t }}
+          </li>
+          }
+        </ul>
+      </li>
+
+      <li class="nav-item">
+        <div class="d-flex align-items-center"></div>
+      </li>
+    </ul>
+  </div>
 </nav>
 ```
 
 ### File: src\app\shared\header\header.component.ts
+
 ```typescript
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { NotificationService } from '../../core/services/notification.service';
-import { Router } from '@angular/router';
-import { interval, Subscription } from 'rxjs';
-import { SidebarService } from '../../core/services/sidebar.service';
-import { SettingsService } from '../../core/services/settings.service';
-import { TranslatePipe } from '../../core/pipes/translate.pipe';
-import { PwaService } from '../../core/services/pwa.service';
-import { AuthService } from '../../core/services/auth.service';
-import Swal from 'sweetalert2';
+import { Component, OnInit, OnDestroy, inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { NotificationService } from "../../core/services/notification.service";
+import { Router } from "@angular/router";
+import { interval, Subscription } from "rxjs";
+import { SidebarService } from "../../core/services/sidebar.service";
+import { SettingsService } from "../../core/services/settings.service";
+import { TranslatePipe } from "../../core/pipes/translate.pipe";
+import { PwaService } from "../../core/services/pwa.service";
+import { AuthService } from "../../core/services/auth.service";
+import Swal from "sweetalert2";
 
 @Component({
-  selector: 'app-header',
+  selector: "app-header",
   standalone: true,
   imports: [CommonModule, TranslatePipe],
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css'],
+  templateUrl: "./header.component.html",
+  styleUrls: ["./header.component.css"],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   private notificationService = inject(NotificationService);
   private router = inject(Router);
   private sidebarService = inject(SidebarService);
-  
 
   pwaService = inject(PwaService);
   settingsService = inject(SettingsService);
@@ -12707,8 +11127,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
 
     this.profilePicUrl = this.authService.getCurrentUserProfilePic();
-    if (typeof window !== 'undefined') {
-      window.addEventListener('profile_pic_updated', () => {
+    if (typeof window !== "undefined") {
+      window.addEventListener("profile_pic_updated", () => {
         this.profilePicUrl = this.authService.getCurrentUserProfilePic();
       });
     }
@@ -12731,7 +11151,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.notifications = extracted;
         this.unreadCount = this.notifications.filter((n) => !n.isRead).length;
       },
-      error: (err) => console.error('Error fetching notifications:', err),
+      error: (err) => console.error("Error fetching notifications:", err),
     });
   }
 
@@ -12747,7 +11167,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.unreadCount = Math.max(0, this.unreadCount - 1);
         this.navigateBasedOnNotification(notification);
       },
-      error: (err) => console.error('Error marking as read:', err),
+      error: (err) => console.error("Error marking as read:", err),
     });
   }
 
@@ -12757,32 +11177,32 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.notificationService.markAllAsRead().subscribe({
       next: () => {
-        this.notifications.forEach(n => n.isRead = true);
+        this.notifications.forEach((n) => (n.isRead = true));
         this.unreadCount = 0;
       },
-      error: (err) => console.error('Error marking all as read:', err),
+      error: (err) => console.error("Error marking all as read:", err),
     });
   }
 
   deleteNotification(event: Event, id: number) {
     event.stopPropagation();
     Swal.fire({
-      title: 'Delete Notification?',
-      text: 'Are you sure you want to delete this notification?',
-      icon: 'warning',
+      title: "Delete Notification?",
+      text: "Are you sure you want to delete this notification?",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it',
-      cancelButtonText: 'Cancel'
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it",
+      cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
         this.notificationService.deleteNotification(id).subscribe({
           next: () => {
-            this.notifications = this.notifications.filter(n => n.id !== id);
+            this.notifications = this.notifications.filter((n) => n.id !== id);
             this.unreadCount = this.notifications.filter((n) => !n.isRead).length;
           },
-          error: (err) => console.error('Error deleting notification:', err)
+          error: (err) => console.error("Error deleting notification:", err),
         });
       }
     });
@@ -12793,14 +11213,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (this.notifications.length === 0) return;
 
     Swal.fire({
-      title: 'Clear All Notifications?',
-      text: 'Are you sure you want to delete all notifications?',
-      icon: 'warning',
+      title: "Clear All Notifications?",
+      text: "Are you sure you want to delete all notifications?",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete all',
-      cancelButtonText: 'Cancel'
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete all",
+      cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
         this.notificationService.deleteAllNotifications().subscribe({
@@ -12808,222 +11228,142 @@ export class HeaderComponent implements OnInit, OnDestroy {
             this.notifications = [];
             this.unreadCount = 0;
           },
-          error: (err) => console.error('Error deleting all notifications:', err)
+          error: (err) => console.error("Error deleting all notifications:", err),
         });
       }
     });
   }
 
   private navigateBasedOnNotification(notif: any) {
-    const type = notif.type || '';
-    const msg = (notif.message || '').toLowerCase();
+    const type = notif.type || "";
+    const msg = (notif.message || "").toLowerCase();
 
-    if (
-      type.includes('Leave') ||
-      msg.includes('leave') ||
-      msg.includes('مغادرة') ||
-      msg.includes('إجازة')
-    ) {
-      this.router.navigate(['/leave']);
-    } else if (
-      type.includes('Salary') ||
-      msg.includes('salary') ||
-      msg.includes('راتب')
-    ) {
-      this.router.navigate(['/salary']);
-    } else if (
-      type.includes('Clock') ||
-      msg.includes('attendance') ||
-      msg.includes('حضور')
-    ) {
-      this.router.navigate(['/attendance']);
-    } else if (
-      type.includes('Meeting') ||
-      msg.includes('meeting') ||
-      msg.includes('اجتماع') ||
-      msg.includes('مقابلة') ||
-      msg.includes('interview')
-    ) {
-      this.router.navigate(['/meetings']);
-    } else if (
-      type.includes('Adjustment') ||
-      type.includes('Bonus') ||
-      type.includes('Penalty') ||
-      msg.includes('bonus') ||
-      msg.includes('penalty') ||
-      msg.includes('مكافأة') ||
-      msg.includes('بونص') ||
-      msg.includes('خصم') ||
-      msg.includes('عقوبة')
-    ) {
-      this.router.navigate(['/payroll-adjustments']);
-    } else if (
-      type.includes('Announcement') ||
-      msg.includes('announcement') ||
-      msg.includes('إعلان')
-    ) {
-      this.router.navigate(['/dashboard']);
-    } else if (
-      type.includes('ProfilePicture') ||
-      type.includes('profile_picture') ||
-      msg.includes('profile picture') ||
-      msg.includes('profile photo') ||
-      msg.includes('صورة') ||
-      msg.includes('picture')
-    ) {
-      this.router.navigate(['/pending-approvals']);
+    if (type.includes("Leave") || msg.includes("leave") || msg.includes("مغادرة") || msg.includes("إجازة")) {
+      this.router.navigate(["/leave"]);
+    } else if (type.includes("Salary") || msg.includes("salary") || msg.includes("راتب")) {
+      this.router.navigate(["/salary"]);
+    } else if (type.includes("Clock") || msg.includes("attendance") || msg.includes("حضور")) {
+      this.router.navigate(["/attendance"]);
+    } else if (type.includes("Meeting") || msg.includes("meeting") || msg.includes("اجتماع") || msg.includes("مقابلة") || msg.includes("interview")) {
+      this.router.navigate(["/meetings"]);
+    } else if (type.includes("Adjustment") || type.includes("Bonus") || type.includes("Penalty") || msg.includes("bonus") || msg.includes("penalty") || msg.includes("مكافأة") || msg.includes("بونص") || msg.includes("خصم") || msg.includes("عقوبة")) {
+      this.router.navigate(["/payroll-adjustments"]);
+    } else if (type.includes("Announcement") || msg.includes("announcement") || msg.includes("إعلان")) {
+      this.router.navigate(["/dashboard"]);
+    } else if (type.includes("ProfilePicture") || type.includes("profile_picture") || msg.includes("profile picture") || msg.includes("profile photo") || msg.includes("صورة") || msg.includes("picture")) {
+      this.router.navigate(["/pending-approvals"]);
     } else {
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(["/dashboard"]);
     }
   }
 }
-
-
 ```
 
 ### File: src\app\shared\sidebar\sidebar.component.html
+
 ```html
 <div class="sidebar" #sidebar>
-
-    
-    <div class="sidebar-brand" style="cursor: pointer;" routerLink="/dashboard"
-        (click)="closeMobileSidebar()">
-        <div class="sidebar-logo-wrap"
-            style="width: 58px; height: 58px; border-radius: 14px;
+  <div class="sidebar-brand" style="cursor: pointer;" routerLink="/dashboard" (click)="closeMobileSidebar()">
+    <div
+      class="sidebar-logo-wrap"
+      style="width: 58px; height: 58px; border-radius: 14px;
                     box-shadow: 0 4px 14px rgba(0,0,0,0.1);
-                    flex-shrink: 0; background: transparent; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 2px;">
-            <img src="kawadir-logo.png" alt="Kawadir" class="brand-logo"
-                style="width: 100%; height: 100%; object-fit: contain;">
-        </div>
-        <div
-            class="sidebar-brand-text d-flex flex-column justify-content-center mt-1">
-            <span class="sidebar-brand-name"
-                style="line-height: 1; font-size: 1.55rem;">Kawadir</span>
-            <span class="sidebar-brand-sub"
-                style="margin-top: 3px; font-size: 0.6rem;">HR Management</span>
-        </div>
+                    flex-shrink: 0; background: transparent; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 2px;"
+    >
+      <img src="kawadir-logo.png" alt="Kawadir" class="brand-logo" style="width: 100%; height: 100%; object-fit: contain;" />
     </div>
-
-    
-    <nav class="sidebar-nav">
-        <ul>
-            <li><a routerLink="/dashboard" routerLinkActive="active"
-                    (click)="closeMobileSidebar()"><i
-                        class="bi bi-house icon-blue"></i> {{ 'Dashboard' | t
-                    }}</a></li>
-            <li><a routerLink="/my-profile" routerLinkActive="active"
-                    (click)="closeMobileSidebar()"><i
-                        class="bi bi-person icon-blue-dark"></i> {{ 'My Profile'
-                    | t
-                    }}</a></li>
-            @if (isAdminOrHR) {
-            <li><a routerLink="/employees" routerLinkActive="active"
-                    (click)="closeMobileSidebar()"><i
-                        class="bi bi-people icon-pink"></i> {{ 'Employees' | t
-                    }}</a></li>
-            <li><a routerLink="/pending-approvals" routerLinkActive="active"
-                    (click)="closeMobileSidebar()" class="position-relative">
-                    <i class="bi bi-person-bounding-box icon-yellow"></i> {{ 'Pending Approvals' | t }}
-                </a></li>
-            }
-            <li><a routerLink="/payroll-adjustments" routerLinkActive="active"
-                    (click)="closeMobileSidebar()"><i
-                        class="bi bi-wallet2 icon-brown"></i> {{
-                    'Bonus & Penalty' | t }}</a></li>
-            <li><a routerLink="/leave" routerLinkActive="active"
-                    (click)="closeMobileSidebar()"><i
-                        class="bi bi-calendar2-check icon-yellow"></i> {{
-                    'Leave Requests' |
-                    t }}</a></li>
-            <li><a routerLink="/attendance" routerLinkActive="active"
-                    (click)="closeMobileSidebar()"><i
-                        class="bi bi-clock-history icon-orange"></i> {{
-                    'Attendance' | t
-                    }}</a></li>
-            <li><a routerLink="/salary" routerLinkActive="active"
-                    (click)="closeMobileSidebar()"><i
-                        class="bi bi-cash-stack icon-green"></i> {{ 'Salaries' |
-                    t
-                    }}</a></li>
-            <li><a routerLink="/meetings" routerLinkActive="active"
-                    (click)="closeMobileSidebar()"><i
-                        class="bi bi-calendar-event icon-gray"></i> {{
-                    'Meetings' | t
-                    }}</a></li>
-            <li><a routerLink="/ai-assistant" routerLinkActive="active"
-                    (click)="closeMobileSidebar()" class="ai-nav-link"><i
-                        class="bi bi-stars"></i> {{ 'AI Assistant' | t
-                    }}</a></li>
-
-            @if (isAdmin) {
-            <li class="section-title">{{ 'System Control' | t }}</li>
-            <li><a routerLink="/departments" routerLinkActive="active"
-                    (click)="closeMobileSidebar()"><i
-                        class="bi bi-diagram-3 icon-indigo"></i> {{
-                    'Departments' | t
-                    }}</a></li>
-            <li><a routerLink="/positions" routerLinkActive="active"
-                    (click)="closeMobileSidebar()"><i
-                        class="bi bi-briefcase icon-teal"></i> {{ 'Positions' |
-                    t
-                    }}</a></li>
-            <li><a routerLink="/register" routerLinkActive="active"
-                    (click)="closeMobileSidebar()"><i
-                        class="bi bi-person-plus icon-cyan"></i> {{
-                    'Register User' | t }}
-                </a></li>
-            }
-        </ul>
-    </nav>
-
-    
-    <div class="sidebar-footer">
-        <div class="user-profile" routerLink="/my-profile"
-            (click)="closeMobileSidebar()">
-            <div class="avatar-initials" [class.p-0]="profilePicUrl" style="overflow: hidden;">
-                <img *ngIf="profilePicUrl" [src]="profilePicUrl" alt="User" class="w-100 h-100 object-fit-cover">
-                <span *ngIf="!profilePicUrl">{{ initials }}</span>
-            </div>
-            <div class="user-info">
-                <p class="name">{{ userName }}</p>
-                <p class="status">{{ userRole }}</p>
-            </div>
-        </div>
-        <button class="btn-logout" (click)="onLogout()">
-            <i class="bi bi-box-arrow-right"></i> <span>{{ 'Logout' | t
-                }}</span>
-        </button>
+    <div class="sidebar-brand-text d-flex flex-column justify-content-center mt-1">
+      <span class="sidebar-brand-name" style="line-height: 1; font-size: 1.55rem;">Kawadir</span>
+      <span class="sidebar-brand-sub" style="margin-top: 3px; font-size: 0.6rem;">HR Management</span>
     </div>
+  </div>
 
-    
-    <div class="sidebar-resizer" [class.active]="isResizing"
-        (mousedown)="startResize($event)"></div>
+  <nav class="sidebar-nav">
+    <ul>
+      <li>
+        <a routerLink="/dashboard" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-house icon-blue"></i> {{ 'Dashboard' | t }}</a>
+      </li>
+      <li>
+        <a routerLink="/my-profile" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-person icon-blue-dark"></i> {{ 'My Profile' | t }}</a>
+      </li>
+      @if (isAdminOrHR) {
+      <li>
+        <a routerLink="/employees" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-people icon-pink"></i> {{ 'Employees' | t }}</a>
+      </li>
+      <li>
+        <a routerLink="/pending-approvals" routerLinkActive="active" (click)="closeMobileSidebar()" class="position-relative"> <i class="bi bi-person-bounding-box icon-yellow"></i> {{ 'Pending Approvals' | t }} </a>
+      </li>
+      }
+      <li>
+        <a routerLink="/payroll-adjustments" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-wallet2 icon-brown"></i> {{ 'Bonus & Penalty' | t }}</a>
+      </li>
+      <li>
+        <a routerLink="/leave" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-calendar2-check icon-yellow"></i> {{ 'Leave Requests' | t }}</a>
+      </li>
+      <li>
+        <a routerLink="/attendance" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-clock-history icon-orange"></i> {{ 'Attendance' | t }}</a>
+      </li>
+      <li>
+        <a routerLink="/salary" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-cash-stack icon-green"></i> {{ 'Salaries' | t }}</a>
+      </li>
+      <li>
+        <a routerLink="/meetings" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-calendar-event icon-gray"></i> {{ 'Meetings' | t }}</a>
+      </li>
+      <li>
+        <a routerLink="/ai-assistant" routerLinkActive="active" (click)="closeMobileSidebar()" class="ai-nav-link"><i class="bi bi-stars"></i> {{ 'AI Assistant' | t }}</a>
+      </li>
+
+      @if (isAdminOrHR) {
+      <li class="section-title">{{ 'System Control' | t }}</li>
+      <li>
+        <a routerLink="/departments" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-diagram-3 icon-indigo"></i> {{ 'Departments' | t }}</a>
+      </li>
+      <li>
+        <a routerLink="/positions" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-briefcase icon-teal"></i> {{ 'Positions' | t }}</a>
+      </li>
+      } @if (isAdmin) {
+      <li>
+        <a routerLink="/register" routerLinkActive="active" (click)="closeMobileSidebar()"><i class="bi bi-person-plus icon-cyan"></i> {{ 'Register User' | t }} </a>
+      </li>
+      }
+    </ul>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-profile" routerLink="/my-profile" (click)="closeMobileSidebar()">
+      <div class="avatar-initials" [class.p-0]="profilePicUrl" style="overflow: hidden;">
+        <img *ngIf="profilePicUrl" [src]="profilePicUrl" alt="User" class="w-100 h-100 object-fit-cover" />
+        <span *ngIf="!profilePicUrl">{{ initials }}</span>
+      </div>
+      <div class="user-info">
+        <p class="name">{{ userName }}</p>
+        <p class="status">{{ userRole }}</p>
+      </div>
+    </div>
+    <button class="btn-logout" (click)="onLogout()"><i class="bi bi-box-arrow-right"></i> <span>{{ 'Logout' | t }}</span></button>
+  </div>
+
+  <div class="sidebar-resizer" [class.active]="isResizing" (mousedown)="startResize($event)"></div>
 </div>
 ```
 
 ### File: src\app\shared\sidebar\sidebar.component.ts
+
 ```typescript
-import {
-  Component,
-  OnInit,
-  inject,
-  ViewChild,
-  ElementRef,
-  HostListener,
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
-import { SidebarService } from '../../core/services/sidebar.service';
-import { EmployeeService } from '../../core/services/employee.service';
-import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { Component, OnInit, inject, ViewChild, ElementRef, HostListener } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterModule, Router } from "@angular/router";
+import { AuthService } from "../../core/services/auth.service";
+import { SidebarService } from "../../core/services/sidebar.service";
+import { EmployeeService } from "../../core/services/employee.service";
+import { TranslatePipe } from "../../core/pipes/translate.pipe";
 
 @Component({
-  selector: 'app-sidebar',
+  selector: "app-sidebar",
   standalone: true,
   imports: [CommonModule, RouterModule, TranslatePipe],
-  templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css'],
+  templateUrl: "./sidebar.component.html",
+  styleUrls: ["./sidebar.component.css"],
 })
 export class SidebarComponent implements OnInit {
   private authService = inject(AuthService);
@@ -13033,11 +11373,11 @@ export class SidebarComponent implements OnInit {
 
   isAdmin: boolean = false;
   isAdminOrHR: boolean = false;
-  userName: string = 'User';
-  userRole: string = 'Employee';
+  userName: string = "User";
+  userRole: string = "Employee";
   profilePicUrl: string | null = null;
 
-  @ViewChild('sidebar') sidebarRef!: ElementRef;
+  @ViewChild("sidebar") sidebarRef!: ElementRef;
   isResizing = false;
 
   startResize(event: MouseEvent) {
@@ -13045,12 +11385,12 @@ export class SidebarComponent implements OnInit {
     event.preventDefault();
   }
 
-  @HostListener('document:mousemove', ['$event'])
+  @HostListener("document:mousemove", ["$event"])
   onMouseMove(event: MouseEvent) {
     if (!this.isResizing) return;
-    
+
     let newWidth = event.clientX;
-    const isRtl = document.documentElement.dir === 'rtl';
+    const isRtl = document.documentElement.dir === "rtl";
     if (isRtl) {
       newWidth = window.innerWidth - event.clientX;
     }
@@ -13058,20 +11398,14 @@ export class SidebarComponent implements OnInit {
     if (newWidth >= 200 && newWidth <= 400) {
       this.sidebarRef.nativeElement.style.width = `${newWidth}px`;
 
-      document.documentElement.style.setProperty(
-        '--sidebar-width',
-        `${newWidth}px`,
-      );
+      document.documentElement.style.setProperty("--sidebar-width", `${newWidth}px`);
 
       const scale = newWidth / 260;
-      this.sidebarRef.nativeElement.style.setProperty(
-        '--sidebar-scale',
-        scale.toString(),
-      );
+      this.sidebarRef.nativeElement.style.setProperty("--sidebar-scale", scale.toString());
     }
   }
 
-  @HostListener('document:mouseup')
+  @HostListener("document:mouseup")
   onMouseUp() {
     this.isResizing = false;
   }
@@ -13079,8 +11413,8 @@ export class SidebarComponent implements OnInit {
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
-    this.userName = localStorage.getItem('user_name') || 'User';
-    this.userRole = localStorage.getItem('user_role') || 'Employee';
+    this.userName = localStorage.getItem("user_name") || "User";
+    this.userRole = localStorage.getItem("user_role") || "Employee";
 
     if (!this.isAdmin) {
       this.employeeService.getMyProfile().subscribe({
@@ -13094,8 +11428,8 @@ export class SidebarComponent implements OnInit {
     }
 
     this.profilePicUrl = this.authService.getCurrentUserProfilePic();
-    if (typeof window !== 'undefined') {
-      window.addEventListener('profile_pic_updated', () => {
+    if (typeof window !== "undefined") {
+      window.addEventListener("profile_pic_updated", () => {
         this.profilePicUrl = this.authService.getCurrentUserProfilePic();
       });
     }
@@ -13103,9 +11437,9 @@ export class SidebarComponent implements OnInit {
 
   get initials(): string {
     return this.userName
-      .split(' ')
+      .split(" ")
       .map((w) => w[0])
-      .join('')
+      .join("")
       .toUpperCase()
       .slice(0, 2);
   }
@@ -13116,49 +11450,46 @@ export class SidebarComponent implements OnInit {
 
   onLogout() {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    this.router.navigate(["/login"]);
   }
 }
-
 ```
 
 ### File: src\index.html
+
 ```html
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>Kawadir</title>
-    <base href="/">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, maximum-scale=1">
-    <link rel="icon" type="image/png" sizes="512x512" href="/kawadir-logo.png?v=3">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="apple-touch-icon" sizes="192x192" href="/kawadir-logo.png?v=3">
-    <link rel="manifest" href="manifest.webmanifest">
-    <meta name="theme-color" content="#0d6efd">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Kawadir">
-</head>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, maximum-scale=1" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/kawadir-logo.png?v=3" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/kawadir-logo.png?v=3" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <meta name="theme-color" content="#0d6efd" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Kawadir" />
+  </head>
   <body class="mat-typography">
     <app-root></app-root>
     <noscript>Please enable JavaScript to continue using this application.</noscript>
-</body>
+  </body>
 </html>
-
 ```
 
 ### File: src\main.ts
+
 ```typescript
-import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
-import { AppComponent } from './app/app.component';
+import { bootstrapApplication } from "@angular/platform-browser";
+import { appConfig } from "./app/app.config";
+import { AppComponent } from "./app/app.component";
 
-bootstrapApplication(AppComponent, appConfig).catch((err) =>
-  console.error(err),
-);
-
+bootstrapApplication(AppComponent, appConfig).catch((err) => console.error(err));
 ```

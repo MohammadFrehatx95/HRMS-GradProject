@@ -15,7 +15,13 @@ import autoTable from 'jspdf-autotable';
 
 import { AnnouncementService } from '../../core/services/announcement.service';
 import { Announcement } from '../../core/models/announcement.model';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+  FormsModule,
+} from '@angular/forms';
 import { ExcelExportService } from '../../core/services/excel-export.service';
 
 Chart.register(...registerables);
@@ -23,7 +29,13 @@ Chart.register(...registerables);
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, TranslatePipe, RouterLink, ReactiveFormsModule, FormsModule],
+  imports: [
+    CommonModule,
+    TranslatePipe,
+    RouterLink,
+    ReactiveFormsModule,
+    FormsModule,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
@@ -73,13 +85,21 @@ export class DashboardComponent implements OnInit {
   attendanceRateChartInstance: any;
 
   downloadSystemReport() {
-    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+    });
     const pageW = doc.internal.pageSize.getWidth();
     const pageH = doc.internal.pageSize.getHeight();
     const margin = 14;
     const today = new Date();
     const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    const timeStr = today.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+    const timeStr = today.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
 
     doc.setFillColor(67, 97, 238);
     doc.rect(0, 0, pageW, 42, 'F');
@@ -112,10 +132,26 @@ export class DashboardComponent implements OnInit {
     const cardH = 28;
     const cardW = (pageW - margin * 2 - 9) / 4;
     const cards = [
-      { label: 'Total Employees', value: String(this.totalEmployees), accentColor: [239, 71, 111] as [number, number, number] },
-      { label: 'Pending Leaves', value: String(this.pendingLeaves), accentColor: [255, 165, 2] as [number, number, number] },
-      { label: 'Departments', value: String(this.departmentsCount), accentColor: [67, 97, 238] as [number, number, number] },
-      { label: 'Total Payroll', value: `${Number(this.totalSalaries).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} JD`, accentColor: [6, 214, 160] as [number, number, number] },
+      {
+        label: 'Total Employees',
+        value: String(this.totalEmployees),
+        accentColor: [239, 71, 111] as [number, number, number],
+      },
+      {
+        label: 'Pending Leaves',
+        value: String(this.pendingLeaves),
+        accentColor: [255, 165, 2] as [number, number, number],
+      },
+      {
+        label: 'Departments',
+        value: String(this.departmentsCount),
+        accentColor: [67, 97, 238] as [number, number, number],
+      },
+      {
+        label: 'Total Payroll',
+        value: `${Number(this.totalSalaries).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} JD`,
+        accentColor: [6, 214, 160] as [number, number, number],
+      },
     ];
 
     cards.forEach((card, i) => {
@@ -175,7 +211,11 @@ export class DashboardComponent implements OnInit {
       alternateRowStyles: { fillColor: [248, 249, 252] },
       columnStyles: {
         0: { cellWidth: (pageW - margin * 2) * 0.68 },
-        1: { cellWidth: (pageW - margin * 2) * 0.32, halign: 'center', fontStyle: 'bold' },
+        1: {
+          cellWidth: (pageW - margin * 2) * 0.32,
+          halign: 'center',
+          fontStyle: 'bold',
+        },
       },
     });
 
@@ -213,14 +253,22 @@ export class DashboardComponent implements OnInit {
           fontSize: 8.5,
           cellPadding: 2.5,
         },
-        bodyStyles: { textColor: [50, 55, 70], fontSize: 8.5, cellPadding: 2.5 },
+        bodyStyles: {
+          textColor: [50, 55, 70],
+          fontSize: 8.5,
+          cellPadding: 2.5,
+        },
         alternateRowStyles: { fillColor: [248, 249, 252] },
         didParseCell: (data: any) => {
           if (data.section === 'body' && data.column.index === 4) {
             const status = data.cell.raw as string;
-            if (status === 'Approved') { data.cell.styles.textColor = [6, 150, 80]; }
-            else if (status === 'Pending') { data.cell.styles.textColor = [200, 120, 0]; }
-            else if (status === 'Rejected') { data.cell.styles.textColor = [180, 30, 50]; }
+            if (status === 'Approved') {
+              data.cell.styles.textColor = [6, 150, 80];
+            } else if (status === 'Pending') {
+              data.cell.styles.textColor = [200, 120, 0];
+            } else if (status === 'Rejected') {
+              data.cell.styles.textColor = [180, 30, 50];
+            }
             data.cell.styles.fontStyle = 'bold';
             data.cell.styles.halign = 'center';
           }
@@ -229,14 +277,20 @@ export class DashboardComponent implements OnInit {
       curY = (doc as any).lastAutoTable.finalY + 10;
     }
 
-    this._pdfSectionHeader(doc, 'RECENT ATTENDANCE RECORDS', margin, curY, pageW);
+    this._pdfSectionHeader(
+      doc,
+      'RECENT ATTENDANCE RECORDS',
+      margin,
+      curY,
+      pageW,
+    );
     curY += 8;
 
     const attRows = this.recentAttendances.map((a: any) => [
       a.employeeName || `Emp #${a.employeeId}`,
       a.date ? a.date.split('T')[0] : '—',
       a.clockIn || '--:--',
-      (a.clockOut && a.clockOut !== '00:00:00') ? a.clockOut : '--:--',
+      a.clockOut && a.clockOut !== '00:00:00' ? a.clockOut : '--:--',
     ]);
 
     if (attRows.length === 0) {
@@ -259,7 +313,11 @@ export class DashboardComponent implements OnInit {
           fontSize: 8.5,
           cellPadding: 2.5,
         },
-        bodyStyles: { textColor: [50, 55, 70], fontSize: 8.5, cellPadding: 2.5 },
+        bodyStyles: {
+          textColor: [50, 55, 70],
+          fontSize: 8.5,
+          cellPadding: 2.5,
+        },
         alternateRowStyles: { fillColor: [248, 252, 249] },
       });
     }
@@ -275,16 +333,27 @@ export class DashboardComponent implements OnInit {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(7.5);
       doc.setTextColor(160, 165, 180);
-      doc.text('Confidential — Kawadir HRMS Internal Report', margin, pageH - 7);
+      doc.text(
+        'Confidential — Kawadir HRMS Internal Report',
+        margin,
+        pageH - 7,
+      );
 
-      doc.text(`Page ${pg} of ${totalPages}`, pageW - margin, pageH - 7, { align: 'right' });
+      doc.text(`Page ${pg} of ${totalPages}`, pageW - margin, pageH - 7, {
+        align: 'right',
+      });
     }
 
     doc.save(`System_Summary_Report_${todayStr}.pdf`);
   }
 
-  
-  private _pdfSectionHeader(doc: jsPDF, title: string, x: number, y: number, pageW: number) {
+  private _pdfSectionHeader(
+    doc: jsPDF,
+    title: string,
+    x: number,
+    y: number,
+    pageW: number,
+  ) {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(9);
     doc.setTextColor(67, 97, 238);
@@ -303,39 +372,52 @@ export class DashboardComponent implements OnInit {
   announcementDepartmentFilter: string = '';
 
   get announcementUniqueDepartments(): string[] {
-    const depts = this.allEmployeesList.map(e => e.departmentName).filter(d => !!d);
+    const depts = this.allEmployeesList
+      .map((e) => e.departmentName)
+      .filter((d) => !!d);
     return Array.from(new Set(depts));
   }
 
   get filteredAnnouncementEmployees(): any[] {
-    return this.allEmployeesList.filter(emp => {
-      const matchesSearch = this.announcementSearchQuery ? 
-        `${emp.firstName} ${emp.lastName}`.toLowerCase().includes(this.announcementSearchQuery.toLowerCase()) : true;
-      const matchesDept = this.announcementDepartmentFilter ? 
-        emp.departmentName === this.announcementDepartmentFilter : true;
+    return this.allEmployeesList.filter((emp) => {
+      const matchesSearch = this.announcementSearchQuery
+        ? `${emp.firstName} ${emp.lastName}`
+          .toLowerCase()
+          .includes(this.announcementSearchQuery.toLowerCase())
+        : true;
+      const matchesDept = this.announcementDepartmentFilter
+        ? emp.departmentName === this.announcementDepartmentFilter
+        : true;
       return matchesSearch && matchesDept;
     });
   }
 
   get isAllFilteredAnnouncementEmployeesSelected(): boolean {
-    const currentSelected = this.announcementForm.get('targetEmployeeIds')?.value || [];
+    const currentSelected =
+      this.announcementForm.get('targetEmployeeIds')?.value || [];
     if (this.filteredAnnouncementEmployees.length === 0) return false;
-    return this.filteredAnnouncementEmployees.every(emp => currentSelected.includes(emp.id));
+    return this.filteredAnnouncementEmployees.every((emp) =>
+      currentSelected.includes(emp.id),
+    );
   }
 
   selectAllFilteredAnnouncementEmployees(event: any) {
     const isChecked = event.target.checked;
-    const currentSelected = new Set(this.announcementForm.get('targetEmployeeIds')?.value || []);
-    
-    this.filteredAnnouncementEmployees.forEach(emp => {
+    const currentSelected = new Set(
+      this.announcementForm.get('targetEmployeeIds')?.value || [],
+    );
+
+    this.filteredAnnouncementEmployees.forEach((emp) => {
       if (isChecked) {
         currentSelected.add(emp.id);
       } else {
         currentSelected.delete(emp.id);
       }
     });
-    
-    this.announcementForm.get('targetEmployeeIds')?.setValue(Array.from(currentSelected));
+
+    this.announcementForm
+      .get('targetEmployeeIds')
+      ?.setValue(Array.from(currentSelected));
   }
 
   constructor() {
@@ -345,7 +427,7 @@ export class DashboardComponent implements OnInit {
       priority: ['Normal', Validators.required],
       isGeneral: [true],
       targetEmployeeIds: [[]],
-      expiryDate: ['']
+      expiryDate: [''],
     });
   }
 
@@ -368,7 +450,8 @@ export class DashboardComponent implements OnInit {
       next: (res) => {
         this.allEmployeesList = res;
       },
-      error: (err) => console.error('Failed to load employees for announcements', err)
+      error: (err) =>
+        console.error('Failed to load employees for announcements', err),
     });
   }
 
@@ -377,12 +460,16 @@ export class DashboardComponent implements OnInit {
       next: (res) => {
         this.announcements = res.items;
       },
-      error: (err) => console.error('Failed to load announcements', err)
+      error: (err) => console.error('Failed to load announcements', err),
     });
   }
 
   openAnnouncementModal() {
-    this.announcementForm.reset({ priority: 'Normal', isGeneral: true, targetEmployeeIds: [] });
+    this.announcementForm.reset({
+      priority: 'Normal',
+      isGeneral: true,
+      targetEmployeeIds: [],
+    });
     this.showAnnouncementModal = true;
   }
 
@@ -391,7 +478,8 @@ export class DashboardComponent implements OnInit {
   }
 
   toggleEmployeeForAnnouncement(empId: number) {
-    const currentSelected = this.announcementForm.get('targetEmployeeIds')?.value || [];
+    const currentSelected =
+      this.announcementForm.get('targetEmployeeIds')?.value || [];
     const index = currentSelected.indexOf(empId);
     if (index > -1) {
       currentSelected.splice(index, 1);
@@ -411,7 +499,6 @@ export class DashboardComponent implements OnInit {
     if (!formValue.expiryDate) {
       formValue.expiryDate = null;
     } else {
-
       formValue.expiryDate = new Date(formValue.expiryDate).toISOString();
     }
 
@@ -423,7 +510,7 @@ export class DashboardComponent implements OnInit {
       },
       error: (err) => {
         Swal.fire('Error', 'Failed to post announcement', 'error');
-      }
+      },
     });
   }
 
@@ -435,7 +522,7 @@ export class DashboardComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: 'Delete',
     }).then((result) => {
       if (result.isConfirmed) {
         this.announcementService.deleteAnnouncement(id).subscribe({
@@ -443,7 +530,7 @@ export class DashboardComponent implements OnInit {
             this.loadAnnouncements();
             Swal.fire('Deleted!', 'Announcement has been deleted.', 'success');
           },
-          error: (err) => Swal.fire('Error', 'Failed to delete', 'error')
+          error: (err) => Swal.fire('Error', 'Failed to delete', 'error'),
         });
       }
     });
@@ -454,7 +541,6 @@ export class DashboardComponent implements OnInit {
   }
 
   loadAdminStats() {
-
     const today = new Date();
     if (today.getDate() >= this.PAYDAY) {
       const currentMonth = today.getMonth() + 1;
@@ -467,7 +553,7 @@ export class DashboardComponent implements OnInit {
             this.pendingPayrollCount = preview.employeeCount;
           }
         },
-        error: (err) => console.error('Error fetching payroll preview:', err)
+        error: (err) => console.error('Error fetching payroll preview:', err),
       });
     }
 
@@ -482,7 +568,6 @@ export class DashboardComponent implements OnInit {
     this.leaveService.getAllLeaves().subscribe({
       next: (leaves: any[]) => {
         this.pendingLeaves = leaves.filter(
-
           (l: any) => l.status === 'Pending',
         ).length;
 
@@ -499,17 +584,12 @@ export class DashboardComponent implements OnInit {
           unpaid = 0;
 
         if (totalLeaves > 0) {
-
-          annual = leaves.filter(
-            (l: any) => l.leaveType === 'Annual',
-          ).length;
+          annual = leaves.filter((l: any) => l.leaveType === 'Annual').length;
           sick = leaves.filter((l: any) => l.leaveType === 'Sick').length;
           emergency = leaves.filter(
             (l: any) => l.leaveType === 'Emergency',
           ).length;
-          unpaid = leaves.filter(
-            (l: any) => l.leaveType === 'Unpaid',
-          ).length;
+          unpaid = leaves.filter((l: any) => l.leaveType === 'Unpaid').length;
 
           this.annualLeavePercent = Math.round((annual / totalLeaves) * 100);
           this.sickLeavePercent = Math.round((sick / totalLeaves) * 100);
@@ -562,7 +642,6 @@ export class DashboardComponent implements OnInit {
   }
 
   calculateAttendanceRate() {
-
     if (this.totalEmployees === 0 || this.allAttendances.length === 0) return;
     const validAtt = this.allAttendances.filter((a) => a.date && a.clockIn);
     const uniqueDays = new Set(validAtt.map((a) => a.date.split('T')[0])).size;
@@ -578,7 +657,6 @@ export class DashboardComponent implements OnInit {
   }
 
   loadNextPayday() {
-
     this.salaryService.getMySalaries().subscribe({
       next: (salaries: any[]) => {
         if (!salaries || salaries.length === 0) return;
@@ -628,7 +706,6 @@ export class DashboardComponent implements OnInit {
   }
 
   loadEmployeeStats() {
-
     const today = new Date();
     const currentMonth = today.toLocaleString('en-US', { month: 'short' });
     const nextMonth = new Date(
@@ -647,7 +724,6 @@ export class DashboardComponent implements OnInit {
 
     this.leaveService.getMyLeaves().subscribe({
       next: (leaves: any[]) => {
-
         this.employeePendingLeaves = leaves.filter(
           (l: any) => l.status === 'Pending',
         ).length;
@@ -665,7 +741,6 @@ export class DashboardComponent implements OnInit {
 
     this.attendanceService.getMyAttendance().subscribe({
       next: (attendances: any[]) => {
-
         const currentMonthNum = today.getMonth();
         const currentYear = today.getFullYear();
 
@@ -710,7 +785,6 @@ export class DashboardComponent implements OnInit {
     emergency: number,
     unpaid: number,
   ) {
-
     const ctx = document.getElementById('leaveTypeChart') as HTMLCanvasElement;
     if (!ctx) return;
 
@@ -780,7 +854,9 @@ export class DashboardComponent implements OnInit {
   }
 
   renderAttendanceRateChart() {
-    const ctx = document.getElementById('attendanceRateChart') as HTMLCanvasElement;
+    const ctx = document.getElementById(
+      'attendanceRateChart',
+    ) as HTMLCanvasElement;
     if (!ctx) return;
 
     if (this.attendanceRateChartInstance) {
@@ -799,13 +875,19 @@ export class DashboardComponent implements OnInit {
       const dateString = d.toISOString().split('T')[0];
 
       if (i === 6) {
-        startDateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        startDateStr = d.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+        });
       }
 
       const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
       labels.push(dayName);
 
-      const dayAtts = this.allAttendances.filter(a => a.date && a.date.startsWith(dateString) && a.clockIn);
+      const dayAtts = this.allAttendances.filter(
+        (a) => a.date && a.date.startsWith(dateString) && a.clockIn,
+      );
       let rate = Math.round((dayAtts.length / this.totalEmployees) * 100);
       if (rate > 100) rate = 100;
       data.push(rate);
@@ -815,20 +897,22 @@ export class DashboardComponent implements OnInit {
       type: 'line',
       data: {
         labels: labels,
-        datasets: [{
-          label: 'Attendance Rate (%)',
-          data: data,
-          borderColor: '#198754',
-          backgroundColor: 'rgba(25, 135, 84, 0.1)',
-          borderWidth: 3,
-          fill: true,
-          tension: 0.4,
-          pointBackgroundColor: '#198754',
-          pointBorderColor: '#fff',
-          pointBorderWidth: 2,
-          pointRadius: 4,
-          pointHoverRadius: 6
-        }]
+        datasets: [
+          {
+            label: 'Attendance Rate (%)',
+            data: data,
+            borderColor: '#198754',
+            backgroundColor: 'rgba(25, 135, 84, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#198754',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+          },
+        ],
       },
       options: {
         responsive: true,
@@ -842,18 +926,18 @@ export class DashboardComponent implements OnInit {
             font: {
               family: "'Inter', sans-serif",
               size: 13,
-              weight: 'normal'
+              weight: 'normal',
             },
-            padding: { bottom: 15 }
+            padding: { bottom: 15 },
           },
           legend: { display: false },
           tooltip: {
             callbacks: {
               label: function (context: any) {
                 return context.parsed.y + '%';
-              }
-            }
-          }
+              },
+            },
+          },
         },
         scales: {
           y: {
@@ -865,49 +949,65 @@ export class DashboardComponent implements OnInit {
             ticks: {
               callback: function (value: any) {
                 return value + '%';
-              }
-            }
+              },
+            },
           },
           x: {
             grid: {
-              display: false
-            }
-          }
-        }
-      }
+              display: false,
+            },
+          },
+        },
+      },
     });
   }
 
   exportRecentAttendancesToExcel() {
     if (this.recentAttendances.length === 0) {
-      Swal.fire('No Data', 'There are no attendance records to export.', 'info');
+      Swal.fire(
+        'No Data',
+        'There are no attendance records to export.',
+        'info',
+      );
       return;
     }
 
     const headers = ['Employee', 'Date', 'Clock In', 'Clock Out'];
-    const data = this.recentAttendances.map(att => [
+    const data = this.recentAttendances.map((att) => [
       att.employeeName || 'Emp #' + att.employeeId,
       att.date ? new Date(att.date).toLocaleDateString() : '',
       att.clockIn || '--:--',
-      att.clockOut && att.clockOut !== '00:00:00' ? att.clockOut : '--:--'
+      att.clockOut && att.clockOut !== '00:00:00' ? att.clockOut : '--:--',
     ]);
 
-    this.excelExportService.exportTableToExcel(headers, data, 'Recent_Attendances');
+    this.excelExportService.exportTableToExcel(
+      headers,
+      data,
+      'Recent_Attendances',
+    );
   }
 
   exportMyRecentAttendancesToExcel() {
     if (this.myRecentAttendances.length === 0) {
-      Swal.fire('No Data', 'There are no attendance records to export.', 'info');
+      Swal.fire(
+        'No Data',
+        'There are no attendance records to export.',
+        'info',
+      );
       return;
     }
 
     const headers = ['Date', 'Clock In', 'Clock Out'];
-    const data = this.myRecentAttendances.map(att => [
+    const data = this.myRecentAttendances.map((att) => [
       att.date ? new Date(att.date).toLocaleDateString() : '',
       att.clockIn || '--:--',
-      att.clockOut && att.clockOut !== '00:00:00' ? att.clockOut : '--:--'
+      att.clockOut && att.clockOut !== '00:00:00' ? att.clockOut : '--:--',
     ]);
 
-    this.excelExportService.exportTableToExcel(headers, data, 'My_Recent_Attendances');
+    this.excelExportService.exportTableToExcel(
+      headers,
+      data,
+      'My_Recent_Attendances',
+    );
   }
 }

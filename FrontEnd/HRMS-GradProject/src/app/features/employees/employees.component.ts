@@ -83,7 +83,6 @@ export class EmployeesComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
     this.loadEmployees();
@@ -145,7 +144,6 @@ export class EmployeesComponent implements OnInit {
   }
 
   loadEmployees() {
-
     this.isLoading = true;
     this.employeeService.getEmployees().subscribe({
       next: (data) => {
@@ -167,7 +165,6 @@ export class EmployeesComponent implements OnInit {
   }
 
   filterEmployees() {
-
     this.employeesList = this.allEmployeesList.filter((emp) => {
       let matchesSearch = true;
       if (this.searchQuery) {
@@ -212,7 +209,7 @@ export class EmployeesComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: 'Delete',
     }).then((result) => {
       if (result.isConfirmed) {
         this.employeeService.deleteEmployee(id).subscribe({
@@ -237,7 +234,6 @@ export class EmployeesComponent implements OnInit {
   }
 
   viewFullDetails(emp: any) {
-
     this.selectedEmployeeProfile = { ...emp, isLoadingDetails: true };
 
     const modalElement = document.getElementById('employeeDetailsModal');
@@ -267,7 +263,6 @@ export class EmployeesComponent implements OnInit {
   }
 
   downloadEmployeeReport(emp: any) {
-
     if (!emp) return;
 
     this.isGeneratingReport = true;
@@ -594,19 +589,25 @@ export class EmployeesComponent implements OnInit {
     }
 
     const headers = ['ID', 'Name', 'Email', 'Phone', 'Department', 'Status'];
-    const data = this.employeesList.map(emp => [
+    const data = this.employeesList.map((emp) => [
       `#${emp.id}`,
       `${emp.firstName || ''} ${emp.lastName || ''}`.trim(),
       emp.email || 'N/A',
       emp.phoneNumber || 'N/A',
       emp.departmentName || 'N/A',
-      emp.isActive ? 'Active' : 'Inactive'
+      emp.isActive ? 'Active' : 'Inactive',
     ]);
 
     const additionalInfo = [
       { label: 'Total Employees', value: String(this.employeesList.length) },
-      { label: 'Active Employees', value: String(this.employeesList.filter(e => e.isActive).length) },
-      { label: 'Filtered Department', value: this.selectedDepartment ? this.selectedDepartment : 'All' }
+      {
+        label: 'Active Employees',
+        value: String(this.employeesList.filter((e) => e.isActive).length),
+      },
+      {
+        label: 'Filtered Department',
+        value: this.selectedDepartment ? this.selectedDepartment : 'All',
+      },
     ];
 
     this.pdfExportService.generateTableReport(
@@ -614,7 +615,7 @@ export class EmployeesComponent implements OnInit {
       headers,
       data,
       'Employees_Report',
-      additionalInfo
+      additionalInfo,
     );
   }
 }

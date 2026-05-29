@@ -42,13 +42,11 @@ export class PositionsComponent implements OnInit {
   };
 
   ngOnInit() {
-
     this.loadDepartments();
     this.loadPositions();
   }
 
   loadDepartments() {
-
     this.departmentService.getDepartments().subscribe({
       next: (res: any) => {
         const extracted = Array.isArray(res) ? res : res?.data || [];
@@ -59,7 +57,6 @@ export class PositionsComponent implements OnInit {
   }
 
   loadPositions() {
-
     this.isLoading = true;
     this.positionService.getPositions().subscribe({
       next: (res: any) => {
@@ -80,7 +77,6 @@ export class PositionsComponent implements OnInit {
   }
 
   openModal(position: any = null) {
-
     if (position) {
       this.isEditMode = true;
       this.currentPositionId = position.id;
@@ -113,7 +109,6 @@ export class PositionsComponent implements OnInit {
   }
 
   savePosition() {
-
     this.isProcessing = true;
 
     if (this.isEditMode && this.currentPositionId) {
@@ -132,7 +127,6 @@ export class PositionsComponent implements OnInit {
   }
 
   onDelete(id: number) {
-
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -140,7 +134,7 @@ export class PositionsComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: 'Delete',
     }).then((result) => {
       if (result.isConfirmed) {
         this.positionService.deletePosition(id).subscribe({
@@ -172,7 +166,11 @@ export class PositionsComponent implements OnInit {
   private handleError(err: any) {
     this.isProcessing = false;
     console.error('Position save error:', err);
-    Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to save position data.'), 'error');
+    Swal.fire(
+      'Error',
+      getFriendlyErrorMessage(err, 'Failed to save position data.'),
+      'error',
+    );
   }
 
   exportToExcel() {
@@ -182,12 +180,12 @@ export class PositionsComponent implements OnInit {
     }
 
     const headers = ['ID', 'Title', 'Department', 'Salary Min', 'Salary Max'];
-    const data = this.positionsList.map(pos => [
+    const data = this.positionsList.map((pos) => [
       `#${pos.id}`,
       pos.title,
       pos.departmentName || 'N/A',
       `${pos.salaryMin} JD`,
-      `${pos.salaryMax} JD`
+      `${pos.salaryMax} JD`,
     ]);
 
     this.excelExportService.exportTableToExcel(headers, data, 'Positions');
@@ -200,19 +198,19 @@ export class PositionsComponent implements OnInit {
     }
 
     const headers = ['ID', 'Title', 'Department', 'Salary Min', 'Salary Max'];
-    const data = this.positionsList.map(pos => [
+    const data = this.positionsList.map((pos) => [
       `#${pos.id}`,
       pos.title,
       pos.departmentName || 'N/A',
       `${pos.salaryMin} $`,
-      `${pos.salaryMax} $`
+      `${pos.salaryMax} $`,
     ]);
 
     this.pdfExportService.generateTableReport(
       'Positions Directory',
       headers,
       data,
-      'Positions_Report'
+      'Positions_Report',
     );
   }
 }

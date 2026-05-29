@@ -62,7 +62,6 @@ export class DepartmentsComponent implements OnInit {
   }
 
   loadPositionsThenEmployees() {
-
     this.positionService.getPositions().subscribe({
       next: (res: any) => {
         this.allPositions = Array.isArray(res) ? res : res?.data || [];
@@ -117,14 +116,12 @@ export class DepartmentsComponent implements OnInit {
       return stat ? stat.totalEmployees : 0;
     }
     if (type === 'positions') {
-
       return this.allPositions.filter((p) => p.departmentId === deptId).length;
     }
     return 0;
   }
 
   loadDepartments() {
-
     this.isLoading = true;
     this.departmentService.getDepartments().subscribe({
       next: (res: any) => {
@@ -146,7 +143,6 @@ export class DepartmentsComponent implements OnInit {
   }
 
   viewDetails(dept: any) {
-
     this.selectedDepartment = dept;
     const stats = this.departmentStats[dept.id] || { totalEmployees: 0 };
     this.selectedDepartment.stats = stats;
@@ -181,7 +177,6 @@ export class DepartmentsComponent implements OnInit {
   }
 
   filterDeptEmployees() {
-
     this.filteredDeptEmployees = this.deptEmployees.filter((emp) => {
       let matchesSearch = true;
       if (this.searchEmpQuery) {
@@ -194,7 +189,6 @@ export class DepartmentsComponent implements OnInit {
 
       let matchesPos = true;
       if (this.selectedPositionFilter) {
-
         const pos = this.allPositions.find(
           (p) => p.title === this.selectedPositionFilter,
         );
@@ -233,7 +227,6 @@ export class DepartmentsComponent implements OnInit {
   }
 
   saveDepartment() {
-
     if (this.addForm.invalid) {
       Swal.fire('Warning', 'Please enter a valid department name.', 'warning');
       return;
@@ -295,7 +288,7 @@ export class DepartmentsComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: 'Delete',
     }).then((result) => {
       if (result.isConfirmed) {
         this.departmentService.deleteDepartment(id).subscribe({
@@ -326,11 +319,11 @@ export class DepartmentsComponent implements OnInit {
     }
 
     const headers = ['ID', 'Department Name', 'Total Employees', 'Positions'];
-    const data = this.departmentsList.map(dept => [
+    const data = this.departmentsList.map((dept) => [
       `#${dept.id}`,
       dept.name,
       this.getDeptStat(dept.id, 'employees'),
-      this.getDeptStat(dept.id, 'positions')
+      this.getDeptStat(dept.id, 'positions'),
     ]);
 
     this.excelExportService.exportTableToExcel(headers, data, 'Departments');
@@ -343,18 +336,18 @@ export class DepartmentsComponent implements OnInit {
     }
 
     const headers = ['ID', 'Department Name', 'Total Employees', 'Positions'];
-    const data = this.departmentsList.map(dept => [
+    const data = this.departmentsList.map((dept) => [
       `#${dept.id}`,
       dept.name,
       this.getDeptStat(dept.id, 'employees'),
-      this.getDeptStat(dept.id, 'positions')
+      this.getDeptStat(dept.id, 'positions'),
     ]);
 
     this.pdfExportService.generateTableReport(
       'Departments Directory',
       headers,
       data,
-      'Departments_Report'
+      'Departments_Report',
     );
   }
 }
