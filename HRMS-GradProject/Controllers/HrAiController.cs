@@ -31,7 +31,8 @@ public class HrAiController(IHrAiService aiService) : ControllerBase
             dto.Message,
             GetEmployeeId(),
             GetRole(),
-            dto.Mode);
+            dto.Mode,
+            dto.History);
 
         return Ok(ApiResponse<AiResponseDto>.Ok(result));
     }

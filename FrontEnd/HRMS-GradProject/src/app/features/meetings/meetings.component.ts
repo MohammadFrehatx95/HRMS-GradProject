@@ -9,6 +9,7 @@ import { Meeting, MeetingStatus, CreateMeetingDto } from '../../core/models/meet
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { Observable } from 'rxjs';
 import { ExcelExportService } from '../../core/services/excel-export.service';
+import { PdfExportService } from '../../core/services/pdf-export.service';
 
 declare var bootstrap: any;
 
@@ -25,6 +26,7 @@ export class MeetingsComponent implements OnInit {
   private employeeService = inject(EmployeeService);
   private authService = inject(AuthService);
   private excelExportService = inject(ExcelExportService);
+  private pdfExportService = inject(PdfExportService);
 
   meetings: Meeting[] = [];
   employees: any[] = [];
@@ -280,5 +282,29 @@ export class MeetingsComponent implements OnInit {
     ]);
 
     this.excelExportService.exportTableToExcel(headers, data, 'Meetings');
+  }
+
+  exportToPDF() {
+    if (this.meetings.length === 0) {
+      Swal.fire('No Data', 'There are no meetings to export.', 'info');
+      return;
+    }
+
+    const headers = ['ID', 'Title', 'Date & Time', 'Employee', 'Status', 'Duration (Min)'];
+    const data = this.meetings.map(m => [
+      `#${m.id}`,
+      m.title,
+      new Date(m.scheduledAt).toLocaleString(),
+      m.employeeName || 'N/A',
+      this.getStatusLabel(m.status),
+      m.durationMinutes || '—'
+    ]);
+
+    this.pdfExportService.generateTableReport(
+      'Meetings & Interviews Report',
+      headers,
+      data,
+      'Meetings_Report'
+    );
   }
 }

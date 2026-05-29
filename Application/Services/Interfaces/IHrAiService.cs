@@ -9,7 +9,8 @@ public interface IHrAiService
         string message,
         int? employeeId = null,
         string userRole = "Employee",
-        Domain.Enums.AiMode mode = Domain.Enums.AiMode.Normal);
+        Domain.Enums.AiMode mode = Domain.Enums.AiMode.Normal,
+        List<ChatMessageDto>? history = null);
 
     Task<AiResponseDto> AnalyzeLeaveAsync(int employeeId);
     Task<AiResponseDto> SalaryInsightAsync(int employeeId);

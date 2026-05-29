@@ -14,6 +14,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import Swal from 'sweetalert2';
 import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
 import { ExcelExportService } from '../../core/services/excel-export.service';
+import { PdfExportService } from '../../core/services/pdf-export.service';
 
 declare var bootstrap: any;
 
@@ -28,6 +29,7 @@ export class DepartmentsComponent implements OnInit {
   private employeeService = inject(EmployeeService);
   private positionService = inject(PositionService);
   private excelExportService = inject(ExcelExportService);
+  private pdfExportService = inject(PdfExportService);
 
   allPositions: any[] = [];
 
@@ -332,5 +334,27 @@ export class DepartmentsComponent implements OnInit {
     ]);
 
     this.excelExportService.exportTableToExcel(headers, data, 'Departments');
+  }
+
+  exportToPDF() {
+    if (this.departmentsList.length === 0) {
+      Swal.fire('No Data', 'There are no departments to export.', 'info');
+      return;
+    }
+
+    const headers = ['ID', 'Department Name', 'Total Employees', 'Positions'];
+    const data = this.departmentsList.map(dept => [
+      `#${dept.id}`,
+      dept.name,
+      this.getDeptStat(dept.id, 'employees'),
+      this.getDeptStat(dept.id, 'positions')
+    ]);
+
+    this.pdfExportService.generateTableReport(
+      'Departments Directory',
+      headers,
+      data,
+      'Departments_Report'
+    );
   }
 }

@@ -11,9 +11,18 @@
         <p class="text-muted mb-0 small">{{ 'Review and approve or reject pending profile picture requests' | t }}</p>
       </div>
     </div>
-    <button class="btn btn-outline-success shadow-sm rounded-pill px-4" (click)="exportToExcel()" title="Export to Excel">
-        <i class="bi bi-file-earmark-excel-fill me-2"></i> {{ 'Export to Excel' | t }}
-    </button>
+    <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
+                <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> 
+                <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
+            </button>
+            <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
+                <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i> 
+                <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
+            </button>
+        </div>
+    </div>
   </div>
 
   

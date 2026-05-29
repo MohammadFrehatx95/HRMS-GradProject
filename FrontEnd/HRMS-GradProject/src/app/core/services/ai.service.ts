@@ -1,4 +1,4 @@
-﻿import { Injectable, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -11,9 +11,15 @@ export interface TokenStatsDto {
   secondsUntilReset: number;
 }
 
+export interface ChatMessageDto {
+  role: string;
+  content: string;
+}
+
 export interface AiChatDto {
   message: string;
   mode?: number;
+  history?: ChatMessageDto[];
 }
 
 export interface AiResponseDto {
@@ -54,8 +60,8 @@ export class AiService {
     });
   }
 
-  chat(message: string, mode: number = 0): Observable<AiResponseDto> {
-    return this.http.post<any>(`${this.apiUrl}/chat`, { message, mode }).pipe(
+  chat(message: string, mode: number = 0, history: ChatMessageDto[] = []): Observable<AiResponseDto> {
+    return this.http.post<any>(`${this.apiUrl}/chat`, { message, mode, history }).pipe(
       map((res) => res?.data ?? res)
     );
   }

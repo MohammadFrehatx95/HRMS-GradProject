@@ -1,4 +1,4 @@
-﻿<div class="container-fluid py-4">
+<div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div class="d-flex align-items-center">
             <div class="icon-box bg-secondary bg-opacity-10 text-secondary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
@@ -9,12 +9,20 @@
                 <p class="text-muted small mb-0">{{ 'Manage schedules and appointments' | t }}</p>
             </div>
         </div>
-        <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-outline-success shadow-sm rounded-pill px-4" (click)="exportToExcel()" title="Export to Excel">
-                <i class="bi bi-file-earmark-excel-fill me-2"></i> {{ 'Export to Excel' | t }}
-            </button>
-            <button *ngIf="isHrOrAdmin" class="btn btn-dark shadow-sm rounded-pill px-4" (click)="openAddModal()">
-                <i class="bi bi-plus-lg me-2"></i> {{ 'Schedule Meeting' | t }}
+        <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
+                    <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> 
+                    <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
+                </button>
+                <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
+                    <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i> 
+                    <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
+                </button>
+            </div>
+            <button *ngIf="isHrOrAdmin" class="btn btn-primary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="openAddModal()">
+                <i class="bi bi-plus-lg" [class.me-md-1]="true"></i> 
+                <span class="d-none d-md-inline">{{ 'Schedule Meeting' | t }}</span>
             </button>
         </div>
     </div>

@@ -375,4 +375,36 @@ export class SalaryComponent implements OnInit {
 
     this.excelExportService.exportTableToExcel(headers, data, 'Salaries');
   }
+
+  exportToPDF() {
+    if (this.salariesList.length === 0) {
+      Swal.fire('No Data', 'There are no salary records to export.', 'info');
+      return;
+    }
+
+    const headers = ['Employee', 'Period (Month/Year)', 'Base ($)', 'Allowances', 'Deductions', 'Net Salary', 'Effective Date'];
+    const data = this.salariesList.map(s => [
+      s.employeeName || `#${s.employeeId}`,
+      `${s.month} / ${s.year}`,
+      s.baseAmount,
+      s.allowances,
+      s.deductions,
+      s.netAmount,
+      s.effectiveDate ? s.effectiveDate.split('T')[0] : '—'
+    ]);
+
+    const additionalInfo = [
+      { label: 'Total Records', value: String(this.salariesList.length) },
+      { label: 'Filtered Year', value: this.selectedYear ? this.selectedYear : 'All' },
+      { label: 'Filtered Month', value: this.selectedMonth ? this.selectedMonth : 'All' }
+    ];
+
+    this.pdfExportService.generateTableReport(
+      'Salaries Report',
+      headers,
+      data,
+      'Salaries_Report',
+      additionalInfo
+    );
+  }
 }

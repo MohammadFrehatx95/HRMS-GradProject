@@ -9,6 +9,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
 
 import { ExcelExportService } from '../../core/services/excel-export.service';
+import { PdfExportService } from '../../core/services/pdf-export.service';
 
 declare var bootstrap: any;
 
@@ -22,6 +23,7 @@ export class PositionsComponent implements OnInit {
   private positionService = inject(PositionService);
   private departmentService = inject(DepartmentService);
   private excelExportService = inject(ExcelExportService);
+  private pdfExportService = inject(PdfExportService);
 
   positionsList: any[] = [];
   departmentsList: any[] = [];
@@ -189,5 +191,28 @@ export class PositionsComponent implements OnInit {
     ]);
 
     this.excelExportService.exportTableToExcel(headers, data, 'Positions');
+  }
+
+  exportToPDF() {
+    if (this.positionsList.length === 0) {
+      Swal.fire('No Data', 'There are no positions to export.', 'info');
+      return;
+    }
+
+    const headers = ['ID', 'Title', 'Department', 'Salary Min', 'Salary Max'];
+    const data = this.positionsList.map(pos => [
+      `#${pos.id}`,
+      pos.title,
+      pos.departmentName || 'N/A',
+      `${pos.salaryMin} $`,
+      `${pos.salaryMax} $`
+    ]);
+
+    this.pdfExportService.generateTableReport(
+      'Positions Directory',
+      headers,
+      data,
+      'Positions_Report'
+    );
   }
 }

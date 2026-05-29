@@ -9,6 +9,7 @@ using Domain.Enums;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Infrastructure.Services;
 
@@ -16,7 +17,8 @@ public class HrAiService(
     IHttpClientFactory httpFactory,
     IUnitOfWork uow,
     IOptions<GroqSettings> options,
-    ITokenTrackerService tokenTracker) : IHrAiService
+    ITokenTrackerService tokenTracker,
+    IMemoryCache cache) : IHrAiService
 {
 
     private readonly GroqSettings _cfg = options.Value;
@@ -100,6 +102,7 @@ public class HrAiService(
               • Reference the employee's actual data when you have it
               • Guide users through the platform step-by-step when asked
               • Suggest the correct API endpoint or UI action when relevant
+              • If the user asks for unauthorized information or actions, gracefully and politely explain that you do not have the required permissions to perform that action or access that data. Do not say "Error".
 
             ❌ NEVER
               • Invent numbers, dates, or names — say "I don't have that data"
@@ -108,6 +111,7 @@ public class HrAiService(
               • Promise actions you cannot perform (you can only advise)
               • Use overly formal or robotic language
               • Attempt to use tools or functions that are not explicitly provided. If asked to do an unsupported action (e.g., delete an employee), politely refuse.
+              • USE EMOJIS. NEVER use any emojis, symbols, or emoticons in your response under any circumstances. Strictly text only.
 
             ════════════════════════════════════════════════════════════════
             ## RESPONSE FORMAT GUIDE
@@ -274,7 +278,7 @@ public class HrAiService(
             {
                 return new AiResponseDto
                 {
-                    Reply = "عذراً، لم أتمكن من تنفيذ هذا الإجراء بشكل صحيح. يرجى إعادة صياغة طلبك أو التأكد من أنني أملك الصلاحية للقيام به.",
+                    Reply = "عذراً، ليس لدي الصلاحية للوصول إلى هذه البيانات أو تنفيذ هذا الإجراء. يرجى التأكد من صلاحياتك أو إعادة صياغة السؤال.",
                     Model = _cfg.Model,
                     Tokens = 0
                 };
@@ -314,8 +318,20 @@ public class HrAiService(
         string message,
         int? employeeId = null,
         string userRole = "Employee",
-        Domain.Enums.AiMode mode = Domain.Enums.AiMode.Normal)
+        Domain.Enums.AiMode mode = Domain.Enums.AiMode.Normal,
+        List<ChatMessageDto>? history = null)
     {
+        var cacheKey = $"AI_Cache_{employeeId}_{mode}_{message.GetHashCode()}";
+        if (cache.TryGetValue(cacheKey, out AiResponseDto? cachedResponse) && cachedResponse != null)
+        {
+            return new AiResponseDto
+            {
+                Reply = cachedResponse.Reply,
+                Model = cachedResponse.Model,
+                Tokens = 0 
+            };
+        }
+
         var context = employeeId.HasValue
             ? await BuildEmployeeContextAsync(employeeId.Value)
             : null;
@@ -323,16 +339,35 @@ public class HrAiService(
         var messages = new List<object>
         {
             new { role = "system", content = BuildSystemPrompt(context) },
-            new { role = "system", content = $"Current user role: {userRole}" },
-            new { role = "user",   content = message }
+            new { role = "system", content = $"Current user role: {userRole}" }
         };
 
-        if (mode == Domain.Enums.AiMode.DeepThink || mode == Domain.Enums.AiMode.Executive)
+        if (history != null && history.Count > 0)
         {
-            return await CallGroqWithToolsAsync(messages, mode, userRole);
+            foreach (var msg in history)
+            {
+                messages.Add(new { role = msg.Role, content = msg.Content });
+            }
         }
 
-        return await CallGroqAsync(messages);
+        messages.Add(new { role = "user", content = message });
+
+        AiResponseDto result;
+        if (mode == Domain.Enums.AiMode.DeepThink || mode == Domain.Enums.AiMode.Executive)
+        {
+            result = await CallGroqWithToolsAsync(messages, mode, userRole);
+        }
+        else
+        {
+            result = await CallGroqAsync(messages);
+        }
+
+        if (!result.Reply.Contains("أعتذر") && !result.Reply.Contains("عذراً"))
+        {
+            cache.Set(cacheKey, result, TimeSpan.FromMinutes(10));
+        }
+
+        return result;
     }
 
 
@@ -596,7 +631,7 @@ public class HrAiService(
                 {
                     return new AiResponseDto
                     {
-                        Reply = "عذراً، لم أتمكن من تنفيذ هذا الإجراء بشكل صحيح. يرجى إعادة صياغة طلبك أو التأكد من أنني أملك الصلاحية للقيام به.",
+                        Reply = "عذراً، ليس لدي الصلاحية للوصول إلى هذه البيانات أو تنفيذ هذا الإجراء. يرجى التأكد من صلاحياتك أو إعادة صياغة السؤال.",
                         Model = _cfg.Model,
                         Tokens = totalTokens
                     };
@@ -682,9 +717,13 @@ public class HrAiService(
                             toolResult = $"Error: Tool {functionName} not found.";
                         }
                     }
+                    catch (UnauthorizedAccessException)
+                    {
+                        toolResult = "The user is not authorized to perform this action. Politely explain that they lack the required permissions.";
+                    }
                     catch (Exception ex)
                     {
-                        toolResult = $"Error executing tool: {ex.Message}";
+                        toolResult = $"Action failed. Politely tell the user you cannot perform this action at the moment due to an internal issue.";
                     }
 
                     messages.Add(new

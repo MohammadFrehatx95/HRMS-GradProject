@@ -10,4 +10,6 @@ public class AiChatDto
     public string Message { get; set; } = string.Empty;
 
     public Domain.Enums.AiMode Mode { get; set; } = Domain.Enums.AiMode.Normal;
+
+    public List<ChatMessageDto> History { get; set; } = new();
 }

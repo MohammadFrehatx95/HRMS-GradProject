@@ -7,6 +7,7 @@ import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { ExcelExportService } from '../../core/services/excel-export.service';
+import { PdfExportService } from '../../core/services/pdf-export.service';
 
 @Component({
   selector: 'app-attendance',
@@ -18,6 +19,7 @@ export class AttendanceComponent implements OnInit {
   private attendanceService = inject(AttendanceService);
   private authService = inject(AuthService);
   private excelExportService = inject(ExcelExportService);
+  private pdfExportService = inject(PdfExportService);
 
   allAttendanceRecords: any[] = [];
   attendanceRecords: any[] = [];
@@ -293,5 +295,49 @@ export class AttendanceComponent implements OnInit {
     });
 
     this.excelExportService.exportTableToExcel(headers, data, 'Attendance');
+  }
+
+  exportToPDF() {
+    if (this.attendanceRecords.length === 0) {
+      Swal.fire(
+        'No Data',
+        'There are no attendance records to export.',
+        'info',
+      );
+      return;
+    }
+
+    const headers = [
+      'Date',
+      'Employee Name',
+      'Employee ID',
+      'Clock In',
+      'Clock Out',
+      'Status',
+      'Total Hours',
+    ];
+
+    const data = this.attendanceRecords.map((rec) => {
+      const isCompleted = rec.clockOut && rec.clockOut !== '00:00:00';
+      const status = isCompleted ? 'Completed' : 'Working';
+      const empName = rec.employeeName || 'Emp #' + rec.employeeId;
+
+      return [
+        rec.date ? new Date(rec.date).toLocaleDateString() : '',
+        empName,
+        rec.employeeId || 'N/A',
+        rec.clockIn || '--:--',
+        rec.clockOut && rec.clockOut !== '00:00:00' ? rec.clockOut : '--:--',
+        status,
+        rec.totalHours || '0',
+      ];
+    });
+
+    this.pdfExportService.generateTableReport(
+      this.isAdmin ? 'Employee Attendance Tracking' : 'My Attendance Tracking',
+      headers,
+      data,
+      'Attendance_Report'
+    );
   }
 }

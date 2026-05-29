@@ -1,4 +1,4 @@
-﻿<div class="page-container p-4">
+<div class="page-container p-4">
 
     
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
@@ -11,8 +11,8 @@
                 <p class="text-muted small mb-0">{{ 'Overview of all employees clock-in and clock-out records' | t }}</p>
             </div>
         </div>
-        <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end">
-            <div class="input-group shadow-sm" style="max-width: 350px;">
+        <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
+            <div class="input-group shadow-sm" style="max-width: 350px; min-width: 200px; flex: 1;">
                 <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
                 <input type="text" class="form-control border-start-0 ps-0" 
                     placeholder="Search by name, ID, or date..." 
@@ -38,14 +38,19 @@
                 </div>
             </div>
 
-            <button class="btn btn-outline-success btn-sm rounded-3 text-nowrap shadow-sm p-2 px-3" (click)="exportToExcel()" title="Export to Excel">
-                <i class="bi bi-file-earmark-excel-fill me-1"></i> Export to Excel
-            </button>
-            <button class="btn btn-outline-danger btn-sm rounded-3 text-nowrap shadow-sm p-2 px-3" (click)="exportToPDF()" title="Export to PDF">
-                <i class="bi bi-file-earmark-pdf-fill me-1"></i> Export to PDF
-            </button>
-            <a routerLink="/employees" class="btn btn-outline-secondary btn-sm rounded-3 text-nowrap shadow-sm p-2 px-3">
-                <i class="bi bi-arrow-left me-1"></i> Back to Employees
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
+                    <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> 
+                    <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
+                </button>
+                <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
+                    <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i> 
+                    <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
+                </button>
+            </div>
+            <a routerLink="/employees" class="btn btn-outline-secondary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap">
+                <i class="bi bi-arrow-left" [class.me-md-1]="true"></i> 
+                <span class="d-none d-md-inline">{{ 'Back to Employees' | t }}</span>
             </a>
         </div>
     </div>

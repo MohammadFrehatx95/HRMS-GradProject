@@ -5,6 +5,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import Swal from 'sweetalert2';
 
 import { ExcelExportService } from '../../core/services/excel-export.service';
+import { PdfExportService } from '../../core/services/pdf-export.service';
 
 @Component({
   selector: 'app-pending-approvals',
@@ -15,6 +16,7 @@ import { ExcelExportService } from '../../core/services/excel-export.service';
 export class PendingApprovalsComponent implements OnInit {
   private authService = inject(AuthService);
   private excelExportService = inject(ExcelExportService);
+  private pdfExportService = inject(PdfExportService);
 
   pendingPictures: any[] = [];
   isLoading = true;
@@ -98,5 +100,27 @@ export class PendingApprovalsComponent implements OnInit {
     ]);
 
     this.excelExportService.exportTableToExcel(headers, data, 'Pending_Profile_Pictures');
+  }
+
+  exportToPDF() {
+    if (this.pendingPictures.length === 0) {
+      Swal.fire('No Data', 'There are no pending approvals to export.', 'info');
+      return;
+    }
+
+    const headers = ['User ID', 'Name', 'Email', 'Upload Date'];
+    const data = this.pendingPictures.map(p => [
+      `#${p.userId}`,
+      `${p.firstName || p.username || ''} ${p.lastName || ''}`.trim() || '—',
+      p.email || '—',
+      p.uploadedAt ? new Date(p.uploadedAt).toLocaleString() : '—'
+    ]);
+
+    this.pdfExportService.generateTableReport(
+      'Pending Profile Pictures',
+      headers,
+      data,
+      'Pending_Profile_Pictures_Report'
+    );
   }
 }

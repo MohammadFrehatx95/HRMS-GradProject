@@ -1,4 +1,4 @@
-﻿import {
+import {
   Component,
   OnInit,
   inject,
@@ -92,7 +92,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
     if (this.messages.length === 0) {
       this.messages.push({
         role: 'assistant',
-        content: "👋 **Hello! I'm HRMS-AI**. How can I help you today?",
+        content: "**Hello! I'm HRMS-AI**. How can I help you today?",
         timestamp: new Date(),
       });
       this.saveChat();
@@ -187,7 +187,15 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
 
   private callChat(text: string): void {
     this.addLoadingMessage();
-    this.aiService.chat(text, this.aiMode).subscribe({
+    
+    // Extract last 4 messages (excluding the currently added user message and loading message)
+    const historyMessages = this.messages
+      .filter(m => !m.loading)
+      .slice(0, -1) // Exclude the newly added user message
+      .slice(-4)    // Take up to last 4 messages
+      .map(m => ({ role: m.role, content: m.content }));
+
+    this.aiService.chat(text, this.aiMode, historyMessages).subscribe({
       next: (res) => this.handleResponse(res),
       error: (err) => this.handleError(err),
     });
@@ -268,7 +276,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
     if (idx !== -1) {
       this.messages[idx] = {
         role: 'assistant',
-        content: `❌ **Error:** ${errMsg}`,
+        content: `**Error:** ${errMsg}`,
         timestamp: new Date(),
         loading: false,
       };
