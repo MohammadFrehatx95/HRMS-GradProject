@@ -145,7 +145,7 @@ export class LeaveComponent implements OnInit {
   }
 
   loadBalances() {
-    if (!this.isAdminOrHR) {
+    if (!this.isAdmin) {
       this.authService.getMe().subscribe({
         next: (res) => {
           this.annualLeaveBalance = res?.annualLeaveBalance ?? 0;

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { SalaryService } from '../../core/services/salary.service';
 import { EmployeeService } from '../../core/services/employee.service';
 import { AuthService } from '../../core/services/auth.service';
+import { DepartmentService } from '../../core/services/department.service';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -24,6 +25,7 @@ export class SalaryComponent implements OnInit {
   private salaryService = inject(SalaryService);
   private employeeService = inject(EmployeeService);
   private authService = inject(AuthService);
+  private departmentService = inject(DepartmentService);
   private pdfExportService = inject(PdfExportService);
   private excelExportService = inject(ExcelExportService);
 
@@ -48,6 +50,16 @@ export class SalaryComponent implements OnInit {
   selectedYear: string = '';
   selectedMonth: string = '';
   uniqueYears: number[] = [];
+  departments: any[] = [];
+
+  // Wizard state
+  wizardStep = 1;
+  previewMonth = new Date().getMonth() + 1;
+  previewYear = new Date().getFullYear();
+  previewDepartmentId: number | null = null;
+  previewData: any = null;
+  isPreviewLoading = false;
+  payrollWizardModal: any;
 
   currentPage: number = 1;
   itemsPerPage: number = 7;
@@ -89,10 +101,24 @@ export class SalaryComponent implements OnInit {
         this.isViewingAll = true;
     }
 
-    this.loadSalaries();
+    this.loadInitialData();
     if (this.isAdmin) {
       this.loadEmployees();
     }
+  }
+
+  loadInitialData() {
+    this.isLoading = true;
+    this.departmentService.getDepartments().subscribe({
+      next: (deps) => {
+        this.departments = deps;
+        this.loadSalaries();
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.handleError(err);
+      }
+    });
   }
 
   loadEmployees() {
@@ -264,32 +290,57 @@ export class SalaryComponent implements OnInit {
     }
   }
 
-  generatePayroll() {
-    Swal.fire({
-      title: 'Generate Payroll?',
-      text: 'This will auto-generate salaries for all active employees for the current month. Are you sure?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Generate',
-      cancelButtonText: 'Cancel'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.isLoading = true;
-        const currentMonth = new Date().getMonth() + 1;
-        const currentYear = new Date().getFullYear();
-        this.salaryService.generateBatch(currentMonth, currentYear).subscribe({
-          next: (res: any) => {
-            const count = res?.data ?? res;
-            Swal.fire('Success', `Generated ${count} salaries successfully.`, 'success');
-            this.loadSalaries();
-          },
-          error: (err) => {
-            this.isLoading = false;
-            this.handleError(err);
-          }
-        });
+  openWizard() {
+    this.wizardStep = 1;
+    this.previewMonth = new Date().getMonth() + 1;
+    this.previewYear = new Date().getFullYear();
+    this.previewDepartmentId = null;
+    this.previewData = null;
+
+    const modalEl = document.getElementById('payrollWizardModal');
+    if (modalEl) {
+      this.payrollWizardModal = new bootstrap.Modal(modalEl);
+      this.payrollWizardModal.show();
+    }
+  }
+
+  previewPayroll() {
+    this.isPreviewLoading = true;
+    this.salaryService.previewBatch(this.previewMonth, this.previewYear, this.previewDepartmentId).subscribe({
+      next: (res: any) => {
+        this.previewData = res?.data ?? res;
+        this.isPreviewLoading = false;
+        this.wizardStep = 2;
+      },
+      error: (err) => {
+        this.isPreviewLoading = false;
+        this.handleError(err);
       }
     });
+  }
+
+  confirmGeneratePayroll() {
+    this.isPreviewLoading = true;
+    this.salaryService.generateBatch(this.previewMonth, this.previewYear, this.previewDepartmentId).subscribe({
+      next: (res: any) => {
+        const count = res?.data ?? res;
+        this.isPreviewLoading = false;
+        if (this.payrollWizardModal) {
+          this.payrollWizardModal.hide();
+        }
+        Swal.fire('Success', `Generated ${count} salaries successfully.`, 'success');
+        this.loadSalaries();
+      },
+      error: (err) => {
+        this.isPreviewLoading = false;
+        this.handleError(err);
+      }
+    });
+  }
+
+  generatePayroll() {
+    // We now use openWizard instead. Leaving this empty or removing it.
+    this.openWizard();
   }
 
   saveSalary() {

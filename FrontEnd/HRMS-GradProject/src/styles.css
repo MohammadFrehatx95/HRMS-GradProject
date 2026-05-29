@@ -663,3 +663,22 @@ h1, h2, h3, h4, h5, h6 {
 p {
   line-height: 1.6;
 }
+
+/* --- Dark Mode Fixes --- */
+body.dark-mode .swal2-popup {
+  background-color: var(--color-modal-bg) !important;
+  color: var(--color-text) !important;
+}
+body.dark-mode .ann-panel {
+  border-color: var(--color-border) !important;
+}
+body.dark-mode .ann-header {
+  background-color: var(--color-surface-2) !important;
+  border-bottom-color: var(--color-border) !important;
+}
+body.dark-mode .ann-icon-wrap {
+  background-color: rgba(79, 70, 229, 0.15) !important;
+}
+body.dark-mode .ann-item:hover {
+  background-color: var(--color-surface-3) !important;
+}

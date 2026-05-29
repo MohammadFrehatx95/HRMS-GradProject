@@ -236,17 +236,85 @@ namespace Application.Services.Implementations
             await uow.SaveChangesAsync();
         }
 
-        public async Task<int> GenerateBatchAsync(int month, int year)
+        public async Task<PayrollPreviewResultDto> PreviewBatchAsync(GeneratePayrollDto dto)
         {
-            var activeEmployees = await uow.Repository<Employee>()
-                                           .GetAllQueryable()
-                                           .Include(e => e.Position)
-                                           .Where(e => e.IsActive)
-                                           .ToListAsync();
+            var query = uow.Repository<Employee>()
+                           .GetAllQueryable()
+                           .Include(e => e.Position)
+                           .Include(e => e.Department)
+                           .Where(e => e.IsActive);
+
+            if (dto.DepartmentId.HasValue && dto.DepartmentId.Value > 0)
+            {
+                query = query.Where(e => e.DepartmentId == dto.DepartmentId.Value);
+            }
+
+            var activeEmployees = await query.ToListAsync();
 
             var existingSalaries = await uow.Repository<Salary>()
                                             .GetAllQueryable()
-                                            .Where(s => s.Month == month && s.Year == year)
+                                            .Where(s => s.Month == dto.Month && s.Year == dto.Year)
+                                            .Select(s => s.EmployeeId)
+                                            .ToListAsync();
+
+            var employeesWithoutSalary = activeEmployees
+                                         .Where(e => !existingSalaries.Contains(e.Id))
+                                         .ToList();
+
+            var previewResult = new PayrollPreviewResultDto();
+
+            foreach (var emp in employeesWithoutSalary)
+            {
+                var baseAmount = emp.Position?.SalaryMin ?? 0;
+
+                var unappliedAdjustments = await uow.Repository<PayrollAdjustment>()
+                                                    .GetAllQueryable()
+                                                    .Where(p => p.EmployeeId == emp.Id && !p.IsApplied)
+                                                    .ToListAsync();
+
+                var totalBonuses = unappliedAdjustments.Where(p => p.Type == AdjustmentType.Bonus).Sum(p => p.Amount);
+                var totalPenalties = unappliedAdjustments.Where(p => p.Type == AdjustmentType.Penalty).Sum(p => p.Amount);
+
+                var gross = baseAmount + totalBonuses;
+                var net = gross - totalPenalties;
+                if (net < 0) net = 0; // Prevent negative preview if penalty > gross
+
+                var preview = new SalaryPreviewDto
+                {
+                    EmployeeId = emp.Id,
+                    EmployeeName = $"{emp.FirstName} {emp.LastName}",
+                    DepartmentName = emp.Department?.Name ?? "Unknown",
+                    BaseAmount = baseAmount,
+                    Allowances = totalBonuses,
+                    Deductions = totalPenalties,
+                    NetAmount = net
+                };
+
+                previewResult.Salaries.Add(preview);
+                previewResult.TotalCost += net;
+                previewResult.EmployeeCount++;
+            }
+
+            return previewResult;
+        }
+
+        public async Task<int> GenerateBatchAsync(GeneratePayrollDto dto)
+        {
+            var query = uow.Repository<Employee>()
+                           .GetAllQueryable()
+                           .Include(e => e.Position)
+                           .Where(e => e.IsActive);
+
+            if (dto.DepartmentId.HasValue && dto.DepartmentId.Value > 0)
+            {
+                query = query.Where(e => e.DepartmentId == dto.DepartmentId.Value);
+            }
+
+            var activeEmployees = await query.ToListAsync();
+
+            var existingSalaries = await uow.Repository<Salary>()
+                                            .GetAllQueryable()
+                                            .Where(s => s.Month == dto.Month && s.Year == dto.Year)
                                             .Select(s => s.EmployeeId)
                                             .ToListAsync();
 
@@ -260,20 +328,20 @@ namespace Application.Services.Implementations
             {
                 var baseAmount = emp.Position?.SalaryMin ?? 0;
 
-                var dto = new CreateSalaryDto
+                var createDto = new CreateSalaryDto
                 {
                     EmployeeId = emp.Id,
-                    Month = month,
-                    Year = year,
+                    Month = dto.Month,
+                    Year = dto.Year,
                     BaseAmount = baseAmount,
                     Allowances = 0,
                     Deductions = 0,
-                    EffectiveDate = new DateTime(year, month, DateTime.DaysInMonth(year, month), 0, 0, 0, DateTimeKind.Utc)
+                    EffectiveDate = new DateTime(dto.Year, dto.Month, DateTime.DaysInMonth(dto.Year, dto.Month), 0, 0, 0, DateTimeKind.Utc)
                 };
 
                 try
                 {
-                    await CreateAsync(dto);
+                    await CreateAsync(createDto);
                     generatedCount++;
                 }
                 catch

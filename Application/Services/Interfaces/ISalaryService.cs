@@ -17,6 +17,7 @@ namespace Application.Services.Interfaces
         Task<SalaryDto> CreateAsync(CreateSalaryDto dto);
         Task<SalaryDto> UpdateAsync(int id, UpdateSalaryDto dto);
         Task DeleteAsync(int id);
-        Task<int> GenerateBatchAsync(int month, int year);
+        Task<PayrollPreviewResultDto> PreviewBatchAsync(GeneratePayrollDto dto);
+        Task<int> GenerateBatchAsync(GeneratePayrollDto dto);
     }
 }

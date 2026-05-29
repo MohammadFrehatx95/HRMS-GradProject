@@ -320,6 +320,119 @@
         </div>
     </div>
 </div>
+</div>
+
+<!-- Payroll Wizard Modal -->
+<div class="modal fade" id="payrollWizardModal" tabindex="-1" aria-labelledby="payrollWizardModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+      <div class="modal-header bg-warning text-dark border-0 py-3">
+        <h5 class="modal-title fw-bold" id="payrollWizardModalLabel">
+          <i class="bi bi-magic me-2"></i>{{ 'Payroll Wizard' | t }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body p-4 bg-light">
+        <!-- Step 1: Configuration -->
+        <div *ngIf="wizardStep === 1">
+          <h6 class="text-primary mb-3"><i class="bi bi-1-circle-fill me-2"></i>Step 1: Configuration</h6>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label fw-semibold text-secondary small">Month</label>
+              <input type="number" class="form-control" [(ngModel)]="previewMonth" min="1" max="12">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold text-secondary small">Year</label>
+              <input type="number" class="form-control" [(ngModel)]="previewYear" min="2000" max="2100">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold text-secondary small">Department (Optional)</label>
+              <select class="form-select" [(ngModel)]="previewDepartmentId">
+                <option [ngValue]="null">All Departments</option>
+                <option *ngFor="let d of departments" [ngValue]="d.id">{{ d.name }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Preview -->
+        <div *ngIf="wizardStep === 2">
+          <h6 class="text-success mb-3">
+            <i class="bi bi-2-circle-fill me-2"></i>Step 2: Preview & Confirm
+            <button class="btn btn-sm btn-outline-secondary float-end" (click)="wizardStep = 1">
+              <i class="bi bi-arrow-left"></i> Back
+            </button>
+          </h6>
+
+          <div *ngIf="isPreviewLoading" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+
+          <div *ngIf="!isPreviewLoading && previewData">
+            <div class="table-responsive" style="max-height: 300px;">
+              <table class="table table-sm table-hover align-middle">
+                <thead class="table-light sticky-top">
+                  <tr>
+                    <th>Employee</th>
+                    <th>Department</th>
+                    <th>Base</th>
+                    <th>Allowances</th>
+                    <th>Deductions</th>
+                    <th class="text-end">Net Pay</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let s of previewData.salaries">
+                    <td>{{ s.employeeName }}</td>
+                    <td><span class="badge bg-secondary">{{ s.departmentName }}</span></td>
+                    <td>{{ s.baseAmount | currency:'JD ' }}</td>
+                    <td class="text-success">+{{ s.allowances | currency:'JD ' }}</td>
+                    <td class="text-danger">-{{ s.deductions | currency:'JD ' }}</td>
+                    <td class="text-end fw-bold">{{ s.netAmount | currency:'JD ' }}</td>
+                  </tr>
+                  <tr *ngIf="previewData.salaries?.length === 0">
+                    <td colspan="6" class="text-center text-muted py-3">No pending salaries found for this selection.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="mt-4 p-3 bg-white rounded-3 shadow-sm border border-success">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <h6 class="mb-0 text-muted">Total Employees</h6>
+                  <h4 class="mb-0 fw-bold">{{ previewData.employeeCount }}</h4>
+                </div>
+                <div class="text-end">
+                  <h6 class="mb-0 text-muted">Total Payroll Cost</h6>
+                  <h3 class="mb-0 fw-bold text-success">{{ previewData.totalCost | currency:'JD ' }}</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer border-0 bg-light">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+        <button *ngIf="wizardStep === 1" type="button" class="btn btn-primary px-4" 
+                (click)="previewPayroll()" [disabled]="isPreviewLoading">
+          <span *ngIf="isPreviewLoading" class="spinner-border spinner-border-sm me-2"></span>
+          Preview
+        </button>
+        <button *ngIf="wizardStep === 2" type="button" class="btn btn-success px-4" 
+                (click)="confirmGeneratePayroll()" 
+                [disabled]="isPreviewLoading || previewData?.salaries?.length === 0">
+          <span *ngIf="isPreviewLoading" class="spinner-border spinner-border-sm me-2"></span>
+          <i class="bi bi-check-circle me-1"></i> Confirm & Generate
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <style>
     .cursor-pointer {

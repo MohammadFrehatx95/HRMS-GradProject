@@ -58,7 +58,7 @@
                 </button>
             </div>
 
-            <button *ngIf="!isAdminOrHR"
+            <button *ngIf="!isAdmin"
                 class="btn btn-primary px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
                 (click)="openModal()">
                 <i class="bi bi-send-plus" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'Request Leave' | t }}</span>
@@ -67,7 +67,7 @@
     </div>
 
     
-    <div class="row mb-4 g-3" *ngIf="!isAdminOrHR">
+    <div class="row mb-4 g-3" *ngIf="!isAdmin">
         
         <div class="col-md-4">
             <div class="card border-0 shadow-sm rounded-4 bg-primary bg-opacity-10 position-relative overflow-hidden h-100">

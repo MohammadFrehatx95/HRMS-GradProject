@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { EmployeeService } from '../../core/services/employee.service';
@@ -63,6 +63,9 @@ export class DashboardComponent implements OnInit {
   employeePendingLeaves: number = 0;
   employeeHoursWorked: number = 0;
   employeeNextPayday: string = '';
+
+  showPayrollAlert: boolean = false;
+  pendingPayrollCount: number = 0;
 
   readonly PAYDAY = 25;
 
@@ -451,6 +454,22 @@ export class DashboardComponent implements OnInit {
   }
 
   loadAdminStats() {
+
+    const today = new Date();
+    if (today.getDate() >= this.PAYDAY) {
+      const currentMonth = today.getMonth() + 1;
+      const currentYear = today.getFullYear();
+      this.salaryService.previewBatch(currentMonth, currentYear).subscribe({
+        next: (res: any) => {
+          const preview = res?.data ?? res;
+          if (preview && preview.employeeCount > 0) {
+            this.showPayrollAlert = true;
+            this.pendingPayrollCount = preview.employeeCount;
+          }
+        },
+        error: (err) => console.error('Error fetching payroll preview:', err)
+      });
+    }
 
     this.empService.getEmployees().subscribe({
       next: (employees: any[]) => {

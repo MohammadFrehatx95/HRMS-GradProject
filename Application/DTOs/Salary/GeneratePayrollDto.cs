@@ -11,5 +11,7 @@ namespace Application.DTOs.Salary
         [Required]
         [Range(2000, 2100)]
         public int Year { get; set; }
+
+        public int? DepartmentId { get; set; }
     }
 }

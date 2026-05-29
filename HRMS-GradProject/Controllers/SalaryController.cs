@@ -84,13 +84,23 @@ namespace HRMS_GradProject.Controllers
             return Ok(ApiResponse.Ok("Salary deleted successfully"));
         }
 
+        // POST /api/salaries/preview-batch → Admin
+        [HttpPost("preview-batch")]
+        [Authorize(Roles = "Admin")]
+        [ValidateModel]
+        public async Task<IActionResult> PreviewBatch([FromBody] GeneratePayrollDto dto)
+        {
+            var result = await salaryService.PreviewBatchAsync(dto);
+            return Ok(ApiResponse<PayrollPreviewResultDto>.Ok(result, "Preview generated successfully"));
+        }
+
         // POST /api/salaries/generate-batch → Admin
         [HttpPost("generate-batch")]
         [Authorize(Roles = "Admin")]
         [ValidateModel]
         public async Task<IActionResult> GenerateBatch([FromBody] GeneratePayrollDto dto)
         {
-            int count = await salaryService.GenerateBatchAsync(dto.Month, dto.Year);
+            int count = await salaryService.GenerateBatchAsync(dto);
             return Ok(ApiResponse<int>.Ok(count, $"Generated {count} salaries successfully"));
         }
     }
