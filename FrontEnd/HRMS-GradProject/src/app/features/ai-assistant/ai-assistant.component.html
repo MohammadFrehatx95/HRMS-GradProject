@@ -22,24 +22,6 @@
         </div>
       </div>
       <div class="ai-header-right">
-        <div class="token-monitor" *ngIf="tokenStats">
-          <div class="token-stats-text">
-            <span class="token-count"><i class="bi bi-cpu"></i> {{
-              tokenStats.usedTokens | number }} / {{
-              tokenStats.maxTokensPerMinute | number }} TPM</span>
-            <span class="token-timer"
-              [class.danger]="tokenStats.secondsUntilReset < 10"><i
-                class="bi bi-clock-history"></i> Resets in {{
-              tokenStats.secondsUntilReset }}s</span>
-          </div>
-          <div class="token-progress-bg">
-            <div class="token-progress-fill"
-              [style.width.%]="(tokenStats.usedTokens / tokenStats.maxTokensPerMinute) * 100"
-              [class.warning]="(tokenStats.usedTokens / tokenStats.maxTokensPerMinute) > 0.7"
-              [class.danger]="(tokenStats.usedTokens / tokenStats.maxTokensPerMinute) > 0.9">
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>

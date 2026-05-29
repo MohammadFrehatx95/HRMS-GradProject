@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+using Domain.Entities;
 using Domain.Enums;
 
 namespace Domain.Entities;
@@ -31,4 +31,6 @@ public class Leave
 
 
     public string? RejectionReason { get; set; }
+    
+    public string? AttachmentUrl { get; set; }
 }

@@ -16,6 +16,7 @@ namespace Application.Services.Implementations
         IMapper mapper,
         INotificationService notificationService,
         IEmailService emailService,
+        IImageService imageService,
         ILogger<LeaveService> logger) : ILeaveService
     {
         public async Task<PagedResult<LeaveDto>> GetAllAsync(int pageNumber, int pageSize)
@@ -77,7 +78,7 @@ namespace Application.Services.Implementations
             return leave is null ? null : mapper.Map<LeaveDto>(leave);
         }
 
-        public async Task<LeaveDto> CreateAsync(int employeeId, CreateLeaveDto dto)
+        public async Task<LeaveDto> CreateAsync(int employeeId, CreateLeaveDto dto, Stream? fileStream = null, string? fileName = null)
         {
             var startDate = DateTime.SpecifyKind(dto.StartDate.Date, DateTimeKind.Utc);
             var endDate = DateTime.SpecifyKind(dto.EndDate.Date, DateTimeKind.Utc);
@@ -88,6 +89,30 @@ namespace Application.Services.Implementations
 
             if (endDate < startDate)
                 throw new ArgumentException("End date cannot be before start date");
+
+            var totalDays = (int)(endDate - startDate).TotalDays + 1;
+
+            // ── Balance validation per leave type ──────────────────────────
+            var employee = await uow.Repository<Employee>().GetByIdAsync(employeeId)
+                           ?? throw new KeyNotFoundException("Employee not found");
+
+            switch (dto.LeaveType)
+            {
+                case LeaveType.Annual when employee.AnnualLeaveBalance < totalDays:
+                    throw new InvalidOperationException(
+                        $"Insufficient annual leave balance. You have {employee.AnnualLeaveBalance} day(s) remaining, but requested {totalDays}.");
+
+                case LeaveType.Sick when employee.SickLeaveBalance < totalDays:
+                    throw new InvalidOperationException(
+                        $"Insufficient sick leave balance. You have {employee.SickLeaveBalance} day(s) remaining, but requested {totalDays}.");
+
+                case LeaveType.Emergency when employee.EmergencyLeaveBalance < totalDays:
+                    throw new InvalidOperationException(
+                        $"Insufficient emergency leave balance. You have {employee.EmergencyLeaveBalance} day(s) remaining, but requested {totalDays}.");
+
+                // LeaveType.Unpaid: no balance restriction
+            }
+            // ──────────────────────────────────────────────────────────────
 
             var hasOverlap = await uow.Repository<Leave>()
                               .GetAllQueryable()
@@ -101,23 +126,30 @@ namespace Application.Services.Implementations
                 throw new InvalidOperationException(
                     "You already have an active (Pending or Approved) leave request overlapping these dates.");
 
+            // ── Handle File Upload ─────────────────────────────────────────
+            string? attachmentUrl = null;
+            if (fileStream != null && !string.IsNullOrWhiteSpace(fileName))
+            {
+                attachmentUrl = await imageService.UploadImageAsync(fileStream, fileName);
+            }
+
             var leave = new Leave
             {
                 EmployeeId = employeeId,
                 LeaveType = dto.LeaveType,
                 StartDate = startDate,
                 EndDate = endDate,
-                TotalDays = (int)(endDate - startDate).TotalDays + 1,
+                TotalDays = totalDays,
                 Reason = dto.Reason,
                 Status = LeaveStatus.Pending,
-                RequestedAt = DateTime.UtcNow
+                RequestedAt = DateTime.UtcNow,
+                AttachmentUrl = attachmentUrl
             };
 
             await uow.Repository<Leave>().AddAsync(leave);
             await uow.SaveChangesAsync();
 
-            var employee = await uow.Repository<Employee>()
-                            .GetByIdAsync(employeeId);
+            // employee is already defined at the beginning of the method
 
             var employeeName = employee is not null
                 ? $"{employee.FirstName} {employee.LastName}"
@@ -197,11 +229,25 @@ namespace Application.Services.Implementations
                             .Include(e => e.User)
                             .FirstOrDefaultAsync(e => e.Id == leave.EmployeeId);
 
-            if (dto.Status == LeaveStatus.Approved && leave.LeaveType == LeaveType.Annual && employee != null)
+            // ── Deduct from the correct balance when approved ───────────
+            if (dto.Status == LeaveStatus.Approved && employee != null)
             {
-                employee.AnnualLeaveBalance -= leave.TotalDays;
+                switch (leave.LeaveType)
+                {
+                    case LeaveType.Annual:
+                        employee.AnnualLeaveBalance = Math.Max(0, employee.AnnualLeaveBalance - leave.TotalDays);
+                        break;
+                    case LeaveType.Sick:
+                        employee.SickLeaveBalance = Math.Max(0, employee.SickLeaveBalance - leave.TotalDays);
+                        break;
+                    case LeaveType.Emergency:
+                        employee.EmergencyLeaveBalance = Math.Max(0, employee.EmergencyLeaveBalance - leave.TotalDays);
+                        break;
+                    // Unpaid: no balance to deduct
+                }
                 uow.Repository<Employee>().Update(employee);
             }
+            // ──────────────────────────────────────────────────────────────
 
             await uow.SaveChangesAsync();
 

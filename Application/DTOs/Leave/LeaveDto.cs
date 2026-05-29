@@ -18,5 +18,7 @@ namespace Application.DTOs.Leave
         // FIX: إضافة حقول الـ reviewer
         public int? ReviewedById { get; set; }
         public DateTime? ReviewedAt { get; set; }
+        
+        public string? AttachmentUrl { get; set; }
     }
 }

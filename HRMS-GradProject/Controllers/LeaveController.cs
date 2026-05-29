@@ -73,13 +73,22 @@ namespace HRMS_GradProject.Controllers
         // POST /api/leaves → Employee
         [HttpPost]
         [ValidateModel]
-        public async Task<IActionResult> Create([FromBody] CreateLeaveDto dto)
+        public async Task<IActionResult> Create([FromForm] CreateLeaveDto dto, Microsoft.AspNetCore.Http.IFormFile? attachment)
         {
             var employeeId = GetEmployeeId();
             if (employeeId is null)
                 return BadRequest(ApiResponse.Fail("Your account is not linked to an employee profile"));
+            
+            Stream? fileStream = null;
+            string? fileName = null;
 
-            var result = await leaveService.CreateAsync(employeeId.Value, dto);
+            if (attachment != null && attachment.Length > 0)
+            {
+                fileStream = attachment.OpenReadStream();
+                fileName = attachment.FileName;
+            }
+
+            var result = await leaveService.CreateAsync(employeeId.Value, dto, fileStream, fileName);
             return CreatedAtAction(nameof(GetMyById), new { id = result.Id },
                 ApiResponse<LeaveDto>.Ok(result, "Leave request submitted successfully"));
         }

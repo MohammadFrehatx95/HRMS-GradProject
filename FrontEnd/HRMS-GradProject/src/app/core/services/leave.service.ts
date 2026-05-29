@@ -1,4 +1,4 @@
-﻿import { Injectable, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -25,7 +25,7 @@ export class LeaveService {
       );
   }
 
-  applyLeave(payload: any): Observable<any> {
+  applyLeave(payload: any | FormData): Observable<any> {
     return this.http.post<any>(this.apiUrl, payload);
   }
 

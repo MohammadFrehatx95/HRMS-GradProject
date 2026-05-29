@@ -34,7 +34,9 @@ export class LeaveComponent implements OnInit {
   isProcessing: boolean = false;
 
   isAdminOrHR: boolean = false;
-  employeeAnnualLeaveBalance: number | string = 14;
+  annualLeaveBalance: number = 0;
+  sickLeaveBalance: number = 0;
+  emergencyLeaveBalance: number = 0;
 
   leaveModal: any;
 
@@ -67,6 +69,15 @@ export class LeaveComponent implements OnInit {
     reason: '',
   };
 
+  selectedFile: File | null = null;
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+    }
+  }
+
   leaveTypes = [
     { id: 0, name: 'Annual' },
     { id: 1, name: 'Sick' },
@@ -76,7 +87,21 @@ export class LeaveComponent implements OnInit {
 
   ngOnInit() {
     this.isAdminOrHR = this.authService.isAdminOrHR();
+    this.loadBalances();
     this.loadLeaves();
+  }
+
+  loadBalances() {
+    if (!this.isAdminOrHR) {
+      this.authService.getMe().subscribe({
+        next: (res) => {
+          this.annualLeaveBalance = res?.annualLeaveBalance ?? 0;
+          this.sickLeaveBalance = res?.sickLeaveBalance ?? 0;
+          this.emergencyLeaveBalance = res?.emergencyLeaveBalance ?? 0;
+        },
+        error: (err) => console.error('Error fetching balances:', err)
+      });
+    }
   }
 
   loadLeaves() {
@@ -114,16 +139,9 @@ export class LeaveComponent implements OnInit {
               new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
             );
           });
-        } else if (!this.isAdminOrHR) {
-
-          const usedAnnualLeavesDays = this.allLeavesList
-            .filter(
-              (l: any) => (this.getStatusText(l.status) === 'Approved' || this.getStatusText(l.status) === 'Pending') && this.getLeaveTypeText(l.leaveType) === 'Annual',
-            )
-            .reduce((acc: number, l: any) => acc + (l.totalDays || 0), 0);
-          this.employeeAnnualLeaveBalance = 14 - usedAnnualLeavesDays;
         }
-
+        // Balance calculation was removed because we now fetch it directly from the database!
+        
         this.isLoading = false;
       },
       error: (err) => {
@@ -221,6 +239,7 @@ export class LeaveComponent implements OnInit {
 
   openModal() {
     this.leaveData = { leaveType: 0, startDate: '', endDate: '', reason: '' };
+    this.selectedFile = null;
     const modalEl = document.getElementById('leaveModal');
     if (modalEl) {
       let modalInstance = bootstrap.Modal.getInstance(modalEl);
@@ -257,23 +276,44 @@ export class LeaveComponent implements OnInit {
     const diffTime = Math.abs(end.getTime() - start.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
-    if (Number(this.leaveData.leaveType) === 0) {
-      if (diffDays > Number(this.employeeAnnualLeaveBalance)) {
-        Swal.fire('Insufficient Balance', `You are requesting ${diffDays} days, but you only have ${this.employeeAnnualLeaveBalance} annual leave days remaining.`, 'warning');
-        return;
-      }
+    // Validate balance according to leave type
+    const selectedType = Number(this.leaveData.leaveType);
+    let availableBalance = 0;
+    let typeName = '';
+
+    if (selectedType === 0) {
+      availableBalance = this.annualLeaveBalance;
+      typeName = 'annual';
+    } else if (selectedType === 1) {
+      availableBalance = this.sickLeaveBalance;
+      typeName = 'sick';
+    } else if (selectedType === 2) {
+      availableBalance = this.emergencyLeaveBalance;
+      typeName = 'emergency';
+    }
+
+    if (selectedType !== 3 && diffDays > availableBalance) {
+      Swal.fire(
+        'Insufficient Balance', 
+        `You are requesting ${diffDays} days, but you only have ${availableBalance} ${typeName} leave days remaining.`, 
+        'warning'
+      );
+      return;
     }
 
     this.isProcessing = true;
-    const payload = {
-      leaveType: Number(this.leaveData.leaveType),
-      startDate: new Date(this.leaveData.startDate).toISOString(),
-      endDate: new Date(this.leaveData.endDate).toISOString(),
-      reason: this.leaveData.reason,
-      status: 0,
-    };
+    
+    const formData = new FormData();
+    formData.append('leaveType', this.leaveData.leaveType.toString());
+    formData.append('startDate', new Date(this.leaveData.startDate).toISOString());
+    formData.append('endDate', new Date(this.leaveData.endDate).toISOString());
+    formData.append('reason', this.leaveData.reason);
+    
+    if (this.selectedFile) {
+      formData.append('attachment', this.selectedFile);
+    }
 
-    this.leaveService.applyLeave(payload).subscribe({
+    this.leaveService.applyLeave(formData).subscribe({
       next: () => {
         this.isProcessing = false;
         this.leaveModal.hide();

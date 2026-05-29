@@ -69,7 +69,10 @@ public class AuthController(IAuthService authService, IUserService userService, 
     public async Task<IActionResult> Me()
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var user = await uow.Repository<User>().GetByIdAsync(userId);
+        var user = await uow.Repository<User>()
+                            .GetAllQueryable()
+                            .Include(u => u.Employee)
+                            .FirstOrDefaultAsync(u => u.Id == userId);
 
         var result = new MeDto
         {
@@ -78,7 +81,10 @@ public class AuthController(IAuthService authService, IUserService userService, 
             Role = User.FindFirstValue(ClaimTypes.Role)!,
             EmployeeId = User.FindFirstValue("employeeId"),
             ProfilePictureUrl = user?.ProfilePictureUrl,
-            PendingProfilePictureUrl = user?.PendingProfilePictureUrl
+            PendingProfilePictureUrl = user?.PendingProfilePictureUrl,
+            AnnualLeaveBalance = user?.Employee?.AnnualLeaveBalance,
+            SickLeaveBalance = user?.Employee?.SickLeaveBalance,
+            EmergencyLeaveBalance = user?.Employee?.EmergencyLeaveBalance
         };
 
         return Ok(ApiResponse<MeDto>.Ok(result));

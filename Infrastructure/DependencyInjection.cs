@@ -31,6 +31,9 @@ public static class DependencyInjection
         // UnitOfWork
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+        // MemoryCache (required by HrAiService)
+        services.AddMemoryCache();
+
         services.AddHostedService<LeaveResetBackgroundService>();
 
         return services;

@@ -13,6 +13,8 @@ public class Employee
     public DateTime HireDate { get; set; }
     public bool IsActive { get; set; } = true;
     public int AnnualLeaveBalance { get; set; } = 14;
+    public int SickLeaveBalance { get; set; } = 14;
+    public int EmergencyLeaveBalance { get; set; } = 3;
 
     // Foreign Keys
     public int DepartmentId { get; set; }
