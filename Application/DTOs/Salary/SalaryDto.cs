@@ -20,5 +20,6 @@ namespace Application.DTOs.Salary
         public int Month { get; set; }
         public int Year { get; set; }
         public DateTime EffectiveDate { get; set; }
+        public string Status { get; set; } = string.Empty;
     }
 }

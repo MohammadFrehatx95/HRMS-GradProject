@@ -69,5 +69,9 @@ export class SalaryService {
   previewBatch(month: number, year: number, departmentId?: number | null): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/preview-batch`, { month, year, departmentId });
   }
+
+  markAsPaid(month: number, year: number): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/mark-paid`, { month, year });
+  }
 }
 

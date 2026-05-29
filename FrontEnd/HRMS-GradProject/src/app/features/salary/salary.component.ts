@@ -36,6 +36,7 @@ export class SalaryComponent implements OnInit {
   isAdminOrHR: boolean = false;
   isProcessing: boolean = false;
   isViewingAll: boolean = false;
+  hasDraftSalaries: boolean = false;
 
   salaryModal: any;
   isEditMode: boolean = false;
@@ -232,6 +233,7 @@ export class SalaryComponent implements OnInit {
       });
     }
 
+    this.hasDraftSalaries = this.salariesList.some(s => s.status === 'Draft');
     this.currentPage = 1;
   }
 
@@ -340,6 +342,33 @@ export class SalaryComponent implements OnInit {
   generatePayroll() {
     // We now use openWizard instead. Leaving this empty or removing it.
     this.openWizard();
+  }
+
+  markAsPaid() {
+    if (!this.selectedMonth || !this.selectedYear) {
+      Swal.fire('Filter Required', 'Please filter by a specific Month and Year before approving salaries.', 'warning');
+      return;
+    }
+    
+    Swal.fire({
+      title: 'Approve Salaries',
+      text: `This will lock all draft salaries for ${this.selectedMonth}/${this.selectedYear}. This action cannot be undone!`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Approve!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.salaryService.markAsPaid(Number(this.selectedMonth), Number(this.selectedYear)).subscribe({
+          next: (res: any) => {
+            const count = res?.data ?? res;
+            Swal.fire('Approved!', `Successfully approved ${count} salaries.`, 'success');
+            this.loadSalaries();
+          },
+          error: (err) => this.handleError(err)
+        });
+      }
+    });
   }
 
   saveSalary() {

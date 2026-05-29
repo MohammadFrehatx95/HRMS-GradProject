@@ -130,7 +130,8 @@ public class MappingProfile : Profile
                     ? $"{s.Employee.FirstName} {s.Employee.LastName}"
                     : string.Empty))
             .ForMember(d => d.EmployeeProfilePictureUrl,
-                o => o.MapFrom(s => s.Employee != null && s.Employee.User != null ? s.Employee.User.ProfilePictureUrl : null));
+                o => o.MapFrom(s => s.Employee != null && s.Employee.User != null ? s.Employee.User.ProfilePictureUrl : null))
+            .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()));
 
        
         CreateMap<Notification, NotificationDto>()

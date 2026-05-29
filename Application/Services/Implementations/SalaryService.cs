@@ -180,6 +180,9 @@ namespace Application.Services.Implementations
                                   .FirstOrDefaultAsync(s => s.Id == id)
                         ?? throw new KeyNotFoundException($"Salary {id} not found");
 
+            if (salary.Status == SalaryStatus.Paid)
+                throw new InvalidOperationException("Cannot update a salary that has already been paid.");
+
             if (dto.BaseAmount.HasValue) salary.BaseAmount = dto.BaseAmount.Value;
             if (dto.Allowances.HasValue) salary.Allowances = dto.Allowances.Value;
             if (dto.Deductions.HasValue) salary.Deductions = dto.Deductions.Value;
@@ -237,6 +240,9 @@ namespace Application.Services.Implementations
                                   .GetAllQueryable()
                                   .FirstOrDefaultAsync(s => s.Id == id)
                         ?? throw new KeyNotFoundException($"Salary {id} not found");
+
+            if (salary.Status == SalaryStatus.Paid)
+                throw new InvalidOperationException("Cannot delete a salary that has already been paid.");
 
             uow.Repository<Salary>().Delete(salary);
             await uow.SaveChangesAsync();
@@ -358,6 +364,25 @@ namespace Application.Services.Implementations
             }
 
             return generatedCount;
+        }
+
+        public async Task<int> MarkAsPaidAsync(int month, int year)
+        {
+            var salaries = await uow.Repository<Salary>()
+                                    .GetAllQueryable()
+                                    .Where(s => s.Month == month && s.Year == year && s.Status == SalaryStatus.Draft)
+                                    .ToListAsync();
+
+            if (!salaries.Any()) return 0;
+
+            foreach (var salary in salaries)
+            {
+                salary.Status = SalaryStatus.Paid;
+                uow.Repository<Salary>().Update(salary);
+            }
+
+            await uow.SaveChangesAsync();
+            return salaries.Count;
         }
     }
 }

@@ -108,6 +108,12 @@
                     ('My Salaries' | t) : ('View All' | t) }}</span>
             </button>
 
+            <button *ngIf="isAdmin && hasDraftSalaries"
+                class="btn btn-success px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
+                (click)="markAsPaid()" [title]="'Approve Salaries' | t">
+                <i class="bi bi-check-circle" [class.me-md-1]="true"></i>
+                <span class="d-none d-md-inline">{{ 'Approve Salaries' | t }}</span>
+            </button>
             <button *ngIf="isAdmin"
                 class="btn btn-warning px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap text-dark"
                 (click)="generatePayroll()" [title]="'Deposit salaries' | t">
@@ -147,6 +153,7 @@
                         <th
                             class="py-3 px-3 border-bottom-0 fw-semibold text-primary">{{
                             'Net Pay' | t }}</th>
+                        <th class="py-3 px-3 border-bottom-0 fw-semibold">{{ 'Status' | t }}</th>
                         <th
                             class="py-3 px-4 border-bottom-0 fw-semibold text-end text-nowrap">{{
                             'Actions' | t }}</th>
@@ -165,7 +172,7 @@
                     </tr>
 
                     <tr *ngIf="!isLoading && salariesList.length === 0">
-                        <td [colSpan]="(isAdminOrHR && isViewingAll) ? 7 : 6"
+                        <td [colSpan]="(isAdminOrHR && isViewingAll) ? 8 : 7"
                             class="text-center py-5 no-data-td">
                             <div class="d-flex flex-column align-items-center">
                                 <div
@@ -237,6 +244,12 @@
                                 ${{ salary.grossAmount
                                 }}</div>
                         </td>
+                        <td data-label="Status" class="py-3 px-3">
+                            <span class="badge" 
+                                  [ngClass]="{'bg-secondary': salary.status === 'Draft', 'bg-success': salary.status === 'Paid'}">
+                                {{ salary.status }}
+                            </span>
+                        </td>
 
                         <td data-label="Actions"
                             class="py-3 px-4 text-end text-nowrap actions-cell">
@@ -246,7 +259,7 @@
                                 title="Download Payslip (PDF)">
                                 <i class="bi bi-file-earmark-pdf-fill"></i>
                             </button>
-                            <button *ngIf="isAdmin"
+                            <button *ngIf="isAdmin && salary.status !== 'Paid'"
                                 class="btn btn-sm btn-light text-primary rounded-circle shadow-sm"
                                 (click)="openModal(salary)" title="Edit Record">
                                 <i class="bi bi-pencil-square"></i>

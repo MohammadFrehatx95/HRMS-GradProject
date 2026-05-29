@@ -107,5 +107,15 @@ namespace HRMS_GradProject.Controllers
             int count = await salaryService.GenerateBatchAsync(dto);
             return Ok(ApiResponse<int>.Ok(count, $"Generated {count} salaries successfully"));
         }
+
+        // PUT /api/salaries/mark-paid → Admin
+        [HttpPut("mark-paid")]
+        [Authorize(Roles = "Admin")]
+        [ValidateModel]
+        public async Task<IActionResult> MarkPaid([FromBody] GeneratePayrollDto dto)
+        {
+            int count = await salaryService.MarkAsPaidAsync(dto.Month, dto.Year);
+            return Ok(ApiResponse<int>.Ok(count, $"Marked {count} salaries as paid successfully"));
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Domain.Entities;
+using Domain.Enums;
+
+namespace Domain.Entities;
 
 public class Salary
 {
@@ -11,6 +13,8 @@ public class Salary
     public int Month { get; set; }
     public int Year { get; set; }
     public DateTime EffectiveDate { get; set; }  // ← DateTime مش decimal
+    
+    public SalaryStatus Status { get; set; } = SalaryStatus.Draft;
 
     public int EmployeeId { get; set; }
     public Employee Employee { get; set; } = null!;
