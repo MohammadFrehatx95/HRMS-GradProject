@@ -10204,9 +10204,9 @@ export class PositionsComponent implements OnInit {
         <span class="d-none d-md-inline">{{ isViewingAll ? ('My Salaries' | t) : ('View All' | t) }}</span>
       </button>
 
-      <button *ngIf="isAdmin" class="btn btn-warning px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap text-dark" (click)="generatePayroll()" [title]="'Generate Payroll' | t">
+      <button *ngIf="isAdmin" class="btn btn-warning px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap text-dark" (click)="generatePayroll()" [title]="'Deposit salaries' | t">
         <i class="bi bi-magic" [class.me-md-1]="true"></i>
-        <span class="d-none d-md-inline">{{ 'Generate Payroll' | t }}</span>
+        <span class="d-none d-md-inline">{{ 'Deposit salaries' | t }}</span>
       </button>
       <button *ngIf="isAdmin" class="btn btn-primary px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="openModal()" [title]="'Add Salary' | t">
         <i class="bi bi-plus-lg" [class.me-md-1]="true"></i>
@@ -10393,12 +10393,11 @@ export class PositionsComponent implements OnInit {
   </div>
 </div>
 
-<!-- Payroll Wizard Modal -->
 <div class="modal fade" id="payrollWizardModal" tabindex="-1" aria-labelledby="payrollWizardModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
       <div class="modal-header bg-warning text-dark border-0 py-3">
-        <h5 class="modal-title fw-bold" id="payrollWizardModalLabel"><i class="bi bi-magic me-2"></i>{{ 'Payroll Wizard' | t }}</h5>
+        <h5 class="modal-title fw-bold" id="payrollWizardModalLabel"><i class="bi bi-magic me-2"></i>{{ 'Payroll' | t }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
