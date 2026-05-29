@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LeaveService } from '../../core/services/leave.service';
+import { LeaveSettingService, LeaveSetting } from '../../core/services/leave-setting.service';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
 import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
@@ -22,6 +23,7 @@ export class LeaveComponent implements OnInit {
   private authService = inject(AuthService);
   private excelExportService = inject(ExcelExportService);
   private pdfExportService = inject(PdfExportService);
+  private leaveSettingService = inject(LeaveSettingService);
 
   allLeavesList: any[] = [];
   leavesList: any[] = [];
@@ -39,6 +41,17 @@ export class LeaveComponent implements OnInit {
   emergencyLeaveBalance: number = 0;
 
   leaveModal: any;
+  settingsModal: any;
+
+  leaveSettings: LeaveSetting = {
+    resetMonth: 1,
+    resetDay: 1,
+    defaultAnnualLeave: 14,
+    defaultSickLeave: 14,
+    defaultEmergencyLeave: 3
+  };
+  isSavingSettings: boolean = false;
+  isAdmin: boolean = false;
 
   currentPage: number = 1;
   itemsPerPage: number = 7;
@@ -87,8 +100,48 @@ export class LeaveComponent implements OnInit {
 
   ngOnInit() {
     this.isAdminOrHR = this.authService.isAdminOrHR();
+    this.isAdmin = this.authService.isAdmin();
     this.loadBalances();
     this.loadLeaves();
+    if (this.isAdminOrHR) {
+      this.loadSettings();
+    }
+  }
+
+  loadSettings() {
+    this.leaveSettingService.getSettings().subscribe({
+      next: (res) => {
+        if (res) {
+          this.leaveSettings = res;
+        }
+      },
+      error: (err) => console.error('Failed to load leave settings', err)
+    });
+  }
+
+  openSettingsModal() {
+    if (!this.settingsModal) {
+      this.settingsModal = new bootstrap.Modal(
+        document.getElementById('settingsModal')
+      );
+    }
+    this.settingsModal.show();
+  }
+
+  saveSettings() {
+    if (!this.isAdmin) return;
+    this.isSavingSettings = true;
+    this.leaveSettingService.updateSettings(this.leaveSettings).subscribe({
+      next: () => {
+        this.isSavingSettings = false;
+        this.settingsModal.hide();
+        Swal.fire('Success', 'Leave settings updated successfully', 'success');
+      },
+      error: (err) => {
+        this.isSavingSettings = false;
+        Swal.fire('Error', getFriendlyErrorMessage(err), 'error');
+      }
+    });
   }
 
   loadBalances() {
@@ -140,7 +193,7 @@ export class LeaveComponent implements OnInit {
             );
           });
         }
-        // Balance calculation was removed because we now fetch it directly from the database!
+        
         
         this.isLoading = false;
       },
@@ -276,7 +329,7 @@ export class LeaveComponent implements OnInit {
     const diffTime = Math.abs(end.getTime() - start.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
-    // Validate balance according to leave type
+    
     const selectedType = Number(this.leaveData.leaveType);
     let availableBalance = 0;
     let typeName = '';

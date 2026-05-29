@@ -24,6 +24,7 @@ public class AppDbContext : DbContext
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<Meeting> Meetings { get; set; }
     public DbSet<Announcement> Announcements { get; set; }
+    public DbSet<LeaveSetting> LeaveSettings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -146,6 +147,18 @@ public class AppDbContext : DbContext
     new Position { Id = 6, Title = "Finance Manager", DepartmentId = 3 },
     new Position { Id = 7, Title = "Operations Manager", DepartmentId = 4 }
 );
+
+        modelBuilder.Entity<LeaveSetting>().HasData(
+            new LeaveSetting
+            {
+                Id = 1,
+                ResetMonth = 1,
+                ResetDay = 1,
+                DefaultAnnualLeave = 14,
+                DefaultSickLeave = 14,
+                DefaultEmergencyLeave = 3
+            }
+        );
 
 
     }

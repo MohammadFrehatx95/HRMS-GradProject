@@ -50,6 +50,7 @@ public static class DependencyInjection
         services.AddScoped<IDepartmentService, DepartmentService>();
         services.AddScoped<IPositionService, PositionService>();
         services.AddScoped<ILeaveService, LeaveService>();
+        services.AddScoped<ILeaveSettingService, LeaveSettingService>();
         services.AddScoped<IAttendanceService, AttendanceService>();
         
         services.AddScoped<ISalaryService, SalaryService>();

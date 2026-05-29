@@ -142,6 +142,8 @@ public class MappingProfile : Profile
         o => o.MapFrom(s => s.Employee != null
             ? $"{s.Employee.FirstName} {s.Employee.LastName}"
             : null));
+        CreateMap<LeaveSetting, LeaveSettingDto>();
+        CreateMap<UpdateLeaveSettingDto, LeaveSetting>();
     }
 
 // Helper method في نفس الـ MappingProfile

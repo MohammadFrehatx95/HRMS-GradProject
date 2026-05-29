@@ -2,7 +2,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Domain.Entities;
-using Domain.Interfaces;
+using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -21,29 +22,31 @@ public class LeaveResetBackgroundService(IServiceProvider serviceProvider, ILogg
             {
                 var now = DateTime.UtcNow;
                 
-                // Run on January 1st
-                if (now.Month == 1 && now.Day == 1)
+                using var scope = serviceProvider.CreateScope();
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                
+                var settings = await dbContext.LeaveSettings.FirstOrDefaultAsync(s => s.Id == 1, stoppingToken);
+                if (settings != null && now.Month == settings.ResetMonth && now.Day == settings.ResetDay)
                 {
-                    using var scope = serviceProvider.CreateScope();
-                    var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-                    
-                    var employees = await uow.Repository<Employee>().GetAllAsync();
-                    bool updated = false;
-                    
-                    foreach (var emp in employees)
+                    // Check if already reset today
+                    if (!settings.LastResetDate.HasValue || settings.LastResetDate.Value.Date != now.Date)
                     {
-                        if (emp.AnnualLeaveBalance < 14) // Only reset if it's less than 14
-                        {
-                            emp.AnnualLeaveBalance = 14;
-                            uow.Repository<Employee>().Update(emp);
-                            updated = true;
-                        }
-                    }
-                    
-                    if (updated)
-                    {
-                        await uow.SaveChangesAsync();
-                        logger.LogInformation("Annual leave balances have been reset for {Year}", now.Year);
+                        logger.LogInformation("Resetting employee leave balances based on database settings.");
+                        
+                        var rowsAffected = await dbContext.Database.ExecuteSqlRawAsync(
+                            @"UPDATE ""Employees"" 
+                              SET ""AnnualLeaveBalance"" = {0}, 
+                                  ""SickLeaveBalance"" = {1}, 
+                                  ""EmergencyLeaveBalance"" = {2}", 
+                            settings.DefaultAnnualLeave, 
+                            settings.DefaultSickLeave, 
+                            settings.DefaultEmergencyLeave);
+
+                        settings.LastResetDate = now.Date;
+                        dbContext.LeaveSettings.Update(settings);
+                        await dbContext.SaveChangesAsync(stoppingToken);
+
+                        logger.LogInformation("Successfully reset leave balances for {Count} employees.", rowsAffected);
                     }
                 }
             }

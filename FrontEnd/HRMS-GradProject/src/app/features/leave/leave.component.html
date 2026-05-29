@@ -47,6 +47,9 @@
             </div>
 
             <div class="d-flex gap-2">
+                <button *ngIf="isAdminOrHR" class="btn btn-outline-dark px-3 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="openSettingsModal()" title="Leave Settings">
+                    <i class="bi bi-gear-fill" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'Settings' | t }}</span>
+                </button>
                 <button class="btn btn-outline-danger px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="exportToPDF()" title="Export to PDF">
                     <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
                 </button>
@@ -65,7 +68,7 @@
 
     
     <div class="row mb-4 g-3" *ngIf="!isAdminOrHR">
-        <!-- Annual Leave Card -->
+        
         <div class="col-md-4">
             <div class="card border-0 shadow-sm rounded-4 bg-primary bg-opacity-10 position-relative overflow-hidden h-100">
                 <div class="position-absolute end-0 top-0 h-100 w-50" style="background: linear-gradient(90deg, transparent, rgba(13, 110, 253, 0.05)); z-index: 0;"></div>
@@ -81,13 +84,13 @@
             </div>
         </div>
 
-        <!-- Sick Leave Card -->
+        
         <div class="col-md-4">
             <div class="card border-0 shadow-sm rounded-4 bg-success bg-opacity-10 position-relative overflow-hidden h-100">
                 <div class="position-absolute end-0 top-0 h-100 w-50" style="background: linear-gradient(90deg, transparent, rgba(25, 135, 84, 0.05)); z-index: 0;"></div>
                 <div class="card-body d-flex align-items-center p-3 position-relative" style="z-index: 1;">
                     <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm me-3" style="width: 45px; height: 45px; flex-shrink: 0;">
-                        <i class="bi bi-heart-pulse-fill fs-5"></i>
+                        <i class="bi bi-heart-pulse-fill fs-5" style="margin-top: 2px; margin-left: 1px;"></i>
                     </div>
                     <div>
                         <p class="text-success small mb-0 fw-bold text-uppercase" style="letter-spacing: 0.5px;">{{ 'Sick' | t }}</p>
@@ -97,7 +100,7 @@
             </div>
         </div>
 
-        <!-- Emergency Leave Card -->
+        
         <div class="col-md-4">
             <div class="card border-0 shadow-sm rounded-4 bg-danger bg-opacity-10 position-relative overflow-hidden h-100">
                 <div class="position-absolute end-0 top-0 h-100 w-50" style="background: linear-gradient(90deg, transparent, rgba(220, 53, 69, 0.05)); z-index: 0;"></div>
@@ -347,6 +350,69 @@
                     <span *ngIf="isProcessing"
                         class="spinner-border spinner-border-sm me-2"></span>
                     Submit Request
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="settingsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow rounded-4">
+            <div class="modal-header border-bottom-0 pt-4 px-4 bg-light">
+                <h5 class="modal-title fw-bold text-dark"><i class="bi bi-gear-fill text-dark me-2"></i>{{ 'Leave Automated Reset Settings' | t }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                
+                <div class="alert alert-info border-0 shadow-sm rounded-3 d-flex align-items-center mb-4">
+                    <i class="bi bi-info-circle-fill fs-4 me-3"></i>
+                    <p class="mb-0 small">
+                        {{ 'These settings control the background system that automatically resets all employees\' leave balances. It runs daily and triggers only on the configured Month and Day.' | t }}
+                    </p>
+                </div>
+
+                <form #settingsForm="ngForm">
+                    <h6 class="fw-bold text-primary mb-3">{{ 'Reset Date Schedule' | t }}</h6>
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <label class="form-label fw-semibold text-secondary small">{{ 'Reset Month' | t }} *</label>
+                            <input type="number" class="form-control bg-light border-0" name="resetMonth" [(ngModel)]="leaveSettings.resetMonth" required min="1" max="12" [disabled]="!isAdmin">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-semibold text-secondary small">{{ 'Reset Day' | t }} *</label>
+                            <input type="number" class="form-control bg-light border-0" name="resetDay" [(ngModel)]="leaveSettings.resetDay" required min="1" max="31" [disabled]="!isAdmin">
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold text-success mb-3">{{ 'Default Balances (Days)' | t }}</h6>
+                    <div class="row mb-3">
+                        <div class="col-4">
+                            <label class="form-label fw-semibold text-secondary small">{{ 'Annual' | t }} *</label>
+                            <input type="number" class="form-control bg-light border-0" name="defaultAnnual" [(ngModel)]="leaveSettings.defaultAnnualLeave" required min="0" [disabled]="!isAdmin">
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label fw-semibold text-secondary small">{{ 'Sick' | t }} *</label>
+                            <input type="number" class="form-control bg-light border-0" name="defaultSick" [(ngModel)]="leaveSettings.defaultSickLeave" required min="0" [disabled]="!isAdmin">
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label fw-semibold text-secondary small">{{ 'Emergency' | t }} *</label>
+                            <input type="number" class="form-control bg-light border-0" name="defaultEmergency" [(ngModel)]="leaveSettings.defaultEmergencyLeave" required min="0" [disabled]="!isAdmin">
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-muted small" *ngIf="leaveSettings.lastResetDate">
+                        <i class="bi bi-clock-history me-1"></i> {{ 'Last automatic reset was on:' | t }} <strong>{{ leaveSettings.lastResetDate | date:'mediumDate' }}</strong>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer border-top-0 pb-4 px-4 bg-light">
+                <button type="button" class="btn btn-light px-4 rounded-3 fw-semibold border shadow-sm" data-bs-dismiss="modal">{{ 'Close' | t }}</button>
+                <button *ngIf="isAdmin" type="button" class="btn btn-primary px-4 rounded-3 fw-semibold shadow-sm" (click)="saveSettings()" [disabled]="settingsForm.invalid || isSavingSettings">
+                    <span *ngIf="isSavingSettings" class="spinner-border spinner-border-sm me-2"></span>
+                    {{ 'Save Settings' | t }}
                 </button>
             </div>
         </div>

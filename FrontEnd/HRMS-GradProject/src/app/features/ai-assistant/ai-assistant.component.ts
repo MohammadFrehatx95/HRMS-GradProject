@@ -188,11 +188,11 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   private callChat(text: string): void {
     this.addLoadingMessage();
     
-    // Extract last 4 messages (excluding the currently added user message and loading message)
+    
     const historyMessages = this.messages
       .filter(m => !m.loading)
-      .slice(0, -1) // Exclude the newly added user message
-      .slice(-4)    // Take up to last 4 messages
+      .slice(0, -1) 
+      .slice(-4)    
       .map(m => ({ role: m.role, content: m.content }));
 
     this.aiService.chat(text, this.aiMode, historyMessages).subscribe({
