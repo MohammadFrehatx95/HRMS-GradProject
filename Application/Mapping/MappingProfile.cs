@@ -15,7 +15,7 @@ using Application.DTOs.Salary;
 using Application.DTOs.User;
 using AutoMapper;
 using Domain.Entities;
-
+using Domain.Enums;
 
 namespace Application.Mappings;
 
