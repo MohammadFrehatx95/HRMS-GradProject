@@ -13,23 +13,23 @@ public class PayrollAdjustmentController(IPayrollAdjustmentService service) : Co
 {
     [HttpGet]
     [Authorize(Roles = "Admin,HR")]
-    public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] int? month = null, [FromQuery] int? year = null)
     {
-        var result = await service.GetAllAsync(pageNumber, pageSize);
+        var result = await service.GetAllAsync(pageNumber, pageSize, month, year);
         return Ok(ApiResponse<PagedResult<PayrollAdjustmentDto>>.Ok(result));
     }
 
     [HttpGet("employee/{employeeId}")]
     [Authorize(Roles = "Admin,HR")]
-    public async Task<IActionResult> GetByEmployeeId(int employeeId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetByEmployeeId(int employeeId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] int? month = null, [FromQuery] int? year = null)
     {
-        var result = await service.GetByEmployeeIdAsync(employeeId, pageNumber, pageSize);
+        var result = await service.GetByEmployeeIdAsync(employeeId, pageNumber, pageSize, month, year);
         return Ok(ApiResponse<PagedResult<PayrollAdjustmentDto>>.Ok(result));
     }
 
     [HttpGet("my")]
     [Authorize]
-    public async Task<IActionResult> GetMyAdjustments([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetMyAdjustments([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] int? month = null, [FromQuery] int? year = null)
     {
         var employeeIdClaim = User.FindFirstValue("employeeId");
         if (!int.TryParse(employeeIdClaim, out var empId))
@@ -37,7 +37,7 @@ public class PayrollAdjustmentController(IPayrollAdjustmentService service) : Co
             return Unauthorized(ApiResponse.Fail("Invalid employee ID claim."));
         }
 
-        var result = await service.GetByEmployeeIdAsync(empId, pageNumber, pageSize);
+        var result = await service.GetByEmployeeIdAsync(empId, pageNumber, pageSize, month, year);
         return Ok(ApiResponse<PagedResult<PayrollAdjustmentDto>>.Ok(result));
     }
 
@@ -48,6 +48,14 @@ public class PayrollAdjustmentController(IPayrollAdjustmentService service) : Co
         var success = await service.AddAdjustmentAsync(dto);
         if (!success) return BadRequest(ApiResponse.Fail("Failed to create adjustment or employee not found."));
         return Ok(ApiResponse.Ok("Adjustment created successfully."));
+    }
+
+    [HttpPost("bulk")]
+    [Authorize(Roles = "Admin,HR")]
+    public async Task<IActionResult> CreateBulk([FromBody] CreateBulkPayrollAdjustmentDto dto)
+    {
+        var count = await service.CreateBulkAsync(dto);
+        return Ok(ApiResponse.Ok($"Bulk adjustment created successfully for {count} employees."));
     }
 
     [HttpDelete("{id}")]

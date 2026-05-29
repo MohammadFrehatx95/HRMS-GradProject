@@ -10,9 +10,13 @@ namespace Application.Services.Implementations;
 
 public class PayrollAdjustmentService(IUnitOfWork uow, IEmailService emailService, INotificationService notificationService) : IPayrollAdjustmentService
 {
-    public async Task<PagedResult<PayrollAdjustmentDto>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
+    public async Task<PagedResult<PayrollAdjustmentDto>> GetAllAsync(int pageNumber = 1, int pageSize = 10, int? month = null, int? year = null)
     {
-        var query = uow.Repository<PayrollAdjustment>().GetAllQueryable().Include(p => p.Employee).ThenInclude(e => e.User);
+        var query = uow.Repository<PayrollAdjustment>().GetAllQueryable().Include(p => p.Employee).ThenInclude(e => e.User).AsQueryable();
+
+        if (month.HasValue && month.Value > 0) query = query.Where(p => p.Date.Month == month.Value);
+        if (year.HasValue && year.Value > 0) query = query.Where(p => p.Date.Year == year.Value);
+
         var total = await query.CountAsync();
         var items = await query.OrderByDescending(p => p.Date)
             .Skip((pageNumber - 1) * pageSize)
@@ -32,9 +36,13 @@ public class PayrollAdjustmentService(IUnitOfWork uow, IEmailService emailServic
         return PagedResult<PayrollAdjustmentDto>.Create(items, total, pageNumber, pageSize);
     }
 
-    public async Task<PagedResult<PayrollAdjustmentDto>> GetByEmployeeIdAsync(int employeeId, int pageNumber = 1, int pageSize = 10)
+    public async Task<PagedResult<PayrollAdjustmentDto>> GetByEmployeeIdAsync(int employeeId, int pageNumber = 1, int pageSize = 10, int? month = null, int? year = null)
     {
         var query = uow.Repository<PayrollAdjustment>().GetAllQueryable().Include(p => p.Employee).ThenInclude(e => e.User).Where(p => p.EmployeeId == employeeId);
+        
+        if (month.HasValue && month.Value > 0) query = query.Where(p => p.Date.Month == month.Value);
+        if (year.HasValue && year.Value > 0) query = query.Where(p => p.Date.Year == year.Value);
+
         var total = await query.CountAsync();
         var items = await query.OrderByDescending(p => p.Date)
             .Skip((pageNumber - 1) * pageSize)
@@ -65,7 +73,7 @@ public class PayrollAdjustmentService(IUnitOfWork uow, IEmailService emailServic
             Type = dto.Type,
             Amount = dto.Amount,
             Reason = dto.Reason,
-            Date = DateTime.UtcNow,
+            Date = new DateTime(dto.Year, dto.Month, 1, 0, 0, 0, DateTimeKind.Utc),
             IsApplied = false
         };
 
@@ -94,6 +102,65 @@ public class PayrollAdjustmentService(IUnitOfWork uow, IEmailService emailServic
         }
         
         return true;
+    }
+
+    public async Task<int> CreateBulkAsync(CreateBulkPayrollAdjustmentDto dto)
+    {
+        var employeeQuery = uow.Repository<Employee>().GetAllQueryable().Include(e => e.User).Where(e => e.IsActive);
+        
+        if (dto.DepartmentId.HasValue && dto.DepartmentId.Value > 0)
+        {
+            employeeQuery = employeeQuery.Where(e => e.DepartmentId == dto.DepartmentId.Value);
+        }
+
+        var employees = await employeeQuery.ToListAsync();
+        int count = 0;
+
+        foreach (var emp in employees)
+        {
+            var adjustment = new PayrollAdjustment
+            {
+                EmployeeId = emp.Id,
+                Type = dto.Type,
+                Amount = dto.Amount,
+                Reason = dto.Reason,
+                Date = new DateTime(dto.Year, dto.Month, 1, 0, 0, 0, DateTimeKind.Utc),
+                IsApplied = false
+            };
+            await uow.Repository<PayrollAdjustment>().AddAsync(adjustment);
+            count++;
+
+            if (!string.IsNullOrEmpty(emp.Email))
+            {
+                try
+                {
+                    await emailService.SendPayrollAdjustmentAsync(
+                        emp.Email,
+                        $"{emp.FirstName} {emp.LastName}",
+                        dto.Type.ToString(),
+                        dto.Amount,
+                        dto.Reason
+                    );
+                } catch { /* ignore */ }
+            }
+
+            if (emp.UserId != 0)
+            {
+                await notificationService.CreateAsync(
+                    emp.UserId,
+                    dto.Type == AdjustmentType.Bonus ? "Bonus Received" : "Penalty Applied",
+                    $"A {(dto.Type == AdjustmentType.Bonus ? "Bonus" : "Penalty")} of {dto.Amount} JD has been added. Reason: {dto.Reason}",
+                    NotificationType.General
+                );
+            }
+        }
+
+        if (count > 0)
+        {
+            await uow.SaveChangesAsync();
+        }
+
+        return count;
     }
 
     public async Task<bool> DeleteAdjustmentAsync(int id)

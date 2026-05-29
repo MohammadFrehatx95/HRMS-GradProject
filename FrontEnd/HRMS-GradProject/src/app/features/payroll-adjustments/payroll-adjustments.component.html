@@ -37,6 +37,20 @@
         </div>
     </div>
 
+    <div class="row mb-4 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label text-muted small fw-bold">{{ 'Month' | t }}</label>
+            <select class="form-select" [(ngModel)]="filterMonth" (change)="onFilterChange()">
+                <option value="">{{ 'All Months' | t }}</option>
+                <option *ngFor="let m of months" [value]="m.value">{{ m.label }}</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label text-muted small fw-bold">{{ 'Year' | t }}</label>
+            <input type="number" class="form-control" [(ngModel)]="filterYear" (change)="onFilterChange()" placeholder="e.g. 2026">
+        </div>
+    </div>
+
     @if (isLoading) {
     <div class="text-center my-5 py-5">
         <div class="spinner-border text-primary mb-3" role="status"
@@ -58,7 +72,9 @@
                         <th
                             class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0">Amount</th>
                         <th
-                            class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0">Date</th>
+                            class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0">Target Month</th>
+                        <th
+                            class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0">Status</th>
                         <th
                             class="py-3 px-4 text-muted small text-uppercase fw-semibold border-bottom-0">Reason</th>
                         @if (isAdminOrHR) {
@@ -105,8 +121,20 @@
                             {{ adj.type === 0 ? '-' : '+' }}{{ adj.amount |
                             number:'1.2-2' }} JD
                         </td>
-                        <td class="py-3 px-4 text-muted">{{ adj.date |
-                            date:'mediumDate' }}</td>
+                        <td class="py-3 px-4 text-muted">
+                            <span class="fw-semibold">{{ adj.date | date:'MMM yyyy' }}</span>
+                        </td>
+                        <td class="py-3 px-4">
+                            @if (adj.isApplied) {
+                            <span class="badge rounded-pill px-3 py-2" style="background-color:#d1fae5; color:#065f46; font-size:0.78rem;">
+                                <i class="bi bi-check-circle-fill me-1"></i>Applied & Paid
+                            </span>
+                            } @else {
+                            <span class="badge rounded-pill px-3 py-2" style="background-color:#fef3c7; color:#92400e; font-size:0.78rem;">
+                                <i class="bi bi-hourglass-split me-1"></i>Pending
+                            </span>
+                            }
+                        </td>
                         <td class="py-3 px-4 text-muted text-wrap">
                             {{ adj.reason }}
                         </td>
@@ -159,20 +187,45 @@
             </div>
             <form [formGroup]="addForm" (ngSubmit)="saveAdjustment()">
                 <div class="modal-body p-4">
-                    <div class="mb-3">
+                    <div class="mb-3 border-bottom pb-3">
+                        <label class="form-label fw-bold text-secondary d-block">{{ 'Apply To' | t }} <span class="text-danger">*</span></label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" formControlName="targetType" value="individual" id="targetIndividual">
+                            <label class="form-check-label" for="targetIndividual">Specific Employee</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" formControlName="targetType" value="department" id="targetDepartment">
+                            <label class="form-check-label" for="targetDepartment">Specific Department</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" formControlName="targetType" value="all" id="targetAll">
+                            <label class="form-check-label" for="targetAll">All Employees</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3" *ngIf="addForm.get('targetType')?.value === 'individual'">
                         <label class="form-label fw-bold text-secondary">{{
                             'Employee' | t }} <span
                                 class="text-danger">*</span></label>
                         <select class="form-select" formControlName="employeeId"
                             [class.is-invalid]="addForm.get('employeeId')?.invalid && addForm.get('employeeId')?.touched">
-                            <option value disabled selected>Select
-                                Employee</option>
+                            <option value disabled selected>Select Employee</option>
                             <option *ngFor="let emp of employees"
                                 [value]="emp.id">{{ emp.firstName }} {{
                                 emp.lastName }} (ID: {{emp.id}})</option>
                         </select>
-                        <div class="invalid-feedback">Please select an
-                            employee.</div>
+                        <div class="invalid-feedback">Please select an employee.</div>
+                    </div>
+
+                    <div class="mb-3" *ngIf="addForm.get('targetType')?.value === 'department'">
+                        <label class="form-label fw-bold text-secondary">{{
+                            'Department' | t }} <span
+                                class="text-danger">*</span></label>
+                        <select class="form-select" formControlName="departmentId">
+                            <option value disabled selected>Select Department</option>
+                            <option *ngFor="let dept of departments"
+                                [value]="dept.id">{{ dept.name }}</option>
+                        </select>
                     </div>
 
                     <div class="row">
@@ -195,6 +248,25 @@
                                 [class.is-invalid]="addForm.get('amount')?.invalid && addForm.get('amount')?.touched">
                             <div class="invalid-feedback">Valid amount is
                                 required.</div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label class="form-label fw-bold text-secondary">Target Month <span class="text-danger">*</span></label>
+                            <select class="form-select" formControlName="targetMonth">
+                                <option *ngFor="let m of months" [value]="m.value">{{ m.label }}</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-bold text-secondary">Target Year <span class="text-danger">*</span></label>
+                            <select class="form-select" formControlName="targetYear">
+                                <option [value]="2023">2023</option>
+                                <option [value]="2024">2024</option>
+                                <option [value]="2025">2025</option>
+                                <option [value]="2026">2026</option>
+                                <option [value]="2027">2027</option>
+                            </select>
                         </div>
                     </div>
 

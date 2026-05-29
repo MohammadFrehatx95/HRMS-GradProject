@@ -3,20 +3,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.DTOs.PayrollAdjustment;
 
-public class CreatePayrollAdjustmentDto
+public class CreateBulkPayrollAdjustmentDto
 {
     [Required]
-    public int EmployeeId { get; set; }
-
-    [Required]
     public AdjustmentType Type { get; set; }
-
+    
     [Required]
-    [Range(0.01, double.MaxValue, ErrorMessage = "Amount must be greater than zero")]
     public decimal Amount { get; set; }
-
+    
     public string Reason { get; set; } = string.Empty;
-
+    
     [Required]
     [Range(1, 12)]
     public int Month { get; set; }
@@ -24,4 +20,10 @@ public class CreatePayrollAdjustmentDto
     [Required]
     [Range(2000, 2100)]
     public int Year { get; set; }
+
+    /// <summary>
+    /// If null, applies to ALL active employees. 
+    /// If provided, applies only to active employees in this department.
+    /// </summary>
+    public int? DepartmentId { get; set; }
 }

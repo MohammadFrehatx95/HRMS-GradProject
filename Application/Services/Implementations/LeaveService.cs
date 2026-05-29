@@ -19,12 +19,17 @@ namespace Application.Services.Implementations
         IImageService imageService,
         ILogger<LeaveService> logger) : ILeaveService
     {
-        public async Task<PagedResult<LeaveDto>> GetAllAsync(int pageNumber, int pageSize)
+        public async Task<PagedResult<LeaveDto>> GetAllAsync(int pageNumber, int pageSize, int? month = null, int? year = null)
         {
             var query = uow.Repository<Leave>()
                            .GetAllQueryable()
                            .Include(l => l.Employee).ThenInclude(e => e.User)
-                           .OrderByDescending(l => l.StartDate);
+                           .AsQueryable();
+
+            if (month.HasValue && month.Value > 0) query = query.Where(l => l.StartDate.Month == month.Value);
+            if (year.HasValue && year.Value > 0) query = query.Where(l => l.StartDate.Year == year.Value);
+
+            query = query.OrderByDescending(l => l.StartDate);
 
             var total = await query.CountAsync();
             var items = await query
@@ -37,13 +42,17 @@ namespace Application.Services.Implementations
         }
 
         public async Task<PagedResult<LeaveDto>> GetMyLeavesAsync(
-            int employeeId, int pageNumber, int pageSize)
+            int employeeId, int pageNumber, int pageSize, int? month = null, int? year = null)
         {
             var query = uow.Repository<Leave>()
                            .GetAllQueryable()
                            .Include(l => l.Employee).ThenInclude(e => e.User)
-                           .Where(l => l.EmployeeId == employeeId)
-                           .OrderByDescending(l => l.StartDate);
+                           .Where(l => l.EmployeeId == employeeId);
+
+            if (month.HasValue && month.Value > 0) query = query.Where(l => l.StartDate.Month == month.Value);
+            if (year.HasValue && year.Value > 0) query = query.Where(l => l.StartDate.Year == year.Value);
+
+            query = query.OrderByDescending(l => l.StartDate);
 
             var total = await query.CountAsync();
             var items = await query

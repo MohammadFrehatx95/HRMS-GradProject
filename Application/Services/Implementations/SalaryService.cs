@@ -18,13 +18,17 @@ namespace Application.Services.Implementations
         INotificationService notificationService,
         IEmailService emailService) : ISalaryService
     {
-        public async Task<PagedResult<SalaryDto>> GetAllAsync(int pageNumber, int pageSize)
-        {
-            var query = uow.Repository<Salary>()
-                           .GetAllQueryable()
-                           .Include(s => s.Employee).ThenInclude(e => e.User)
-                           .OrderByDescending(s => s.Year)
-                           .ThenByDescending(s => s.Month);
+    public async Task<PagedResult<SalaryDto>> GetAllAsync(int pageNumber, int pageSize, int? month = null, int? year = null)
+    {
+        var query = uow.Repository<Salary>()
+                       .GetAllQueryable()
+                       .Include(s => s.Employee).ThenInclude(e => e.User)
+                       .AsQueryable();
+
+        if (month.HasValue && month.Value > 0) query = query.Where(s => s.Month == month.Value);
+        if (year.HasValue && year.Value > 0) query = query.Where(s => s.Year == year.Value);
+
+        query = query.OrderByDescending(s => s.Year).ThenByDescending(s => s.Month);
 
             var total = await query.CountAsync();
             var items = await query
@@ -36,15 +40,17 @@ namespace Application.Services.Implementations
                 mapper.Map<List<SalaryDto>>(items), total, pageNumber, pageSize);
         }
 
-        public async Task<PagedResult<SalaryDto>> GetMyAsync(
-            int employeeId, int pageNumber, int pageSize)
-        {
-            var query = uow.Repository<Salary>()
-                           .GetAllQueryable()
-                           .Include(s => s.Employee).ThenInclude(e => e.User)
-                           .Where(s => s.EmployeeId == employeeId)
-                           .OrderByDescending(s => s.Year)
-                           .ThenByDescending(s => s.Month);
+    public async Task<PagedResult<SalaryDto>> GetMyAsync(int employeeId, int pageNumber, int pageSize, int? month = null, int? year = null)
+    {
+        var query = uow.Repository<Salary>()
+                       .GetAllQueryable()
+                       .Include(s => s.Employee).ThenInclude(e => e.User)
+                       .Where(s => s.EmployeeId == employeeId);
+
+        if (month.HasValue && month.Value > 0) query = query.Where(s => s.Month == month.Value);
+        if (year.HasValue && year.Value > 0) query = query.Where(s => s.Year == year.Value);
+
+        query = query.OrderByDescending(s => s.Year).ThenByDescending(s => s.Month);
 
             var total = await query.CountAsync();
             var items = await query

@@ -168,9 +168,13 @@ export class SalaryComponent implements OnInit {
   loadSalaries() {
 
     this.isLoading = true;
+    
+    const m = this.selectedMonth ? Number(this.selectedMonth) : undefined;
+    const y = this.selectedYear ? Number(this.selectedYear) : undefined;
+
     const request = (this.isAdminOrHR && this.isViewingAll)
-      ? this.salaryService.getAllSalaries()
-      : this.salaryService.getMySalaries();
+      ? this.salaryService.getAllSalaries(m, y)
+      : this.salaryService.getMySalaries(m, y);
 
     request.subscribe({
       next: (res: any) => {
@@ -180,13 +184,16 @@ export class SalaryComponent implements OnInit {
           : [];
         this.salariesList = [...this.allSalariesList];
 
-        const years = this.allSalariesList
-          .map((s) => s.year)
-          .filter((y) => y != null);
-        this.uniqueYears = Array.from(new Set(years))
-          .sort()
-          .reverse() as number[];
+        if (!m && !y) {
+          const years = this.allSalariesList
+            .map((s) => s.year)
+            .filter((y) => y != null);
+          this.uniqueYears = Array.from(new Set(years))
+            .sort()
+            .reverse() as number[];
+        }
 
+        this.filterSalariesLocal();
         this.isLoading = false;
       },
       error: (err) => {
@@ -197,7 +204,10 @@ export class SalaryComponent implements OnInit {
   }
 
   filterSalaries() {
+    this.loadSalaries();
+  }
 
+  filterSalariesLocal() {
     this.salariesList = this.allSalariesList.filter((s) => {
       let matchesSearch = true;
       if (this.salarySearchQuery) {
@@ -210,18 +220,7 @@ export class SalaryComponent implements OnInit {
           empId.includes(query) ||
           baseAmt.includes(query);
       }
-
-      let matchesYear = true;
-      if (this.selectedYear) {
-        matchesYear = String(s.year) === this.selectedYear;
-      }
-
-      let matchesMonth = true;
-      if (this.selectedMonth) {
-        matchesMonth = String(s.month) === this.selectedMonth;
-      }
-
-      return matchesSearch && matchesYear && matchesMonth;
+      return matchesSearch;
     });
 
     if (this.salariesList.length > 0) {

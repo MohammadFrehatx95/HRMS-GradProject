@@ -5,8 +5,8 @@ namespace Application.Services.Interfaces
 {
     public interface ILeaveService
     {
-        Task<PagedResult<LeaveDto>> GetAllAsync(int pageNumber, int pageSize);
-        Task<PagedResult<LeaveDto>> GetMyLeavesAsync(int employeeId, int pageNumber, int pageSize);
+        Task<PagedResult<LeaveDto>> GetAllAsync(int pageNumber, int pageSize, int? month = null, int? year = null);
+        Task<PagedResult<LeaveDto>> GetMyLeavesAsync(int employeeId, int pageNumber, int pageSize, int? month = null, int? year = null);
         Task<LeaveDto?> GetByIdAsync(int id);
 
         // FIX: endpoint خاص للموظف يجيب طلبه بالـ ID مع التحقق من الملكية

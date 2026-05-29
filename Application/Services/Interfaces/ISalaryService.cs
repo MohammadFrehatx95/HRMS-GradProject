@@ -11,8 +11,8 @@ namespace Application.Services.Interfaces
    
     public interface ISalaryService
     {
-        Task<PagedResult<SalaryDto>> GetAllAsync(int pageNumber, int pageSize);
-        Task<PagedResult<SalaryDto>> GetMyAsync(int employeeId, int pageNumber, int pageSize);
+        Task<PagedResult<SalaryDto>> GetAllAsync(int pageNumber, int pageSize, int? month = null, int? year = null);
+        Task<PagedResult<SalaryDto>> GetMyAsync(int employeeId, int pageNumber, int pageSize, int? month = null, int? year = null);
         Task<SalaryDto?> GetByIdAsync(int id);
         Task<SalaryDto> CreateAsync(CreateSalaryDto dto);
         Task<SalaryDto> UpdateAsync(int id, UpdateSalaryDto dto);

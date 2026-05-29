@@ -11,9 +11,12 @@ export class LeaveService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/leaves`;
 
-  getMyLeaves(): Observable<any[]> {
+  getMyLeaves(month?: number, year?: number): Observable<any[]> {
+    let url = `${this.apiUrl}/my?pageNumber=1&pageSize=1000`;
+    if (month) url += `&month=${month}`;
+    if (year) url += `&year=${year}`;
     return this.http
-      .get<any>(`${this.apiUrl}/my?pageNumber=1&pageSize=1000`)
+      .get<any>(url)
       .pipe(
         map((response) => {
           if (response && response.data && response.data.items)
@@ -29,8 +32,11 @@ export class LeaveService {
     return this.http.post<any>(this.apiUrl, payload);
   }
 
-  getAllLeaves(): Observable<any[]> {
-    return this.http.get<any>(`${this.apiUrl}?pageNumber=1&pageSize=1000`).pipe(
+  getAllLeaves(month?: number, year?: number): Observable<any[]> {
+    let url = `${this.apiUrl}?pageNumber=1&pageSize=1000`;
+    if (month) url += `&month=${month}`;
+    if (year) url += `&year=${year}`;
+    return this.http.get<any>(url).pipe(
       map((response) => {
         if (response && response.data && response.data.items)
           return response.data.items;

@@ -26,6 +26,7 @@ export class AttendanceComponent implements OnInit {
 
   searchQuery: string = '';
   selectedStatus: string = '';
+  selectedDate: string = '';
 
   isLoading = true;
   isProcessing = false;
@@ -84,16 +85,22 @@ export class AttendanceComponent implements OnInit {
   loadAllAttendance() {
 
     this.isLoading = true;
-    this.attendanceService.getAllAttendance().subscribe({
+    const d = this.selectedDate || undefined;
+    this.attendanceService.getAllAttendance(d).subscribe({
       next: (res: any) => {
         const items = Array.isArray(res)
           ? res
           : (res?.items ?? res?.data?.items ?? res?.data ?? []);
         this.allAttendanceRecords = Array.isArray(items) ? items : [];
-        this.allAttendanceRecords.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-        );
+        
+        if (!d) {
+           this.allAttendanceRecords.sort(
+             (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+           );
+        }
+        
         this.attendanceRecords = [...this.allAttendanceRecords];
+        this.filterRecordsLocal();
         this.isLoading = false;
       },
       error: () => {
@@ -105,7 +112,8 @@ export class AttendanceComponent implements OnInit {
   loadMyAttendance() {
 
     this.isLoading = true;
-    this.attendanceService.getMyAttendance().subscribe({
+    const d = this.selectedDate || undefined;
+    this.attendanceService.getMyAttendance(d).subscribe({
       next: (res: any) => {
         const items = Array.isArray(res)
           ? res
@@ -113,6 +121,7 @@ export class AttendanceComponent implements OnInit {
         this.allAttendanceRecords = Array.isArray(items) ? items : [];
         this.attendanceRecords = [...this.allAttendanceRecords];
         this.analyzeSessionStatus(this.attendanceRecords);
+        this.filterRecordsLocal();
         this.isLoading = false;
       },
       error: (err) => {
@@ -123,6 +132,14 @@ export class AttendanceComponent implements OnInit {
   }
 
   filterRecords() {
+    if (this.isAdmin) {
+      this.loadAllAttendance();
+    } else {
+      this.loadMyAttendance();
+    }
+  }
+
+  filterRecordsLocal() {
     this.attendanceRecords = this.allAttendanceRecords.filter((rec) => {
       let matchesSearch = true;
       if (this.searchQuery) {

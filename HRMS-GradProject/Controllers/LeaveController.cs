@@ -24,9 +24,11 @@ namespace HRMS_GradProject.Controllers
         [Authorize(Roles = "Admin,HR")]
         public async Task<IActionResult> GetAll(
             [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 10)
+            [FromQuery] int pageSize = 10,
+            [FromQuery] int? month = null,
+            [FromQuery] int? year = null)
         {
-            var result = await leaveService.GetAllAsync(pageNumber, pageSize);
+            var result = await leaveService.GetAllAsync(pageNumber, pageSize, month, year);
             return Ok(ApiResponse<PagedResult<LeaveDto>>.Ok(result));
         }
 
@@ -34,13 +36,15 @@ namespace HRMS_GradProject.Controllers
         [HttpGet("my")]
         public async Task<IActionResult> GetMyLeaves(
             [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 10)
+            [FromQuery] int pageSize = 10,
+            [FromQuery] int? month = null,
+            [FromQuery] int? year = null)
         {
             var employeeId = GetEmployeeId();
             if (employeeId is null)
                 return BadRequest(ApiResponse.Fail("Your account is not linked to an employee profile"));
 
-            var result = await leaveService.GetMyLeavesAsync(employeeId.Value, pageNumber, pageSize);
+            var result = await leaveService.GetMyLeavesAsync(employeeId.Value, pageNumber, pageSize, month, year);
             return Ok(ApiResponse<PagedResult<LeaveDto>>.Ok(result));
         }
 

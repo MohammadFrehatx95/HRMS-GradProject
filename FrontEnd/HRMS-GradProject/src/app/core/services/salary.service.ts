@@ -11,8 +11,11 @@ export class SalaryService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/salaries`;
 
-  getAllSalaries(): Observable<any[]> {
-    return this.http.get<any>(`${this.apiUrl}?pageNumber=1&pageSize=1000`).pipe(
+  getAllSalaries(month?: number, year?: number): Observable<any[]> {
+    let url = `${this.apiUrl}?pageNumber=1&pageSize=1000`;
+    if (month) url += `&month=${month}`;
+    if (year) url += `&year=${year}`;
+    return this.http.get<any>(url).pipe(
       map((response) => {
         if (response && response.data && response.data.items)
           return response.data.items;
@@ -23,10 +26,11 @@ export class SalaryService {
     );
   }
 
-  getMySalaries(): Observable<any[]> {
-    return this.http
-      .get<any>(`${this.apiUrl}/my?pageNumber=1&pageSize=1000`)
-      .pipe(
+  getMySalaries(month?: number, year?: number): Observable<any[]> {
+    let url = `${this.apiUrl}/my?pageNumber=1&pageSize=1000`;
+    if (month) url += `&month=${month}`;
+    if (year) url += `&year=${year}`;
+    return this.http.get<any>(url).pipe(
         map((response) => {
           if (response && response.data && response.data.items)
             return response.data.items;

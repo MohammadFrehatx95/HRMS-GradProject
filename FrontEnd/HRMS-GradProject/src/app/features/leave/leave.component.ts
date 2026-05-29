@@ -31,6 +31,10 @@ export class LeaveComponent implements OnInit {
   leaveSearchQuery: string = '';
   selectedLeaveStatus: string = '';
   selectedLeaveType: string = '';
+  selectedMonth: string = '';
+  selectedYear: string = '';
+  
+  uniqueYears: number[] = [];
 
   isLoading: boolean = true;
   isProcessing: boolean = false;
@@ -160,10 +164,12 @@ export class LeaveComponent implements OnInit {
   loadLeaves() {
 
     this.isLoading = true;
+    const m = this.selectedMonth ? Number(this.selectedMonth) : undefined;
+    const y = this.selectedYear ? Number(this.selectedYear) : undefined;
 
     const request = this.isAdminOrHR
-      ? this.leaveService.getAllLeaves()
-      : this.leaveService.getMyLeaves();
+      ? this.leaveService.getAllLeaves(m, y)
+      : this.leaveService.getMyLeaves(m, y);
 
     request.subscribe({
       next: (res: any) => {
@@ -178,23 +184,19 @@ export class LeaveComponent implements OnInit {
         }
 
         this.allLeavesList = extracted;
-        this.leavesList = [...this.allLeavesList];
-
-        if (this.isAdminOrHR && this.leavesList.length > 0) {
-          this.leavesList.sort((a, b) => {
-            const statusA = this.getStatusText(a.status);
-            const statusB = this.getStatusText(b.status);
-
-            if (statusA === 'Pending' && statusB !== 'Pending') return -1;
-            if (statusA !== 'Pending' && statusB === 'Pending') return 1;
-
-            return (
-              new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
-            );
-          });
+        
+        if (!m && !y) {
+          const years = this.allLeavesList
+            .map((s) => new Date(s.startDate).getFullYear())
+            .filter((y) => !isNaN(y));
+          this.uniqueYears = Array.from(new Set(years))
+            .sort()
+            .reverse() as number[];
         }
         
-        
+        this.leavesList = [...this.allLeavesList];
+        this.filterLeavesLocal();
+
         this.isLoading = false;
       },
       error: (err) => {
@@ -206,6 +208,10 @@ export class LeaveComponent implements OnInit {
   }
 
   filterLeaves() {
+    this.loadLeaves();
+  }
+
+  filterLeavesLocal() {
 
     this.leavesList = this.allLeavesList.filter((l) => {
       let matchesSearch = true;

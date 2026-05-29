@@ -21,7 +21,12 @@
                 <input type="text" class="form-control border-start-0 ps-0" 
                     placeholder="{{ 'Search employees...' | t }}" 
                     [(ngModel)]="searchQuery" 
-                    (input)="filterRecords()">
+                    (input)="filterRecordsLocal()">
+            </div>
+            
+            <div class="input-group shadow-sm" style="max-width: 250px;">
+                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-calendar"></i></span>
+                <input type="date" class="form-control border-start-0 ps-0" [(ngModel)]="selectedDate" (change)="filterRecords()">
             </div>
 
             <div class="d-flex gap-2">
@@ -44,7 +49,7 @@
                     <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">{{ 'Filter Options' | t }}</h6>
                     <div class="mb-0">
                         <label class="form-label small fw-semibold text-muted mb-1">{{ 'Status' | t }}</label>
-                        <select class="form-select form-select-sm border-light-subtle" [(ngModel)]="selectedStatus" (change)="filterRecords()">
+                        <select class="form-select form-select-sm border-light-subtle" [(ngModel)]="selectedStatus" (change)="filterRecordsLocal()">
                             <option value="">{{ 'All Statuses' | t }}</option>
                             <option value="Completed">{{ 'Completed' | t }}</option>
                             <option value="Working">{{ 'Working' | t }}</option>

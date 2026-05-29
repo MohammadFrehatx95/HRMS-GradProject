@@ -22,12 +22,16 @@ namespace Application.Services.Implementations
         private readonly AttendanceSettings _attendanceSettings = attendanceOptions.Value;
 
         public async Task<PagedResult<AttendanceDto>> GetAllAsync(
-            int pageNumber, int pageSize)
+            int pageNumber, int pageSize, DateTime? date = null)
         {
             var query = uow.Repository<Attendance>()
                            .GetAllQueryable()
                            .Include(a => a.Employee).ThenInclude(e => e.User)
-                           .OrderByDescending(a => a.Date);
+                           .AsQueryable();
+
+            if (date.HasValue) query = query.Where(a => a.Date.Date == date.Value.Date);
+
+            query = query.OrderByDescending(a => a.Date);
 
             var total = await query.CountAsync();
             var items = await query
@@ -40,13 +44,16 @@ namespace Application.Services.Implementations
         }
 
         public async Task<PagedResult<AttendanceDto>> GetMyAttendanceAsync(
-            int employeeId, int pageNumber, int pageSize)
+            int employeeId, int pageNumber, int pageSize, DateTime? date = null)
         {
             var query = uow.Repository<Attendance>()
                            .GetAllQueryable()
                            .Include(a => a.Employee).ThenInclude(e => e.User)
-                           .Where(a => a.EmployeeId == employeeId)
-                           .OrderByDescending(a => a.Date);
+                           .Where(a => a.EmployeeId == employeeId);
+
+            if (date.HasValue) query = query.Where(a => a.Date.Date == date.Value.Date);
+
+            query = query.OrderByDescending(a => a.Date);
 
             var total = await query.CountAsync();
             var items = await query

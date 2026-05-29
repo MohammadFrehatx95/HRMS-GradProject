@@ -16,7 +16,7 @@
                 <input type="text" class="form-control border-start-0 ps-0" 
                     placeholder="{{ 'Search by name, ID, or reason...' | t }}"
                     [(ngModel)]="leaveSearchQuery" 
-                    (input)="filterLeaves()">
+                    (input)="filterLeavesLocal()">
             </div>
 
             <div class="dropdown">
@@ -28,19 +28,46 @@
                     
                     <div class="mb-3">
                         <label class="form-label small fw-semibold text-muted mb-1">{{ 'Leave Type' | t }}</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="selectedLeaveType" (change)="filterLeaves()">
+                        <select class="form-select form-select-sm" [(ngModel)]="selectedLeaveType" (change)="filterLeavesLocal()">
                             <option value="">{{ 'All Types' | t }}</option>
                             <option *ngFor="let type of leaveTypes" [value]="type.name">{{ type.name }}</option>
                         </select>
                     </div>
                     
-                    <div class="mb-2">
+                    <div class="mb-3">
                         <label class="form-label small fw-semibold text-muted mb-1">{{ 'Status' | t }}</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="selectedLeaveStatus" (change)="filterLeaves()">
+                        <select class="form-select form-select-sm" [(ngModel)]="selectedLeaveStatus" (change)="filterLeavesLocal()">
                             <option value="">{{ 'All Statuses' | t }}</option>
                             <option value="Pending">{{ 'Pending' | t }}</option>
                             <option value="Approved">{{ 'Approved' | t }}</option>
                             <option value="Rejected">{{ 'Rejected' | t }}</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold text-muted mb-1">{{ 'Year' | t }}</label>
+                        <select class="form-select form-select-sm" [(ngModel)]="selectedYear" (change)="filterLeaves()">
+                            <option value="">{{ 'All Years' | t }}</option>
+                            <option *ngFor="let yr of uniqueYears" [value]="yr">{{ yr }}</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label small fw-semibold text-muted mb-1">{{ 'Month' | t }}</label>
+                        <select class="form-select form-select-sm" [(ngModel)]="selectedMonth" (change)="filterLeaves()">
+                            <option value="">{{ 'All Months' | t }}</option>
+                            <option value="1">{{ 'January' | t }}</option>
+                            <option value="2">{{ 'February' | t }}</option>
+                            <option value="3">{{ 'March' | t }}</option>
+                            <option value="4">{{ 'April' | t }}</option>
+                            <option value="5">{{ 'May' | t }}</option>
+                            <option value="6">{{ 'June' | t }}</option>
+                            <option value="7">{{ 'July' | t }}</option>
+                            <option value="8">{{ 'August' | t }}</option>
+                            <option value="9">{{ 'September' | t }}</option>
+                            <option value="10">{{ 'October' | t }}</option>
+                            <option value="11">{{ 'November' | t }}</option>
+                            <option value="12">{{ 'December' | t }}</option>
                         </select>
                     </div>
                 </div>

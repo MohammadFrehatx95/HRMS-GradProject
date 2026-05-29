@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { PayrollAdjustmentService } from '../../core/services/payroll-adjustments.service';
 import { EmployeeService } from '../../core/services/employee.service';
+import { DepartmentService } from '../../core/services/department.service';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
 import { AdjustmentType, PayrollAdjustmentDto } from '../../core/models/payroll-adjustment.model';
@@ -24,6 +25,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
   private fb = inject(FormBuilder);
   private adjustmentService = inject(PayrollAdjustmentService);
   private employeeService = inject(EmployeeService);
+  private departmentService = inject(DepartmentService);
   private authService = inject(AuthService);
   private pdfExportService = inject(PdfExportService);
   private excelExportService = inject(ExcelExportService);
@@ -31,6 +33,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
 
   adjustments: PayrollAdjustmentDto[] = [];
   employees: any[] = [];
+  departments: any[] = [];
   isLoading = false;
   isSubmitting = false;
   isAdminOrHR = false;
@@ -44,13 +47,30 @@ export class PayrollAdjustmentsComponent implements OnInit {
   pageNumber = 1;
   pageSize = 100;
   totalItems = 0;
+  
+  filterMonth: number | '' = '';
+  filterYear: number | '' = new Date().getFullYear();
+
+  months = [
+    { value: 1, label: 'January' }, { value: 2, label: 'February' },
+    { value: 3, label: 'March' }, { value: 4, label: 'April' },
+    { value: 5, label: 'May' }, { value: 6, label: 'June' },
+    { value: 7, label: 'July' }, { value: 8, label: 'August' },
+    { value: 9, label: 'September' }, { value: 10, label: 'October' },
+    { value: 11, label: 'November' }, { value: 12, label: 'December' }
+  ];
 
   constructor() {
+    const now = new Date();
     this.addForm = this.fb.group({
-      employeeId: ['', Validators.required],
+      targetType: ['individual', Validators.required],
+      employeeId: [''],
+      departmentId: [''],
       type: [AdjustmentType.Penalty, Validators.required],
       amount: ['', [Validators.required, Validators.min(0.01)]],
-      reason: ['', [Validators.required, Validators.maxLength(250)]]
+      reason: ['', [Validators.required, Validators.maxLength(500)]],
+      targetMonth: [now.getMonth() + 1, [Validators.required, Validators.min(1), Validators.max(12)]],
+      targetYear: [now.getFullYear(), [Validators.required, Validators.min(2000), Validators.max(2100)]]
     });
   }
 
@@ -60,15 +80,35 @@ export class PayrollAdjustmentsComponent implements OnInit {
     this.loadAdjustments();
     if (this.isAdminOrHR) {
       this.loadEmployees();
+      this.loadDepartments();
     }
+  }
+
+  onFilterChange() {
+    this.pageNumber = 1;
+    this.loadAdjustments();
+  }
+
+  loadDepartments() {
+    this.departmentService.getDepartments().subscribe({
+      next: (res: any) => {
+        let extracted = [];
+        if (Array.isArray(res)) extracted = res;
+        else if (res?.data && Array.isArray(res.data)) extracted = res.data;
+        this.departments = extracted;
+      }
+    });
   }
 
   loadAdjustments() {
     this.isLoading = true;
     
+    const m = this.filterMonth ? Number(this.filterMonth) : undefined;
+    const y = this.filterYear ? Number(this.filterYear) : undefined;
+
     const request = this.isAdminOrHR 
-      ? this.adjustmentService.getAll(this.pageNumber, this.pageSize)
-      : this.adjustmentService.getMyAdjustments(this.pageNumber, this.pageSize);
+      ? this.adjustmentService.getAll(this.pageNumber, this.pageSize, m, y)
+      : this.adjustmentService.getMyAdjustments(this.pageNumber, this.pageSize, m, y);
 
     request.subscribe({
       next: (res: any) => {
@@ -108,7 +148,13 @@ export class PayrollAdjustmentsComponent implements OnInit {
   }
 
   openAddModal() {
-    this.addForm.reset({ type: AdjustmentType.Penalty });
+    const now = new Date();
+    this.addForm.reset({
+      targetType: 'individual',
+      type: AdjustmentType.Penalty,
+      targetMonth: now.getMonth() + 1,
+      targetYear: now.getFullYear()
+    });
     const modalElement = document.getElementById('addAdjustmentModal');
     if (modalElement) {
       const modal = new bootstrap.Modal(modalElement);
@@ -124,10 +170,40 @@ export class PayrollAdjustmentsComponent implements OnInit {
 
     this.isSubmitting = true;
     const dto = this.addForm.value;
+    const target = dto.targetType;
 
-    this.adjustmentService.create(dto).subscribe({
-      next: () => {
-        Swal.fire('Success', 'Adjustment created successfully', 'success');
+    let request;
+    if (target === 'individual') {
+      if (!dto.employeeId) {
+        Swal.fire('Error', 'Please select an employee', 'error');
+        this.isSubmitting = false;
+        return;
+      }
+      request = this.adjustmentService.create({
+        employeeId: Number(dto.employeeId),
+        type: dto.type,
+        amount: dto.amount,
+        reason: dto.reason,
+        month: dto.targetMonth,
+        year: dto.targetYear
+      });
+    } else {
+      const bulkDto: any = {
+        type: dto.type,
+        amount: dto.amount,
+        reason: dto.reason,
+        month: dto.targetMonth,
+        year: dto.targetYear
+      };
+      if (target === 'department' && dto.departmentId) {
+        bulkDto.departmentId = Number(dto.departmentId);
+      }
+      request = this.adjustmentService.createBulk(bulkDto);
+    }
+
+    request.subscribe({
+      next: (res: any) => {
+        Swal.fire('Success', res?.message || 'Adjustment created successfully', 'success');
         this.loadAdjustments();
         this.isSubmitting = false;
         const modalElement = document.getElementById('addAdjustmentModal');
