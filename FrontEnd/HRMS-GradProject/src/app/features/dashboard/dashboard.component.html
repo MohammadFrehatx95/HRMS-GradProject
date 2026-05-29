@@ -7,9 +7,12 @@
                 
                 <div class="ann-header px-4 py-3 d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center gap-2">
-                        <div class="ann-icon-wrap">
-                            <i class="bi bi-megaphone-fill"></i>
-                        </div>
+                        <button class="btn btn-light rounded-circle ann-icon-wrap d-flex align-items-center justify-content-center border-0" 
+                                style="width: 40px; height: 40px; cursor: pointer; transition: background-color 0.2s;" 
+                                (click)="toggleAnnouncements()"
+                                [title]="isAnnouncementsVisible ? ('Hide Announcements' | t) : ('Show Announcements' | t)">
+                            <i class="bi bi-megaphone-fill text-primary" [ngClass]="{'opacity-75': !isAnnouncementsVisible}"></i>
+                        </button>
                         <div>
                             <h6 class="fw-bold m-0 text-dark" style="font-size: 0.95rem;">{{ 'Company Announcements' | t }}</h6>
                             <small class="text-muted" style="font-size: 0.75rem;">{{ announcements.length }} {{ 'active announcement(s)' | t }}</small>
@@ -20,11 +23,12 @@
                     </button>
                 </div>
 
-                
-                <div *ngIf="announcements.length === 0" class="text-center py-4 px-4 bg-white">
-                    <i class="bi bi-megaphone text-muted" style="font-size: 2rem; opacity: 0.4;"></i>
-                    <p class="text-muted small mt-2 mb-0">{{ 'No announcements at this time.' | t }}</p>
-                </div>
+                <div *ngIf="isAnnouncementsVisible" class="announcements-body-wrapper" style="animation: fadeIn 0.3s ease-in-out;">
+                    
+                    <div *ngIf="announcements.length === 0" class="text-center py-4 px-4 bg-white">
+                        <i class="bi bi-megaphone text-muted" style="font-size: 2rem; opacity: 0.4;"></i>
+                        <p class="text-muted small mt-2 mb-0">{{ 'No announcements at this time.' | t }}</p>
+                    </div>
 
                 
                 <div class="ann-scroll-area bg-white" style="max-height: 260px; overflow-y: auto;">
@@ -61,6 +65,7 @@
                             <i class="bi bi-trash3" style="font-size: 0.85rem;"></i>
                         </button>
                     </div>
+                </div>
                 </div>
             </div>
         </div>

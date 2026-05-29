@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 public class CreateEmployeeDto
 {
@@ -20,4 +20,5 @@ public class CreateEmployeeDto
     public int UserId { get; set; } 
     [Required]
     public int PositionId { get; set; }
+    public bool IsActive { get; set; } = true;
 }

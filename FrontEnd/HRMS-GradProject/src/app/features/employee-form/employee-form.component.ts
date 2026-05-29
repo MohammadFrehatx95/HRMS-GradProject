@@ -56,6 +56,7 @@ export class EmployeeFormComponent implements OnInit {
     ),
     userId: new FormControl('', Validators.required),
     password: new FormControl('', [Validators.minLength(6)]),
+    isActive: new FormControl(true),
   });
 
   ngOnInit() {
@@ -129,6 +130,7 @@ export class EmployeeFormComponent implements OnInit {
           departmentId: profile.departmentId || '',
           positionId: profile.positionId || '',
           userId: profile.userId || '',
+          isActive: profile.isActive !== false,
         });
 
         this.linkedUserInfo = {
@@ -268,6 +270,7 @@ export class EmployeeFormComponent implements OnInit {
       ...rawValues,
       departmentId: Number(rawValues.departmentId),
       positionId: Number(rawValues.positionId),
+      isActive: rawValues.isActive,
       hireDate: rawValues.hireDate
         ? new Date(rawValues.hireDate).toISOString()
         : new Date().toISOString(),

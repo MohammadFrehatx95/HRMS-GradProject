@@ -15,8 +15,9 @@
 
         <!-- Primary Action Buttons -->
         <div class="d-flex gap-2" *ngIf="isAdmin">
-            <button *ngIf="hasDraftSalaries"
+            <button
                 class="btn btn-success px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
+                [disabled]="!hasDraftSalaries || isLoading"
                 (click)="markAsPaid()" [title]="'Approve Salaries' | t">
                 <i class="bi bi-check-circle" [class.me-md-1]="true"></i>
                 <span class="d-none d-md-inline">{{ 'Approve Salaries' | t }}</span>
@@ -138,14 +139,29 @@
 
                 <tbody class="border-top-0">
 
-                    <tr *ngIf="isLoading">
-                        <td colspan="7"
-                            class="text-center py-5 text-muted no-data-td">
-                            <span
-                                class="spinner-border spinner-border-sm me-2"></span>
-                            {{ 'Loading...' | t }}
-                        </td>
-                    </tr>
+                    <ng-container *ngIf="isLoading">
+                        <tr *ngFor="let i of [1,2,3,4,5]">
+                            <td *ngIf="isAdminOrHR && isViewingAll" class="py-3 px-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="skeleton-line rounded-circle me-2" style="width: 32px; height: 32px;"></div>
+                                    <div class="skeleton-line w-50"></div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4">
+                                <div class="skeleton-line w-75 mb-1"></div>
+                                <div class="skeleton-line w-50" style="height: 10px;"></div>
+                            </td>
+                            <td class="py-3 px-3"><div class="skeleton-line w-50"></div></td>
+                            <td class="py-3 px-3"><div class="skeleton-line w-50"></div></td>
+                            <td class="py-3 px-3"><div class="skeleton-line w-50"></div></td>
+                            <td class="py-3 px-3">
+                                <div class="skeleton-line w-75 mb-1"></div>
+                                <div class="skeleton-line w-50" style="height: 10px;"></div>
+                            </td>
+                            <td class="py-3 px-3"><div class="skeleton-line w-50 rounded-pill"></div></td>
+                            <td class="py-3 px-4 text-end"><div class="skeleton-line w-50 ms-auto"></div></td>
+                        </tr>
+                    </ng-container>
 
                     <tr *ngIf="!isLoading && salariesList.length === 0">
                         <td [colSpan]="(isAdminOrHR && isViewingAll) ? 8 : 7"
