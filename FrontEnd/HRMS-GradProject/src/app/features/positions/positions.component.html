@@ -1,5 +1,7 @@
-<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-    <div class="d-flex align-items-center">
+<!-- Top Row: Title and Primary Actions -->
+<div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-3">
+    <!-- Title Section -->
+    <div class="d-flex align-items-center mt-1">
         <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
             <i class="bi bi-briefcase-fill fs-4"></i>
         </div>
@@ -8,20 +10,26 @@
             <p class="text-muted mb-0 small">{{ 'Manage company job titles and roles' | t }}</p>
         </div>
     </div>
-    <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
-        <div class="d-flex gap-2">
-            <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
-                <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> 
-                <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
-            </button>
-            <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
-                <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i> 
-                <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
-            </button>
-        </div>
+
+    <!-- Primary Action Buttons -->
+    <div class="d-flex gap-2">
         <button class="btn btn-primary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="openModal()">
             <i class="bi bi-plus-lg" [class.me-md-1]="true"></i> 
             <span class="d-none d-md-inline">{{ 'Add Position' | t }}</span>
+        </button>
+    </div>
+</div>
+
+<!-- Bottom Row: Secondary Actions -->
+<div class="d-flex justify-content-end align-items-center mb-4 flex-wrap gap-3 bg-white p-3 rounded-4 shadow-sm border border-light">
+    <div class="d-flex gap-2">
+        <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
+            <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> 
+            <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
+        </button>
+        <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
+            <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i> 
+            <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
         </button>
     </div>
 </div>

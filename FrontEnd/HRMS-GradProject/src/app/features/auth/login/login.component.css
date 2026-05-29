@@ -1,4 +1,4 @@
-﻿.login-wrapper {
+.login-wrapper {
     background: linear-gradient(135deg, #0f1b2d 0%, #1a2e45 40%, #0d2137 100%);
     position: relative;
     overflow-x: hidden;
@@ -77,13 +77,12 @@
 .login-card {
     position: relative;
     z-index: 1;
-}
-
-.login-card {
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     background-image: 
-        radial-gradient(rgba(0, 0, 0, 0.09) 2px, transparent 2px),
-        radial-gradient(circle at bottom left, rgba(255, 248, 225, 0.4) 0%, #ffffff 60%);
+        radial-gradient(rgba(0, 0, 0, 0.05) 2px, transparent 2px),
+        radial-gradient(circle at bottom left, rgba(255, 248, 225, 0.4) 0%, rgba(255, 255, 255, 0.4) 60%);
     background-size: 24px 24px, 100% 100%;
     background-position: 0 0, 0 0;
     border-radius: 2.5rem;
@@ -91,8 +90,8 @@
     max-width: 95vw;
     min-height: 750px; 
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
 }
 
 .login-form-section {
@@ -111,13 +110,17 @@
 }
 
 .custom-input {
-    background-color: #f9fafb;
+    background-color: rgba(249, 250, 251, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     transition: all 0.3s;
     font-size: 0.95rem;
+    border: 1px solid rgba(229, 231, 235, 0.5) !important;
 }
 
 .custom-input:focus {
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 214, 107, 0.8) !important;
     box-shadow: 0 0 0 4px rgba(255, 214, 107, 0.3) !important;
     outline: none;
 }
@@ -144,19 +147,23 @@ div:has(.custom-input.is-invalid) .invalid-feedback {
 }
 
 .submit-btn {
-    background-color: #fed35c;
+    background: linear-gradient(135deg, #fed35c, #f5c43d);
     border: none;
-    transition: all 0.3s;
-    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 1.05rem;
+    box-shadow: 0 4px 15px rgba(254, 211, 92, 0.4) !important;
 }
 
 .submit-btn:hover {
-    background-color: #f5c43d;
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #f5c43d, #eab308);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(254, 211, 92, 0.5) !important;
 }
 
 .submit-btn:disabled {
     opacity: 0.7;
+    transform: none;
+    box-shadow: none !important;
 }
 
 @media (max-width: 991px) {
