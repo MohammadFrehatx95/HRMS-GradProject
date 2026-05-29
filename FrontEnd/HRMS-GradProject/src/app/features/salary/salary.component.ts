@@ -264,6 +264,34 @@ export class SalaryComponent implements OnInit {
     }
   }
 
+  generatePayroll() {
+    Swal.fire({
+      title: 'Generate Payroll?',
+      text: 'This will auto-generate salaries for all active employees for the current month. Are you sure?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Generate',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        const currentMonth = new Date().getMonth() + 1;
+        const currentYear = new Date().getFullYear();
+        this.salaryService.generateBatch(currentMonth, currentYear).subscribe({
+          next: (res: any) => {
+            const count = res?.data ?? res;
+            Swal.fire('Success', `Generated ${count} salaries successfully.`, 'success');
+            this.loadSalaries();
+          },
+          error: (err) => {
+            this.isLoading = false;
+            this.handleError(err);
+          }
+        });
+      }
+    });
+  }
+
   saveSalary() {
 
     this.isProcessing = true;

@@ -1,4 +1,4 @@
-﻿using Application.Common;
+using Application.Common;
 using Application.DTOs.Department;
 using Application.Services.Interfaces;
 using HRMS_API.Filters;
@@ -33,7 +33,7 @@ public class DepartmentController(IDepartmentService departmentService) : Contro
 
     // POST api/departments
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,HR")]
     [ValidateModel]
     public async Task<IActionResult> Create([FromBody] CreateDepartmentDto dto)
     {
@@ -44,7 +44,7 @@ public class DepartmentController(IDepartmentService departmentService) : Contro
 
     // PUT api/departments/5
     [HttpPut("{id}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,HR")]
     [ValidateModel]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateDepartmentDto dto)
     {
@@ -57,7 +57,7 @@ public class DepartmentController(IDepartmentService departmentService) : Contro
 
     // DELETE api/departments/5
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,HR")]
     public async Task<IActionResult> Delete(int id)
     {
         var result = await departmentService.DeleteAsync(id);

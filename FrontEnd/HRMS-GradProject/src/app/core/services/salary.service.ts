@@ -1,4 +1,4 @@
-﻿import { Injectable, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -56,6 +56,10 @@ export class SalaryService {
 
   deleteSalary(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
+  }
+
+  generateBatch(month: number, year: number): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/generate-batch`, { month, year });
   }
 }
 

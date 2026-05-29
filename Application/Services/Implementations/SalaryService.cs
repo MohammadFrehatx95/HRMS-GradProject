@@ -235,5 +235,55 @@ namespace Application.Services.Implementations
             uow.Repository<Salary>().Delete(salary);
             await uow.SaveChangesAsync();
         }
+
+        public async Task<int> GenerateBatchAsync(int month, int year)
+        {
+            var activeEmployees = await uow.Repository<Employee>()
+                                           .GetAllQueryable()
+                                           .Include(e => e.Position)
+                                           .Where(e => e.IsActive)
+                                           .ToListAsync();
+
+            var existingSalaries = await uow.Repository<Salary>()
+                                            .GetAllQueryable()
+                                            .Where(s => s.Month == month && s.Year == year)
+                                            .Select(s => s.EmployeeId)
+                                            .ToListAsync();
+
+            var employeesWithoutSalary = activeEmployees
+                                         .Where(e => !existingSalaries.Contains(e.Id))
+                                         .ToList();
+
+            int generatedCount = 0;
+
+            foreach (var emp in employeesWithoutSalary)
+            {
+                var baseAmount = emp.Position?.SalaryMin ?? 0;
+
+                var dto = new CreateSalaryDto
+                {
+                    EmployeeId = emp.Id,
+                    Month = month,
+                    Year = year,
+                    BaseAmount = baseAmount,
+                    Allowances = 0,
+                    Deductions = 0,
+                    EffectiveDate = new DateTime(year, month, DateTime.DaysInMonth(year, month), 0, 0, 0, DateTimeKind.Utc)
+                };
+
+                try
+                {
+                    await CreateAsync(dto);
+                    generatedCount++;
+                }
+                catch
+                {
+                    // If creation fails for an employee, log it and continue
+                    continue;
+                }
+            }
+
+            return generatedCount;
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Application.Common;
+using Application.Common;
 using Application.DTOs.Salary;
 using System;
 using System.Collections.Generic;
@@ -17,5 +17,6 @@ namespace Application.Services.Interfaces
         Task<SalaryDto> CreateAsync(CreateSalaryDto dto);
         Task<SalaryDto> UpdateAsync(int id, UpdateSalaryDto dto);
         Task DeleteAsync(int id);
+        Task<int> GenerateBatchAsync(int month, int year);
     }
 }

@@ -1,4 +1,4 @@
-﻿using Application.Common;
+using Application.Common;
 using Application.DTOs.Position;
 using Application.Services.Interfaces;
 using HRMS_API.Filters;
@@ -43,7 +43,7 @@ public class PositionController(IPositionService positionService) : ControllerBa
 
     // POST api/positions
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,HR")]
     [ValidateModel]
     public async Task<IActionResult> Create([FromBody] CreatePositionDto dto)
     {
@@ -55,7 +55,7 @@ public class PositionController(IPositionService positionService) : ControllerBa
 
     // PUT api/positions/5
     [HttpPut("{id}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,HR")]
     [ValidateModel]
     public async Task<IActionResult> Update(int id, [FromBody] UpdatePositionDto dto)
     {
@@ -68,7 +68,7 @@ public class PositionController(IPositionService positionService) : ControllerBa
 
     // DELETE api/positions/5
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,HR")]
     public async Task<IActionResult> Delete(int id)
     {
         var result = await positionService.DeleteAsync(id);

@@ -83,5 +83,15 @@ namespace HRMS_GradProject.Controllers
             await salaryService.DeleteAsync(id);
             return Ok(ApiResponse.Ok("Salary deleted successfully"));
         }
+
+        // POST /api/salaries/generate-batch → Admin
+        [HttpPost("generate-batch")]
+        [Authorize(Roles = "Admin")]
+        [ValidateModel]
+        public async Task<IActionResult> GenerateBatch([FromBody] GeneratePayrollDto dto)
+        {
+            int count = await salaryService.GenerateBatchAsync(dto.Month, dto.Year);
+            return Ok(ApiResponse<int>.Ok(count, $"Generated {count} salaries successfully"));
+        }
     }
 }

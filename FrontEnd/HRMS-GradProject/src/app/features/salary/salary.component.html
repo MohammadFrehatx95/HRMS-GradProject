@@ -74,6 +74,11 @@
                 <span class="d-none d-md-inline">{{ isViewingAll ? ('My Salaries' | t) : ('View All' | t) }}</span>
             </button>
 
+            <button *ngIf="isAdmin" class="btn btn-warning px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap text-dark"
+                (click)="generatePayroll()" [title]="'Generate Payroll' | t">
+                <i class="bi bi-magic" [class.me-md-1]="true"></i> 
+                <span class="d-none d-md-inline">{{ 'Generate Payroll' | t }}</span>
+            </button>
             <button *ngIf="isAdmin" class="btn btn-primary px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
                 (click)="openModal()" [title]="'Add Salary' | t">
                 <i class="bi bi-plus-lg" [class.me-md-1]="true"></i> 
@@ -204,6 +209,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
+                <div class="alert alert-info py-2 d-flex align-items-center mb-4" role="alert" style="font-size: 0.85rem;">
+                    <i class="bi bi-info-circle-fill me-2 fs-5"></i>
+                    <div>
+                        Standard allowances and unapplied adjustments (bonuses/penalties) will be automatically calculated and applied by the system.
+                    </div>
+                </div>
                 <form #salaryForm="ngForm">
 
                     <div class="mb-4 position-relative">
@@ -275,13 +286,13 @@
 
                     <div class="row mb-4">
                         <div class="col-6">
-                            <label class="form-label fw-semibold text-success small">Allowances
+                            <label class="form-label fw-semibold text-success small">Additional Allowances
                                 (+) <span class="text-danger">*</span></label>
                             <input type="number" class="form-control border-success border-opacity-25 bg-light"
                                 name="allowances" [(ngModel)]="salaryData.allowances" required min="0">
                         </div>
                         <div class="col-6">
-                            <label class="form-label fw-semibold text-danger small">Deductions
+                            <label class="form-label fw-semibold text-danger small">Additional Deductions
                                 (-) <span class="text-danger">*</span></label>
                             <input type="number" class="form-control border-danger border-opacity-25 bg-light"
                                 name="deductions" [(ngModel)]="salaryData.deductions" required min="0">
