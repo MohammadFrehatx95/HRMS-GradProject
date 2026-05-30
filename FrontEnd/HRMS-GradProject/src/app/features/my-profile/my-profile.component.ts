@@ -327,7 +327,8 @@ export class MyProfileComponent implements OnInit {
   }
 
   private getFingerprintRegisterError(err: any): string {
-    const debugInfo = `<br><br><small class="text-muted" style="font-size:10px;">Debug: ${err?.name || ''} - ${err?.message || JSON.stringify(err)}</small>`;
+    const errorBody = typeof err?.error === 'string' ? err.error : JSON.stringify(err?.error || '');
+    const debugInfo = `<br><br><small class="text-muted" style="font-size:10px;">Debug: ${err?.name || ''} - ${err?.message || ''} | Server: ${errorBody}</small>`;
 
     if (
       err?.name === 'NotAllowedError' ||
