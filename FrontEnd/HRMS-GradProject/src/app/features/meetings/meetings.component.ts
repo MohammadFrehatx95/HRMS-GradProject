@@ -7,9 +7,21 @@ import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
 import { Meeting, MeetingStatus, CreateMeetingDto } from '../../core/models/meeting.model';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { ExcelExportService } from '../../core/services/excel-export.service';
 import { PdfExportService } from '../../core/services/pdf-export.service';
+
+export interface GroupedMeeting {
+  meetLink: string;
+  title: string;
+  reason: string;
+  scheduledAt: string;
+  durationMinutes: number;
+  status: string;
+  organizerName: string;
+  meetings: Meeting[];
+  attendees: string[];
+}
 
 declare var bootstrap: any;
 
@@ -29,6 +41,7 @@ export class MeetingsComponent implements OnInit {
   private pdfExportService = inject(PdfExportService);
 
   meetings: Meeting[] = [];
+  groupedMeetings: GroupedMeeting[] = [];
   employees: any[] = [];
   isLoading = false;
   isSubmitting = false;
@@ -39,6 +52,33 @@ export class MeetingsComponent implements OnInit {
 
   pageNumber = 1;
   pageSize = 100;
+
+  currentPage: number = 1;
+  itemsPerPage: number = 7;
+
+  get paginatedMeetings(): Meeting[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.meetings.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get paginatedGroupedMeetings(): GroupedMeeting[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.groupedMeetings.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.groupedMeetings.length / this.itemsPerPage) || 1;
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+  getMathMin(a: number, b: number): number {
+    return Math.min(a, b);
+  }
 
   employeeSearchQuery: string = '';
   selectedDepartmentFilter: string = '';
@@ -108,6 +148,30 @@ export class MeetingsComponent implements OnInit {
     this.meetingService.getAll(this.pageNumber, this.pageSize).subscribe({
       next: (res: any) => {
         this.meetings = res.data?.items || res.items || [];
+        
+        // Group meetings by MeetLink
+        const groups = new Map<string, GroupedMeeting>();
+        this.meetings.forEach(m => {
+          const key = m.meetLink || m.title + m.scheduledAt;
+          if (!groups.has(key)) {
+            groups.set(key, {
+              meetLink: m.meetLink,
+              title: m.title,
+              reason: m.reason,
+              scheduledAt: m.scheduledAt,
+              durationMinutes: m.durationMinutes,
+              status: m.status,
+              organizerName: m.organizerName || 'System',
+              meetings: [],
+              attendees: []
+            });
+          }
+          const group = groups.get(key)!;
+          group.meetings.push(m);
+          group.attendees.push(m.employeeName || 'Unknown');
+        });
+        
+        this.groupedMeetings = Array.from(groups.values());
         this.isLoading = false;
       },
       error: () => {
@@ -122,6 +186,30 @@ export class MeetingsComponent implements OnInit {
     this.meetingService.getMyMeetings(this.pageNumber, this.pageSize).subscribe({
       next: (res: any) => {
         this.meetings = res.data?.items || res.items || [];
+        
+        // Group meetings by MeetLink
+        const groups = new Map<string, GroupedMeeting>();
+        this.meetings.forEach(m => {
+          const key = m.meetLink || m.title + m.scheduledAt;
+          if (!groups.has(key)) {
+            groups.set(key, {
+              meetLink: m.meetLink,
+              title: m.title,
+              reason: m.reason,
+              scheduledAt: m.scheduledAt,
+              durationMinutes: m.durationMinutes,
+              status: m.status,
+              organizerName: m.organizerName || 'System',
+              meetings: [],
+              attendees: []
+            });
+          }
+          const group = groups.get(key)!;
+          group.meetings.push(m);
+          group.attendees.push(m.employeeName || 'Unknown');
+        });
+        
+        this.groupedMeetings = Array.from(groups.values());
         this.isLoading = false;
       },
       error: () => {
@@ -188,6 +276,43 @@ export class MeetingsComponent implements OnInit {
       error: (err) => {
         this.isSubmitting = false;
         Swal.fire('Error', err.error?.message || 'Failed to schedule meeting', 'error');
+      }
+    });
+  }
+
+  updateGroupStatus(group: GroupedMeeting, status: MeetingStatus) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to update the status of this group meeting for all attendees?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const observables: Observable<void>[] = [];
+        group.meetings.forEach(m => {
+          if (status === MeetingStatus.Cancelled) {
+            observables.push(this.meetingService.cancel(m.id));
+          } else if (status === MeetingStatus.Completed) {
+            observables.push(this.meetingService.complete(m.id));
+          }
+        });
+
+        if (observables.length > 0) {
+          this.isLoading = true;
+          forkJoin(observables).subscribe({
+            next: () => {
+              Swal.fire('Success', 'Meetings updated successfully', 'success');
+              if (this.isHrOrAdmin) this.loadAllMeetings();
+              else this.loadMyMeetings();
+            },
+            error: () => {
+              this.isLoading = false;
+              Swal.fire('Error', 'Failed to update meetings', 'error');
+            }
+          });
+        }
       }
     });
   }

@@ -104,7 +104,7 @@
             </div>
             <div class="user-info">
                 <p class="name">{{ userName }}</p>
-                <p class="status">{{ userRole }}</p>
+                <p class="status">{{ userRole | t }}</p>
             </div>
         </div>
         <button class="btn-logout" (click)="onLogout()">

@@ -1,8 +1,9 @@
-﻿import { Injectable, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { create, get } from '@github/webauthn-json';
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +30,30 @@ export class AuthService {
         }
       }),
     );
+  }
+
+  async registerFingerprint(): Promise<any> {
+    const optionsRes = await this.http.post<any>(`${this.apiUrl}/webauthn/register-options`, {}).toPromise();
+    const credential = await create(optionsRes);
+    return this.http.post<any>(`${this.apiUrl}/webauthn/register`, credential).toPromise();
+  }
+
+  async loginWithFingerprint(email: string): Promise<any> {
+    const optionsRes = await this.http.post<any>(`${this.apiUrl}/webauthn/login-options`, `"${email}"`, {
+      headers: { 'Content-Type': 'application/json' }
+    }).toPromise();
+    const assertion = await get(optionsRes);
+    
+    const response = await this.http.post<any>(`${this.apiUrl}/webauthn/login?email=${encodeURIComponent(email)}`, assertion).toPromise();
+    
+    if (response?.data?.token) {
+      localStorage.setItem('jwt_token', response.data.token);
+      if (response.data.role) localStorage.setItem('user_role', response.data.role);
+      if (response.data.username) localStorage.setItem('user_name', response.data.username);
+      if (response.data.email) localStorage.setItem('user_email', response.data.email);
+      if (response.data.profilePictureUrl) localStorage.setItem('user_profile_pic', response.data.profilePictureUrl);
+    }
+    return response;
   }
 
   register(payload: any): Observable<any> {

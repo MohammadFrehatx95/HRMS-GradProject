@@ -87,7 +87,7 @@
                 </div>
             </div>
 
-            <a *ngIf="isAdminOrHR" routerLink="/all-attendance"
+            <a *ngIf="isHR" routerLink="/all-attendance"
                class="btn btn-outline-primary px-3 px-md-4 py-2 rounded-3 shadow-sm text-nowrap">
                 <i class="bi bi-people" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'View All' | t }}</span>
             </a>

@@ -1,4 +1,4 @@
-﻿import { Injectable, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +18,6 @@ export class SettingsService {
   }
 
   constructor() {
-
     const savedTheme = localStorage.getItem('hrms_theme');
     const savedLang = localStorage.getItem('hrms_language') as 'en' | 'ar';
 

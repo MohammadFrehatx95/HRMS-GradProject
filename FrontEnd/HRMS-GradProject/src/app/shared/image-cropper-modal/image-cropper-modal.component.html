@@ -1,0 +1,58 @@
+<div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0,0,0,0.5); z-index: 1070;" *ngIf="showModal">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+      <div class="modal-header bg-light border-bottom-0 pb-3">
+        <h5 class="modal-title fw-bold text-dark"><i class="bi bi-crop me-2"></i>{{ title }}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="onCancel()"></button>
+      </div>
+      <div class="modal-body p-4 bg-white text-center">
+        
+        <div *ngIf="isLoading" class="py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2 text-muted">Loading image...</p>
+        </div>
+
+        <div class="cropper-container bg-light rounded-3 p-2 border" [class.d-none]="isLoading">
+            <image-cropper
+              [imageChangedEvent]="imageChangedEvent"
+              [maintainAspectRatio]="maintainAspectRatio"
+              [aspectRatio]="aspectRatio"
+              [transform]="transform"
+              [canvasRotation]="rotation"
+              format="png"
+              (imageCropped)="imageCropped($event)"
+              (imageLoaded)="imageLoaded($event)"
+              (cropperReady)="cropperReady()"
+              (loadImageFailed)="loadImageFailed()"
+              style="max-height: 50vh;">
+            </image-cropper>
+            <div class="d-flex justify-content-center gap-2 mt-3 mb-2 flex-wrap">
+                <button type="button" class="btn btn-sm btn-outline-secondary" (click)="zoomOut()" title="Zoom Out">
+                    <i class="bi bi-zoom-out"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" (click)="zoomIn()" title="Zoom In">
+                    <i class="bi bi-zoom-in"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" (click)="rotateLeft()" title="Rotate Left">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" (click)="rotateRight()" title="Rotate Right">
+                    <i class="bi bi-arrow-clockwise"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-danger" (click)="resetImage()" title="Reset">
+                    <i class="bi bi-arrow-counterclockwise"></i> Reset
+                </button>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer bg-light border-top-0 pt-3">
+        <button type="button" class="btn btn-outline-secondary px-4 rounded-3 fw-medium" (click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-primary px-4 rounded-3 fw-medium" (click)="onSave()">
+            <i class="bi bi-check2 me-1"></i> Crop & Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

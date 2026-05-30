@@ -448,5 +448,15 @@
     </div>
 </div>
 
+<app-image-cropper-modal
+  *ngIf="showCropperModal"
+  [showModal]="showCropperModal"
+  [imageChangedEvent]="imageChangedEvent"
+  [maintainAspectRatio]="false"
+  title="Crop Medical Excuse"
+  (imageCroppedEventOut)="handleCroppedImage($event)"
+  (closeModalEvent)="showCropperModal = false">
+</app-image-cropper-modal>
+
 <style>
 </style>

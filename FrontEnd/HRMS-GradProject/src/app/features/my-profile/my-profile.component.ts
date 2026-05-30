@@ -7,13 +7,14 @@ import Swal from 'sweetalert2';
 import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
 
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { ImageCropperModalComponent } from '../../shared/image-cropper-modal/image-cropper-modal.component';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-my-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, TranslatePipe, ImageCropperModalComponent],
   templateUrl: './my-profile.component.html',
 })
 export class MyProfileComponent implements OnInit {
@@ -34,6 +35,9 @@ export class MyProfileComponent implements OnInit {
   isUploadingPic = false;
   profilePicUrl: string | null = null;
   pendingProfilePicUrl: string | null = null;
+
+  showCropperModal = false;
+  imageChangedEvent: any = '';
 
   ngOnInit() {
 
@@ -122,47 +126,53 @@ export class MyProfileComponent implements OnInit {
         return;
       }
 
-      this.isUploadingPic = true;
-      this.authService.uploadProfilePicture(file).subscribe({
-        next: (res) => {
-          this.isUploadingPic = false;
-          
-          if (res?.message && res.message.includes('approval')) {
-            this.pendingProfilePicUrl = res?.data ?? null;
-            Swal.fire({
-              icon: 'info',
-              title: 'Picture Submitted!',
-              html: `<p>Your profile picture has been submitted for review.</p>
-                     <p class="text-muted small mt-2">An HR manager will review and approve it shortly. You will be notified once it\'s approved.</p>`,
-              confirmButtonText: 'Got it!',
-              confirmButtonColor: '#4361ee',
-            });
-          } else {
-            this.profilePicUrl = res?.data ?? null;
-            this.pendingProfilePicUrl = null;
-            if (this.profilePicUrl) {
-              localStorage.setItem('user_profile_pic', this.profilePicUrl);
-              window.dispatchEvent(new Event('profile_pic_updated'));
-            }
-            Swal.fire({
-              icon: 'success',
-              title: 'Picture Updated!',
-              text: 'Your profile picture has been updated successfully.',
-              timer: 2000,
-              showConfirmButton: false,
-            });
-          }
-        },
-        error: (err) => {
-          this.isUploadingPic = false;
-          Swal.fire(
-            'Error',
-            getFriendlyErrorMessage(err, 'Failed to upload profile picture.'),
-            'error'
-          );
-        }
-      });
+      this.imageChangedEvent = event;
+      this.showCropperModal = true;
     }
+  }
+
+  handleCroppedImage(file: File) {
+    this.showCropperModal = false;
+    this.isUploadingPic = true;
+    this.authService.uploadProfilePicture(file).subscribe({
+      next: (res) => {
+        this.isUploadingPic = false;
+        
+        if (res?.message && res.message.includes('approval')) {
+          this.pendingProfilePicUrl = res?.data ?? null;
+          Swal.fire({
+            icon: 'info',
+            title: 'Picture Submitted!',
+            html: `<p>Your profile picture has been submitted for review.</p>
+                   <p class="text-muted small mt-2">An HR manager will review and approve it shortly. You will be notified once it\'s approved.</p>`,
+            confirmButtonText: 'Got it!',
+            confirmButtonColor: '#4361ee',
+          });
+        } else {
+          this.profilePicUrl = res?.data ?? null;
+          this.pendingProfilePicUrl = null;
+          if (this.profilePicUrl) {
+            localStorage.setItem('user_profile_pic', this.profilePicUrl);
+            window.dispatchEvent(new Event('profile_pic_updated'));
+          }
+          Swal.fire({
+            icon: 'success',
+            title: 'Picture Updated!',
+            text: 'Your profile picture has been updated successfully.',
+            timer: 2000,
+            showConfirmButton: false,
+          });
+        }
+      },
+      error: (err) => {
+        this.isUploadingPic = false;
+        Swal.fire(
+          'Error',
+          getFriendlyErrorMessage(err, 'Failed to upload profile picture.'),
+          'error'
+        );
+      }
+    });
   }
 
   openEditModal() {
@@ -292,5 +302,51 @@ export class MyProfileComponent implements OnInit {
       timer: 2000,
       showConfirmButton: false,
     });
+  }
+
+  async addFingerprint() {
+    try {
+      await this.authService.registerFingerprint();
+      Swal.fire({
+        icon: 'success',
+        title: 'Fingerprint Added!',
+        text: 'You can now log in using your fingerprint.',
+        timer: 2500,
+        showConfirmButton: false,
+      });
+    } catch (err: any) {
+      const msg = this.getFingerprintRegisterError(err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed to Add Fingerprint',
+        html: msg,
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#4361ee',
+      });
+    }
+  }
+
+  private getFingerprintRegisterError(err: any): string {
+    if (
+      err?.name === 'NotAllowedError' ||
+      err?.message?.includes('NotAllowedError') ||
+      err?.message?.includes('cancelled') ||
+      err?.message?.includes('canceled')
+    ) {
+      return '❌ Fingerprint scan was cancelled.<br><small class="text-muted">Please try again and follow your device prompt.</small>';
+    }
+    if (err?.name === 'NotSupportedError' || err?.message?.includes('authenticator')) {
+      return '🔒 Your device does not support fingerprint login, or no biometric sensor is configured.';
+    }
+    if (err?.status === 401) {
+      return '🔑 You must be logged in to add a fingerprint.';
+    }
+    if (err?.status >= 500) {
+      return '⚙️ Server error. Please try again later.';
+    }
+    if (err?.status === 0 || !navigator.onLine) {
+      return '🌐 No internet connection. Please check your network.';
+    }
+    return '❌ Could not register fingerprint.<br><small class="text-muted">Please make sure your device has a biometric sensor and try again.</small>';
   }
 }

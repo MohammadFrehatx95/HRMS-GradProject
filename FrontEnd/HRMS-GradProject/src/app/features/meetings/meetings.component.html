@@ -24,12 +24,12 @@
     <!-- Bottom Row: Secondary Actions -->
     <div class="d-flex justify-content-end align-items-center mb-4 flex-wrap gap-3 bg-white p-3 rounded-4 shadow-sm border border-light">
         <div class="d-flex gap-2">
-            <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
-                <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> 
+            <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap d-flex align-items-center gap-2" (click)="exportToPDF()" title="Export to PDF">
+                <i class="bi bi-file-earmark-pdf-fill"></i> 
                 <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
             </button>
-            <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
-                <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i> 
+            <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap d-flex align-items-center gap-2" (click)="exportToExcel()" title="Export to Excel">
+                <i class="bi bi-file-earmark-excel-fill"></i> 
                 <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
             </button>
         </div>
@@ -60,67 +60,68 @@
                             </td>
                         </tr>
                         } @else {
-                        @for (meeting of meetings; track meeting.id) {
+                        @for (group of paginatedGroupedMeetings; track group.meetLink) {
                         <tr>
                             <td class="ps-4">
-                                <div class="fw-bold text-dark">{{ meeting.title }}</div>
-                                <div class="small text-muted text-truncate" style="max-width: 250px;">{{ meeting.reason || meeting.notes }}</div>
+                                <div class="fw-bold text-dark">{{ group.title }}</div>
+                                <div class="small text-muted text-truncate" style="max-width: 250px;">{{ group.reason }}</div>
                             </td>
                             <td>
-                                <span class="fw-medium text-dark">{{ meeting.organizerName || 'System' }}</span>
+                                <span class="fw-medium text-dark">{{ group.organizerName }}</span>
                             </td>
                             <td>
-                                <div class="d-flex align-items-center">
-                                    <ng-container *ngIf="meeting.employeeProfilePictureUrl; else noMeetPic">
-                                        <img [src]="meeting.employeeProfilePictureUrl" alt="User" class="rounded-circle me-2 object-fit-cover shadow-sm" style="width: 32px; height: 32px; border: 2px solid #fff;">
-                                    </ng-container>
-                                    <ng-template #noMeetPic>
-                                        <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center"
-                                            style="width: 32px; height: 32px; font-size: 13px;">
-                                            {{ meeting.employeeName ? meeting.employeeName.charAt(0).toUpperCase() : 'U' }}
-                                        </div>
-                                    </ng-template>
-                                    <span class="fw-medium text-dark">{{ meeting.employeeName }}</span>
+                                <div class="dropdown">
+                                    <button class="btn btn-light btn-sm rounded-pill fw-semibold dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-people-fill text-primary"></i> 
+                                        {{ group.attendees.length }} {{ group.attendees.length === 1 ? ('Employee' | t) : ('Employees' | t) }}
+                                    </button>
+                                    <ul class="dropdown-menu shadow-sm border-0 rounded-3">
+                                        <li *ngFor="let attendee of group.attendees">
+                                            <span class="dropdown-item d-flex align-items-center gap-2">
+                                                <i class="bi bi-person-circle text-muted"></i> {{ attendee }}
+                                            </span>
+                                        </li>
+                                    </ul>
                                 </div>
                             </td>
                             <td>
-                                <div><i class="bi bi-calendar-event text-muted me-2"></i>{{ meeting.scheduledAt | date:'mediumDate' }}</div>
-                                <div class="small text-muted"><i class="bi bi-clock me-2"></i>{{ meeting.scheduledAt | date:'shortTime' }} <span *ngIf="meeting.durationMinutes">({{ meeting.durationMinutes }} min)</span></div>
+                                <div class="d-flex align-items-center gap-2"><i class="bi bi-calendar-event text-muted"></i>{{ group.scheduledAt | date:'mediumDate' }}</div>
+                                <div class="small text-muted d-flex align-items-center gap-2"><i class="bi bi-clock"></i>{{ group.scheduledAt | date:'shortTime' }} <span *ngIf="group.durationMinutes">({{ group.durationMinutes }} min)</span></div>
                             </td>
                             <td>
-                                <span class="badge rounded-pill px-3 py-2" [ngClass]="getStatusBadgeClass(meeting.status)">
-                                    {{ getStatusLabel(meeting.status) | t }}
+                                <span class="badge rounded-pill px-3 py-2" [ngClass]="getStatusBadgeClass(group.status)">
+                                    {{ getStatusLabel(group.status) | t }}
                                 </span>
                             </td>
                             <td class="text-end pe-4">
                                 <div class="d-flex align-items-center justify-content-end gap-2">
                                     
-                                    <ng-container *ngIf="isHrOrAdmin && meeting.status === 'Scheduled'">
+                                    <ng-container *ngIf="isHrOrAdmin && group.status === 'Scheduled'">
                                         <button
                                             class="btn btn-success btn-sm rounded-pill d-inline-flex align-items-center gap-1 px-3"
-                                            (click)="updateStatus(meeting.id, MeetingStatus.Completed)"
+                                            (click)="updateGroupStatus(group, MeetingStatus.Completed)"
                                             title="Mark Completed">
                                             <i class="bi bi-check2-circle"></i>
-                                            <span class="small">Done</span>
+                                            <span class="small">{{ 'Done' | t }}</span>
                                         </button>
                                         <button
                                             class="btn btn-danger btn-sm rounded-pill d-inline-flex align-items-center gap-1 px-3"
-                                            (click)="updateStatus(meeting.id, MeetingStatus.Cancelled)"
+                                            (click)="updateGroupStatus(group, MeetingStatus.Cancelled)"
                                             title="Cancel Meeting">
                                             <i class="bi bi-slash-circle"></i>
-                                            <span class="small">Cancel</span>
+                                            <span class="small">{{ 'Cancel' | t }}</span>
                                         </button>
                                     </ng-container>
                                     
-                                    <a *ngIf="meeting.meetLink && meeting.status === 'Scheduled'"
-                                        [href]="meeting.meetLink" target="_blank"
+                                    <a *ngIf="group.meetLink && group.status === 'Scheduled'"
+                                        [href]="group.meetLink" target="_blank"
                                         class="btn btn-outline-primary btn-sm rounded-pill d-inline-flex align-items-center gap-1 px-3"
                                         title="Join Meeting">
                                         <i class="bi bi-camera-video"></i>
-                                        <span class="small">Join</span>
+                                        <span class="small">{{ 'Join' | t }}</span>
                                     </a>
                                     
-                                    <span *ngIf="meeting.status !== 'Scheduled'" class="text-muted small fst-italic">—</span>
+                                    <span *ngIf="group.status !== 'Scheduled'" class="text-muted small fst-italic">—</span>
                                 </div>
                             </td>
                         </tr>
@@ -135,6 +136,24 @@
                         }
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Pagination Footer -->
+            <div *ngIf="groupedMeetings.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <small class="text-muted fw-medium">
+                    {{ 'Showing' | t }} {{ (currentPage - 1) * itemsPerPage + 1 }} {{ 'to' | t }} {{ getMathMin(currentPage * itemsPerPage, groupedMeetings.length) }} {{ 'of' | t }} {{ groupedMeetings.length }} {{ 'entries' | t }}
+                </small>
+                <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
+                    <li class="page-item" [class.disabled]="currentPage === 1">
+                        <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
+                    </li>
+                    <li class="page-item active">
+                        <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
+                    </li>
+                    <li class="page-item" [class.disabled]="currentPage === totalPages">
+                        <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>

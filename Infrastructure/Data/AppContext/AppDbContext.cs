@@ -25,6 +25,7 @@ public class AppDbContext : DbContext
     public DbSet<Meeting> Meetings { get; set; }
     public DbSet<Announcement> Announcements { get; set; }
     public DbSet<LeaveSetting> LeaveSettings { get; set; }
+    public DbSet<FidoCredential> FidoCredentials { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -131,6 +132,11 @@ public class AppDbContext : DbContext
           .IsUnique()
           .HasDatabaseName("IX_Salaries_Employee_Month_Year_Unique");
 
+        modelBuilder.Entity<FidoCredential>()
+            .HasOne(f => f.User)
+            .WithMany(u => u.FidoCredentials)
+            .HasForeignKey(f => f.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Department>().HasData(
            new Department { Id = 1, Name = "HR" },

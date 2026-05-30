@@ -32,6 +32,7 @@ export class AttendanceComponent implements OnInit {
   isProcessing = false;
   isAdmin = false;
   isAdminOrHR = false;
+  isHR = false;
 
   currentPage: number = 1;
   itemsPerPage: number = 7;
@@ -75,6 +76,7 @@ export class AttendanceComponent implements OnInit {
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
+    this.isHR = this.authService.isHR();
     if (this.isAdmin) {
       this.loadAllAttendance();
     } else {

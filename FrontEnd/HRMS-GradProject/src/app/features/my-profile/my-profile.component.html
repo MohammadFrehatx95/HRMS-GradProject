@@ -1,4 +1,4 @@
-﻿<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
   <div class="d-flex align-items-center">
     <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
       <i class="bi bi-person-badge-fill fs-4"></i>
@@ -57,6 +57,12 @@
         class="badge rounded-pill px-3 py-2 bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">
         <i class="bi bi-shield-fill-check me-1"></i> System Admin
       </span>
+
+      <div class="mt-4 pt-3 border-top">
+        <button class="btn btn-outline-primary w-100 rounded-pill fw-semibold shadow-sm" (click)="addFingerprint()">
+          <i class="bi bi-fingerprint fs-5 me-2 align-middle"></i>{{ 'Add Fingerprint Login' | t }}
+        </button>
+      </div>
     </div>
   </div>
 
@@ -150,6 +156,12 @@
         class="badge rounded-pill px-3 py-2 bg-success bg-opacity-10 text-success border border-success border-opacity-25">
         <i class="bi bi-check-circle-fill me-1"></i> Active
       </span>
+
+      <div class="mt-4 pt-3 border-top">
+        <button class="btn btn-outline-primary w-100 rounded-pill fw-semibold shadow-sm" (click)="addFingerprint()">
+          <i class="bi bi-fingerprint fs-5 me-2 align-middle"></i>{{ 'Add Fingerprint Login' | t }}
+        </button>
+      </div>
     </div>
   </div>
 
@@ -277,6 +289,18 @@
     </div>
   </div>
 </div>
+
+<app-image-cropper-modal
+  *ngIf="showCropperModal"
+  [showModal]="showCropperModal"
+  [imageChangedEvent]="imageChangedEvent"
+  [aspectRatio]="1 / 1"
+  [maintainAspectRatio]="true"
+  title="Crop Profile Picture"
+  (imageCroppedEventOut)="handleCroppedImage($event)"
+  (closeModalEvent)="showCropperModal = false">
+</app-image-cropper-modal>
+
 
 <style>
   .profile-avatar {

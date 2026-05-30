@@ -28,16 +28,26 @@
     <!-- Bottom Row: Filters and Secondary Actions -->
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3 bg-white p-3 rounded-4 shadow-sm border border-light">
         <div class="d-flex align-items-center gap-3 flex-grow-1 flex-wrap">
-            <div class="d-flex align-items-center gap-2">
-                <label class="form-label text-muted small fw-bold mb-0 text-nowrap">{{ 'Month' | t }}:</label>
-                <select class="form-select form-select-sm shadow-sm" [(ngModel)]="filterMonth" (change)="onFilterChange()" style="width: 140px;">
-                    <option value="">{{ 'All Months' | t }}</option>
-                    <option *ngFor="let m of months" [value]="m.value">{{ m.label }}</option>
-                </select>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-                <label class="form-label text-muted small fw-bold mb-0 text-nowrap">{{ 'Year' | t }}:</label>
-                <input type="number" class="form-control form-control-sm shadow-sm" [(ngModel)]="filterYear" (change)="onFilterChange()" placeholder="e.g. 2026" style="width: 100px;">
+            <!-- Filter Dropdown -->
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary shadow-sm" type="button"
+                    data-bs-toggle="dropdown" aria-expanded="false" title="Filter Options">
+                    <i class="bi bi-funnel-fill"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-start p-3 shadow-lg border-0 rounded-4" style="width: 250px;">
+                    <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">Filter Options</h6>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold text-muted mb-1">{{ 'Month' | t }}</label>
+                        <select class="form-select form-select-sm" [(ngModel)]="filterMonth" (change)="onFilterChange()">
+                            <option value="">{{ 'All Months' | t }}</option>
+                            <option *ngFor="let m of months" [value]="m.value">{{ m.label }}</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small fw-semibold text-muted mb-1">{{ 'Year' | t }}</label>
+                        <input type="number" class="form-control form-control-sm" [(ngModel)]="filterYear" (change)="onFilterChange()" placeholder="e.g. 2026">
+                    </div>
+                </div>
             </div>
         </div>
 

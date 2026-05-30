@@ -9,13 +9,14 @@ import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { ExcelExportService } from '../../core/services/excel-export.service';
 import { PdfExportService } from '../../core/services/pdf-export.service';
+import { ImageCropperModalComponent } from '../../shared/image-cropper-modal/image-cropper-modal.component';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-leave',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, TranslatePipe, ImageCropperModalComponent],
   templateUrl: './leave.component.html',
 })
 export class LeaveComponent implements OnInit {
@@ -87,12 +88,24 @@ export class LeaveComponent implements OnInit {
   };
 
   selectedFile: File | null = null;
+  showCropperModal = false;
+  imageChangedEvent: any = '';
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this.selectedFile = file;
+      if (file.type.startsWith('image/')) {
+        this.imageChangedEvent = event;
+        this.showCropperModal = true;
+      } else {
+        this.selectedFile = file;
+      }
     }
+  }
+
+  handleCroppedImage(file: File) {
+    this.showCropperModal = false;
+    this.selectedFile = file;
   }
 
   leaveTypes = [

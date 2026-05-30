@@ -1,0 +1,12 @@
+.modal {
+  display: block;
+  z-index: 1050;
+}
+
+.cropper-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa;
+    border: 1px dashed #ced4da;
+}

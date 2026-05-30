@@ -202,5 +202,34 @@ export const TRANSLATIONS: { [key: string]: { en: string; ar: string } } = {
   'Meetings':            { en: 'Meetings',             ar: 'الاجتماعات' },
   'Urgent':              { en: 'IMPORTANT',            ar: 'هام جداً' },
   'High':                { en: 'High',                 ar: 'مرتفع' },
-  'Normal':              { en: 'Normal',               ar: 'عادي' }
+  'Normal':              { en: 'Normal',               ar: 'عادي' },
+
+  'Company Announcements': { en: 'Company Announcements', ar: 'إعلانات الشركة' },
+  'active announcement(s)': { en: 'active announcement(s)', ar: 'إعلان نشط' },
+  'Pending Approvals':   { en: 'Pending Approvals',    ar: 'الاعتمادات المعلقة' },
+  'Export to PDF':       { en: 'Export to PDF',        ar: 'تصدير لـ PDF' },
+  'hrs':                 { en: 'hrs',                  ar: 'ساعات' },
+  'JD':                  { en: 'JD',                   ar: 'د.أ' },
+  'Post':                { en: 'Post',                 ar: 'نشر' },
+
+
+  'Join': { en: 'Join', ar: 'انضمام' },
+
+  'Jan': { en: 'Jan', ar: 'يناير' },
+  'Feb': { en: 'Feb', ar: 'فبراير' },
+  'Mar': { en: 'Mar', ar: 'مارس' },
+  'Apr': { en: 'Apr', ar: 'أبريل' },
+  'May_short': { en: 'May', ar: 'مايو' },
+  'Jun': { en: 'Jun', ar: 'يونيو' },
+  'Jul': { en: 'Jul', ar: 'يوليو' },
+  'Aug': { en: 'Aug', ar: 'أغسطس' },
+  'Sep': { en: 'Sep', ar: 'سبتمبر' },
+  'Oct': { en: 'Oct', ar: 'أكتوبر' },
+  'Nov': { en: 'Nov', ar: 'نوفمبر' },
+  'Dec': { en: 'Dec', ar: 'ديسمبر' },
+
+  // Fingerprint / WebAuthn
+  'Add Fingerprint Login': { en: 'Add Fingerprint Login', ar: 'إضافة تسجيل الدخول بالبصمة' },
+  'Fingerprint Added': { en: 'Fingerprint Added', ar: 'تمت إضافة البصمة' },
+  'Sign in with Fingerprint': { en: 'Sign in with Fingerprint', ar: 'تسجيل الدخول بالبصمة' }
 };

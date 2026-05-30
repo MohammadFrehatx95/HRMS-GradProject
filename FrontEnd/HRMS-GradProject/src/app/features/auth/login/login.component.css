@@ -166,6 +166,35 @@ div:has(.custom-input.is-invalid) .invalid-feedback {
     box-shadow: none !important;
 }
 
+.fingerprint-btn {
+    border: 2px solid rgba(67, 97, 238, 0.4);
+    color: #4361ee;
+    background: rgba(67, 97, 238, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 1.05rem;
+}
+
+.fingerprint-btn:hover:not(:disabled) {
+    border-color: #4361ee;
+    background: rgba(67, 97, 238, 0.12);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(67, 97, 238, 0.25) !important;
+    color: #2f4acf;
+}
+
+.fingerprint-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.fingerprint-btn .bi-fingerprint {
+    transition: transform 0.3s ease;
+}
+
+.fingerprint-btn:hover:not(:disabled) .bi-fingerprint {
+    transform: scale(1.2);
+}
+
 @media (max-width: 991px) {
     .login-form-section {
         max-width: 100%;

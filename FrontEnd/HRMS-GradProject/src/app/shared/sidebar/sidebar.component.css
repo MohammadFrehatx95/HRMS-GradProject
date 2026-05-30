@@ -25,9 +25,10 @@
 .sidebar-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: calc(12px * var(--sidebar-scale));
   padding: calc(30px * var(--sidebar-scale)) calc(20px * var(--sidebar-scale))
     calc(20px * var(--sidebar-scale));
+  overflow: hidden;
 }
 
 .sidebar-logo-wrap {
@@ -53,6 +54,9 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow: hidden;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 .sidebar-brand-name {
@@ -66,6 +70,8 @@
 
   display: inline-block;
   transition: all 0.3s ease;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sidebar-brand-sub {
@@ -76,6 +82,8 @@
   letter-spacing: 0.5px;
   margin-top: 4px;
   transition: color 0.3s ease;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sidebar-nav {

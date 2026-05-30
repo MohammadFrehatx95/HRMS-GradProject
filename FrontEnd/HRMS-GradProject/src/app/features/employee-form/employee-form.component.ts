@@ -7,6 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { ImageCropperModalComponent } from '../../shared/image-cropper-modal/image-cropper-modal.component';
 import { EmployeeService } from '../../core/services/employee.service';
 import { DepartmentService } from '../../core/services/department.service';
 import { PositionService } from '../../core/services/position.service';
@@ -16,7 +17,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-employee-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, ImageCropperModalComponent],
   templateUrl: './employee-form.component.html',
   styleUrl: './employee-form.component.css',
 })
@@ -39,6 +40,9 @@ export class EmployeeFormComponent implements OnInit {
 
   selectedPictureFile: File | null = null;
   picturePreviewUrl: string | null = null;
+
+  showCropperModal = false;
+  imageChangedEvent: any = '';
 
   employeeForm = new FormGroup({
     firstName: new FormControl('', Validators.required),
@@ -232,13 +236,19 @@ export class EmployeeFormComponent implements OnInit {
         Swal.fire('Error', 'File size exceeds 5MB limit', 'error');
         return;
       }
-      this.selectedPictureFile = file;
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.picturePreviewUrl = e.target.result;
-      };
-      reader.readAsDataURL(file);
+      this.imageChangedEvent = event;
+      this.showCropperModal = true;
     }
+  }
+
+  handleCroppedImage(file: File) {
+    this.showCropperModal = false;
+    this.selectedPictureFile = file;
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.picturePreviewUrl = e.target.result;
+    };
+    reader.readAsDataURL(file);
   }
 
   onSubmit() {

@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
+builder.Services.AddMemoryCache();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -88,6 +89,13 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+builder.Services.AddFido2(options =>
+{
+    options.ServerDomain = builder.Configuration["Fido2:ServerDomain"] ?? "localhost";
+    options.ServerName = "Kawadir HRMS";
+    options.Origins = builder.Configuration.GetSection("AllowedOrigins").Get<HashSet<string>>() ?? new HashSet<string> { "http://localhost:4200" };
+    options.TimestampDriftTolerance = 300000;
+});
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication(builder.Configuration);
 

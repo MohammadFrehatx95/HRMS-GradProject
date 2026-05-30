@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -26,6 +26,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   private settingsService = inject(SettingsService);
 
   isLoading = false;
+  isFingerprintLoading = false;
   isPasswordVisible = false;
 
   loginForm = new FormGroup({
@@ -38,7 +39,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   });
 
   togglePasswordVisibility() {
-
     this.isPasswordVisible = !this.isPasswordVisible;
   }
 
@@ -51,7 +51,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     document.documentElement.setAttribute('data-theme', 'light');
     document.body.classList.remove('dark-mode');
 
-    
     setTimeout(() => {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
@@ -70,7 +69,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-
     if (this.settingsService.isDarkMode) {
       document.documentElement.setAttribute('data-theme', 'dark');
       document.body.classList.add('dark-mode');
@@ -78,7 +76,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
@@ -87,7 +84,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.isLoading = true;
 
     const credentials = {
-
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
     };
@@ -109,5 +105,78 @@ export class LoginComponent implements OnInit, OnDestroy {
         );
       },
     });
+  }
+
+  async loginWithFingerprint() {
+    const email = this.loginForm.get('email')?.value;
+    if (!email) {
+      Swal.fire('Error', 'Please enter your email address first.', 'warning');
+      return;
+    }
+
+    this.isFingerprintLoading = true;
+    try {
+      await this.authService.loginWithFingerprint(email);
+      this.router.navigate(['/dashboard']);
+    } catch (err: any) {
+      this.isFingerprintLoading = false;
+      const friendlyMsg = this.getFingerprintErrorMessage(err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Fingerprint Login Failed',
+        html: friendlyMsg,
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#4361ee',
+      });
+    } finally {
+      this.isFingerprintLoading = false;
+    }
+  }
+
+  private getFingerprintErrorMessage(err: any): string {
+    // User cancelled or dismissed the fingerprint prompt
+    if (
+      err?.name === 'NotAllowedError' ||
+      err?.message?.includes('NotAllowedError') ||
+      err?.message?.includes('cancelled') ||
+      err?.message?.includes('canceled')
+    ) {
+      return '❌ Fingerprint scan was cancelled.<br><small class="text-muted">Please try again and follow your device prompt.</small>';
+    }
+
+    // No fingerprint registered for this user (400 from backend)
+    const status = err?.status;
+    const backendMsg: string = err?.error || err?.error?.message || err?.message || '';
+
+    if (status === 400) {
+      if (typeof backendMsg === 'string' && backendMsg.toLowerCase().includes('no fingerprint')) {
+        return '⚠️ No fingerprint registered for this account.<br><small class="text-muted">Go to <b>My Profile</b> and tap <b>"Add Fingerprint Login"</b> first.</small>';
+      }
+      if (typeof backendMsg === 'string' && backendMsg.toLowerCase().includes('expired')) {
+        return '⏱️ Session expired. Please try again.';
+      }
+      if (typeof backendMsg === 'string' && backendMsg.length > 0 && backendMsg.length < 200) {
+        return `⚠️ ${backendMsg}<br><small class="text-muted">Make sure you have registered your fingerprint from My Profile page.</small>`;
+      }
+      return '⚠️ No fingerprint is registered for this account.<br><small class="text-muted">Go to <b>My Profile → Add Fingerprint Login</b> first.</small>';
+    }
+
+    if (status === 404) {
+      return '❌ User not found. Please check your email address.';
+    }
+
+    if (status === 0 || !navigator.onLine) {
+      return '🌐 No internet connection. Please check your network.';
+    }
+
+    // Hardware not available
+    if (
+      err?.name === 'NotSupportedError' ||
+      err?.message?.includes('authenticator')
+    ) {
+      return '🔒 Your device does not support fingerprint login, or no biometric is configured.';
+    }
+
+    return '❌ Could not verify your fingerprint.<br><small class="text-muted">Please try again or use your password.</small>';
   }
 }

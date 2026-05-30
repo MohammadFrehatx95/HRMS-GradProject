@@ -369,3 +369,14 @@
 
   </div>
 </div>
+
+<app-image-cropper-modal
+  *ngIf="showCropperModal"
+  [showModal]="showCropperModal"
+  [imageChangedEvent]="imageChangedEvent"
+  [aspectRatio]="1 / 1"
+  [maintainAspectRatio]="true"
+  title="Crop Profile Picture"
+  (imageCroppedEventOut)="handleCroppedImage($event)"
+  (closeModalEvent)="showCropperModal = false">
+</app-image-cropper-modal>
