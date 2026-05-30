@@ -12,17 +12,35 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
+using Microsoft.Extensions.Options;
 
 namespace HRMS_API.Controllers;
 
 [ApiController]
 [Route("api/auth/webauthn")]
-public class WebAuthnController(
-    IFido2 fido2,
-    IMemoryCache cache,
-    IUnitOfWork uow,
-    IJwtService jwtService) : ControllerBase
+public class WebAuthnController : ControllerBase
 {
+    private readonly IFido2 fido2;
+    private readonly IMemoryCache cache;
+    private readonly IUnitOfWork uow;
+    private readonly IJwtService jwtService;
+    private readonly JsonSerializerOptions _jsonOptions;
+
+    public WebAuthnController(
+        IFido2 fido2,
+        IMemoryCache cache,
+        IUnitOfWork uow,
+        IJwtService jwtService,
+        IOptions<JsonOptions> mvcJsonOptions)
+    {
+        this.fido2 = fido2;
+        this.cache = cache;
+        this.uow = uow;
+        this.jwtService = jwtService;
+        _jsonOptions = mvcJsonOptions.Value.JsonSerializerOptions;
+    }
+
     private string GetCacheKey(string prefix, string identifier) => $"{prefix}_{identifier}";
 
     [HttpPost("register-options")]
@@ -69,8 +87,14 @@ public class WebAuthnController(
 
     [HttpPost("register")]
     [Authorize]
-    public async Task<IActionResult> MakeCredential([FromBody] AuthenticatorAttestationRawResponse attestationResponse)
+    public async Task<IActionResult> MakeCredential([FromBody] System.Text.Json.JsonElement clientResponse)
     {
+        AuthenticatorAttestationRawResponse attestationResponse;
+        try {
+            attestationResponse = JsonSerializer.Deserialize<AuthenticatorAttestationRawResponse>(clientResponse.GetRawText(), _jsonOptions);
+        } catch (Exception ex) {
+            return Ok(new { status = "error", message = "Invalid registration JSON: " + ex.Message });
+        }
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         
         var jsonOptions = cache.Get<string>(GetCacheKey("fido2_register", userId.ToString()));
@@ -145,13 +169,19 @@ public class WebAuthnController(
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> MakeAssertion([FromBody] AuthenticatorAssertionRawResponse assertionResponse, [FromQuery] string email)
+    public async Task<IActionResult> MakeAssertion([FromBody] System.Text.Json.JsonElement clientResponse, [FromQuery] string email)
     {
-        var jsonOptions = cache.Get<string>(GetCacheKey("fido2_login", email));
-        if (string.IsNullOrEmpty(jsonOptions))
+        AuthenticatorAssertionRawResponse assertionResponse;
+        try {
+            assertionResponse = JsonSerializer.Deserialize<AuthenticatorAssertionRawResponse>(clientResponse.GetRawText(), _jsonOptions);
+        } catch (Exception ex) {
+            return Ok(new { status = "error", message = "Invalid login JSON: " + ex.Message });
+        }
+        var jsonOptionsStr = cache.Get<string>(GetCacheKey("fido2_login", email));
+        if (string.IsNullOrEmpty(jsonOptionsStr))
             return BadRequest("Login options not found or expired. Please try again.");
 
-        var options = AssertionOptions.FromJson(jsonOptions);
+        var options = AssertionOptions.FromJson(jsonOptionsStr);
 
         var user = await uow.Repository<User>().GetAllQueryable()
             .Include(u => u.FidoCredentials)
