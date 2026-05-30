@@ -34,7 +34,7 @@ export class AuthService {
 
   async registerFingerprint(): Promise<any> {
     const optionsRes = await this.http.post<any>(`${this.apiUrl}/webauthn/register-options`, {}).toPromise();
-    const credential = await create(optionsRes);
+    const credential = await create({ publicKey: optionsRes } as any);
     return this.http.post<any>(`${this.apiUrl}/webauthn/register`, credential).toPromise();
   }
 
@@ -42,7 +42,7 @@ export class AuthService {
     const optionsRes = await this.http.post<any>(`${this.apiUrl}/webauthn/login-options`, `"${email}"`, {
       headers: { 'Content-Type': 'application/json' }
     }).toPromise();
-    const assertion = await get(optionsRes);
+    const assertion = await get({ publicKey: optionsRes } as any);
     
     const response = await this.http.post<any>(`${this.apiUrl}/webauthn/login?email=${encodeURIComponent(email)}`, assertion).toPromise();
     
