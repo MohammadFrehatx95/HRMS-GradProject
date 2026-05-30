@@ -13,11 +13,12 @@ import { DepartmentService } from '../../core/services/department.service';
 import { PositionService } from '../../core/services/position.service';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 @Component({
   selector: 'app-employee-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, ImageCropperModalComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, ImageCropperModalComponent, TranslatePipe],
   templateUrl: './employee-form.component.html',
   styleUrl: './employee-form.component.css',
 })

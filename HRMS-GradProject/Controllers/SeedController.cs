@@ -38,7 +38,7 @@ public class SeedController : ControllerBase
                 var dept = await _context.Departments.FirstOrDefaultAsync(d => d.Name == deptName);
                 if (dept == null)
                 {
-                    dept = new Department { Name = deptName, Description = $"{deptName} Department" };
+                    dept = new Department { Name = deptName };
                     _context.Departments.Add(dept);
                     await _context.SaveChangesAsync();
                 }
@@ -55,7 +55,7 @@ public class SeedController : ControllerBase
                     var pos = await _context.Positions.FirstOrDefaultAsync(p => p.Title == posName && p.DepartmentId == dept.Id);
                     if (pos == null)
                     {
-                        pos = new Position { Title = posName, Description = posName, DepartmentId = dept.Id, BaseSalary = 1000m + new Random().Next(500, 2000) };
+                        pos = new Position { Title = posName, DepartmentId = dept.Id, SalaryMin = 500m, SalaryMax = 2500m };
                         _context.Positions.Add(pos);
                         await _context.SaveChangesAsync();
                     }
@@ -69,7 +69,7 @@ public class SeedController : ControllerBase
                 .RuleFor(u => u.Email, f => "") 
                 .RuleFor(u => u.Username, f => "") 
                 .RuleFor(u => u.PasswordHash, f => passwordHash)
-                .RuleFor(u => u.Role, f => Role.Employee)
+                .RuleFor(u => u.Role, f => "Employee")
                 .RuleFor(u => u.IsActive, f => true);
 
             var empFaker = new Faker<Employee>()
@@ -106,8 +106,8 @@ public class SeedController : ControllerBase
                 
                 // Make some HR or Admin
                 var randRole = f.Random.Int(1, 100);
-                if (randRole <= 5) user.Role = Role.Admin;
-                else if (randRole <= 15) user.Role = Role.HR;
+                if (randRole <= 5) user.Role = "Admin";
+                else if (randRole <= 15) user.Role = "HR";
 
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
@@ -146,21 +146,18 @@ public class SeedController : ControllerBase
                     // 10% absent
                     if (f.Random.Bool(0.1f)) continue;
 
-                    var inTime = new TimeSpan(8, f.Random.Int(45, 59), 0);
-                    if (f.Random.Bool(0.2f)) inTime = new TimeSpan(9, f.Random.Int(5, 30), 0); // Late
+                    var inTime = new TimeOnly(8, f.Random.Int(45, 59), 0);
+                    if (f.Random.Bool(0.2f)) inTime = new TimeOnly(9, f.Random.Int(5, 30), 0); // Late
 
-                    var outTime = inTime.Add(new TimeSpan(8, f.Random.Int(0, 30), 0));
-                    if (f.Random.Bool(0.1f)) outTime = new TimeSpan(16, f.Random.Int(0, 30), 0); // Early
-
-                    var status = inTime.Hours >= 9 ? AttendanceStatus.Late : AttendanceStatus.Present;
+                    var outTime = inTime.AddHours(8).AddMinutes(f.Random.Int(0, 30));
+                    if (f.Random.Bool(0.1f)) outTime = new TimeOnly(16, f.Random.Int(0, 30), 0); // Early
 
                     _context.Attendances.Add(new Attendance
                     {
                         EmployeeId = emp.Id,
                         Date = date,
                         ClockIn = inTime,
-                        ClockOut = outTime,
-                        Status = status
+                        ClockOut = outTime
                     });
                 }
             }
@@ -168,10 +165,10 @@ public class SeedController : ControllerBase
 
             // 5. Leaves
             var leaveFaker = new Faker<Leave>()
-                .RuleFor(l => l.Type, f => f.PickRandom<LeaveType>())
+                .RuleFor(l => l.LeaveType, f => f.PickRandom<LeaveType>())
                 .RuleFor(l => l.StartDate, f => f.Date.Soon(30))
                 .RuleFor(l => l.Reason, f => f.Lorem.Sentence())
-                .RuleFor(l => l.Status, f => f.PickRandom<RequestStatus>());
+                .RuleFor(l => l.Status, f => f.PickRandom<LeaveStatus>());
 
             foreach (var emp in addedEmployees)
             {
@@ -192,16 +189,12 @@ public class SeedController : ControllerBase
             for (int i = 0; i < 3; i++)
             {
                 var start = fEvent.Date.Soon(15);
-                var end = start.AddHours(2);
                 events.Add(new CompanyEvent
                 {
                     Title = fEvent.Company.CatchPhrase(),
                     Description = fEvent.Lorem.Paragraph(),
                     EventDate = start,
-                    StartTime = start.TimeOfDay,
-                    EndTime = end.TimeOfDay,
-                    Location = fEvent.Address.City(),
-                    IsMandatory = fEvent.Random.Bool()
+                    EventType = "Meeting"
                 });
             }
             _context.CompanyEvents.AddRange(events);
