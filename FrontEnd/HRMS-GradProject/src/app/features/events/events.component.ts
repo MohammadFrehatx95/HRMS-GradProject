@@ -76,7 +76,7 @@ export class EventsComponent implements OnInit {
       next: () => {
         this.isSubmitting = false;
         Swal.fire('Success', 'Event added successfully.', 'success');
-        
+
         // Hide modal
         const modalEl = document.getElementById('addEventModal');
         if (modalEl) {
@@ -104,7 +104,7 @@ export class EventsComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: 'Delete'
     }).then((result) => {
       if (result.isConfirmed) {
         this.eventService.deleteEvent(id).subscribe({

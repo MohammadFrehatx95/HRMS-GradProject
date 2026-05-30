@@ -56,10 +56,10 @@ export class MyProfileComponent implements OnInit {
           this.userEmail =
             payload['email'] ||
             payload[
-              'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
+            'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
             ] ||
             '';
-        } catch {}
+        } catch { }
       }
       this.isLoading = false;
     } else {
@@ -77,7 +77,7 @@ export class MyProfileComponent implements OnInit {
           this.pendingProfilePicUrl = me.pendingProfilePictureUrl;
         }
       },
-      error: () => {}
+      error: () => { }
     });
 
     this.loadFingerprints();
@@ -142,7 +142,7 @@ export class MyProfileComponent implements OnInit {
     this.authService.uploadProfilePicture(file).subscribe({
       next: (res) => {
         this.isUploadingPic = false;
-        
+
         if (res?.message && res.message.includes('approval')) {
           this.pendingProfilePicUrl = res?.data ?? null;
           Swal.fire({
@@ -233,7 +233,7 @@ export class MyProfileComponent implements OnInit {
     const phoneChanged =
       this.profile &&
       this.editData.phone !==
-        (this.profile?.phone || this.profile?.phoneNumber);
+      (this.profile?.phone || this.profile?.phoneNumber);
 
     if (emailChanged || phoneChanged) {
       if (this.profile && this.profile.id) {
@@ -321,6 +321,17 @@ export class MyProfileComponent implements OnInit {
       });
       this.loadFingerprints();
     } catch (err: any) {
+      if (err?.name === 'NotAllowedError' || err?.message?.includes('cancelled') || err?.message?.includes('canceled')) {
+         Swal.fire({
+           icon: 'info',
+           title: 'Cancelled',
+           text: 'Fingerprint registration was cancelled.',
+           timer: 2000,
+           showConfirmButton: false
+         });
+         return;
+      }
+
       const msg = this.getFingerprintRegisterError(err);
       Swal.fire({
         icon: 'error',
@@ -353,7 +364,7 @@ export class MyProfileComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, remove it!'
+      confirmButtonText: 'Remove'
     });
 
     if (result.isConfirmed) {
@@ -374,29 +385,18 @@ export class MyProfileComponent implements OnInit {
   }
 
   private getFingerprintRegisterError(err: any): string {
-    const errorBody = typeof err?.error === 'string' ? err.error : JSON.stringify(err?.error || '');
-    const debugInfo = `<br><br><small class="text-muted" style="font-size:10px;">Debug: ${err?.name || ''} - ${err?.message || ''} | Server: ${errorBody}</small>`;
-
-    if (
-      err?.name === 'NotAllowedError' ||
-      err?.message?.includes('NotAllowedError') ||
-      err?.message?.includes('cancelled') ||
-      err?.message?.includes('canceled')
-    ) {
-      return 'Fingerprint scan was cancelled or blocked.' + debugInfo;
-    }
     if (err?.name === 'NotSupportedError' || err?.message?.includes('authenticator')) {
-      return 'Your device does not support fingerprint login, or no biometric sensor is configured.' + debugInfo;
+      return 'Your device does not support fingerprint login, or no biometric sensor is configured.';
     }
     if (err?.status === 401) {
-      return 'You must be logged in to add a fingerprint.' + debugInfo;
+      return 'You must be logged in to add a fingerprint.';
     }
     if (err?.status >= 500) {
-      return 'Server error. Please try again later.' + debugInfo;
+      return 'Server error. Please try again later.';
     }
     if (err?.status === 0 || !navigator.onLine) {
-      return 'No internet connection. Please check your network.' + debugInfo;
+      return 'No internet connection. Please check your network.';
     }
-    return `Could not register fingerprint.<br><br><b>Debug Info:</b> ${err?.message || JSON.stringify(err)}`;
+    return `Could not register fingerprint. Please try again.`;
   }
 }

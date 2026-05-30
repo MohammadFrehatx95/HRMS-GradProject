@@ -95,7 +95,7 @@ public class EventsController : ControllerBase
         {
             Title = dto.Title,
             Description = dto.Description,
-            EventDate = dto.EventDate,
+            EventDate = DateTime.SpecifyKind(dto.EventDate, DateTimeKind.Utc),
             EventType = dto.EventType
         };
 

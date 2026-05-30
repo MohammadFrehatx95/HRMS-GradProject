@@ -21,7 +21,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private notificationService = inject(NotificationService);
   private router = inject(Router);
   private sidebarService = inject(SidebarService);
-  
+
 
   pwaService = inject(PwaService);
   settingsService = inject(SettingsService);
@@ -113,7 +113,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it',
+      confirmButtonText: 'Delete',
       cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {
