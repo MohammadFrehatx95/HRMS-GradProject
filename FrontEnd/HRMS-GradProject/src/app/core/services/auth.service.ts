@@ -42,11 +42,11 @@ export class AuthService {
     return res;
   }
 
-  async loginWithFingerprint(email: string): Promise<any> {
-    const optionsRes = await this.http.post<any>(`${this.apiUrl}/webauthn/login-options?email=${encodeURIComponent(email)}`, {}).toPromise();
+  async loginWithFingerprint(): Promise<any> {
+    const optionsRes = await this.http.post<any>(`${this.apiUrl}/webauthn/login-options`, {}).toPromise();
     const assertion = await get({ publicKey: optionsRes } as any);
     
-    const response = await this.http.post<any>(`${this.apiUrl}/webauthn/login?email=${encodeURIComponent(email)}`, assertion).toPromise();
+    const response = await this.http.post<any>(`${this.apiUrl}/webauthn/login`, assertion).toPromise();
     
     if (response?.status === 'error') {
       throw new Error(response.message);

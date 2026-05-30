@@ -80,7 +80,8 @@ public class WebAuthnController : ControllerBase
 
         var authenticatorSelection = new AuthenticatorSelection
         {
-            ResidentKey = ResidentKeyRequirement.Preferred,
+            ResidentKey = ResidentKeyRequirement.Required,
+            RequireResidentKey = true,
             UserVerification = UserVerificationRequirement.Preferred
         };
 
@@ -155,18 +156,23 @@ public class WebAuthnController : ControllerBase
     }
 
     [HttpPost("login-options")]
-    public async Task<IActionResult> GetLoginOptions([FromQuery] string email)
+    public async Task<IActionResult> GetLoginOptions([FromQuery] string? email)
     {
-        var user = await uow.Repository<User>().GetAllQueryable()
-            .Include(u => u.FidoCredentials)
-            .FirstOrDefaultAsync(u => u.Email == email);
+        var existingCredentials = new List<PublicKeyCredentialDescriptor>();
 
-        if (user == null || !user.FidoCredentials.Any())
-            return BadRequest("No fingerprint registered for this account. Please go to My Profile and add a fingerprint first.");
+        if (!string.IsNullOrEmpty(email))
+        {
+            var user = await uow.Repository<User>().GetAllQueryable()
+                .Include(u => u.FidoCredentials)
+                .FirstOrDefaultAsync(u => u.Email == email);
 
-        var existingCredentials = user.FidoCredentials
-            .Select(c => new PublicKeyCredentialDescriptor(c.DescriptorId))
-            .ToList();
+            if (user != null && user.FidoCredentials.Any())
+            {
+                existingCredentials = user.FidoCredentials
+                    .Select(c => new PublicKeyCredentialDescriptor(c.DescriptorId))
+                    .ToList();
+            }
+        }
 
         var getParams = new GetAssertionOptionsParams
         {
@@ -176,34 +182,40 @@ public class WebAuthnController : ControllerBase
 
         var options = fido2.GetAssertionOptions(getParams);
 
-        cache.Set(GetCacheKey("fido2_login", email), options.ToJson(), TimeSpan.FromMinutes(5));
+        var cacheKey = string.IsNullOrEmpty(email) ? "anonymous" : email;
+        cache.Set(GetCacheKey("fido2_login", cacheKey), options.ToJson(), TimeSpan.FromMinutes(5));
 
-        return Content(options.ToJson(), "application/json");
+        return Ok(options);
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> MakeAssertion([FromBody] System.Text.Json.JsonElement clientResponse, [FromQuery] string email)
+    public async Task<IActionResult> MakeAssertion([FromBody] System.Text.Json.JsonElement clientResponse, [FromQuery] string? email)
     {
         AuthenticatorAssertionRawResponse assertionResponse;
         try {
-            assertionResponse = JsonSerializer.Deserialize<AuthenticatorAssertionRawResponse>(clientResponse.GetRawText(), _jsonOptions);
+            string rawJson = clientResponse.GetRawText();
+            rawJson = rawJson.Replace("\"public-key\"", "\"PublicKey\"");
+            assertionResponse = JsonSerializer.Deserialize<AuthenticatorAssertionRawResponse>(rawJson, _jsonOptions);
         } catch (Exception ex) {
             return Ok(new { status = "error", message = "Invalid login JSON: " + ex.Message });
         }
-        var jsonOptionsStr = cache.Get<string>(GetCacheKey("fido2_login", email));
+
+        var cacheKey = string.IsNullOrEmpty(email) ? "anonymous" : email;
+        var jsonOptionsStr = cache.Get<string>(GetCacheKey("fido2_login", cacheKey));
+
         if (string.IsNullOrEmpty(jsonOptionsStr))
-            return BadRequest("Login options not found or expired. Please try again.");
+            return BadRequest(ApiResponse.Fail("Login options not found or expired. Please try again."));
 
         var options = AssertionOptions.FromJson(jsonOptionsStr);
 
-        var user = await uow.Repository<User>().GetAllQueryable()
-            .Include(u => u.FidoCredentials)
-            .FirstOrDefaultAsync(u => u.Email == email);
+        var allCreds = await uow.Repository<FidoCredential>().GetAllQueryable()
+            .Include(c => c.User)
+            .ToListAsync();
 
-        if (user == null) return NotFound("User not found");
+        var creds = allCreds.FirstOrDefault(c => c.DescriptorId.SequenceEqual(assertionResponse.RawId));
+        if (creds == null) return BadRequest(ApiResponse.Fail("Unknown credential"));
 
-        var creds = user.FidoCredentials.FirstOrDefault(c => c.DescriptorId == assertionResponse.RawId);
-        if (creds == null) return BadRequest("Unknown credential");
+        var user = creds.User;
 
         try
         {

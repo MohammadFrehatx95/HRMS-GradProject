@@ -108,15 +108,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   async loginWithFingerprint() {
-    const email = this.loginForm.get('email')?.value;
-    if (!email) {
-      Swal.fire('Error', 'Please enter your email address first.', 'warning');
-      return;
-    }
-
     this.isFingerprintLoading = true;
     try {
-      await this.authService.loginWithFingerprint(email);
+      await this.authService.loginWithFingerprint();
       this.router.navigate(['/dashboard']);
     } catch (err: any) {
       this.isFingerprintLoading = false;
