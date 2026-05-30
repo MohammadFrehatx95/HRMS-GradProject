@@ -110,27 +110,6 @@ public class EmployeeController(IEmployeeService employeeService) : ControllerBa
             ? NotFound(ApiResponse.Fail($"Employee {id} not found"))
             : Ok(ApiResponse.Ok("Employee deleted successfully"));
     }
-
-    // POST api/employees/{id}/enroll-face
-    [HttpPost("{id}/enroll-face")]
-    [Authorize(Roles = "Admin,HR")]
-    public async Task<IActionResult> EnrollFace(int id, IFormFile image, [FromServices] IAzureFaceAuthService faceAuthService)
-    {
-        if (image == null || image.Length == 0)
-        {
-            return BadRequest(ApiResponse.Fail("No image provided."));
-        }
-
-        using var stream = image.OpenReadStream();
-        // Get user id from employee id (In real app, you need to query User id linked to this employee)
-        // Assuming employee id = user id for mock, or we fetch the user.
-        // For demonstration, we just pass the employee id.
-        var azurePersonId = await faceAuthService.RegisterFaceAsync(id, stream);
-        
-        // TODO: Save azurePersonId to the User/Employee entity in the DB
-        
-        return Ok(ApiResponse.Ok($"Face enrolled successfully with Azure Person ID: {azurePersonId}"));
-    }
 }
 
 

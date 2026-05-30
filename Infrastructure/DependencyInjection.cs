@@ -35,7 +35,6 @@ public static class DependencyInjection
         services.AddMemoryCache();
 
         services.AddHostedService<LeaveResetBackgroundService>();
-        services.AddScoped<IAzureFaceAuthService, AzureFaceAuthService>();
 
         return services;
     }

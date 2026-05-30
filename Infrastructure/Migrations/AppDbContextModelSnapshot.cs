@@ -64,7 +64,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Announcements");
+                    b.ToTable("Announcements", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Attendance", b =>
@@ -94,7 +94,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("Attendances");
+                    b.ToTable("Attendances", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.CompanyEvent", b =>
@@ -127,7 +127,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("CompanyEvents");
+                    b.ToTable("CompanyEvents", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Department", b =>
@@ -148,7 +148,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
 
                     b.HasData(
                         new
@@ -234,7 +234,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.FidoCredential", b =>
@@ -277,7 +277,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FidoCredentials");
+                    b.ToTable("FidoCredentials", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Leave", b =>
@@ -332,7 +332,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ReviewedById");
 
-                    b.ToTable("Leaves");
+                    b.ToTable("Leaves", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.LeaveSetting", b =>
@@ -363,7 +363,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LeaveSettings");
+                    b.ToTable("LeaveSettings", (string)null);
 
                     b.HasData(
                         new
@@ -424,7 +424,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("OrganizerId");
 
-                    b.ToTable("Meetings");
+                    b.ToTable("Meetings", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Notification", b =>
@@ -459,7 +459,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.PayrollAdjustment", b =>
@@ -498,7 +498,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("PayrollAdjustments");
+                    b.ToTable("PayrollAdjustments", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Position", b =>
@@ -526,7 +526,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Positions");
+                    b.ToTable("Positions", (string)null);
 
                     b.HasData(
                         new
@@ -631,7 +631,7 @@ namespace Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("IX_Salaries_Employee_Month_Year_Unique");
 
-                    b.ToTable("Salaries");
+                    b.ToTable("Salaries", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
@@ -641,9 +641,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AzurePersonId")
-                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -681,7 +678,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Users", t =>
+                    b.ToTable("Users", null, t =>
                         {
                             t.HasCheckConstraint("CK_User_Role", "\"Role\" IN ('Admin', 'HR', 'Employee')");
                         });
