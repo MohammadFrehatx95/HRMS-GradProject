@@ -26,6 +26,7 @@ public class AppDbContext : DbContext
     public DbSet<Announcement> Announcements { get; set; }
     public DbSet<LeaveSetting> LeaveSettings { get; set; }
     public DbSet<FidoCredential> FidoCredentials { get; set; }
+    public DbSet<CompanyEvent> CompanyEvents { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

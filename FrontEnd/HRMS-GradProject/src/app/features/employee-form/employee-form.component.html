@@ -158,6 +158,15 @@
               [class.is-invalid]="employeeForm.get('lastName')?.invalid && employeeForm.get('lastName')?.touched">
             <div class="invalid-feedback">Last name is required.</div>
           </div>
+          <div class="col-md-6 mt-3">
+            <label class="field-label">
+              <i class="bi bi-calendar-event text-primary"></i>
+              Date of Birth <span class="text-danger">*</span>
+            </label>
+            <input type="date" class="form-control field-input" formControlName="birthDate"
+              [class.is-invalid]="employeeForm.get('birthDate')?.invalid && employeeForm.get('birthDate')?.touched">
+            <div class="invalid-feedback">Date of Birth is required.</div>
+          </div>
         </div>
       </div>
 

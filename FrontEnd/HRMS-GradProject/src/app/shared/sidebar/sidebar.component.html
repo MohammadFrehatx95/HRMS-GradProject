@@ -65,6 +65,11 @@
                         class="bi bi-calendar-event icon-gray"></i> {{
                     'Meetings' | t
                     }}</a></li>
+            <li><a routerLink="/events" routerLinkActive="active"
+                    (click)="closeMobileSidebar()"><i
+                        class="bi bi-calendar-heart icon-teal"></i> {{
+                    'Events & Birthdays' | t
+                    }}</a></li>
             <li><a routerLink="/ai-assistant" routerLinkActive="active"
                     (click)="closeMobileSidebar()" class="ai-nav-link"><i
                         class="bi bi-stars"></i> {{ 'AI Assistant' | t

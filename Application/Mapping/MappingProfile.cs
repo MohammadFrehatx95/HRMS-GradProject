@@ -145,6 +145,12 @@ public class MappingProfile : Profile
             : null));
         CreateMap<LeaveSetting, LeaveSettingDto>();
         CreateMap<UpdateLeaveSettingDto, LeaveSetting>();
+        
+        // Company Events
+        CreateMap<CompanyEvent, Application.DTOs.CompanyEvent.CompanyEventDto>()
+            .ForMember(d => d.EmployeeName, 
+                o => o.MapFrom(s => s.Employee != null ? $"{s.Employee.FirstName} {s.Employee.LastName}" : string.Empty));
+        CreateMap<Application.DTOs.CompanyEvent.CreateCompanyEventDto, CompanyEvent>();
     }
 
 // Helper method في نفس الـ MappingProfile

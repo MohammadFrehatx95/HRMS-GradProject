@@ -13,6 +13,8 @@ public class CreateEmployeeDto
     [RegularExpression(@"^\+?\d{10,15}$", ErrorMessage = "Invalid phone number format.")]
     public string PhoneNumber { get; set; } = string.Empty;
     [Required]
+    public DateTime BirthDate { get; set; }
+    [Required]
     public DateTime HireDate { get; set; }
     [Required]
     public int DepartmentId { get; set; }

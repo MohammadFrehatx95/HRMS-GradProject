@@ -52,6 +52,7 @@ export class EmployeeFormComponent implements OnInit {
       Validators.required,
       Validators.pattern(/^[0-9]{10}$/),
     ]),
+    birthDate: new FormControl('', Validators.required),
     hireDate: new FormControl('', Validators.required),
     departmentId: new FormControl('', Validators.required),
     positionId: new FormControl(
@@ -128,6 +129,9 @@ export class EmployeeFormComponent implements OnInit {
             '',
           email: profile.email || '',
           phoneNumber: profile.phoneNumber || profile.phone || '',
+          birthDate: profile.birthDate
+            ? new Date(profile.birthDate).toISOString().split('T')[0]
+            : '',
           hireDate: profile.hireDate
             ? new Date(profile.hireDate).toISOString().split('T')[0]
             : '',

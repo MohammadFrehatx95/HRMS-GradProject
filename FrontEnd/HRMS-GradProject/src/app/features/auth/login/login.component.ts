@@ -141,7 +141,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       err?.message?.includes('cancelled') ||
       err?.message?.includes('canceled')
     ) {
-      return '❌ Fingerprint scan was cancelled.<br><small class="text-muted">Please try again and follow your device prompt.</small>';
+      return 'Fingerprint scan was cancelled.<br><small class="text-muted">Please try again and follow your device prompt.</small>';
     }
 
     // No fingerprint registered for this user (400 from backend)
@@ -150,23 +150,23 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     if (status === 400) {
       if (typeof backendMsg === 'string' && backendMsg.toLowerCase().includes('no fingerprint')) {
-        return '⚠️ No fingerprint registered for this account.<br><small class="text-muted">Go to <b>My Profile</b> and tap <b>"Add Fingerprint Login"</b> first.</small>';
+        return 'No fingerprint registered for this account.<br><small class="text-muted">Go to <b>My Profile</b> and tap <b>"Add Fingerprint Login"</b> first.</small>';
       }
       if (typeof backendMsg === 'string' && backendMsg.toLowerCase().includes('expired')) {
-        return '⏱️ Session expired. Please try again.';
+        return 'Session expired. Please try again.';
       }
       if (typeof backendMsg === 'string' && backendMsg.length > 0 && backendMsg.length < 200) {
-        return `⚠️ ${backendMsg}<br><small class="text-muted">Make sure you have registered your fingerprint from My Profile page.</small>`;
+        return `${backendMsg}<br><small class="text-muted">Make sure you have registered your fingerprint from My Profile page.</small>`;
       }
-      return '⚠️ No fingerprint is registered for this account.<br><small class="text-muted">Go to <b>My Profile → Add Fingerprint Login</b> first.</small>';
+      return 'No fingerprint is registered for this account.<br><small class="text-muted">Go to <b>My Profile → Add Fingerprint Login</b> first.</small>';
     }
 
     if (status === 404) {
-      return '❌ User not found. Please check your email address.';
+      return 'User not found. Please check your email address.';
     }
 
     if (status === 0 || !navigator.onLine) {
-      return '🌐 No internet connection. Please check your network.';
+      return 'No internet connection. Please check your network.';
     }
 
     // Hardware not available
@@ -174,9 +174,9 @@ export class LoginComponent implements OnInit, OnDestroy {
       err?.name === 'NotSupportedError' ||
       err?.message?.includes('authenticator')
     ) {
-      return '🔒 Your device does not support fingerprint login, or no biometric is configured.';
+      return 'Your device does not support fingerprint login, or no biometric is configured.';
     }
 
-    return '❌ Could not verify your fingerprint.<br><small class="text-muted">Please try again or use your password.</small>';
+    return 'Could not verify your fingerprint.<br><small class="text-muted">Please try again or use your password.</small>';
   }
 }
