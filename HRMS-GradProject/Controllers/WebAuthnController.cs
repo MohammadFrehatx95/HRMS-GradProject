@@ -64,7 +64,7 @@ public class WebAuthnController(
         var options = fido2.RequestNewCredential(reqParams);
         cache.Set(GetCacheKey("fido2_register", user.Id.ToString()), options.ToJson(), TimeSpan.FromMinutes(5));
 
-        return Ok(options);
+        return Content(options.ToJson(), "application/json");
     }
 
     [HttpPost("register")]
@@ -141,7 +141,7 @@ public class WebAuthnController(
 
         cache.Set(GetCacheKey("fido2_login", email), options.ToJson(), TimeSpan.FromMinutes(5));
 
-        return Ok(options);
+        return Content(options.ToJson(), "application/json");
     }
 
     [HttpPost("login")]
