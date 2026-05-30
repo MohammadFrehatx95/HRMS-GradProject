@@ -170,7 +170,7 @@ public class WebAuthnController(
                 OriginalOptions = options,
                 StoredPublicKey = creds.PublicKey,
                 StoredSignatureCounter = creds.SignatureCounter,
-                IsUserHandleOwnerOfCredentialIdCallback = async (args, cancellationToken) => true
+                IsUserHandleOwnerOfCredentialIdCallback = (args, cancellationToken) => Task.FromResult(true)
             };
 
             var res = await fido2.MakeAssertionAsync(makeAssertionParams, HttpContext.RequestAborted);

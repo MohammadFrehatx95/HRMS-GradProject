@@ -111,11 +111,11 @@ public class EventsController : ControllerBase
     {
         var ev = await _uow.Repository<CompanyEvent>().GetByIdAsync(id);
         if (ev == null)
-            return NotFound(ApiResponse<object>.NotFound("Event not found"));
+            return NotFound(ApiResponse.Fail("Event not found"));
 
         _uow.Repository<CompanyEvent>().Delete(ev);
         await _uow.SaveChangesAsync();
 
-        return Ok(ApiResponse<object>.Ok(null, "Event deleted"));
+        return Ok(ApiResponse.Ok("Event deleted"));
     }
 }
