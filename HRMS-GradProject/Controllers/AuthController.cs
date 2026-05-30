@@ -123,6 +123,15 @@ public class AuthController(IAuthService authService, IUserService userService, 
                 // Store as PENDING — not applied yet
                 user.PendingProfilePictureUrl = url;
                 uow.Repository<User>().Update(user);
+
+                var request = new ProfilePictureRequest
+                {
+                    UserId = userId,
+                    RequestedPictureUrl = url,
+                    Status = RequestStatus.Pending,
+                    RequestedAt = DateTime.UtcNow
+                };
+                await uow.Repository<ProfilePictureRequest>().AddAsync(request);
                 await uow.SaveChangesAsync();
 
                 // Notify all HR and Admin users
@@ -155,40 +164,51 @@ public class AuthController(IAuthService authService, IUserService userService, 
     [Authorize(Roles = "Admin,HR")]
     public async Task<IActionResult> GetPendingProfilePictures()
     {
-        var users = await uow.Repository<User>()
+        var requests = await uow.Repository<ProfilePictureRequest>()
             .GetAllQueryable()
-            .Where(u => u.PendingProfilePictureUrl != null)
-            .Select(u => new PendingProfilePictureDto
+            .Include(r => r.User)
+            .OrderByDescending(r => r.RequestedAt)
+            .Select(r => new ProfilePictureRequestDto
             {
-                UserId = u.Id,
-                Username = u.Username,
-                Email = u.Email,
-                CurrentProfilePictureUrl = u.ProfilePictureUrl,
-                PendingProfilePictureUrl = u.PendingProfilePictureUrl!
+                Id = r.Id,
+                UserId = r.UserId,
+                Username = r.User.Username,
+                Email = r.User.Email,
+                CurrentProfilePictureUrl = r.User.ProfilePictureUrl,
+                RequestedPictureUrl = r.RequestedPictureUrl,
+                Status = r.Status,
+                RequestedAt = r.RequestedAt,
+                ResolvedAt = r.ResolvedAt
             })
             .ToListAsync();
 
-        return Ok(ApiResponse<List<PendingProfilePictureDto>>.Ok(users, "Pending pictures retrieved."));
+        return Ok(ApiResponse<List<ProfilePictureRequestDto>>.Ok(requests, "Profile picture requests retrieved."));
     }
 
-    // POST api/auth/approve-profile-picture/{userId} — HR/Admin only
-    [HttpPost("approve-profile-picture/{targetUserId:int}")]
+    // POST api/auth/approve-profile-picture/{requestId} — HR/Admin only
+    [HttpPost("approve-profile-picture/{requestId:int}")]
     [Authorize(Roles = "Admin,HR")]
-    public async Task<IActionResult> ApproveProfilePicture(int targetUserId,
+    public async Task<IActionResult> ApproveProfilePicture(int requestId,
         [FromServices] INotificationService notificationService)
     {
-        var user = await uow.Repository<User>().GetByIdAsync(targetUserId);
-        if (user == null) return NotFound(ApiResponse.Fail("User not found."));
-        if (user.PendingProfilePictureUrl == null)
-            return BadRequest(ApiResponse.Fail("No pending picture found."));
+        var request = await uow.Repository<ProfilePictureRequest>().GetAllQueryable().Include(r => r.User).FirstOrDefaultAsync(r => r.Id == requestId);
+        if (request == null) return NotFound(ApiResponse.Fail("Request not found."));
+        if (request.Status != RequestStatus.Pending) return BadRequest(ApiResponse.Fail("Request is not pending."));
 
-        user.ProfilePictureUrl = user.PendingProfilePictureUrl;
+        var user = request.User!;
+        
+        request.Status = RequestStatus.Approved;
+        request.ResolvedAt = DateTime.UtcNow;
+        uow.Repository<ProfilePictureRequest>().Update(request);
+
+        user.ProfilePictureUrl = request.RequestedPictureUrl;
         user.PendingProfilePictureUrl = null;
         uow.Repository<User>().Update(user);
+
         await uow.SaveChangesAsync();
 
         await notificationService.CreateAsync(
-            targetUserId,
+            user.Id,
             "Profile Picture Approved",
             "Your profile picture has been approved and is now live!",
             NotificationType.ProfilePictureApproved);
@@ -196,23 +216,29 @@ public class AuthController(IAuthService authService, IUserService userService, 
         return Ok(ApiResponse.Ok("Profile picture approved successfully."));
     }
 
-    // POST api/auth/reject-profile-picture/{userId} — HR/Admin only
-    [HttpPost("reject-profile-picture/{targetUserId:int}")]
+    // POST api/auth/reject-profile-picture/{requestId} — HR/Admin only
+    [HttpPost("reject-profile-picture/{requestId:int}")]
     [Authorize(Roles = "Admin,HR")]
-    public async Task<IActionResult> RejectProfilePicture(int targetUserId,
+    public async Task<IActionResult> RejectProfilePicture(int requestId,
         [FromServices] INotificationService notificationService)
     {
-        var user = await uow.Repository<User>().GetByIdAsync(targetUserId);
-        if (user == null) return NotFound(ApiResponse.Fail("User not found."));
-        if (user.PendingProfilePictureUrl == null)
-            return BadRequest(ApiResponse.Fail("No pending picture found."));
+        var request = await uow.Repository<ProfilePictureRequest>().GetAllQueryable().Include(r => r.User).FirstOrDefaultAsync(r => r.Id == requestId);
+        if (request == null) return NotFound(ApiResponse.Fail("Request not found."));
+        if (request.Status != RequestStatus.Pending) return BadRequest(ApiResponse.Fail("Request is not pending."));
+
+        var user = request.User!;
+
+        request.Status = RequestStatus.Rejected;
+        request.ResolvedAt = DateTime.UtcNow;
+        uow.Repository<ProfilePictureRequest>().Update(request);
 
         user.PendingProfilePictureUrl = null;
         uow.Repository<User>().Update(user);
+        
         await uow.SaveChangesAsync();
 
         await notificationService.CreateAsync(
-            targetUserId,
+            user.Id,
             "Profile Picture Rejected",
             "Your profile picture was rejected. Please upload a different photo that complies with company policy.",
             NotificationType.ProfilePictureRejected);
@@ -249,6 +275,36 @@ public class AuthController(IAuthService authService, IUserService userService, 
         {
             return StatusCode(500, ApiResponse.Fail($"Error: {ex.Message}"));
         }
+    }
+
+    [HttpDelete("profile-picture")]
+    [Authorize]
+    public async Task<IActionResult> DeleteProfilePicture()
+    {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var user = await uow.Repository<User>().GetByIdAsync(userId);
+        if (user == null) return NotFound(ApiResponse.Fail("User not found."));
+
+        user.ProfilePictureUrl = null;
+        uow.Repository<User>().Update(user);
+        await uow.SaveChangesAsync();
+
+        return Ok(ApiResponse.Ok("Profile picture deleted successfully."));
+    }
+
+    [HttpDelete("admin-delete-profile-picture/{userId}")]
+    [Authorize(Roles = "Admin,HR")]
+    public async Task<IActionResult> AdminDeleteProfilePicture(int userId)
+    {
+        var user = await uow.Repository<User>().GetByIdAsync(userId);
+        if (user == null) return NotFound(ApiResponse.Fail("User not found."));
+
+        user.ProfilePictureUrl = null;
+        user.PendingProfilePictureUrl = null; 
+        uow.Repository<User>().Update(user);
+        await uow.SaveChangesAsync();
+
+        return Ok(ApiResponse.Ok("Profile picture deleted successfully by admin."));
     }
 
     [HttpGet("users")]

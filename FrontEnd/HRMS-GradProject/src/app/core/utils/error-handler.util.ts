@@ -1,5 +1,4 @@
-﻿
-export function getFriendlyErrorMessage(
+﻿export function getFriendlyErrorMessage(
   err: any,
   fallback: string = 'Something went wrong. Please try again later.',
 ): string {
@@ -39,9 +38,10 @@ export function getFriendlyErrorMessage(
   }
 
   if (status === 400) {
-
     if (Array.isArray(err?.error)) {
-      const msgs = err.error.map((e: any) => e.description || e.errorMessage || e).filter((e: any) => typeof e === 'string');
+      const msgs = err.error
+        .map((e: any) => e.description || e.errorMessage || e)
+        .filter((e: any) => typeof e === 'string');
       if (msgs.length > 0) return msgs.join('\n');
     }
 

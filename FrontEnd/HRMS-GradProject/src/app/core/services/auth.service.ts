@@ -104,18 +104,26 @@ export class AuthService {
     );
   }
 
-  approveProfilePicture(userId: number): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/approve-profile-picture/${userId}`, {});
+  approveProfilePicture(requestId: number): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/approve-profile-picture/${requestId}`, {});
   }
 
-  rejectProfilePicture(userId: number): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/reject-profile-picture/${userId}`, {});
+  rejectProfilePicture(requestId: number): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/reject-profile-picture/${requestId}`, {});
   }
 
   adminUpdateProfilePicture(userId: number, file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
     return this.http.post<any>(`${this.apiUrl}/admin-update-profile-picture/${userId}`, formData);
+  }
+
+  deleteProfilePicture(): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/profile-picture`);
+  }
+
+  adminDeleteProfilePicture(userId: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/admin-delete-profile-picture/${userId}`);
   }
 
   isLoggedIn(): boolean {

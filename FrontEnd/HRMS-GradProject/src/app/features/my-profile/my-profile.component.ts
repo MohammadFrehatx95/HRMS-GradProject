@@ -180,6 +180,35 @@ export class MyProfileComponent implements OnInit {
     });
   }
 
+  deleteProfilePicture() {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to delete your profile picture?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isUploadingPic = true;
+        this.authService.deleteProfilePicture().subscribe({
+          next: () => {
+            this.isUploadingPic = false;
+            this.profilePicUrl = null;
+            localStorage.removeItem('user_profile_pic');
+            window.dispatchEvent(new Event('profile_pic_updated'));
+            Swal.fire('Deleted!', 'Your profile picture has been deleted.', 'success');
+          },
+          error: (err) => {
+            this.isUploadingPic = false;
+            Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to delete picture.'), 'error');
+          }
+        });
+      }
+    });
+  }
+
   openEditModal() {
     this.editData.email = this.profile?.email || this.userEmail || '';
     this.editData.phone =

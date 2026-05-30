@@ -45,7 +45,7 @@
         <i class="bi bi-check-circle-fill text-success fs-1"></i>
       </div>
       <h5 class="fw-bold text-dark mb-0">{{ 'All Caught Up!' | t }}</h5>
-      <p class="text-muted small mb-0">{{ 'There are no pending profile picture requests at this time.' | t }}</p>
+      <p class="text-muted small mb-0">{{ 'There are no profile picture requests at this time.' | t }}</p>
     </div>
   </div>
   }
@@ -55,9 +55,9 @@
   <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
     <div class="card-header bg-white border-0 p-3 d-flex justify-content-between align-items-center">
       <span class="fw-semibold text-dark">
-        <i class="bi bi-clock-history text-warning me-2"></i>
-        {{ 'Pending Requests' | t }}
-        <span class="badge bg-warning text-dark ms-2 rounded-pill">{{ pendingPictures.length }}</span>
+        <i class="bi bi-clock-history text-primary me-2"></i>
+        {{ 'Profile Picture Requests' | t }}
+        <span class="badge bg-primary text-light ms-2 rounded-pill">{{ pendingPictures.length }}</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (pic of pendingPictures; track pic.userId) {
+          @for (pic of pendingPictures; track pic.id) {
           <tr class="border-top">
             
             <td class="ps-4 py-3">
@@ -108,25 +108,41 @@
             
             <td class="py-3">
               <div class="d-flex align-items-center gap-2">
-                <img [src]="pic.pendingProfilePictureUrl"
-                  class="rounded-circle object-fit-cover border border-2 border-warning shadow"
+                <img [src]="pic.requestedPictureUrl"
+                  class="rounded-circle object-fit-cover border shadow"
+                  [class.border-warning]="pic.status === 0"
+                  [class.border-success]="pic.status === 1"
+                  [class.border-danger]="pic.status === 2"
+                  [class.border-2]="true"
                   style="width: 60px; height: 60px;"
-                  alt="Pending">
-                <span class="badge bg-warning text-dark rounded-pill px-2 py-1" style="font-size: 10px;">
+                  alt="Requested">
+                <span *ngIf="pic.status === 0" class="badge bg-warning text-dark rounded-pill px-2 py-1" style="font-size: 10px;">
                   <i class="bi bi-clock me-1"></i>Pending
                 </span>
+                <span *ngIf="pic.status === 1" class="badge bg-success text-light rounded-pill px-2 py-1" style="font-size: 10px;">
+                  <i class="bi bi-check-circle me-1"></i>Approved
+                </span>
+                <span *ngIf="pic.status === 2" class="badge bg-danger text-light rounded-pill px-2 py-1" style="font-size: 10px;">
+                  <i class="bi bi-x-circle me-1"></i>Rejected
+                </span>
+              </div>
+              <div class="small text-muted mt-1" style="font-size: 0.7rem;">
+                {{ pic.requestedAt | date:'short' }}
               </div>
             </td>
 
             
             <td class="py-3 pe-4 text-end">
-              <div class="d-flex gap-2 justify-content-end">
-                <button class="btn btn-success btn-sm px-3 shadow-sm" (click)="approve(pic.userId)">
+              <div class="d-flex gap-2 justify-content-end" *ngIf="pic.status === 0">
+                <button class="btn btn-success btn-sm px-3 shadow-sm" (click)="approve(pic.id)">
                   <i class="bi bi-check-lg me-1"></i>{{ 'Approve' | t }}
                 </button>
-                <button class="btn btn-outline-danger btn-sm px-3" (click)="reject(pic.userId)">
+                <button class="btn btn-outline-danger btn-sm px-3" (click)="reject(pic.id)">
                   <i class="bi bi-x-lg me-1"></i>{{ 'Reject' | t }}
                 </button>
+              </div>
+              <div class="text-muted small fst-italic" *ngIf="pic.status !== 0">
+                Resolved on<br>{{ pic.resolvedAt | date:'short' }}
               </div>
             </td>
           </tr>

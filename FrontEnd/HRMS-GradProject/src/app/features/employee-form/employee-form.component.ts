@@ -198,6 +198,15 @@ export class EmployeeFormComponent implements OnInit {
     return this.employeeForm.getRawValue().email || '';
   }
 
+  getProfileInitials(): string {
+    const fName = this.employeeForm.getRawValue().firstName || '';
+    const lName = this.employeeForm.getRawValue().lastName || '';
+    if (fName || lName) {
+      return ((fName[0] || '') + (lName[0] || '')).toUpperCase();
+    }
+    return this.linkedUserInfo?.username?.charAt(0)?.toUpperCase() || 'U';
+  }
+
   private parseBackendError(err: any): string {
     const body = err?.error;
 
@@ -253,6 +262,42 @@ export class EmployeeFormComponent implements OnInit {
       this.picturePreviewUrl = e.target.result;
     };
     reader.readAsDataURL(file);
+  }
+
+  deleteProfilePicture() {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to delete this employee\'s profile picture?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (!this.isEditMode || !this.employeeForm.getRawValue().userId) {
+          this.selectedPictureFile = null;
+          this.picturePreviewUrl = null;
+          return;
+        }
+        
+        this.isLoading = true;
+        this.authService.adminDeleteProfilePicture(Number(this.employeeForm.getRawValue().userId)).subscribe({
+          next: () => {
+            this.isLoading = false;
+            this.picturePreviewUrl = null;
+            this.selectedPictureFile = null;
+            if (this.linkedUserInfo) this.linkedUserInfo.profilePictureUrl = null;
+            Swal.fire('Deleted!', 'Profile picture has been deleted.', 'success');
+          },
+          error: (err) => {
+            this.isLoading = false;
+            Swal.fire('Error', 'Failed to delete picture.', 'error');
+            console.error(err);
+          }
+        });
+      }
+    });
   }
 
   onSubmit() {

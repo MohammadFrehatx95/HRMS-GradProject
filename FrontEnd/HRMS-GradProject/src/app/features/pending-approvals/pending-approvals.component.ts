@@ -39,7 +39,7 @@ export class PendingApprovalsComponent implements OnInit {
     });
   }
 
-  approve(userId: number) {
+  approve(requestId: number) {
     Swal.fire({
       title: 'Approve Picture?',
       text: 'This will replace the employee\'s current profile picture.',
@@ -51,7 +51,7 @@ export class PendingApprovalsComponent implements OnInit {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.authService.approveProfilePicture(userId).subscribe({
+        this.authService.approveProfilePicture(requestId).subscribe({
           next: () => {
             Swal.fire({ icon: 'success', title: 'Approved!', text: 'Profile picture has been approved and applied.', timer: 2000, showConfirmButton: false });
             this.load();
@@ -62,7 +62,7 @@ export class PendingApprovalsComponent implements OnInit {
     });
   }
 
-  reject(userId: number) {
+  reject(requestId: number) {
     Swal.fire({
       title: 'Reject Picture?',
       text: 'The employee will be notified that their picture was rejected.',
@@ -74,7 +74,7 @@ export class PendingApprovalsComponent implements OnInit {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.authService.rejectProfilePicture(userId).subscribe({
+        this.authService.rejectProfilePicture(requestId).subscribe({
           next: () => {
             Swal.fire({ icon: 'success', title: 'Rejected', text: 'Profile picture request has been rejected.', timer: 2000, showConfirmButton: false });
             this.load();
@@ -87,40 +87,54 @@ export class PendingApprovalsComponent implements OnInit {
 
   exportToExcel() {
     if (this.pendingPictures.length === 0) {
-      Swal.fire('No Data', 'There are no pending approvals to export.', 'info');
+      Swal.fire('No Data', 'There are no profile picture requests to export.', 'info');
       return;
     }
 
-    const headers = ['User ID', 'Name', 'Email', 'Upload Date'];
-    const data = this.pendingPictures.map(p => [
-      `#${p.userId}`,
-      `${p.firstName} ${p.lastName}`,
-      p.email,
-      new Date(p.uploadedAt).toLocaleString()
-    ]);
+    const headers = ['Request ID', 'User ID', 'Name', 'Email', 'Upload Date', 'Status'];
+    const data = this.pendingPictures.map(p => {
+      let statusStr = 'Pending';
+      if (p.status === 1) statusStr = 'Approved';
+      if (p.status === 2) statusStr = 'Rejected';
+      return [
+        `#${p.id}`,
+        `#${p.userId}`,
+        `${p.username}`,
+        p.email,
+        p.requestedAt ? new Date(p.requestedAt).toLocaleString() : '—',
+        statusStr
+      ];
+    });
 
-    this.excelExportService.exportTableToExcel(headers, data, 'Pending_Profile_Pictures');
+    this.excelExportService.exportTableToExcel(headers, data, 'Profile_Picture_Requests');
   }
 
   exportToPDF() {
     if (this.pendingPictures.length === 0) {
-      Swal.fire('No Data', 'There are no pending approvals to export.', 'info');
+      Swal.fire('No Data', 'There are no profile picture requests to export.', 'info');
       return;
     }
 
-    const headers = ['User ID', 'Name', 'Email', 'Upload Date'];
-    const data = this.pendingPictures.map(p => [
-      `#${p.userId}`,
-      `${p.firstName || p.username || ''} ${p.lastName || ''}`.trim() || '—',
-      p.email || '—',
-      p.uploadedAt ? new Date(p.uploadedAt).toLocaleString() : '—'
-    ]);
+    const headers = ['Request ID', 'User ID', 'Name', 'Email', 'Upload Date', 'Status'];
+    const data = this.pendingPictures.map(p => {
+      let statusStr = 'Pending';
+      if (p.status === 1) statusStr = 'Approved';
+      if (p.status === 2) statusStr = 'Rejected';
+      return [
+        `#${p.id}`,
+        `#${p.userId}`,
+        `${p.username || ''}`.trim() || '—',
+        p.email || '—',
+        p.requestedAt ? new Date(p.requestedAt).toLocaleString() : '—',
+        statusStr
+      ];
+    });
 
     this.pdfExportService.generateTableReport(
-      'Pending Profile Pictures',
+      'Profile Picture Requests',
       headers,
       data,
-      'Pending_Profile_Pictures_Report'
+      'Profile_Picture_Requests_Report'
     );
   }
 }

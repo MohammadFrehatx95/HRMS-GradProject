@@ -17,4 +17,5 @@ public class User
     // Navigation properties
     public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
     public ICollection<FidoCredential> FidoCredentials { get; set; } = new List<FidoCredential>();
+    public ICollection<ProfilePictureRequest> ProfilePictureRequests { get; set; } = new List<ProfilePictureRequest>();
 }

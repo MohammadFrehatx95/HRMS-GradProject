@@ -185,8 +185,8 @@
               <img *ngIf="picturePreviewUrl" [src]="picturePreviewUrl" 
                    class="rounded-circle object-fit-cover w-100 h-100 border shadow-sm" alt="Profile Preview">
               <div *ngIf="!picturePreviewUrl" 
-                   class="rounded-circle bg-light d-flex align-items-center justify-content-center w-100 h-100 border shadow-sm text-secondary">
-                <i class="bi bi-person-fill fs-1"></i>
+                   class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center w-100 h-100 border shadow-sm text-primary fw-bold" style="font-size: 2.5rem;">
+                {{ getProfileInitials() }}
               </div>
               
               
@@ -199,7 +199,13 @@
 
             <input type="file" id="profilePicInput" class="d-none" accept="image/*" (change)="onFileSelected($event)">
             
-            <small class="text-muted text-center mt-1">
+            <div class="mt-2" *ngIf="picturePreviewUrl && isEditMode">
+              <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3" (click)="deleteProfilePicture()" [disabled]="isLoading">
+                <i class="bi bi-trash-fill me-1"></i> {{ 'Delete Picture' | t }}
+              </button>
+            </div>
+
+            <small class="text-muted text-center mt-2">
               Click the camera icon to upload or change picture.<br>
               <i class="bi bi-info-circle me-1"></i>Max size: 5MB. Formats: JPG, PNG.
             </small>

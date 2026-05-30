@@ -27,6 +27,7 @@ public class AppDbContext : DbContext
     public DbSet<LeaveSetting> LeaveSettings { get; set; }
     public DbSet<FidoCredential> FidoCredentials { get; set; }
     public DbSet<CompanyEvent> CompanyEvents { get; set; }
+    public DbSet<ProfilePictureRequest> ProfilePictureRequests { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -137,6 +138,12 @@ public class AppDbContext : DbContext
             .HasOne(f => f.User)
             .WithMany(u => u.FidoCredentials)
             .HasForeignKey(f => f.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ProfilePictureRequest>()
+            .HasOne(p => p.User)
+            .WithMany(u => u.ProfilePictureRequests)
+            .HasForeignKey(p => p.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Department>().HasData(
