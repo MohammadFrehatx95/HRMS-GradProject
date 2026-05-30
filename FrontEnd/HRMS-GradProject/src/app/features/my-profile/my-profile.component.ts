@@ -36,6 +36,9 @@ export class MyProfileComponent implements OnInit {
   profilePicUrl: string | null = null;
   pendingProfilePicUrl: string | null = null;
 
+  fingerprints: any[] = [];
+  isLoadingFingerprints = false;
+
   showCropperModal = false;
   imageChangedEvent: any = '';
 
@@ -76,6 +79,8 @@ export class MyProfileComponent implements OnInit {
       },
       error: () => {}
     });
+
+    this.loadFingerprints();
   }
 
   get initials(): string {
@@ -314,6 +319,7 @@ export class MyProfileComponent implements OnInit {
         timer: 2500,
         showConfirmButton: false,
       });
+      this.loadFingerprints();
     } catch (err: any) {
       const msg = this.getFingerprintRegisterError(err);
       Swal.fire({
@@ -323,6 +329,47 @@ export class MyProfileComponent implements OnInit {
         confirmButtonText: 'OK',
         confirmButtonColor: '#4361ee',
       });
+    }
+  }
+
+  loadFingerprints() {
+    this.isLoadingFingerprints = true;
+    this.authService.getFingerprints()
+      .then(res => {
+        this.fingerprints = res?.data || res || [];
+        this.isLoadingFingerprints = false;
+      })
+      .catch(err => {
+        console.error('Failed to load fingerprints:', err);
+        this.isLoadingFingerprints = false;
+      });
+  }
+
+  async deleteFingerprint(id: number) {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to remove this fingerprint? You won\'t be able to log in with it anymore.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Yes, remove it!'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await this.authService.deleteFingerprint(id);
+        Swal.fire({
+          icon: 'success',
+          title: 'Removed!',
+          text: 'The fingerprint has been removed.',
+          timer: 2000,
+          showConfirmButton: false
+        });
+        this.loadFingerprints();
+      } catch (err) {
+        Swal.fire('Error', 'Failed to remove fingerprint. Please try again.', 'error');
+      }
     }
   }
 

@@ -125,7 +125,7 @@
                         <button type="button"
                             class="btn btn-outline-secondary w-100 rounded-pill py-3 fw-bold fs-5 d-flex justify-content-center align-items-center gap-2 fingerprint-btn"
                             (click)="loginWithFingerprint()"
-                            [disabled]="isFingerprintLoading || !loginForm.get('email')?.value">
+                            [disabled]="isFingerprintLoading">
                             @if (isFingerprintLoading) {
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             } @else {

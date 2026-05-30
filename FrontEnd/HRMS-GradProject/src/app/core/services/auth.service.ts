@@ -185,6 +185,14 @@ export class AuthService {
     localStorage.removeItem('user_profile_pic');
   }
 
+  getFingerprints(): Promise<any> {
+    return this.http.get<any>(`${this.apiUrl}/webauthn/fingerprints`).toPromise();
+  }
+
+  deleteFingerprint(id: number): Promise<any> {
+    return this.http.delete<any>(`${this.apiUrl}/webauthn/fingerprint/${id}`).toPromise();
+  }
+
   getCurrentUserName(): string | null {
     return typeof window !== 'undefined' ? localStorage.getItem('user_name') : null;
   }

@@ -155,7 +155,7 @@ public class WebAuthnController : ControllerBase
     }
 
     [HttpPost("login-options")]
-    public async Task<IActionResult> GetLoginOptions([FromBody] string email)
+    public async Task<IActionResult> GetLoginOptions([FromQuery] string email)
     {
         var user = await uow.Repository<User>().GetAllQueryable()
             .Include(u => u.FidoCredentials)
@@ -239,5 +239,35 @@ public class WebAuthnController : ControllerBase
         {
             return Ok(new { status = "error", message = $"Error authenticating: {ex.Message}" });
         }
+    }
+
+    [HttpGet("fingerprints")]
+    [Authorize]
+    public async Task<IActionResult> GetFingerprints()
+    {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var credentials = await uow.Repository<FidoCredential>().GetAllQueryable()
+            .Where(c => c.UserId == userId)
+            .OrderByDescending(c => c.RegDate)
+            .Select(c => new { id = c.Id, regDate = c.RegDate })
+            .ToListAsync();
+
+        return Ok(ApiResponse<object>.Ok(credentials, "Fingerprints retrieved successfully"));
+    }
+
+    [HttpDelete("fingerprint/{id}")]
+    [Authorize]
+    public async Task<IActionResult> DeleteFingerprint(int id)
+    {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var credential = await uow.Repository<FidoCredential>().GetByIdAsync(id);
+
+        if (credential == null || credential.UserId != userId)
+            return BadRequest(ApiResponse.Fail("Fingerprint not found or does not belong to you."));
+
+        uow.Repository<FidoCredential>().Delete(credential);
+        await uow.SaveChangesAsync();
+
+        return Ok(ApiResponse<object>.Ok(null, "Fingerprint deleted successfully."));
     }
 }
