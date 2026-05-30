@@ -935,11 +935,15 @@ export class DashboardComponent implements OnInit {
             },
             padding: { bottom: 15 },
           },
-          legend: { display: false },
+          legend: {
+            display: false,
+          },
           tooltip: {
+            backgroundColor: 'rgba(30, 41, 59, 0.9)',
+            padding: 10,
             callbacks: {
-              label: function (context: any) {
-                return context.parsed.y + '%';
+              label: function (context) {
+                return context.raw + '% Attendance';
               },
             },
           },
@@ -949,12 +953,7 @@ export class DashboardComponent implements OnInit {
             beginAtZero: true,
             max: 100,
             grid: {
-              color: 'rgba(0, 0, 0, 0.05)',
-            },
-            ticks: {
-              callback: function (value: any) {
-                return value + '%';
-              },
+              color: 'rgba(0,0,0,0.05)',
             },
           },
           x: {
@@ -965,6 +964,48 @@ export class DashboardComponent implements OnInit {
         },
       },
     });
+  }
+
+  generateDummyData() {
+    Swal.fire({
+      title: 'Generate Dummy Data',
+      text: 'How many employees do you want to generate? (This will also generate attendance, leaves, events, etc.)',
+      input: 'number',
+      inputAttributes: {
+        min: '1',
+        max: '200',
+        step: '1'
+      },
+      inputValue: 20,
+      showCancelButton: true,
+      confirmButtonText: 'Generate',
+      showLoaderOnConfirm: true,
+      preConfirm: (count) => {
+        return fetch(`http://localhost:5164/api/seed/generate?employeeCount=${count}`, {
+          method: 'POST'
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(response.statusText)
+          }
+          return response.json()
+        })
+        .catch(error => {
+          Swal.showValidationMessage(`Request failed: ${error}`)
+        })
+      },
+      allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: 'Success!',
+          text: result.value.message || 'Data generated successfully.',
+          icon: 'success'
+        }).then(() => {
+          window.location.reload();
+        });
+      }
+    })
   }
 
   exportRecentAttendancesToExcel() {

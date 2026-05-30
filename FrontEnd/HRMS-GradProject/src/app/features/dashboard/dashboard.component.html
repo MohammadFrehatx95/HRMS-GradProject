@@ -81,7 +81,11 @@
     </div>
 
     @if (isAdminOrHR) {
-    <div class="d-flex justify-content-end mb-3" *ngIf="isAdmin">
+    <div class="d-flex justify-content-end mb-3 gap-2" *ngIf="isAdmin">
+        <button class="btn btn-warning d-flex align-items-center gap-2 shadow-sm px-4 fw-bold text-dark" (click)="generateDummyData()">
+            <i class="bi bi-magic"></i>
+            {{ 'Generate Dummy Data' | t }}
+        </button>
         <button class="btn btn-primary d-flex align-items-center gap-2 shadow-sm px-4" (click)="downloadSystemReport()">
             <i class="bi bi-file-earmark-arrow-down"></i>
             {{ 'Download Report' | t }}
