@@ -38,7 +38,19 @@ public class WebAuthnController : ControllerBase
         this.cache = cache;
         this.uow = uow;
         this.jwtService = jwtService;
+        
         _jsonOptions = new JsonSerializerOptions(mvcJsonOptions.Value.JsonSerializerOptions);
+        
+        // Remove existing enum converters to prevent them from taking precedence
+        var existingEnumConverters = _jsonOptions.Converters
+            .Where(c => c.GetType() == typeof(System.Text.Json.Serialization.JsonStringEnumConverter))
+            .ToList();
+        foreach (var c in existingEnumConverters)
+        {
+            _jsonOptions.Converters.Remove(c);
+        }
+        
+        // Add our custom converter for kebab-case enums (like "public-key")
         _jsonOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter(System.Text.Json.JsonNamingPolicy.KebabCaseLower));
     }
 
