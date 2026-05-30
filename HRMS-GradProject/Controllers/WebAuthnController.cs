@@ -113,7 +113,7 @@ public class WebAuthnController(
         }
         catch (Exception ex)
         {
-            return BadRequest($"Error creating credential: {ex.Message}");
+            return Ok(new { status = "error", message = $"Error creating credential: {ex.Message}" });
         }
     }
 
@@ -194,7 +194,7 @@ public class WebAuthnController(
         }
         catch (Exception ex)
         {
-            return BadRequest($"Error authenticating: {ex.Message}");
+            return Ok(new { status = "error", message = $"Error authenticating: {ex.Message}" });
         }
     }
 }
