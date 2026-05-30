@@ -177,7 +177,9 @@ public class WebAuthnController : ControllerBase
         var getParams = new GetAssertionOptionsParams
         {
             AllowedCredentials = existingCredentials,
-            UserVerification = UserVerificationRequirement.Preferred
+            // Required forces the device to use biometrics (fingerprint/face)
+            // instead of showing a password-manager picker
+            UserVerification = UserVerificationRequirement.Required
         };
 
         var options = fido2.GetAssertionOptions(getParams);
@@ -213,7 +215,8 @@ public class WebAuthnController : ControllerBase
             .ToListAsync();
 
         var creds = allCreds.FirstOrDefault(c => c.DescriptorId.SequenceEqual(assertionResponse.RawId));
-        if (creds == null) return BadRequest(ApiResponse.Fail("Unknown credential"));
+        if (creds == null)
+            return BadRequest(ApiResponse.Fail("No fingerprint is registered for this account. Go to My Profile → Add Fingerprint Login first."));
 
         var user = creds.User;
 

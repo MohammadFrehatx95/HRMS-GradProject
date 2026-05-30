@@ -44,7 +44,14 @@ export class AuthService {
 
   async loginWithFingerprint(): Promise<any> {
     const optionsRes = await this.http.post<any>(`${this.apiUrl}/webauthn/login-options`, {}).toPromise();
-    const assertion = await get({ publicKey: optionsRes } as any);
+    // Override userVerification to 'required' so the browser triggers
+    // the device biometric prompt directly, instead of showing a
+    // password-manager account picker.
+    const assertionOptions = {
+      ...optionsRes,
+      userVerification: 'required' as UserVerificationRequirement,
+    };
+    const assertion = await get({ publicKey: assertionOptions } as any);
     
     const response = await this.http.post<any>(`${this.apiUrl}/webauthn/login`, assertion).toPromise();
     

@@ -140,17 +140,22 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     // No fingerprint registered for this user (400 from backend)
     const status = err?.status;
-    const backendMsg: string = err?.error || err?.error?.message || err?.message || '';
+    // Backend returns ApiResponse: { success: false, message: "..." }
+    const backendMsg: string =
+      err?.error?.message ||
+      (typeof err?.error === 'string' ? err.error : '') ||
+      err?.message ||
+      '';
 
     if (status === 400) {
-      if (typeof backendMsg === 'string' && backendMsg.toLowerCase().includes('no fingerprint')) {
-        return 'No fingerprint registered for this account.<br><small class="text-muted">Go to <b>My Profile</b> and tap <b>"Add Fingerprint Login"</b> first.</small>';
+      if (backendMsg.toLowerCase().includes('no fingerprint') || backendMsg.toLowerCase().includes('unknown credential')) {
+        return 'No fingerprint is registered for this account.<br><small class="text-muted">Go to <b>My Profile → Add Fingerprint Login</b> first.</small>';
       }
-      if (typeof backendMsg === 'string' && backendMsg.toLowerCase().includes('expired')) {
+      if (backendMsg.toLowerCase().includes('expired')) {
         return 'Session expired. Please try again.';
       }
-      if (typeof backendMsg === 'string' && backendMsg.length > 0 && backendMsg.length < 200) {
-        return `${backendMsg}<br><small class="text-muted">Make sure you have registered your fingerprint from My Profile page.</small>`;
+      if (backendMsg.length > 0 && backendMsg.length < 300) {
+        return `${backendMsg}<br><small class="text-muted">Go to <b>My Profile → Add Fingerprint Login</b> if you haven't registered yet.</small>`;
       }
       return 'No fingerprint is registered for this account.<br><small class="text-muted">Go to <b>My Profile → Add Fingerprint Login</b> first.</small>';
     }
