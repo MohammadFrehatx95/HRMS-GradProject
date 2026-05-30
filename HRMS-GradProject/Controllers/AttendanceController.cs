@@ -83,5 +83,32 @@ namespace HRMS_GradProject.Controllers
             var result = await attendanceService.ClockOutAsync(employeeId, dto);
             return Ok(ApiResponse<AttendanceDto>.Ok(result, "Clocked out successfully"));
         }
+
+        [HttpPost("face-clockin")]
+        public async Task<IActionResult> FaceClockIn([FromForm] ClockInDto dto, IFormFile image, [FromServices] IAzureFaceAuthService faceAuthService)
+        {
+            var employeeIdClaim = User.FindFirstValue("employeeId");
+
+            if (string.IsNullOrWhiteSpace(employeeIdClaim) || !int.TryParse(employeeIdClaim, out int employeeId))
+                return BadRequest(ApiResponse.Fail("Your account is not linked to an employee profile"));
+
+            if (image == null || image.Length == 0)
+                return BadRequest(ApiResponse.Fail("Face image is required for Face Check-in."));
+
+            using var stream = image.OpenReadStream();
+            
+            // In a real app, fetch the user's AzurePersonId from DB
+            string dummyAzurePersonId = "dummy-id-from-db";
+            
+            var isMatch = await faceAuthService.VerifyFaceAsync(dummyAzurePersonId, stream);
+            if (!isMatch)
+            {
+                return BadRequest(ApiResponse.Fail("Face verification failed. Please try again."));
+            }
+
+            var result = await attendanceService.ClockInAsync(employeeId, dto);
+            return CreatedAtAction(nameof(GetById), new { id = result.Id },
+                ApiResponse<AttendanceDto>.Ok(result, "Clocked in successfully via Face ID"));
+        }
     }
 }
