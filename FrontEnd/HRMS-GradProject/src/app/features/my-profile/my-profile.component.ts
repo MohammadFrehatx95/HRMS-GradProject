@@ -325,13 +325,7 @@ export class MyProfileComponent implements OnInit {
       const errMsg = err?.message?.toLowerCase() || '';
       
       if (errName === 'notallowederror' || errName === 'aborterror' || errMsg.includes('cancel') || errMsg.includes('abort') || errMsg.includes('timed out')) {
-         Swal.fire({
-           icon: 'info',
-           title: 'Cancelled',
-           text: 'Fingerprint registration was cancelled.',
-           timer: 2000,
-           showConfirmButton: false
-         });
+         // Do absolutely nothing, just return quietly
          return;
       }
 

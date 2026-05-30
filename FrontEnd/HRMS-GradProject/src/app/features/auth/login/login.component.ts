@@ -114,6 +114,13 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.router.navigate(['/dashboard']);
     } catch (err: any) {
       this.isFingerprintLoading = false;
+      const errName = err?.name?.toLowerCase() || '';
+      const errMsg = err?.message?.toLowerCase() || '';
+      
+      if (errName === 'notallowederror' || errName === 'aborterror' || errMsg.includes('cancel') || errMsg.includes('abort') || errMsg.includes('timed out')) {
+         return; // Quietly ignore cancellation
+      }
+
       const friendlyMsg = this.getFingerprintErrorMessage(err);
       Swal.fire({
         icon: 'error',
