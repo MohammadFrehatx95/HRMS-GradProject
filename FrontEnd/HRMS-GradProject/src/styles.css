@@ -479,8 +479,14 @@ html[dir="rtl"] .dropdown-menu-end {
 body.dark-mode .swal2-title {
   color: var(--color-text) !important;
 }
+
 body.dark-mode .swal2-html-container {
-  color: var(--color-text-label) !important;
+  color: var(--color-text) !important;
+}
+
+body.dark-mode .swal2-validation-message {
+  background: var(--color-surface) !important;
+  color: var(--color-text) !important;
 }
 
 body.dark-mode .detail-item {

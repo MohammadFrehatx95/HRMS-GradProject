@@ -12,6 +12,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { environment } from '../../../environments/environment';
 
 import { AnnouncementService } from '../../core/services/announcement.service';
 import { Announcement } from '../../core/models/announcement.model';
@@ -968,7 +969,7 @@ export class DashboardComponent implements OnInit {
 
   generateDummyData() {
     Swal.fire({
-      title: 'Generate Dummy Data',
+      title: 'Add Random Data',
       text: 'How many employees do you want to generate? (This will also generate attendance, leaves, events, etc.)',
       input: 'number',
       inputAttributes: {
@@ -981,7 +982,7 @@ export class DashboardComponent implements OnInit {
       confirmButtonText: 'Generate',
       showLoaderOnConfirm: true,
       preConfirm: (count) => {
-        return fetch(`http://localhost:5164/api/seed/generate?employeeCount=${count}`, {
+        return fetch(`${environment.apiUrl}/seed/generate?employeeCount=${count}`, {
           method: 'POST'
         })
         .then(response => {
