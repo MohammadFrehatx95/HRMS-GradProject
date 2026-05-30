@@ -91,9 +91,15 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddFido2(options =>
 {
-    options.ServerDomain = builder.Configuration["Fido2:ServerDomain"] ?? "localhost";
+    var serverDomain = builder.Configuration["Fido2:ServerDomain"] ?? "localhost";
+    options.ServerDomain = serverDomain;
     options.ServerName = "Kawadir HRMS";
-    options.Origins = builder.Configuration.GetSection("AllowedOrigins").Get<HashSet<string>>() ?? new HashSet<string> { "http://localhost:4200" };
+    
+    var origins = builder.Configuration.GetSection("AllowedOrigins").Get<HashSet<string>>() ?? new HashSet<string>();
+    origins.Add($"https://{serverDomain}");
+    origins.Add("http://localhost:4200");
+    options.Origins = origins;
+    
     options.TimestampDriftTolerance = 300000;
 });
 builder.Services.AddInfrastructure(builder.Configuration);

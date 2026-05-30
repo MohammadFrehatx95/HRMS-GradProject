@@ -327,26 +327,28 @@ export class MyProfileComponent implements OnInit {
   }
 
   private getFingerprintRegisterError(err: any): string {
+    const debugInfo = `<br><br><small class="text-muted" style="font-size:10px;">Debug: ${err?.name || ''} - ${err?.message || JSON.stringify(err)}</small>`;
+
     if (
       err?.name === 'NotAllowedError' ||
       err?.message?.includes('NotAllowedError') ||
       err?.message?.includes('cancelled') ||
       err?.message?.includes('canceled')
     ) {
-      return 'Fingerprint scan was cancelled.<br><small class="text-muted">Please try again and follow your device prompt.</small>';
+      return 'Fingerprint scan was cancelled or blocked.' + debugInfo;
     }
     if (err?.name === 'NotSupportedError' || err?.message?.includes('authenticator')) {
-      return 'Your device does not support fingerprint login, or no biometric sensor is configured.';
+      return 'Your device does not support fingerprint login, or no biometric sensor is configured.' + debugInfo;
     }
     if (err?.status === 401) {
-      return 'You must be logged in to add a fingerprint.';
+      return 'You must be logged in to add a fingerprint.' + debugInfo;
     }
     if (err?.status >= 500) {
-      return 'Server error. Please try again later.';
+      return 'Server error. Please try again later.' + debugInfo;
     }
     if (err?.status === 0 || !navigator.onLine) {
-      return 'No internet connection. Please check your network.';
+      return 'No internet connection. Please check your network.' + debugInfo;
     }
-    return 'Could not register fingerprint.<br><small class="text-muted">Please make sure your device has a biometric sensor and try again.</small>';
+    return `Could not register fingerprint.<br><br><b>Debug Info:</b> ${err?.message || JSON.stringify(err)}`;
   }
 }

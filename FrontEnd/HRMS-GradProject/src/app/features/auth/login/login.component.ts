@@ -177,6 +177,6 @@ export class LoginComponent implements OnInit, OnDestroy {
       return 'Your device does not support fingerprint login, or no biometric is configured.';
     }
 
-    return 'Could not verify your fingerprint.<br><small class="text-muted">Please try again or use your password.</small>';
+    return `Could not log in with fingerprint.<br><br><b>Debug Info:</b> ${err?.message || JSON.stringify(err)}`;
   }
 }
