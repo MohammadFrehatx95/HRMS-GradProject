@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -25,7 +25,7 @@ declare var bootstrap: any;
   imports: [CommonModule, RouterLink, FormsModule, TranslatePipe],
   templateUrl: './employees.component.html',
 })
-export class EmployeesComponent implements OnInit {
+export class EmployeesComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private employeeService = inject(EmployeeService);
   private authService = inject(AuthService);
@@ -86,6 +86,17 @@ export class EmployeesComponent implements OnInit {
     this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
     this.loadEmployees();
+  }
+
+  ngOnDestroy() {
+    if (this.detailsModal) {
+      this.detailsModal.hide();
+    }
+    document.body.classList.remove('modal-open');
+    const backdrops = document.querySelectorAll('.modal-backdrop');
+    backdrops.forEach((backdrop) => backdrop.remove());
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
   }
 
   getRoleBadgeClass(roleId: number): string {

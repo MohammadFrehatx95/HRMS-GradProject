@@ -321,7 +321,10 @@ export class MyProfileComponent implements OnInit {
       });
       this.loadFingerprints();
     } catch (err: any) {
-      if (err?.name === 'NotAllowedError' || err?.message?.includes('cancelled') || err?.message?.includes('canceled')) {
+      const errName = err?.name?.toLowerCase() || '';
+      const errMsg = err?.message?.toLowerCase() || '';
+      
+      if (errName === 'notallowederror' || errName === 'aborterror' || errMsg.includes('cancel') || errMsg.includes('abort') || errMsg.includes('timed out')) {
          Swal.fire({
            icon: 'info',
            title: 'Cancelled',
