@@ -38,7 +38,8 @@ public class WebAuthnController : ControllerBase
         this.cache = cache;
         this.uow = uow;
         this.jwtService = jwtService;
-        _jsonOptions = mvcJsonOptions.Value.JsonSerializerOptions;
+        _jsonOptions = new JsonSerializerOptions(mvcJsonOptions.Value.JsonSerializerOptions);
+        _jsonOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter(System.Text.Json.JsonNamingPolicy.KebabCaseLower));
     }
 
     private string GetCacheKey(string prefix, string identifier) => $"{prefix}_{identifier}";
