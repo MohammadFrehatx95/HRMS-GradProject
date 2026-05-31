@@ -27,8 +27,8 @@ public class SeedController : ControllerBase
     {
         try
         {
-            // Set a fixed seed for predictable data if needed, but random is fine.
-            Randomizer.Seed = new Random(8675309);
+            // Set a random seed so multiple clicks don't generate the same data
+            Randomizer.Seed = new Random();
 
             // 1. Departments
             var defaultDepts = new List<string> { "IT", "HR", "Finance", "Marketing", "Engineering" };
@@ -96,13 +96,13 @@ public class SeedController : ControllerBase
                 employee.DepartmentId = dept.Id;
                 employee.PositionId = pos.Id;
 
-                // Make safe unique email
-                string safeEmail = $"{employee.FirstName.ToLower()}.{employee.LastName.ToLower()}{f.Random.Int(1, 9999)}@hrms-grad.local";
+                var uniqueStr = Guid.NewGuid().ToString().Substring(0, 6);
+                string safeEmail = $"{employee.FirstName.ToLower()}.{employee.LastName.ToLower()}{uniqueStr}@hrms-grad.local";
                 employee.Email = safeEmail;
 
                 var user = userFaker.Generate();
                 user.Email = safeEmail;
-                user.Username = $"{employee.FirstName.ToLower()}{employee.LastName.ToLower()}{f.Random.Int(1, 9999)}";
+                user.Username = $"{employee.FirstName.ToLower()}{employee.LastName.ToLower()}{uniqueStr}";
                 
                 // Make some HR or Admin
                 var randRole = f.Random.Int(1, 100);

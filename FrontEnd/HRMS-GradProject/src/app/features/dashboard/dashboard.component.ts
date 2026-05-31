@@ -985,14 +985,15 @@ export class DashboardComponent implements OnInit {
         return fetch(`${environment.apiUrl}/seed/generate?employeeCount=${count}`, {
           method: 'POST'
         })
-        .then(response => {
+        .then(async response => {
           if (!response.ok) {
-            throw new Error(response.statusText)
+            const errJson = await response.json().catch(() => ({}));
+            throw new Error(errJson.inner || errJson.message || response.statusText || 'Unknown error occurred');
           }
           return response.json()
         })
         .catch(error => {
-          Swal.showValidationMessage(`Request failed: ${error}`)
+          Swal.showValidationMessage(`Request failed: ${error.message}`)
         })
       },
       allowOutsideClick: () => !Swal.isLoading()
