@@ -93,9 +93,7 @@ export class PendingApprovalsComponent implements OnInit {
 
     const headers = ['Request ID', 'User ID', 'Name', 'Email', 'Upload Date', 'Status'];
     const data = this.pendingPictures.map(p => {
-      let statusStr = 'Pending';
-      if (p.status === 1) statusStr = 'Approved';
-      if (p.status === 2) statusStr = 'Rejected';
+      let statusStr = p.status || 'Pending';
       return [
         `#${p.id}`,
         `#${p.userId}`,
@@ -117,9 +115,7 @@ export class PendingApprovalsComponent implements OnInit {
 
     const headers = ['Request ID', 'User ID', 'Name', 'Email', 'Upload Date', 'Status'];
     const data = this.pendingPictures.map(p => {
-      let statusStr = 'Pending';
-      if (p.status === 1) statusStr = 'Approved';
-      if (p.status === 2) statusStr = 'Rejected';
+      let statusStr = p.status || 'Pending';
       return [
         `#${p.id}`,
         `#${p.userId}`,

@@ -110,19 +110,19 @@
               <div class="d-flex align-items-center gap-2">
                 <img [src]="pic.requestedPictureUrl"
                   class="rounded-circle object-fit-cover border shadow"
-                  [class.border-warning]="pic.status === 0"
-                  [class.border-success]="pic.status === 1"
-                  [class.border-danger]="pic.status === 2"
+                  [class.border-warning]="pic.status === 0 || pic.status === 'Pending'"
+                  [class.border-success]="pic.status === 1 || pic.status === 'Approved'"
+                  [class.border-danger]="pic.status === 2 || pic.status === 'Rejected'"
                   [class.border-2]="true"
                   style="width: 60px; height: 60px;"
                   alt="Requested">
-                <span *ngIf="pic.status === 0" class="badge bg-warning text-dark rounded-pill px-2 py-1" style="font-size: 10px;">
+                <span *ngIf="pic.status === 0 || pic.status === 'Pending'" class="badge bg-warning text-dark rounded-pill px-2 py-1" style="font-size: 10px;">
                   <i class="bi bi-clock me-1"></i>Pending
                 </span>
-                <span *ngIf="pic.status === 1" class="badge bg-success text-light rounded-pill px-2 py-1" style="font-size: 10px;">
+                <span *ngIf="pic.status === 1 || pic.status === 'Approved'" class="badge bg-success text-light rounded-pill px-2 py-1" style="font-size: 10px;">
                   <i class="bi bi-check-circle me-1"></i>Approved
                 </span>
-                <span *ngIf="pic.status === 2" class="badge bg-danger text-light rounded-pill px-2 py-1" style="font-size: 10px;">
+                <span *ngIf="pic.status === 2 || pic.status === 'Rejected'" class="badge bg-danger text-light rounded-pill px-2 py-1" style="font-size: 10px;">
                   <i class="bi bi-x-circle me-1"></i>Rejected
                 </span>
               </div>
@@ -133,7 +133,7 @@
 
             
             <td class="py-3 pe-4 text-end">
-              <div class="d-flex gap-2 justify-content-end" *ngIf="pic.status === 0">
+              <div class="d-flex gap-2 justify-content-end" *ngIf="pic.status === 0 || pic.status === 'Pending'">
                 <button class="btn btn-success btn-sm px-3 shadow-sm" (click)="approve(pic.id)">
                   <i class="bi bi-check-lg me-1"></i>{{ 'Approve' | t }}
                 </button>
@@ -141,8 +141,11 @@
                   <i class="bi bi-x-lg me-1"></i>{{ 'Reject' | t }}
                 </button>
               </div>
-              <div class="text-muted small fst-italic" *ngIf="pic.status !== 0">
-                Resolved on<br>{{ pic.resolvedAt | date:'short' }}
+              <div class="text-muted small fst-italic text-end" *ngIf="pic.status !== 0 && pic.status !== 'Pending'">
+                <ng-container *ngIf="pic.status === 1 || pic.status === 'Approved'">Approved on</ng-container>
+                <ng-container *ngIf="pic.status === 2 || pic.status === 'Rejected'">Rejected on</ng-container>
+                <ng-container *ngIf="pic.status !== 1 && pic.status !== 'Approved' && pic.status !== 2 && pic.status !== 'Rejected'">Resolved on</ng-container>
+                <br>{{ pic.resolvedAt | date:'short' }}
               </div>
             </td>
           </tr>
