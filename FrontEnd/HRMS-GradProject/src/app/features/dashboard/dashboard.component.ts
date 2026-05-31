@@ -12,7 +12,6 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { environment } from '../../../environments/environment';
 
 import { AnnouncementService } from '../../core/services/announcement.service';
 import { Announcement } from '../../core/models/announcement.model';
@@ -965,49 +964,6 @@ export class DashboardComponent implements OnInit {
         },
       },
     });
-  }
-
-  generateDummyData() {
-    Swal.fire({
-      title: 'Add Random Data',
-      text: 'How many employees do you want to generate? (This will also generate attendance, leaves, events, etc.)',
-      input: 'number',
-      inputAttributes: {
-        min: '1',
-        max: '200',
-        step: '1'
-      },
-      inputValue: 20,
-      showCancelButton: true,
-      confirmButtonText: 'Generate',
-      showLoaderOnConfirm: true,
-      preConfirm: (count) => {
-        return fetch(`${environment.apiUrl}/seed/generate?employeeCount=${count}`, {
-          method: 'POST'
-        })
-        .then(async response => {
-          if (!response.ok) {
-            const errJson = await response.json().catch(() => ({}));
-            throw new Error(errJson.inner || errJson.message || response.statusText || 'Unknown error occurred');
-          }
-          return response.json()
-        })
-        .catch(error => {
-          Swal.showValidationMessage(`Request failed: ${error.message}`)
-        })
-      },
-      allowOutsideClick: () => !Swal.isLoading()
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: 'Success!',
-          text: result.value.message || 'Data generated successfully.',
-          icon: 'success'
-        }).then(() => {
-          window.location.reload();
-        });
-      }
-    })
   }
 
   exportRecentAttendancesToExcel() {
