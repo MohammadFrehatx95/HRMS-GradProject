@@ -31,6 +31,7 @@ export class EmployeeFormComponent implements OnInit {
 
   isLoading = false;
   isEditMode = false;
+  isAdmin = false;
   currentEmployeeId: number | null = null;
   departments: any[] = [];
   positions: any[] = [];
@@ -62,10 +63,12 @@ export class EmployeeFormComponent implements OnInit {
     ),
     userId: new FormControl('', Validators.required),
     password: new FormControl('', [Validators.minLength(6)]),
+    role: new FormControl(''),
     isActive: new FormControl(true),
   });
 
   ngOnInit() {
+    this.isAdmin = this.authService.isAdmin();
 
     const state = window.history.state;
 
@@ -139,6 +142,7 @@ export class EmployeeFormComponent implements OnInit {
           departmentId: profile.departmentId || '',
           positionId: profile.positionId || '',
           userId: profile.userId || '',
+          role: profile.role || '',
           isActive: profile.isActive !== false,
         });
 
@@ -338,6 +342,10 @@ export class EmployeeFormComponent implements OnInit {
 
     if (this.isEditMode && rawValues.password) {
       payload.password = rawValues.password;
+    }
+
+    if (this.isEditMode && rawValues.role && this.isAdmin) {
+      payload.role = rawValues.role;
     }
 
     if (this.isEditMode && this.currentEmployeeId) {

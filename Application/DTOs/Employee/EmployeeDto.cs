@@ -20,5 +20,6 @@ public class EmployeeDto
     public string PositionTitle { get; set; } = string.Empty;
     public int UserId { get; set; }
     public string? ProfilePictureUrl { get; set; }
+    public string Role { get; set; } = string.Empty;
 }
 

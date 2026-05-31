@@ -10,5 +10,6 @@ namespace Application.DTOs.Employee
         public int? DepartmentId { get; set; }
         public int? PositionId { get; set; }
         public string? Password { get; set; }
+        public string? Role { get; set; }
     }
 }

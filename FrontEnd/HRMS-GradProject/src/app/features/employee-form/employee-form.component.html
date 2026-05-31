@@ -337,7 +337,7 @@
       <div class="form-section" style="border-left: 4px solid #f59e0b;">
         <div class="section-header" style="color: #d97706;">
           <i class="bi bi-key-fill" style="color: #f59e0b;"></i>
-          <span>Reset Password</span>
+          <span>Account & Permissions</span>
         </div>
         <div class="row g-3">
           <div class="col-md-6">
@@ -360,6 +360,24 @@
               Password will be securely hashed before saving.
             </small>
           </div>
+
+          @if (isAdmin) {
+          <div class="col-md-6">
+            <label class="field-label">
+              <i class="bi bi-shield-lock text-warning"></i>
+              System Role
+            </label>
+            <select class="form-select field-input" formControlName="role">
+              <option value="Employee">Employee</option>
+              <option value="HR">HR</option>
+              <option value="Admin">Admin</option>
+            </select>
+            <small class="field-hint">
+              <i class="bi bi-info-circle me-1"></i>
+              Change the system permissions for this user.
+            </small>
+          </div>
+          }
         </div>
       </div>
       }

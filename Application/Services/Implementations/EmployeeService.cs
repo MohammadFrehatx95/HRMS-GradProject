@@ -114,9 +114,16 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
 
         mapper.Map(dto, employee);
 
-        if (!string.IsNullOrWhiteSpace(dto.Password) && employee.User != null)
+        if (employee.User != null)
         {
-            employee.User.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            if (!string.IsNullOrWhiteSpace(dto.Password))
+            {
+                employee.User.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            }
+            if (!string.IsNullOrWhiteSpace(dto.Role))
+            {
+                employee.User.Role = dto.Role;
+            }
         }
 
         uow.Repository<Employee>().Update(employee);

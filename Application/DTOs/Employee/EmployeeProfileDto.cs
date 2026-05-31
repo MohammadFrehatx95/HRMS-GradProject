@@ -10,4 +10,5 @@ public class EmployeeProfileDto
     public string PositionTitle { get; set; } = string.Empty;
     public DateTime HireDate { get; set; }
     public string? ProfilePictureUrl { get; set; }
+    public string Role { get; set; } = string.Empty;
 }
