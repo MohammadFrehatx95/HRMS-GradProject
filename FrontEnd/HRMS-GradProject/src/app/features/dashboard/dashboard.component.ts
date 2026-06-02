@@ -571,7 +571,7 @@ export class DashboardComponent implements OnInit {
       error: (err) => console.error('Error fetching employees:', err),
     });
 
-    this.leaveService.getAllLeaves(1, 1000).subscribe({
+    this.leaveService.getAllLeaves(undefined, undefined, 1, 1000).subscribe({
       next: (res: any) => {
         const leaves = res?.items || [];
         this.pendingLeaves = leaves.filter(
@@ -625,7 +625,7 @@ export class DashboardComponent implements OnInit {
       error: (err) => console.error('Error fetching departments:', err),
     });
 
-    this.salaryService.getAllSalaries(1, 1000).subscribe({
+    this.salaryService.getAllSalaries(undefined, undefined, 1, 1000).subscribe({
       next: (res: any) => {
         const salaries = res?.items || [];
         this.totalSalaries = salaries.reduce(
@@ -666,7 +666,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadNextPayday() {
-    this.salaryService.getMySalaries(1, 1000).subscribe({
+    this.salaryService.getMySalaries(undefined, undefined, 1, 1000).subscribe({
       next: (res: any) => {
         const salaries = res?.items || [];
         if (!salaries || salaries.length === 0) return;
@@ -732,7 +732,7 @@ export class DashboardComponent implements OnInit {
 
     this.loadNextPayday();
 
-    this.leaveService.getMyLeaves(1, 1000).subscribe({
+    this.leaveService.getMyLeaves(undefined, undefined, 1, 1000).subscribe({
       next: (res: any) => {
         const leaves = res?.items || [];
         this.employeePendingLeaves = leaves.filter(
