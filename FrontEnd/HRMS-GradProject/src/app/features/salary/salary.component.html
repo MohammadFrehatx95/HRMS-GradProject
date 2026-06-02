@@ -1,8 +1,7 @@
 <div class="page-container p-4">
-
-    <!-- Top Row: Title and Primary Actions -->
+    
     <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
-        <!-- Title Section -->
+        
         <div class="d-flex align-items-center">
             <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
                 <i class="bi bi-cash-stack fs-4"></i>
@@ -12,8 +11,7 @@
                 <p class="text-muted small mb-0">{{ 'View and manage employee payroll records' | t }}</p>
             </div>
         </div>
-
-        <!-- Primary Action Buttons -->
+        
         <div class="d-flex gap-2" *ngIf="isAdmin">
             <button
                 class="btn btn-success px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
@@ -36,11 +34,10 @@
             </button>
         </div>
     </div>
-
-    <!-- Bottom Row: Search, Filters, and Secondary Actions -->
+    
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3 bg-white p-3 rounded-4 shadow-sm border border-light">
         <div class="d-flex align-items-center gap-2 flex-grow-1 flex-wrap">
-            <!-- Search -->
+            
             <div class="input-group shadow-sm" style="max-width: 350px; min-width: 200px;">
                 <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
                 <input type="text" class="form-control border-start-0 ps-0"
@@ -48,8 +45,7 @@
                     [(ngModel)]="salarySearchQuery"
                     (input)="filterSalaries()">
             </div>
-
-            <!-- Filter Dropdown -->
+            
             <div class="dropdown">
                 <button class="btn btn-outline-secondary shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Filter Salaries">
                     <i class="bi bi-funnel-fill"></i>
@@ -83,8 +79,7 @@
                     </div>
                 </div>
             </div>
-
-            <!-- View Toggle -->
+            
             <button *ngIf="isAdminOrHR && !isAdmin"
                 class="btn btn-outline-primary px-3 px-md-4 py-2 rounded-3 shadow-sm text-nowrap"
                 (click)="toggleViewAll()"
@@ -93,8 +88,7 @@
                 <span class="d-none d-md-inline">{{ isViewingAll ? ('My Salaries' | t) : ('View All' | t) }}</span>
             </button>
         </div>
-
-        <!-- Export Buttons -->
+        
         <div class="d-flex gap-2">
             <button class="btn btn-outline-danger px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="exportToPDF()" title="Export to PDF">
                 <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i>
@@ -106,11 +100,9 @@
             </button>
         </div>
     </div>
-
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0 text-nowrap">
-
                 <thead class="bg-light text-muted small text-uppercase"
                     style="letter-spacing: 0.5px;">
                     <tr>
@@ -136,9 +128,7 @@
                             'Actions' | t }}</th>
                     </tr>
                 </thead>
-
                 <tbody class="border-top-0">
-
                     <ng-container *ngIf="isLoading">
                         <tr *ngFor="let i of [1,2,3,4,5]">
                             <td *ngIf="isAdminOrHR && isViewingAll" class="py-3 px-4">
@@ -162,7 +152,6 @@
                             <td class="py-3 px-4 text-end"><div class="skeleton-line w-50 ms-auto"></div></td>
                         </tr>
                     </ng-container>
-
                     <tr *ngIf="!isLoading && salariesList.length === 0">
                         <td [colSpan]="(isAdminOrHR && isViewingAll) ? 8 : 7"
                             class="text-center py-5 no-data-td">
@@ -180,9 +169,7 @@
                             </div>
                         </td>
                     </tr>
-
                     <tr *ngFor="let salary of paginatedSalaries">
-
                         <td *ngIf="isAdminOrHR && isViewingAll"
                             data-label="Employee" class="py-3 px-4">
                             <div class="d-flex align-items-center">
@@ -242,7 +229,6 @@
                                 {{ salary.status }}
                             </span>
                         </td>
-
                         <td data-label="Actions"
                             class="py-3 px-4 text-end text-nowrap actions-cell">
                             <button
@@ -261,7 +247,6 @@
                 </tbody>
             </table>
         </div>
-
         <div *ngIf="totalCount > 0"
             class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
             <div class="d-flex align-items-center gap-3 flex-wrap">
@@ -304,7 +289,6 @@
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="salaryModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow rounded-4">
@@ -329,7 +313,6 @@
                     </div>
                 </div>
                 <form #salaryForm="ngForm">
-
                     <div class="mb-4 position-relative">
                         <label
                             class="form-label fw-semibold text-secondary small">Employee
@@ -349,12 +332,10 @@
                                 autocomplete="off" required
                                 placeholder="Search by name or ID...">
                         </div>
-
                         <div
                             class="dropdown-menu w-100 shadow-lg border-0 rounded-4 mt-2 py-2"
                             [class.show]="showEmployeeDropdown"
                             style="position: absolute; top: 100%; left: 0; max-height: 250px; overflow-y: auto; z-index: 1050;">
-
                             <ng-container
                                 *ngIf="filteredEmployeesList.length > 0; else noEmployees">
                                 <button type="button"
@@ -383,7 +364,6 @@
                                         }}</span>
                                 </button>
                             </ng-container>
-
                             <ng-template #noEmployees>
                                 <div class="text-center py-4 text-muted">
                                     <i
@@ -394,7 +374,6 @@
                             </ng-template>
                         </div>
                     </div>
-
                     <div class="row mb-4">
                         <div class="col-6">
                             <label
@@ -417,7 +396,6 @@
                                 min="2000">
                         </div>
                     </div>
-
                     <div class="mb-4">
                         <label
                             class="form-label fw-semibold text-secondary small">Base
@@ -429,7 +407,6 @@
                             [(ngModel)]="salaryData.baseAmount" required
                             min="0">
                     </div>
-
                     <div class="row mb-4">
                         <div class="col-6">
                             <label
@@ -454,7 +431,6 @@
                                 min="0">
                         </div>
                     </div>
-
                     <div class="mb-2">
                         <label
                             class="form-label fw-semibold text-secondary small">Effective
@@ -464,7 +440,6 @@
                             name="effectiveDate"
                             [(ngModel)]="salaryData.effectiveDate" required>
                     </div>
-
                 </form>
             </div>
             <div class="modal-footer border-top-0 pb-4 px-4">
@@ -483,7 +458,6 @@
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="payrollWizardModal" tabindex="-1"
     aria-labelledby="payrollWizardModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -495,9 +469,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-
             <div class="modal-body p-4 bg-light">
-                <!-- Step 1: Configuration -->
+                
                 <div *ngIf="wizardStep === 1">
                     <h6 class="text-primary mb-3"><i
                             class="bi bi-1-circle-fill me-2"></i>Step 1:
@@ -529,8 +502,7 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Step 2: Preview -->
+                
                 <div *ngIf="wizardStep === 2">
                     <h6 class="text-success mb-3">
                         <i class="bi bi-2-circle-fill me-2"></i>Step 2: Preview
@@ -541,13 +513,11 @@
                             <i class="bi bi-arrow-left"></i> Back
                         </button>
                     </h6>
-
                     <div *ngIf="isPreviewLoading" class="text-center py-4">
                         <div class="spinner-border text-primary" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>
                     </div>
-
                     <div *ngIf="!isPreviewLoading && previewData">
                         <div class="table-responsive"
                             style="max-height: 300px;">
@@ -588,7 +558,6 @@
                                 </tbody>
                             </table>
                         </div>
-
                         <div
                             class="mt-4 p-3 bg-white rounded-3 shadow-sm border border-success">
                             <div
@@ -611,7 +580,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="modal-footer border-0 bg-light">
                 <button type="button" class="btn btn-light"
                     data-bs-dismiss="modal">Cancel</button>
@@ -634,10 +602,8 @@
         </div>
     </div>
 </div>
-
 <style>
     .cursor-pointer {
         cursor: pointer;
     }
-
-</style>
+</style>

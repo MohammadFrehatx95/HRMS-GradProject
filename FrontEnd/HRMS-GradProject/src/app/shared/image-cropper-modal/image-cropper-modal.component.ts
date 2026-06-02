@@ -37,7 +37,6 @@ export class ImageCropperModalComponent {
   }
   
   cropperReady() {
-    // cropper ready
   }
   
   loadImageFailed() {

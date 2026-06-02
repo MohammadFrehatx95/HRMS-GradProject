@@ -103,7 +103,6 @@ export class AttendanceComponent implements OnInit {
       next: (res: any) => {
         this.attendanceRecords = res.items || [];
         this.totalCount = res.totalCount || 0;
-        // The active session will always be at the top if sorting is by Date DESC
         if (this.currentPage === 1 && !this.selectedDate && !this.searchQuery && !this.selectedStatus) {
             this.analyzeSessionStatus(this.attendanceRecords);
         }

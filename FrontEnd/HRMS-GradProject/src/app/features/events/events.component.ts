@@ -21,7 +21,6 @@ export class EventsComponent implements OnInit {
   isLoading = true;
   isAdminOrHR = false;
 
-  // New Event Form
   newEvent = {
     title: '',
     description: '',
@@ -77,14 +76,11 @@ export class EventsComponent implements OnInit {
         this.isSubmitting = false;
         Swal.fire('Success', 'Event added successfully.', 'success');
 
-        // Hide modal
         const modalEl = document.getElementById('addEventModal');
         if (modalEl) {
-          // Note: using bootstrap types or any
           (window as any).bootstrap.Modal.getInstance(modalEl)?.hide();
         }
 
-        // Reset form
         this.newEvent = { title: '', description: '', eventDate: '', eventType: 'Company' };
         this.loadEvents();
       },

@@ -447,9 +447,9 @@ export class DashboardComponent implements OnInit {
   }
 
   loadEmployeesForSelect() {
-    this.empService.getEmployees().subscribe({
+    this.empService.getEmployees(1, 1000).subscribe({
       next: (res) => {
-        this.allEmployeesList = res;
+        this.allEmployeesList = res.items || [];
       },
       error: (err) =>
         console.error('Failed to load employees for announcements', err),
@@ -562,22 +562,24 @@ export class DashboardComponent implements OnInit {
       });
     }
 
-    this.empService.getEmployees().subscribe({
-      next: (employees: any[]) => {
+    this.empService.getEmployees(1, 1000).subscribe({
+      next: (res: any) => {
+        const employees = res?.items || [];
         this.totalEmployees = employees.length;
         this.calculateAttendanceRate();
       },
       error: (err) => console.error('Error fetching employees:', err),
     });
 
-    this.leaveService.getAllLeaves().subscribe({
-      next: (leaves: any[]) => {
+    this.leaveService.getAllLeaves(1, 1000).subscribe({
+      next: (res: any) => {
+        const leaves = res?.items || [];
         this.pendingLeaves = leaves.filter(
           (l: any) => l.status === 'Pending',
         ).length;
 
         leaves.sort(
-          (a, b) =>
+          (a: any, b: any) =>
             new Date(b.startDate).getTime() - new Date(a.startDate).getTime(),
         );
         this.recentLeaves = leaves.slice(0, 5);
@@ -623,20 +625,22 @@ export class DashboardComponent implements OnInit {
       error: (err) => console.error('Error fetching departments:', err),
     });
 
-    this.salaryService.getAllSalaries().subscribe({
-      next: (salaries: any[]) => {
+    this.salaryService.getAllSalaries(1, 1000).subscribe({
+      next: (res: any) => {
+        const salaries = res?.items || [];
         this.totalSalaries = salaries.reduce(
-          (sum, current) => sum + (current.netAmount || 0),
+          (sum: number, current: any) => sum + (current.netAmount || 0),
           0,
         );
       },
       error: (err) => console.error('Error fetching salaries:', err),
     });
 
-    this.attendanceService.getAllAttendance().subscribe({
-      next: (attendances: any[]) => {
+    this.attendanceService.getAllAttendance(undefined, 1, 1000).subscribe({
+      next: (res: any) => {
+        const attendances = res?.items || [];
         attendances.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+          (a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime(),
         );
         this.recentAttendances = attendances.slice(0, 5);
         this.allAttendances = attendances;
@@ -662,8 +666,9 @@ export class DashboardComponent implements OnInit {
   }
 
   loadNextPayday() {
-    this.salaryService.getMySalaries().subscribe({
-      next: (salaries: any[]) => {
+    this.salaryService.getMySalaries(1, 1000).subscribe({
+      next: (res: any) => {
+        const salaries = res?.items || [];
         if (!salaries || salaries.length === 0) return;
 
         const sorted = [...salaries].sort((a, b) => {
@@ -727,8 +732,9 @@ export class DashboardComponent implements OnInit {
 
     this.loadNextPayday();
 
-    this.leaveService.getMyLeaves().subscribe({
-      next: (leaves: any[]) => {
+    this.leaveService.getMyLeaves(1, 1000).subscribe({
+      next: (res: any) => {
+        const leaves = res?.items || [];
         this.employeePendingLeaves = leaves.filter(
           (l: any) => l.status === 'Pending',
         ).length;
@@ -744,8 +750,9 @@ export class DashboardComponent implements OnInit {
       error: (err) => console.error('Error fetching my leaves:', err),
     });
 
-    this.attendanceService.getMyAttendance().subscribe({
-      next: (attendances: any[]) => {
+    this.attendanceService.getMyAttendance(undefined, 1, 1000).subscribe({
+      next: (res: any) => {
+        const attendances = res?.items || [];
         const currentMonthNum = today.getMonth();
         const currentYear = today.getFullYear();
 
@@ -774,7 +781,7 @@ export class DashboardComponent implements OnInit {
         });
 
         attendances.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+          (a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime(),
         );
         this.myRecentAttendances = attendances.slice(0, 5);
 

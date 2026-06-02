@@ -158,7 +158,6 @@ export class MeetingsComponent implements OnInit {
         this.meetings = res.data?.items || res.items || [];
         this.totalCount = res.data?.totalCount || res.totalCount || 0;
         
-        // Group meetings by MeetLink
         const groups = new Map<string, GroupedMeeting>();
         this.meetings.forEach(m => {
           const key = m.meetLink || m.title + m.scheduledAt;
@@ -197,7 +196,6 @@ export class MeetingsComponent implements OnInit {
         this.meetings = res.data?.items || res.items || [];
         this.totalCount = res.data?.totalCount || res.totalCount || 0;
         
-        // Group meetings by MeetLink
         const groups = new Map<string, GroupedMeeting>();
         this.meetings.forEach(m => {
           const key = m.meetLink || m.title + m.scheduledAt;
@@ -230,8 +228,8 @@ export class MeetingsComponent implements OnInit {
   }
 
   loadEmployees() {
-    this.employeeService.getEmployees().subscribe(res => {
-      this.employees = res;
+    this.employeeService.getEmployees(1, 1000).subscribe((res: any) => {
+      this.employees = res?.items || [];
     });
   }
 

@@ -135,7 +135,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   private getFingerprintErrorMessage(err: any): string {
-    // User cancelled or dismissed the fingerprint prompt
     if (
       err?.name === 'NotAllowedError' ||
       err?.message?.includes('NotAllowedError') ||
@@ -145,9 +144,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       return 'Fingerprint scan was cancelled.<br><small class="text-muted">Please try again and follow your device prompt.</small>';
     }
 
-    // No fingerprint registered for this user (400 from backend)
     const status = err?.status;
-    // Backend returns ApiResponse: { success: false, message: "..." }
     const backendMsg: string =
       err?.error?.message ||
       (typeof err?.error === 'string' ? err.error : '') ||
@@ -175,7 +172,6 @@ export class LoginComponent implements OnInit, OnDestroy {
       return 'No internet connection. Please check your network.';
     }
 
-    // Hardware not available
     if (
       err?.name === 'NotSupportedError' ||
       err?.message?.includes('authenticator')

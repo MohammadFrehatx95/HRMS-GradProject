@@ -228,7 +228,6 @@ export const TRANSLATIONS: { [key: string]: { en: string; ar: string } } = {
   'Nov': { en: 'Nov', ar: 'نوفمبر' },
   'Dec': { en: 'Dec', ar: 'ديسمبر' },
 
-  // Fingerprint / WebAuthn
   'Add Fingerprint Login': { en: 'Add Fingerprint Login', ar: 'إضافة تسجيل الدخول بالبصمة' },
   'Fingerprint Added': { en: 'Fingerprint Added', ar: 'تمت إضافة البصمة' },
   'Sign in with Fingerprint': { en: 'Sign in with Fingerprint', ar: 'تسجيل الدخول بالبصمة' }
