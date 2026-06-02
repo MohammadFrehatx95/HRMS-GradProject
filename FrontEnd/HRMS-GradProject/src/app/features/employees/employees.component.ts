@@ -254,11 +254,11 @@ export class EmployeesComponent implements OnInit, OnDestroy {
 
     forkJoin({
       attendance: this.attendanceService
-        .getAllAttendance()
+        .getAllAttendance(undefined, 1, 1000)
         .pipe(catchError(() => of({items: [], totalCount: 0}))),
-      leaves: this.leaveService.getAllLeaves().pipe(catchError(() => of({items: [], totalCount: 0}))),
+      leaves: this.leaveService.getAllLeaves(1, 1000).pipe(catchError(() => of({items: [], totalCount: 0}))),
       salaries: this.salaryService
-        .getAllSalaries()
+        .getAllSalaries(1, 1000)
         .pipe(catchError(() => of({items: [], totalCount: 0}))),
     }).subscribe(({ attendance, leaves, salaries }) => {
       this.isGeneratingReport = false;

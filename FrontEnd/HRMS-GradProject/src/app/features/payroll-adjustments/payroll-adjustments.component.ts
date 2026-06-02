@@ -176,14 +176,9 @@ export class PayrollAdjustmentsComponent implements OnInit {
   }
 
   loadEmployees() {
-    this.employeeService.getEmployees().subscribe({
+    this.employeeService.getEmployees(1, 1000).subscribe({
       next: (res: any) => {
-        let extracted: any[] = [];
-        if (Array.isArray(res)) extracted = res;
-        else if (res?.data?.items && Array.isArray(res.data.items))
-          extracted = res.data.items;
-        else if (res?.data && Array.isArray(res.data)) extracted = res.data;
-        this.employees = extracted;
+        this.employees = res?.items || [];
       },
       error: (err: any) => {
         console.error(err);

@@ -72,11 +72,9 @@ export class DepartmentsComponent implements OnInit {
   }
 
   loadEmployees() {
-    this.employeeService.getEmployees().subscribe({
+    this.employeeService.getEmployees(1, 1000).subscribe({
       next: (res: any) => {
-        const extracted: any[] = Array.isArray(res)
-          ? res
-          : res?.data?.items || res?.data || [];
+        const extracted: any[] = res?.items || [];
 
         this.allEmployees = extracted.map((emp) => {
           if (!emp.positionName && emp.positionId) {
