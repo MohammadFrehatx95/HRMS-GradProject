@@ -11,32 +11,38 @@ export class SalaryService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/salaries`;
 
-  getAllSalaries(month?: number, year?: number): Observable<any[]> {
-    let url = `${this.apiUrl}?pageNumber=1&pageSize=1000`;
+  getAllSalaries(month?: number, year?: number, pageNumber: number = 1, pageSize: number = 10, searchQuery: string = ''): Observable<{items: any[], totalCount: number}> {
+    let url = `${this.apiUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     if (month) url += `&month=${month}`;
     if (year) url += `&year=${year}`;
+    if (searchQuery) url += `&searchQuery=${encodeURIComponent(searchQuery)}`;
     return this.http.get<any>(url).pipe(
       map((response) => {
-        if (response && response.data && response.data.items)
-          return response.data.items;
-        if (Array.isArray(response)) return response;
-        if (response && Array.isArray(response.data)) return response.data;
-        return [];
+        if (response && response.data) {
+          return {
+            items: response.data.items || [],
+            totalCount: response.data.totalCount || 0
+          };
+        }
+        return { items: [], totalCount: 0 };
       }),
     );
   }
 
-  getMySalaries(month?: number, year?: number): Observable<any[]> {
-    let url = `${this.apiUrl}/my?pageNumber=1&pageSize=1000`;
+  getMySalaries(month?: number, year?: number, pageNumber: number = 1, pageSize: number = 10, searchQuery: string = ''): Observable<{items: any[], totalCount: number}> {
+    let url = `${this.apiUrl}/my?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     if (month) url += `&month=${month}`;
     if (year) url += `&year=${year}`;
+    if (searchQuery) url += `&searchQuery=${encodeURIComponent(searchQuery)}`;
     return this.http.get<any>(url).pipe(
         map((response) => {
-          if (response && response.data && response.data.items)
-            return response.data.items;
-          if (Array.isArray(response)) return response;
-          if (response && Array.isArray(response.data)) return response.data;
-          return [];
+          if (response && response.data) {
+            return {
+              items: response.data.items || [],
+              totalCount: response.data.totalCount || 0
+            };
+          }
+          return { items: [], totalCount: 0 };
         }),
       );
   }

@@ -1,4 +1,4 @@
-﻿// Aother : Abedalqader Alfaqeeh
+// Aother : Abedalqader Alfaqeeh
 // last Edit : 2026/04/12
   
 
@@ -9,7 +9,7 @@ namespace Application.Services.Interfaces;
 
 public interface IEmployeeService
 {
-    Task<PagedResult<EmployeeDto>> GetAllAsync(int pageNumber, int pageSize);
+    Task<PagedResult<EmployeeDto>> GetAllAsync(int pageNumber, int pageSize, string? searchQuery = null, int? departmentId = null, bool? isActive = null);
     Task<EmployeeProfileDto?> GetProfileAsync(int id);
     Task<EmployeeDto?> GetByIdAsync(int id);
     Task<EmployeeDto> CreateAsync(CreateEmployeeDto dto);

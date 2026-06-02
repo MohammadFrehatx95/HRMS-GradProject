@@ -21,6 +21,10 @@ export class PendingApprovalsComponent implements OnInit {
   pendingPictures: any[] = [];
   isLoading = true;
 
+  get pendingCount(): number {
+    return this.pendingPictures.filter(p => p.status === 0 || p.status === 'Pending').length;
+  }
+
   ngOnInit() {
     this.load();
   }

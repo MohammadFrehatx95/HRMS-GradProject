@@ -22,7 +22,7 @@ namespace Application.Services.Implementations
         private readonly AttendanceSettings _attendanceSettings = attendanceOptions.Value;
 
         public async Task<PagedResult<AttendanceDto>> GetAllAsync(
-            int pageNumber, int pageSize, DateTime? date = null)
+            int pageNumber, int pageSize, DateTime? date = null, string? searchQuery = null, string? status = null)
         {
             var query = uow.Repository<Attendance>()
                            .GetAllQueryable()
@@ -30,6 +30,20 @@ namespace Application.Services.Implementations
                            .AsQueryable();
 
             if (date.HasValue) query = query.Where(a => a.Date.Date == date.Value.Date);
+
+            if (!string.IsNullOrWhiteSpace(status))
+            {
+                var sLower = status.ToLower();
+                if (sLower == "completed") query = query.Where(a => a.ClockOut != null);
+                else if (sLower == "working") query = query.Where(a => a.ClockOut == null);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                query = query.Where(a => 
+                    (a.Employee != null && (a.Employee.FirstName.Contains(searchQuery) || a.Employee.LastName.Contains(searchQuery))) ||
+                    a.EmployeeId.ToString().Contains(searchQuery));
+            }
 
             query = query.OrderByDescending(a => a.Date);
 
@@ -52,6 +66,16 @@ namespace Application.Services.Implementations
                            .Where(a => a.EmployeeId == employeeId);
 
             if (date.HasValue) query = query.Where(a => a.Date.Date == date.Value.Date);
+
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                var isCompletedSearch = searchQuery.Equals("Completed", StringComparison.OrdinalIgnoreCase);
+                var isWorkingSearch = searchQuery.Equals("Working", StringComparison.OrdinalIgnoreCase);
+                
+                query = query.Where(a => 
+                    (isCompletedSearch && a.ClockOut != null) ||
+                    (isWorkingSearch && a.ClockOut == null));
+            }
 
             query = query.OrderByDescending(a => a.Date);
 

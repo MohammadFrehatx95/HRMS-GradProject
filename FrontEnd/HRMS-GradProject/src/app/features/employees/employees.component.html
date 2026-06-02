@@ -46,8 +46,8 @@
                     <label class="form-label small fw-semibold text-muted mb-1">{{ 'Department' | t }}</label>
                     <select class="form-select form-select-sm" [(ngModel)]="selectedDepartment" (change)="filterEmployees()">
                         <option value>All Departments</option>
-                        @for (dept of uniqueDepartments; track dept) {
-                        <option [value]="dept">{{ dept }}</option>
+                        @for (dept of departmentsList; track dept.id) {
+                        <option [value]="dept.id">{{ dept.name }}</option>
                         }
                     </select>
                 </div>
@@ -164,20 +164,37 @@
     </div>
 
     
-    @if (employeesList.length > 0) {
+    @if (totalCount > 0) {
     <div class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-        <small class="text-muted fw-medium">
-            Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, employeesList.length) }} of {{ employeesList.length }} entries
-        </small>
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <div class="d-flex align-items-center gap-2">
+                <label class="small text-muted mb-0 text-nowrap">{{ 'Per page' | t }}:</label>
+                <select class="form-select form-select-sm border-light-subtle" style="width: 70px;" [(ngModel)]="itemsPerPage" (change)="filterEmployees()">
+                    <option [ngValue]="10">10</option>
+                    <option [ngValue]="25">25</option>
+                    <option [ngValue]="50">50</option>
+                    <option [ngValue]="100">100</option>
+                </select>
+            </div>
+            <small class="text-muted fw-medium">
+                {{ 'Showing' | t }} {{ (currentPage - 1) * itemsPerPage + 1 }} {{ 'to' | t }} {{ getMathMin(currentPage * itemsPerPage, totalCount) }} {{ 'of' | t }} {{ totalCount }} {{ 'entries' | t }}
+            </small>
+        </div>
         <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
             <li class="page-item" [class.disabled]="currentPage === 1">
-                <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
+                <a class="page-link cursor-pointer px-2" (click)="changePage(1)" title="First Page"><i class="bi bi-chevron-double-left"></i></a>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">{{ 'Previous' | t }}</a>
             </li>
             <li class="page-item active">
                 <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
             </li>
             <li class="page-item" [class.disabled]="currentPage === totalPages">
-                <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
+                <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">{{ 'Next' | t }}</a>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <a class="page-link cursor-pointer px-2" (click)="changePage(totalPages)" title="Last Page"><i class="bi bi-chevron-double-right"></i></a>
             </li>
         </ul>
     </div>

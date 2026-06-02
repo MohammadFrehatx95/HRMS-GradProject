@@ -57,7 +57,7 @@
       <span class="fw-semibold text-dark">
         <i class="bi bi-clock-history text-primary me-2"></i>
         {{ 'Profile Picture Requests' | t }}
-        <span class="badge bg-primary text-light ms-2 rounded-pill">{{ pendingPictures.length }}</span>
+        <span *ngIf="pendingCount > 0" class="badge bg-primary text-light ms-2 rounded-pill">{{ pendingCount }}</span>
       </span>
     </div>
 

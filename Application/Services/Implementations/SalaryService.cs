@@ -18,7 +18,7 @@ namespace Application.Services.Implementations
         INotificationService notificationService,
         IEmailService emailService) : ISalaryService
     {
-    public async Task<PagedResult<SalaryDto>> GetAllAsync(int pageNumber, int pageSize, int? month = null, int? year = null)
+    public async Task<PagedResult<SalaryDto>> GetAllAsync(int pageNumber, int pageSize, int? month = null, int? year = null, string? searchQuery = null)
     {
         var query = uow.Repository<Salary>()
                        .GetAllQueryable()
@@ -27,6 +27,14 @@ namespace Application.Services.Implementations
 
         if (month.HasValue && month.Value > 0) query = query.Where(s => s.Month == month.Value);
         if (year.HasValue && year.Value > 0) query = query.Where(s => s.Year == year.Value);
+
+        if (!string.IsNullOrWhiteSpace(searchQuery))
+        {
+            query = query.Where(s => 
+                (s.Employee != null && (s.Employee.FirstName.Contains(searchQuery) || s.Employee.LastName.Contains(searchQuery))) ||
+                s.EmployeeId.ToString().Contains(searchQuery) ||
+                s.Status.ToString().Contains(searchQuery));
+        }
 
         query = query.OrderByDescending(s => s.Year).ThenByDescending(s => s.Month);
 
@@ -40,7 +48,7 @@ namespace Application.Services.Implementations
                 mapper.Map<List<SalaryDto>>(items), total, pageNumber, pageSize);
         }
 
-    public async Task<PagedResult<SalaryDto>> GetMyAsync(int employeeId, int pageNumber, int pageSize, int? month = null, int? year = null)
+    public async Task<PagedResult<SalaryDto>> GetMyAsync(int employeeId, int pageNumber, int pageSize, int? month = null, int? year = null, string? searchQuery = null)
     {
         var query = uow.Repository<Salary>()
                        .GetAllQueryable()
@@ -49,6 +57,12 @@ namespace Application.Services.Implementations
 
         if (month.HasValue && month.Value > 0) query = query.Where(s => s.Month == month.Value);
         if (year.HasValue && year.Value > 0) query = query.Where(s => s.Year == year.Value);
+
+        if (!string.IsNullOrWhiteSpace(searchQuery))
+        {
+            query = query.Where(s => 
+                s.Status.ToString().Contains(searchQuery));
+        }
 
         query = query.OrderByDescending(s => s.Year).ThenByDescending(s => s.Month);
 

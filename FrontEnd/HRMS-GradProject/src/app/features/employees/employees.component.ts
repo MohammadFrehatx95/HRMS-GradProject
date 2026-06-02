@@ -9,6 +9,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { AttendanceService } from '../../core/services/attendance.service';
 import { LeaveService } from '../../core/services/leave.service';
 import { SalaryService } from '../../core/services/salary.service';
+import { DepartmentService } from '../../core/services/department.service';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -32,11 +33,12 @@ export class EmployeesComponent implements OnInit, OnDestroy {
   private attendanceService = inject(AttendanceService);
   private leaveService = inject(LeaveService);
   private salaryService = inject(SalaryService);
+  private departmentService = inject(DepartmentService);
   private pdfExportService = inject(PdfExportService);
   private excelExportService = inject(ExcelExportService);
 
-  allEmployeesList: any[] = [];
   employeesList: any[] = [];
+  departmentsList: any[] = [];
   isLoading: boolean = true;
   isGeneratingReport: boolean = false;
   isAdmin: boolean = false;
@@ -46,25 +48,25 @@ export class EmployeesComponent implements OnInit, OnDestroy {
   searchQuery: string = '';
   selectedDepartment: string = '';
   selectedStatus: string = '';
-  uniqueDepartments: string[] = [];
-
+  
   detailsModal: any;
 
   currentPage: number = 1;
-  itemsPerPage: number = 7;
+  itemsPerPage: number = 10;
+  totalCount: number = 0;
 
   get paginatedEmployees() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.employeesList.slice(startIndex, startIndex + this.itemsPerPage);
+    return this.employeesList;
   }
 
   get totalPages() {
-    return Math.ceil(this.employeesList.length / this.itemsPerPage) || 1;
+    return Math.ceil(this.totalCount / this.itemsPerPage) || 1;
   }
 
   changePage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+      this.loadEmployees();
     }
   }
 
@@ -85,6 +87,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
+    this.loadDepartments();
     this.loadEmployees();
   }
 
@@ -97,6 +100,15 @@ export class EmployeesComponent implements OnInit, OnDestroy {
     backdrops.forEach((backdrop) => backdrop.remove());
     document.body.style.overflow = '';
     document.body.style.paddingRight = '';
+  }
+
+  loadDepartments() {
+    this.departmentService.getDepartments().subscribe({
+      next: (data) => {
+        this.departmentsList = data;
+      },
+      error: (err) => console.error('Error fetching departments:', err)
+    });
   }
 
   getRoleBadgeClass(roleId: number): string {
@@ -156,16 +168,14 @@ export class EmployeesComponent implements OnInit, OnDestroy {
 
   loadEmployees() {
     this.isLoading = true;
-    this.employeeService.getEmployees().subscribe({
+    let isActiveParams: boolean | string = '';
+    if (this.selectedStatus === 'Active') isActiveParams = true;
+    if (this.selectedStatus === 'Inactive') isActiveParams = false;
+
+    this.employeeService.getEmployees(this.currentPage, this.itemsPerPage, this.searchQuery, this.selectedDepartment, isActiveParams).subscribe({
       next: (data) => {
-        this.allEmployeesList = data;
-        this.employeesList = [...this.allEmployeesList];
-
-        const depts = data
-          .map((e: any) => e.departmentName || e.departmentId)
-          .filter(Boolean);
-        this.uniqueDepartments = Array.from(new Set(depts)) as string[];
-
+        this.employeesList = data.items;
+        this.totalCount = data.totalCount;
         this.isLoading = false;
       },
       error: (err) => {
@@ -176,40 +186,8 @@ export class EmployeesComponent implements OnInit, OnDestroy {
   }
 
   filterEmployees() {
-    this.employeesList = this.allEmployeesList.filter((emp) => {
-      let matchesSearch = true;
-      if (this.searchQuery) {
-        const query = this.searchQuery.toLowerCase();
-        const fullName =
-          `${emp.firstName || ''} ${emp.lastName || ''}`.toLowerCase();
-        const idStr = String(emp.id);
-        const deptStr = String(
-          emp.departmentName || emp.departmentId || '',
-        ).toLowerCase();
-
-        matchesSearch =
-          fullName.includes(query) ||
-          idStr.includes(query) ||
-          deptStr.includes(query);
-      }
-
-      let matchesDept = true;
-      if (this.selectedDepartment) {
-        matchesDept =
-          (emp.departmentName || String(emp.departmentId)) ===
-          this.selectedDepartment;
-      }
-
-      let matchesStatus = true;
-      if (this.selectedStatus) {
-        matchesStatus =
-          this.selectedStatus === 'Active' ? emp.isActive : !emp.isActive;
-      }
-
-      return matchesSearch && matchesDept && matchesStatus;
-    });
-
     this.currentPage = 1;
+    this.loadEmployees();
   }
 
   onDelete(id: number) {
@@ -225,14 +203,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
       if (result.isConfirmed) {
         this.employeeService.deleteEmployee(id).subscribe({
           next: () => {
-            this.employeesList = this.employeesList.filter(
-              (emp) => emp.id !== id,
-            );
-
-            if (this.currentPage > this.totalPages) {
-              this.currentPage = this.totalPages;
-            }
-
+            this.loadEmployees();
             this.showToast('Employee deleted successfully', 'success');
           },
           error: (err) => {
@@ -284,15 +255,18 @@ export class EmployeesComponent implements OnInit, OnDestroy {
     forkJoin({
       attendance: this.attendanceService
         .getAllAttendance()
-        .pipe(catchError(() => of([]))),
-      leaves: this.leaveService.getAllLeaves().pipe(catchError(() => of([]))),
+        .pipe(catchError(() => of({items: [], totalCount: 0}))),
+      leaves: this.leaveService.getAllLeaves().pipe(catchError(() => of({items: [], totalCount: 0}))),
       salaries: this.salaryService
         .getAllSalaries()
-        .pipe(catchError(() => of([]))),
+        .pipe(catchError(() => of({items: [], totalCount: 0}))),
     }).subscribe(({ attendance, leaves, salaries }) => {
       this.isGeneratingReport = false;
+      const attendanceItems = attendance.items || [];
+      const leavesItems = leaves.items || [];
+      const salariesItems = salaries.items || [];
 
-      const empAttendance = attendance
+      const empAttendance = attendanceItems
         .filter((a: any) => a.employeeId === emp.id)
         .sort(
           (a: any, b: any) =>
@@ -300,7 +274,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
         )
         .slice(0, 15);
 
-      const empLeaves = leaves
+      const empLeaves = leavesItems
         .filter((l: any) => l.employeeId === emp.id)
         .sort(
           (a: any, b: any) =>
@@ -308,7 +282,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
             new Date(a.startDate || 0).getTime(),
         );
 
-      const empSalaries = salaries
+      const empSalaries = salariesItems
         .filter((s: any) => s.employeeId === emp.id)
         .sort((a: any, b: any) => {
           if (b.year !== a.year) return b.year - a.year;
@@ -610,11 +584,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
     ]);
 
     const additionalInfo = [
-      { label: 'Total Employees', value: String(this.employeesList.length) },
-      {
-        label: 'Active Employees',
-        value: String(this.employeesList.filter((e) => e.isActive).length),
-      },
+      { label: 'Total Employees', value: String(this.totalCount) },
       {
         label: 'Filtered Department',
         value: this.selectedDepartment ? this.selectedDepartment : 'All',

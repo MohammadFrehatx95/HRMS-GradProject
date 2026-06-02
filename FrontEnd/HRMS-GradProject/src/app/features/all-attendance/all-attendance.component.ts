@@ -8,6 +8,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { PdfExportService } from '../../core/services/pdf-export.service';
 import { ExcelExportService } from '../../core/services/excel-export.service';
 import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-all-attendance',
   standalone: true,
@@ -19,29 +20,30 @@ export class AllAttendanceComponent implements OnInit {
   private pdfExportService = inject(PdfExportService);
   private excelExportService = inject(ExcelExportService);
 
-  allRecords: any[] = [];
   records: any[] = [];
 
   searchQuery: string = '';
   selectedStatus: string = '';
+  selectedDate: string = '';
 
   isLoading = true;
 
   currentPage: number = 1;
-  itemsPerPage: number = 7;
+  itemsPerPage: number = 10;
+  totalCount: number = 0;
 
   get paginatedRecords() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.records.slice(startIndex, startIndex + this.itemsPerPage);
+    return this.records;
   }
 
   get totalPages() {
-    return Math.ceil(this.records.length / this.itemsPerPage) || 1;
+    return Math.ceil(this.totalCount / this.itemsPerPage) || 1;
   }
 
   changePage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+      this.loadAllAttendance();
     }
   }
 
@@ -50,29 +52,16 @@ export class AllAttendanceComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loadAllAttendance();
+  }
 
-    this.attendanceService.getAllAttendance().subscribe({
+  loadAllAttendance() {
+    this.isLoading = true;
+    const d = this.selectedDate || undefined;
+    this.attendanceService.getAllAttendance(d, this.currentPage, this.itemsPerPage, this.searchQuery, this.selectedStatus).subscribe({
       next: (res: any) => {
-        const items = Array.isArray(res)
-          ? res
-          : (res?.items ?? res?.data?.items ?? res?.data ?? []);
-        
-        const rawRecords = Array.isArray(items) ? items : [];
-        const uniqueRecords = new Map<string, any>();
-        
-        for (const rec of rawRecords) {
-          const key = `${rec.employeeId}_${rec.date}_${rec.clockIn}_${rec.clockOut}`;
-          if (!uniqueRecords.has(key)) {
-            uniqueRecords.set(key, rec);
-          }
-        }
-        
-        this.allRecords = Array.from(uniqueRecords.values());
-        
-        this.allRecords.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-        );
-        this.records = [...this.allRecords];
+        this.records = res.items || [];
+        this.totalCount = res.totalCount || 0;
         this.isLoading = false;
       },
       error: () => {
@@ -82,30 +71,8 @@ export class AllAttendanceComponent implements OnInit {
   }
 
   filterRecords() {
-
-    this.records = this.allRecords.filter((rec) => {
-      let matchesSearch = true;
-      if (this.searchQuery) {
-        const query = this.searchQuery.toLowerCase();
-        const empName = (rec.employeeName || '').toLowerCase();
-        const empId = String(rec.employeeId || '');
-        const dateStr = String(rec.date || '').toLowerCase();
-        matchesSearch =
-          empName.includes(query) ||
-          empId.includes(query) ||
-          dateStr.includes(query);
-      }
-
-      let matchesStatus = true;
-      if (this.selectedStatus) {
-        const currentStatus = this.getStatusLabel(rec);
-        matchesStatus = currentStatus === this.selectedStatus;
-      }
-
-      return matchesSearch && matchesStatus;
-    });
-
     this.currentPage = 1;
+    this.loadAllAttendance();
   }
 
   getStatusClass(rec: any): string {
@@ -143,7 +110,7 @@ export class AllAttendanceComponent implements OnInit {
     ]);
 
     const additionalInfo = [
-      { label: 'Total Records', value: String(this.records.length) },
+      { label: 'Total Records', value: String(this.totalCount) },
       { label: 'Completed Sessions', value: String(this.records.filter(r => this.getStatusLabel(r) === 'Completed').length) },
       { label: 'Currently Working', value: String(this.records.filter(r => this.getStatusLabel(r) === 'Working').length) }
     ];

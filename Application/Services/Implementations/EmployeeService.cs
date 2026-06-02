@@ -45,15 +45,35 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
     }
 
 
-    public async Task<PagedResult<EmployeeDto>> GetAllAsync(int pageNumber, int pageSize)
+    public async Task<PagedResult<EmployeeDto>> GetAllAsync(int pageNumber, int pageSize, string? searchQuery = null, int? departmentId = null, bool? isActive = null)
     {
         var query = uow.Repository<Employee>()
                        .GetAllQueryable()
                        .Include(e => e.Department)
                        .Include(e => e.Position)
                        .Include(e => e.User)
-                       .OrderBy(e => e.DepartmentId)
-                       .ThenBy(e => e.Id);
+                       .AsQueryable();
+
+        if (departmentId.HasValue && departmentId.Value > 0)
+        {
+            query = query.Where(e => e.DepartmentId == departmentId.Value);
+        }
+
+        if (isActive.HasValue)
+        {
+            query = query.Where(e => e.IsActive == isActive.Value);
+        }
+
+        if (!string.IsNullOrWhiteSpace(searchQuery))
+        {
+            query = query.Where(e => 
+                e.Id.ToString().Contains(searchQuery) ||
+                e.FirstName.Contains(searchQuery) ||
+                e.LastName.Contains(searchQuery));
+        }
+
+        query = query.OrderBy(e => e.DepartmentId)
+                     .ThenBy(e => e.Id);
 
         var total = await query.CountAsync();
         var items = await query

@@ -26,7 +26,6 @@ export class LeaveComponent implements OnInit {
   private pdfExportService = inject(PdfExportService);
   private leaveSettingService = inject(LeaveSettingService);
 
-  allLeavesList: any[] = [];
   leavesList: any[] = [];
 
   leaveSearchQuery: string = '';
@@ -59,20 +58,21 @@ export class LeaveComponent implements OnInit {
   isAdmin: boolean = false;
 
   currentPage: number = 1;
-  itemsPerPage: number = 7;
+  itemsPerPage: number = 10;
+  totalCount: number = 0;
 
   get paginatedLeaves() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.leavesList.slice(startIndex, startIndex + this.itemsPerPage);
+    return this.leavesList;
   }
 
   get totalPages() {
-    return Math.ceil(this.leavesList.length / this.itemsPerPage) || 1;
+    return Math.ceil(this.totalCount / this.itemsPerPage) || 1;
   }
 
   changePage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+      this.loadLeaves();
     }
   }
 
@@ -118,6 +118,12 @@ export class LeaveComponent implements OnInit {
   ngOnInit() {
     this.isAdminOrHR = this.authService.isAdminOrHR();
     this.isAdmin = this.authService.isAdmin();
+    
+    const currentYear = new Date().getFullYear();
+    for(let i = 0; i < 5; i++) {
+        this.uniqueYears.push(currentYear - i);
+    }
+
     this.loadBalances();
     this.loadLeaves();
     if (this.isAdminOrHR) {
@@ -175,41 +181,29 @@ export class LeaveComponent implements OnInit {
   }
 
   loadLeaves() {
-
     this.isLoading = true;
     const m = this.selectedMonth ? Number(this.selectedMonth) : undefined;
     const y = this.selectedYear ? Number(this.selectedYear) : undefined;
 
+    let statusParam: number | string = '';
+    if (this.selectedLeaveStatus === 'Pending') statusParam = 0;
+    else if (this.selectedLeaveStatus === 'Approved') statusParam = 1;
+    else if (this.selectedLeaveStatus === 'Rejected') statusParam = 2;
+
+    let typeParam: number | string = '';
+    if (this.selectedLeaveType === 'Annual') typeParam = 0;
+    else if (this.selectedLeaveType === 'Sick') typeParam = 1;
+    else if (this.selectedLeaveType === 'Emergency') typeParam = 2;
+    else if (this.selectedLeaveType === 'Unpaid') typeParam = 3;
+
     const request = this.isAdminOrHR
-      ? this.leaveService.getAllLeaves(m, y)
-      : this.leaveService.getMyLeaves(m, y);
+      ? this.leaveService.getAllLeaves(m, y, this.currentPage, this.itemsPerPage, this.leaveSearchQuery, statusParam, typeParam)
+      : this.leaveService.getMyLeaves(m, y, this.currentPage, this.itemsPerPage, this.leaveSearchQuery, statusParam, typeParam);
 
     request.subscribe({
       next: (res: any) => {
-        let extracted: any[] = [];
-
-        if (Array.isArray(res)) {
-          extracted = res;
-        } else if (res?.data?.items && Array.isArray(res.data.items)) {
-          extracted = res.data.items;
-        } else if (res?.data && Array.isArray(res.data)) {
-          extracted = res.data;
-        }
-
-        this.allLeavesList = extracted;
-        
-        if (!m && !y) {
-          const years = this.allLeavesList
-            .map((s) => new Date(s.startDate).getFullYear())
-            .filter((y) => !isNaN(y));
-          this.uniqueYears = Array.from(new Set(years))
-            .sort()
-            .reverse() as number[];
-        }
-        
-        this.leavesList = [...this.allLeavesList];
-        this.filterLeavesLocal();
-
+        this.leavesList = res.items || [];
+        this.totalCount = res.totalCount || 0;
         this.isLoading = false;
       },
       error: (err) => {
@@ -221,63 +215,14 @@ export class LeaveComponent implements OnInit {
   }
 
   filterLeaves() {
+    this.currentPage = 1;
     this.loadLeaves();
   }
 
-  filterLeavesLocal() {
-
-    this.leavesList = this.allLeavesList.filter((l) => {
-      let matchesSearch = true;
-      if (this.leaveSearchQuery) {
-        const query = this.leaveSearchQuery.toLowerCase();
-        const empName = (l.employeeName || '').toLowerCase();
-        const empId = String(l.employeeId || '');
-        const reason = (l.reason || '').toLowerCase();
-        matchesSearch =
-          empName.includes(query) ||
-          empId.includes(query) ||
-          reason.includes(query);
-      }
-
-      let matchesStatus = true;
-      if (this.selectedLeaveStatus) {
-        matchesStatus =
-          this.getStatusText(l.status).toLowerCase() ===
-          this.selectedLeaveStatus.toLowerCase();
-      }
-
-      let matchesType = true;
-      if (this.selectedLeaveType) {
-
-        const leaveTypeName = this.getLeaveTypeText(l.leaveType).toLowerCase();
-        matchesType = leaveTypeName === this.selectedLeaveType.toLowerCase();
-      }
-
-      return matchesSearch && matchesStatus && matchesType;
-    });
-
-    this.currentPage = 1;
-    if (this.leavesList.length > 0) {
-      this.leavesList.sort((a, b) => {
-        if (this.isAdminOrHR) {
-          const statusA = this.getStatusText(a.status);
-          const statusB = this.getStatusText(b.status);
-          if (statusA === 'Pending' && statusB !== 'Pending') return -1;
-          if (statusA !== 'Pending' && statusB === 'Pending') return 1;
-        }
-        return (
-          new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
-        );
-      });
-    }
-  }
-
   getStatusText(statusCode: any): string {
-
     if (typeof statusCode === 'string' && isNaN(Number(statusCode))) {
       return statusCode;
     }
-
     if (statusCode === 0 || statusCode === '0') return 'Pending';
     if (statusCode === 1 || statusCode === '1') return 'Approved';
     if (statusCode === 2 || statusCode === '2') return 'Rejected';
@@ -285,7 +230,6 @@ export class LeaveComponent implements OnInit {
   }
 
   getLeaveTypeText(typeCode: any): string {
-
     if (typeof typeCode === 'string' && isNaN(Number(typeCode))) {
       const found = this.leaveTypes.find(
         (t) => t.name.toLowerCase() === typeCode.toLowerCase(),
@@ -294,7 +238,6 @@ export class LeaveComponent implements OnInit {
         ? found.name
         : typeCode.charAt(0).toUpperCase() + typeCode.slice(1);
     }
-
     const type = this.leaveTypes.find((t) => t.id === Number(typeCode));
     return type ? type.name : typeCode != null ? String(typeCode) : 'Unknown';
   }
@@ -328,7 +271,6 @@ export class LeaveComponent implements OnInit {
   }
 
   submitLeaveRequest() {
-
     if (this.leaveData.startDate < this.getToday()) {
       Swal.fire('Invalid Date', 'Start Date cannot be in the past.', 'warning');
       return;
@@ -348,7 +290,6 @@ export class LeaveComponent implements OnInit {
     const diffTime = Math.abs(end.getTime() - start.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
-    
     const selectedType = Number(this.leaveData.leaveType);
     let availableBalance = 0;
     let typeName = '';
@@ -412,7 +353,6 @@ export class LeaveComponent implements OnInit {
   }
 
   changeStatus(id: number, newStatusCode: number) {
-
     if (newStatusCode === 2) {
       Swal.fire({
         title: 'Reject Leave Request',

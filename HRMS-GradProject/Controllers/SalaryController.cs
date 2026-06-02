@@ -22,9 +22,10 @@ namespace HRMS_GradProject.Controllers
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
             [FromQuery] int? month = null,
-            [FromQuery] int? year = null)
+            [FromQuery] int? year = null,
+            [FromQuery] string? searchQuery = null)
         {
-            var result = await salaryService.GetAllAsync(pageNumber, pageSize, month, year);
+            var result = await salaryService.GetAllAsync(pageNumber, pageSize, month, year, searchQuery);
             return Ok(ApiResponse<PagedResult<SalaryDto>>.Ok(result));
         }
 
@@ -34,7 +35,8 @@ namespace HRMS_GradProject.Controllers
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
             [FromQuery] int? month = null,
-            [FromQuery] int? year = null)
+            [FromQuery] int? year = null,
+            [FromQuery] string? searchQuery = null)
         {
             var employeeIdClaim = User.FindFirstValue("employeeId");
 
@@ -43,7 +45,7 @@ namespace HRMS_GradProject.Controllers
                 return BadRequest(ApiResponse.Fail(
                     "Your account is not linked to an employee profile"));
 
-            var result = await salaryService.GetMyAsync(employeeId, pageNumber, pageSize, month, year);
+            var result = await salaryService.GetMyAsync(employeeId, pageNumber, pageSize, month, year, searchQuery);
             return Ok(ApiResponse<PagedResult<SalaryDto>>.Ok(result));
         }
 

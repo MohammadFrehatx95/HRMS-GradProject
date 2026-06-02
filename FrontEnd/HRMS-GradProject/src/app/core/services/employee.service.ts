@@ -1,4 +1,4 @@
-﻿import { Injectable, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -11,22 +11,29 @@ export class EmployeeService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/employees`;
 
-  getEmployees(): Observable<any[]> {
-    return this.http.get<any>(`${this.apiUrl}?pageNumber=1&pageSize=1000`).pipe(
-      map((response) => {
-        if (response && response.data && response.data.items) {
-          return response.data.items;
-        }
-        if (Array.isArray(response)) return response;
-        if (response && Array.isArray(response.data)) return response.data;
+  getEmployees(pageNumber: number = 1, pageSize: number = 10, searchQuery: string = '', departmentId?: number | string, isActive?: boolean | string): Observable<{items: any[], totalCount: number}> {
+    let url = `${this.apiUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+    if (searchQuery) url += `&searchQuery=${encodeURIComponent(searchQuery)}`;
+    if (departmentId) url += `&departmentId=${departmentId}`;
+    if (isActive !== undefined && isActive !== '') url += `&isActive=${isActive}`;
 
-        return [];
+    return this.http.get<any>(url).pipe(
+      map((response) => {
+        if (response && response.data) {
+          return {
+            items: response.data.items || [],
+            totalCount: response.data.totalCount || 0
+          };
+        }
+        return { items: [], totalCount: 0 };
       }),
     );
   }
+
   addEmployee(employee: any): Observable<any> {
     return this.http.post(this.apiUrl, employee);
   }
+  
   getEmployeeFullProfile(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}/profile`).pipe(
       map((response) => {
@@ -62,4 +69,3 @@ export class EmployeeService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }
-

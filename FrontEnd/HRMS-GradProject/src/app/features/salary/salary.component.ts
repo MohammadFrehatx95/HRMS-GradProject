@@ -29,7 +29,6 @@ export class SalaryComponent implements OnInit {
   private pdfExportService = inject(PdfExportService);
   private excelExportService = inject(ExcelExportService);
 
-  allSalariesList: any[] = [];
   salariesList: any[] = [];
   isLoading: boolean = true;
   isAdmin: boolean = false;
@@ -53,7 +52,6 @@ export class SalaryComponent implements OnInit {
   uniqueYears: number[] = [];
   departments: any[] = [];
 
-  // Wizard state
   wizardStep = 1;
   previewMonth = new Date().getMonth() + 1;
   previewYear = new Date().getFullYear();
@@ -63,20 +61,21 @@ export class SalaryComponent implements OnInit {
   payrollWizardModal: any;
 
   currentPage: number = 1;
-  itemsPerPage: number = 7;
+  itemsPerPage: number = 10;
+  totalCount: number = 0;
 
   get paginatedSalaries() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.salariesList.slice(startIndex, startIndex + this.itemsPerPage);
+    return this.salariesList;
   }
 
   get totalPages() {
-    return Math.ceil(this.salariesList.length / this.itemsPerPage) || 1;
+    return Math.ceil(this.totalCount / this.itemsPerPage) || 1;
   }
 
   changePage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+      this.loadSalaries();
     }
   }
 
@@ -102,6 +101,11 @@ export class SalaryComponent implements OnInit {
         this.isViewingAll = true;
     }
 
+    const currentYear = new Date().getFullYear();
+    for(let i = 0; i < 5; i++) {
+        this.uniqueYears.push(currentYear - i);
+    }
+
     this.loadInitialData();
     if (this.isAdmin) {
       this.loadEmployees();
@@ -123,11 +127,10 @@ export class SalaryComponent implements OnInit {
   }
 
   loadEmployees() {
-
-    this.employeeService.getEmployees().subscribe({
+    this.employeeService.getEmployees(1, 1000).subscribe({
       next: (res: any) => {
-        const extractedData = Array.isArray(res) ? res : res?.data || [];
-        this.employeesList = Array.isArray(extractedData) ? extractedData : [];
+        const extractedData = res.items || [];
+        this.employeesList = extractedData;
         this.filteredEmployeesList = [...this.employeesList];
       },
       error: (err: any) => {
@@ -167,34 +170,20 @@ export class SalaryComponent implements OnInit {
   }
 
   loadSalaries() {
-
     this.isLoading = true;
     
     const m = this.selectedMonth ? Number(this.selectedMonth) : undefined;
     const y = this.selectedYear ? Number(this.selectedYear) : undefined;
 
     const request = (this.isAdminOrHR && this.isViewingAll)
-      ? this.salaryService.getAllSalaries(m, y)
-      : this.salaryService.getMySalaries(m, y);
+      ? this.salaryService.getAllSalaries(m, y, this.currentPage, this.itemsPerPage, this.salarySearchQuery)
+      : this.salaryService.getMySalaries(m, y, this.currentPage, this.itemsPerPage, this.salarySearchQuery);
 
     request.subscribe({
       next: (res: any) => {
-        const extractedData = Array.isArray(res) ? res : res?.data || [];
-        this.allSalariesList = Array.isArray(extractedData)
-          ? extractedData
-          : [];
-        this.salariesList = [...this.allSalariesList];
-
-        if (!m && !y) {
-          const years = this.allSalariesList
-            .map((s) => s.year)
-            .filter((y) => y != null);
-          this.uniqueYears = Array.from(new Set(years))
-            .sort()
-            .reverse() as number[];
-        }
-
-        this.filterSalariesLocal();
+        this.salariesList = res.items || [];
+        this.totalCount = res.totalCount || 0;
+        this.hasDraftSalaries = this.salariesList.some(s => s.status === 'Draft');
         this.isLoading = false;
       },
       error: (err) => {
@@ -205,36 +194,8 @@ export class SalaryComponent implements OnInit {
   }
 
   filterSalaries() {
-    this.loadSalaries();
-  }
-
-  filterSalariesLocal() {
-    this.salariesList = this.allSalariesList.filter((s) => {
-      let matchesSearch = true;
-      if (this.salarySearchQuery) {
-        const query = this.salarySearchQuery.toLowerCase();
-        const empName = (s.employeeName || '').toLowerCase();
-        const empId = String(s.employeeId || '');
-        const baseAmt = String(s.baseAmount || '');
-        matchesSearch =
-          empName.includes(query) ||
-          empId.includes(query) ||
-          baseAmt.includes(query);
-      }
-      return matchesSearch;
-    });
-
-    if (this.salariesList.length > 0) {
-      this.salariesList.sort((a, b) => {
-        if (b.year !== a.year) {
-          return b.year - a.year;
-        }
-        return b.month - a.month;
-      });
-    }
-
-    this.hasDraftSalaries = this.salariesList.some(s => s.status === 'Draft');
     this.currentPage = 1;
+    this.loadSalaries();
   }
 
   toggleViewAll() {
@@ -242,6 +203,7 @@ export class SalaryComponent implements OnInit {
     this.salarySearchQuery = '';
     this.selectedYear = '';
     this.selectedMonth = '';
+    this.currentPage = 1;
     this.loadSalaries();
   }
 
@@ -340,7 +302,6 @@ export class SalaryComponent implements OnInit {
   }
 
   generatePayroll() {
-    // We now use openWizard instead. Leaving this empty or removing it.
     this.openWizard();
   }
 
@@ -372,9 +333,7 @@ export class SalaryComponent implements OnInit {
   }
 
   saveSalary() {
-
     this.isProcessing = true;
-
     const isoDate = new Date(this.salaryData.effectiveDate).toISOString();
 
     const base = Number(this.salaryData.baseAmount) || 0;
@@ -501,7 +460,7 @@ export class SalaryComponent implements OnInit {
     ]);
 
     const additionalInfo = [
-      { label: 'Total Records', value: String(this.salariesList.length) },
+      { label: 'Total Records', value: String(this.totalCount) },
       { label: 'Filtered Year', value: this.selectedYear ? this.selectedYear : 'All' },
       { label: 'Filtered Month', value: this.selectedMonth ? this.selectedMonth : 'All' }
     ];

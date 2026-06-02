@@ -21,15 +21,17 @@ namespace HRMS_GradProject.Controllers
         public async Task<IActionResult> GetAll(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
-            [FromQuery] DateTime? date = null)
+            [FromQuery] DateTime? date = null,
+            [FromQuery] string? searchQuery = null,
+            [FromQuery] string? status = null)
         {
-            var result = await attendanceService.GetAllAsync(pageNumber, pageSize, date);
+            var result = await attendanceService.GetAllAsync(pageNumber, pageSize, date, searchQuery, status);
             return Ok(ApiResponse<PagedResult<AttendanceDto>>.Ok(result));
         }
 
         // GET /api/attendance/my → Employee
         [HttpGet("my")]
-        public async Task<IActionResult> GetMyAttendance( [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] DateTime? date = null)
+        public async Task<IActionResult> GetMyAttendance( [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] DateTime? date = null, [FromQuery] string? searchQuery = null, [FromQuery] string? status = null)
         {
             var employeeIdClaim = User.FindFirstValue("employeeId");
 
@@ -37,7 +39,7 @@ namespace HRMS_GradProject.Controllers
             {
                 return BadRequest(ApiResponse.Fail("Your account is not linked to an employee profile"));
             }
-            var result = await attendanceService.GetMyAttendanceAsync(employeeId, pageNumber, pageSize, date);
+            var result = await attendanceService.GetMyAttendanceAsync(employeeId, pageNumber, pageSize, date, searchQuery, status);
 
             return Ok(ApiResponse<PagedResult<AttendanceDto>>.Ok(result));
         }

@@ -21,7 +21,6 @@ export class AttendanceComponent implements OnInit {
   private excelExportService = inject(ExcelExportService);
   private pdfExportService = inject(PdfExportService);
 
-  allAttendanceRecords: any[] = [];
   attendanceRecords: any[] = [];
 
   searchQuery: string = '';
@@ -35,23 +34,21 @@ export class AttendanceComponent implements OnInit {
   isHR = false;
 
   currentPage: number = 1;
-  itemsPerPage: number = 7;
+  itemsPerPage: number = 10;
+  totalCount: number = 0;
 
   get paginatedRecords() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.attendanceRecords.slice(
-      startIndex,
-      startIndex + this.itemsPerPage,
-    );
+    return this.attendanceRecords;
   }
 
   get totalPages() {
-    return Math.ceil(this.attendanceRecords.length / this.itemsPerPage) || 1;
+    return Math.ceil(this.totalCount / this.itemsPerPage) || 1;
   }
 
   changePage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+      this.filterRecords();
     }
   }
 
@@ -85,24 +82,12 @@ export class AttendanceComponent implements OnInit {
   }
 
   loadAllAttendance() {
-
     this.isLoading = true;
     const d = this.selectedDate || undefined;
-    this.attendanceService.getAllAttendance(d).subscribe({
+    this.attendanceService.getAllAttendance(d, this.currentPage, this.itemsPerPage, this.searchQuery, this.selectedStatus).subscribe({
       next: (res: any) => {
-        const items = Array.isArray(res)
-          ? res
-          : (res?.items ?? res?.data?.items ?? res?.data ?? []);
-        this.allAttendanceRecords = Array.isArray(items) ? items : [];
-        
-        if (!d) {
-           this.allAttendanceRecords.sort(
-             (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-           );
-        }
-        
-        this.attendanceRecords = [...this.allAttendanceRecords];
-        this.filterRecordsLocal();
+        this.attendanceRecords = res.items || [];
+        this.totalCount = res.totalCount || 0;
         this.isLoading = false;
       },
       error: () => {
@@ -112,18 +97,16 @@ export class AttendanceComponent implements OnInit {
   }
 
   loadMyAttendance() {
-
     this.isLoading = true;
     const d = this.selectedDate || undefined;
-    this.attendanceService.getMyAttendance(d).subscribe({
+    this.attendanceService.getMyAttendance(d, this.currentPage, this.itemsPerPage, this.searchQuery, this.selectedStatus).subscribe({
       next: (res: any) => {
-        const items = Array.isArray(res)
-          ? res
-          : (res?.items ?? res?.data?.items ?? res?.data ?? []);
-        this.allAttendanceRecords = Array.isArray(items) ? items : [];
-        this.attendanceRecords = [...this.allAttendanceRecords];
-        this.analyzeSessionStatus(this.attendanceRecords);
-        this.filterRecordsLocal();
+        this.attendanceRecords = res.items || [];
+        this.totalCount = res.totalCount || 0;
+        // The active session will always be at the top if sorting is by Date DESC
+        if (this.currentPage === 1 && !this.selectedDate && !this.searchQuery && !this.selectedStatus) {
+            this.analyzeSessionStatus(this.attendanceRecords);
+        }
         this.isLoading = false;
       },
       error: (err) => {
@@ -141,40 +124,12 @@ export class AttendanceComponent implements OnInit {
     }
   }
 
-  filterRecordsLocal() {
-    this.attendanceRecords = this.allAttendanceRecords.filter((rec) => {
-      let matchesSearch = true;
-      if (this.searchQuery) {
-        const query = this.searchQuery.toLowerCase();
-        const empName = (rec.employeeName || '').toLowerCase();
-        const empId = String(rec.employeeId || '');
-        const dateStr = String(rec.date || '').toLowerCase();
-        matchesSearch =
-          empName.includes(query) ||
-          empId.includes(query) ||
-          dateStr.includes(query);
-      }
-
-      let matchesStatus = true;
-      if (this.selectedStatus) {
-        const isCompleted = rec.clockOut && rec.clockOut !== '00:00:00';
-        const currentStatus = isCompleted ? 'Completed' : 'Working';
-        matchesStatus = currentStatus === this.selectedStatus;
-      }
-
-      return matchesSearch && matchesStatus;
-    });
-
-    this.currentPage = 1;
-    if (this.attendanceRecords.length > 0) {
-      this.attendanceRecords.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-      );
-    }
+  onFilterChange() {
+      this.currentPage = 1;
+      this.filterRecords();
   }
 
   private analyzeSessionStatus(records: any[]) {
-
     const today = new Date().toDateString();
 
     const openSession = records.find(
@@ -207,7 +162,6 @@ export class AttendanceComponent implements OnInit {
   }
 
   onClockIn() {
-
     this.isProcessing = true;
     const now = new Date();
     const dateIso = now.toISOString();
@@ -277,7 +231,6 @@ export class AttendanceComponent implements OnInit {
   }
 
   exportToExcel() {
-
     if (this.attendanceRecords.length === 0) {
       Swal.fire(
         'No Data',

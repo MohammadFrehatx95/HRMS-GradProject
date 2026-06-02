@@ -26,9 +26,12 @@ namespace HRMS_GradProject.Controllers
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
             [FromQuery] int? month = null,
-            [FromQuery] int? year = null)
+            [FromQuery] int? year = null,
+            [FromQuery] string? searchQuery = null,
+            [FromQuery] int? status = null,
+            [FromQuery] int? leaveType = null)
         {
-            var result = await leaveService.GetAllAsync(pageNumber, pageSize, month, year);
+            var result = await leaveService.GetAllAsync(pageNumber, pageSize, month, year, searchQuery, status, leaveType);
             return Ok(ApiResponse<PagedResult<LeaveDto>>.Ok(result));
         }
 
@@ -38,13 +41,19 @@ namespace HRMS_GradProject.Controllers
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
             [FromQuery] int? month = null,
-            [FromQuery] int? year = null)
+            [FromQuery] int? year = null,
+            [FromQuery] string? searchQuery = null,
+            [FromQuery] int? status = null,
+            [FromQuery] int? leaveType = null)
         {
-            var employeeId = GetEmployeeId();
-            if (employeeId is null)
-                return BadRequest(ApiResponse.Fail("Your account is not linked to an employee profile"));
+            var employeeIdClaim = User.FindFirstValue("employeeId");
 
-            var result = await leaveService.GetMyLeavesAsync(employeeId.Value, pageNumber, pageSize, month, year);
+            if (string.IsNullOrWhiteSpace(employeeIdClaim) || !int.TryParse(employeeIdClaim, out int employeeId))
+            {
+                return BadRequest(ApiResponse.Fail("Your account is not linked to an employee profile"));
+            }
+
+            var result = await leaveService.GetMyLeavesAsync(employeeId, pageNumber, pageSize, month, year, searchQuery, status, leaveType);
             return Ok(ApiResponse<PagedResult<LeaveDto>>.Ok(result));
         }
 

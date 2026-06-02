@@ -19,15 +19,35 @@ namespace Application.Services.Implementations
         IImageService imageService,
         ILogger<LeaveService> logger) : ILeaveService
     {
-        public async Task<PagedResult<LeaveDto>> GetAllAsync(int pageNumber, int pageSize, int? month = null, int? year = null)
+        public async Task<PagedResult<LeaveDto>> GetAllAsync(int pageNumber, int pageSize, int? month = null, int? year = null, string? searchQuery = null, int? status = null, int? leaveType = null)
         {
             var query = uow.Repository<Leave>()
                            .GetAllQueryable()
                            .Include(l => l.Employee).ThenInclude(e => e.User)
                            .AsQueryable();
 
-            if (month.HasValue && month.Value > 0) query = query.Where(l => l.StartDate.Month == month.Value);
-            if (year.HasValue && year.Value > 0) query = query.Where(l => l.StartDate.Year == year.Value);
+            if (month.HasValue && year.HasValue)
+            {
+                query = query.Where(l => l.StartDate.Month <= month.Value && l.EndDate.Month >= month.Value &&
+                                         l.StartDate.Year <= year.Value && l.EndDate.Year >= year.Value);
+            }
+
+            if (status.HasValue)
+            {
+                query = query.Where(l => (int)l.Status == status.Value);
+            }
+
+            if (leaveType.HasValue)
+            {
+                query = query.Where(l => (int)l.LeaveType == leaveType.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                query = query.Where(l => 
+                    (l.Employee != null && (l.Employee.FirstName.Contains(searchQuery) || l.Employee.LastName.Contains(searchQuery))) ||
+                    l.EmployeeId.ToString().Contains(searchQuery));
+            }
 
             query = query.OrderByDescending(l => l.StartDate);
 
@@ -42,7 +62,7 @@ namespace Application.Services.Implementations
         }
 
         public async Task<PagedResult<LeaveDto>> GetMyLeavesAsync(
-            int employeeId, int pageNumber, int pageSize, int? month = null, int? year = null)
+            int employeeId, int pageNumber, int pageSize, int? month = null, int? year = null, string? searchQuery = null, int? status = null, int? leaveType = null)
         {
             var query = uow.Repository<Leave>()
                            .GetAllQueryable()
@@ -51,6 +71,23 @@ namespace Application.Services.Implementations
 
             if (month.HasValue && month.Value > 0) query = query.Where(l => l.StartDate.Month == month.Value);
             if (year.HasValue && year.Value > 0) query = query.Where(l => l.StartDate.Year == year.Value);
+
+            if (status.HasValue)
+            {
+                query = query.Where(l => (int)l.Status == status.Value);
+            }
+
+            if (leaveType.HasValue)
+            {
+                query = query.Where(l => (int)l.LeaveType == leaveType.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                query = query.Where(l => 
+                    l.Status.ToString().Contains(searchQuery) ||
+                    l.LeaveType.ToString().Contains(searchQuery));
+            }
 
             query = query.OrderByDescending(l => l.StartDate);
 

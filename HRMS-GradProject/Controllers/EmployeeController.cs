@@ -16,9 +16,9 @@ public class EmployeeController(IEmployeeService employeeService) : ControllerBa
     // GET api/employees?pageNumber=1&pageSize=10
     [HttpGet]
     [Authorize(Roles = "Admin,HR")]
-    public async Task<IActionResult> GetAll( [FromQuery] int pageNumber = 1,[FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetAll( [FromQuery] int pageNumber = 1,[FromQuery] int pageSize = 10, [FromQuery] string? searchQuery = null, [FromQuery] int? departmentId = null, [FromQuery] bool? isActive = null)
     {
-        var employees = await employeeService.GetAllAsync(pageNumber, pageSize);
+        var employees = await employeeService.GetAllAsync(pageNumber, pageSize, searchQuery, departmentId, isActive);
 
         return Ok(ApiResponse<PagedResult<EmployeeDto>>.Ok(employees));
     }

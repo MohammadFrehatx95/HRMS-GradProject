@@ -11,32 +11,40 @@ export class AttendanceService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/attendance`;
 
-  getAllAttendance(date?: string): Observable<any[]> {
-    let url = `${this.apiUrl}?pageNumber=1&pageSize=1000`;
+  getAllAttendance(date?: string, pageNumber: number = 1, pageSize: number = 10, searchQuery: string = '', status: string = ''): Observable<{items: any[], totalCount: number}> {
+    let url = `${this.apiUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     if (date) url += `&date=${date}`;
+    if (searchQuery) url += `&searchQuery=${encodeURIComponent(searchQuery)}`;
+    if (status) url += `&status=${status}`;
     return this.http.get<any>(url).pipe(
       map((response) => {
-        if (response && response.data && response.data.items)
-          return response.data.items;
-        if (Array.isArray(response)) return response;
-        if (response && Array.isArray(response.data)) return response.data;
-        return [];
+        if (response && response.data) {
+          return {
+            items: response.data.items || [],
+            totalCount: response.data.totalCount || 0
+          };
+        }
+        return { items: [], totalCount: 0 };
       }),
     );
   }
 
-  getMyAttendance(date?: string): Observable<any[]> {
-    let url = `${this.apiUrl}/my?pageNumber=1&pageSize=1000`;
+  getMyAttendance(date?: string, pageNumber: number = 1, pageSize: number = 10, searchQuery: string = '', status: string = ''): Observable<{items: any[], totalCount: number}> {
+    let url = `${this.apiUrl}/my?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     if (date) url += `&date=${date}`;
+    if (searchQuery) url += `&searchQuery=${encodeURIComponent(searchQuery)}`;
+    if (status) url += `&status=${status}`;
     return this.http
       .get<any>(url)
       .pipe(
         map((response) => {
-          if (response && response.data && response.data.items)
-            return response.data.items;
-          if (Array.isArray(response)) return response;
-          if (response && Array.isArray(response.data)) return response.data;
-          return [];
+          if (response && response.data) {
+            return {
+              items: response.data.items || [],
+              totalCount: response.data.totalCount || 0
+            };
+          }
+          return { items: [], totalCount: 0 };
         }),
       );
   }
@@ -58,4 +66,3 @@ export class AttendanceService {
     );
   }
 }
-
