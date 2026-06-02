@@ -53,9 +53,25 @@ export class PayrollAdjustmentsComponent implements OnInit {
     { value: AdjustmentType.Bonus, label: 'Bonus (Allowance)' },
   ];
 
-  pageNumber = 1;
-  pageSize = 100;
-  totalItems = 0;
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  totalCount: number = 0;
+
+  get totalPages(): number {
+    return Math.ceil(this.totalCount / this.itemsPerPage) || 1;
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.loadAdjustments();
+    }
+  }
+
+  onPageSizeChange() {
+    this.currentPage = 1;
+    this.loadAdjustments();
+  }
 
   filterMonth: number | '' = '';
   filterYear: number | '' = new Date().getFullYear();
@@ -106,7 +122,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
   }
 
   onFilterChange() {
-    this.pageNumber = 1;
+    this.currentPage = 1;
     this.loadAdjustments();
   }
 
@@ -128,10 +144,10 @@ export class PayrollAdjustmentsComponent implements OnInit {
     const y = this.filterYear ? Number(this.filterYear) : undefined;
 
     const request = this.isAdminOrHR
-      ? this.adjustmentService.getAll(this.pageNumber, this.pageSize, m, y)
+      ? this.adjustmentService.getAll(this.currentPage, this.itemsPerPage, m, y)
       : this.adjustmentService.getMyAdjustments(
-          this.pageNumber,
-          this.pageSize,
+          this.currentPage,
+          this.itemsPerPage,
           m,
           y,
         );
@@ -146,7 +162,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
         else if (res?.data && Array.isArray(res.data)) extracted = res.data;
 
         this.adjustments = extracted;
-        this.totalItems = res?.totalCount || res?.data?.totalCount || 0;
+        this.totalCount = res?.totalCount || res?.data?.totalCount || 0;
         this.isLoading = false;
       },
       error: (err: any) => {

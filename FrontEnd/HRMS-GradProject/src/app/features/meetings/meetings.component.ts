@@ -57,23 +57,31 @@ export class MeetingsComponent implements OnInit {
   itemsPerPage: number = 7;
 
   get paginatedMeetings(): Meeting[] {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.meetings.slice(startIndex, startIndex + this.itemsPerPage);
+    return this.meetings;
   }
 
   get paginatedGroupedMeetings(): GroupedMeeting[] {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.groupedMeetings.slice(startIndex, startIndex + this.itemsPerPage);
+    return this.groupedMeetings;
   }
 
+  totalCount: number = 0;
+
   get totalPages(): number {
-    return Math.ceil(this.groupedMeetings.length / this.itemsPerPage) || 1;
+    return Math.ceil(this.totalCount / this.itemsPerPage) || 1;
   }
 
   changePage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+      if (this.isHrOrAdmin) this.loadAllMeetings();
+      else this.loadMyMeetings();
     }
+  }
+
+  onPageSizeChange() {
+    this.currentPage = 1;
+    if (this.isHrOrAdmin) this.loadAllMeetings();
+    else this.loadMyMeetings();
   }
 
   getMathMin(a: number, b: number): number {
@@ -145,9 +153,10 @@ export class MeetingsComponent implements OnInit {
 
   loadAllMeetings() {
     this.isLoading = true;
-    this.meetingService.getAll(this.pageNumber, this.pageSize).subscribe({
+    this.meetingService.getAll(this.currentPage, this.itemsPerPage).subscribe({
       next: (res: any) => {
         this.meetings = res.data?.items || res.items || [];
+        this.totalCount = res.data?.totalCount || res.totalCount || 0;
         
         // Group meetings by MeetLink
         const groups = new Map<string, GroupedMeeting>();
@@ -183,9 +192,10 @@ export class MeetingsComponent implements OnInit {
 
   loadMyMeetings() {
     this.isLoading = true;
-    this.meetingService.getMyMeetings(this.pageNumber, this.pageSize).subscribe({
+    this.meetingService.getMyMeetings(this.currentPage, this.itemsPerPage).subscribe({
       next: (res: any) => {
         this.meetings = res.data?.items || res.items || [];
+        this.totalCount = res.data?.totalCount || res.totalCount || 0;
         
         // Group meetings by MeetLink
         const groups = new Map<string, GroupedMeeting>();

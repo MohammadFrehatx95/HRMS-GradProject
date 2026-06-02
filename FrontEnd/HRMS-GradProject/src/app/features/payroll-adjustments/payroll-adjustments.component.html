@@ -179,6 +179,41 @@
                 </tbody>
             </table>
         </div>
+        
+        <!-- Pagination Footer -->
+        <div *ngIf="totalCount > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <div class="d-flex align-items-center gap-2">
+                    <label class="small text-muted mb-0 text-nowrap">{{ 'Per page' | t }}:</label>
+                    <select class="form-select form-select-sm border-light-subtle" style="width: 70px;" [(ngModel)]="itemsPerPage" (change)="onPageSizeChange()">
+                        <option [ngValue]="10">10</option>
+                        <option [ngValue]="25">25</option>
+                        <option [ngValue]="50">50</option>
+                        <option [ngValue]="100">100</option>
+                    </select>
+                </div>
+                <small class="text-muted fw-medium">
+                    Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ (currentPage * itemsPerPage > totalCount) ? totalCount : (currentPage * itemsPerPage) }} of {{ totalCount }} entries
+                </small>
+            </div>
+            <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                    <a class="page-link cursor-pointer px-2" (click)="changePage(1)" title="First Page"><i class="bi bi-chevron-double-left"></i></a>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
+                </li>
+                <li class="page-item active">
+                    <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                    <a class="page-link cursor-pointer px-2" (click)="changePage(totalPages)" title="Last Page"><i class="bi bi-chevron-double-right"></i></a>
+                </li>
+            </ul>
+        </div>
     </div>
     }
 </div>
