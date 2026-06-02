@@ -5,8 +5,8 @@ using Microsoft.Extensions.Configuration;
 namespace Infrastructure.Data;
 
 /// <summary>
-/// Used by EF Core CLI tools (dotnet ef migrations add) at design time
-/// so migrations can be created without running the full application host.
+// Used by EF Core CLI tools (dotnet ef migrations add) at design time
+// so migrations can be created without running the full application host.
 /// </summary>
 public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {

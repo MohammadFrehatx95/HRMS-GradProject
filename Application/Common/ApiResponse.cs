@@ -1,9 +1,4 @@
-﻿// This file defines a generic class `ApiResponse<T>` that represents a standard structure for API responses.
-// It includes properties to indicate success, a message, the data being returned, and any errors that may have occurred.
-// The class also provides static methods for creating successful and failed responses. Additionally,
-// there is a non-generic version of `ApiResponse` for cases where no data is needed.
-
-namespace Application.Common;
+﻿namespace Application.Common;
 
 public class ApiResponse<T> 
 {
