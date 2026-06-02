@@ -58,7 +58,7 @@ namespace Application.Services.Implementations
         }
 
         public async Task<PagedResult<AttendanceDto>> GetMyAttendanceAsync(
-            int employeeId, int pageNumber, int pageSize, DateTime? date = null)
+            int employeeId, int pageNumber, int pageSize, DateTime? date = null, string? searchQuery = null, string? status = null)
         {
             var query = uow.Repository<Attendance>()
                            .GetAllQueryable()
