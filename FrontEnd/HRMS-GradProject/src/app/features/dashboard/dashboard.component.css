@@ -1,4 +1,4 @@
-﻿.stat-card {
+.stat-card {
   border-radius: 16px;
   color: white;
   padding: 25px;
@@ -157,22 +157,29 @@
 }
 
 .ann-panel {
-  border: 1px solid rgba(0,0,0,0.05);
+  border: 1px solid var(--bs-border-color, rgba(0,0,0,0.1));
+  background-color: var(--bs-body-bg, #ffffff);
 }
 .ann-header {
-  background-color: #f8f9fa;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
+  background-color: var(--bs-tertiary-bg, #f8f9fa);
+  border-bottom: 1px solid var(--bs-border-color, rgba(0,0,0,0.1));
+}
+.ann-empty-state {
+  background-color: var(--bs-body-bg, #ffffff);
 }
 .ann-icon-wrap {
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background-color: #e0e7ff;
-  color: #4f46e5;
+  background-color: rgba(var(--bs-primary-rgb), 0.1);
+  color: var(--bs-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 14px;
+}
+.ann-scroll-area {
+  background-color: var(--bs-body-bg, #ffffff);
 }
 .ann-scroll-area::-webkit-scrollbar {
   width: 6px;
@@ -181,17 +188,18 @@
   background: transparent;
 }
 .ann-scroll-area::-webkit-scrollbar-thumb {
-  background-color: #e5e7eb;
+  background-color: var(--bs-border-color, #e5e7eb);
   border-radius: 10px;
 }
 .ann-scroll-area:hover::-webkit-scrollbar-thumb {
-  background-color: #d1d5db;
+  background-color: var(--bs-secondary-color, #d1d5db);
 }
 .ann-item {
   transition: background-color 0.2s;
+  border-color: var(--bs-border-color, rgba(0,0,0,0.1)) !important;
 }
 .ann-item:hover {
-  background-color: #f9fafb;
+  background-color: var(--bs-tertiary-bg, #f9fafb);
 }
 .ann-priority-dot {
   width: 8px;
@@ -201,18 +209,19 @@
 .ann-badge {
   font-size: 0.65rem;
   font-weight: 600;
-  padding: 2px 8px;
+  padding: 3px 10px;
   border-radius: 12px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-.ann-badge-urgent { background: #fee2e2; color: #dc2626; }
-.ann-badge-high { background: #fef3c7; color: #d97706; }
-.ann-badge-normal { background: #e0f2fe; color: #0284c7; }
+.ann-badge-urgent { background: rgba(var(--bs-danger-rgb), 0.15); color: var(--bs-danger); }
+.ann-badge-high { background: rgba(var(--bs-warning-rgb), 0.15); color: var(--bs-warning-text, #d97706); }
+.ann-badge-normal { background: rgba(var(--bs-info-rgb), 0.15); color: var(--bs-info); }
 .ann-delete-btn {
-  opacity: 0;
-  transition: opacity 0.2s;
+  opacity: 0.5;
+  transition: opacity 0.2s, transform 0.2s;
 }
 .ann-item:hover .ann-delete-btn {
   opacity: 1;
+  transform: scale(1.1);
 }
