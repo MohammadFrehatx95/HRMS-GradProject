@@ -10,6 +10,9 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { Observable, forkJoin } from 'rxjs';
 import { ExcelExportService } from '../../core/services/excel-export.service';
 import { PdfExportService } from '../../core/services/pdf-export.service';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { NgxMaskDirective } from 'ngx-mask';
 
 export interface GroupedMeeting {
   meetLink: string;
@@ -28,7 +31,7 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-meetings',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
   templateUrl: './meetings.component.html',
   styleUrls: ['./meetings.component.css']
 })

@@ -163,8 +163,17 @@
               <i class="bi bi-calendar-event text-primary"></i>
               Date of Birth <span class="text-danger">*</span>
             </label>
-            <input type="date" class="form-control field-input" formControlName="birthDate"
-              [class.is-invalid]="employeeForm.get('birthDate')?.invalid && employeeForm.get('birthDate')?.touched">
+            <div class="input-group shadow-sm" [class.is-invalid]="employeeForm.get('birthDate')?.invalid && employeeForm.get('birthDate')?.touched">
+                <input class="form-control field-input border-end-0" matInput
+                    formControlName="birthDate"
+                    [matDatepicker]="birthPicker"
+                    mask="00/00/0000" [dropSpecialCharacters]="false"
+                    placeholder="DD/MM/YYYY" style="z-index: 1;">
+                <span class="input-group-text bg-white border-start-0 p-0" style="z-index: 2;">
+                    <mat-datepicker-toggle matIconSuffix [for]="birthPicker"></mat-datepicker-toggle>
+                </span>
+                <mat-datepicker #birthPicker></mat-datepicker>
+            </div>
             <div class="invalid-feedback">Date of Birth is required.</div>
           </div>
         </div>
@@ -288,8 +297,17 @@
               <i class="bi bi-calendar-date text-primary"></i>
               Hire Date <span class="text-danger">*</span>
             </label>
-            <input type="date" class="form-control field-input" formControlName="hireDate"
-              [class.is-invalid]="employeeForm.get('hireDate')?.invalid && employeeForm.get('hireDate')?.touched">
+            <div class="input-group shadow-sm" [class.is-invalid]="employeeForm.get('hireDate')?.invalid && employeeForm.get('hireDate')?.touched">
+                <input class="form-control field-input border-end-0" matInput
+                    formControlName="hireDate"
+                    [matDatepicker]="hirePicker"
+                    mask="00/00/0000" [dropSpecialCharacters]="false"
+                    placeholder="DD/MM/YYYY" style="z-index: 1;">
+                <span class="input-group-text bg-white border-start-0 p-0" style="z-index: 2;">
+                    <mat-datepicker-toggle matIconSuffix [for]="hirePicker"></mat-datepicker-toggle>
+                </span>
+                <mat-datepicker #hirePicker></mat-datepicker>
+            </div>
             <div class="invalid-feedback">Hire date is required.</div>
           </div>
           <div class="col-md-4">

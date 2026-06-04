@@ -24,69 +24,222 @@ namespace Application.Services.Implementations
         public async Task<PagedResult<AttendanceDto>> GetAllAsync(
             int pageNumber, int pageSize, DateTime? date = null, string? searchQuery = null, string? status = null)
         {
-            var query = uow.Repository<Attendance>()
-                           .GetAllQueryable()
-                           .Include(a => a.Employee).ThenInclude(e => e.User)
-                           .AsQueryable();
-
-            if (date.HasValue) query = query.Where(a => a.Date.Date == date.Value.Date);
-
-            if (!string.IsNullOrWhiteSpace(status))
+            if (date.HasValue)
             {
-                var sLower = status.ToLower();
-                if (sLower == "completed") query = query.Where(a => a.ClockOut != null);
-                else if (sLower == "working") query = query.Where(a => a.ClockOut == null);
-            }
+                var isAbsenceVisible = date.Value.Date < DateTime.UtcNow.Date ||
+                    (date.Value.Date == DateTime.UtcNow.Date && DateTime.UtcNow.TimeOfDay > _attendanceSettings.WorkEndTime.ToTimeSpan());
 
-            if (!string.IsNullOrWhiteSpace(searchQuery))
+                var employeesQuery = uow.Repository<Employee>().GetAllQueryable()
+                    .Include(e => e.User)
+                    .Where(e => e.IsActive && e.HireDate.Date <= date.Value.Date);
+
+                if (!string.IsNullOrWhiteSpace(searchQuery))
+                {
+                    employeesQuery = employeesQuery.Where(e =>
+                        e.FirstName.Contains(searchQuery) || e.LastName.Contains(searchQuery) ||
+                        e.Id.ToString().Contains(searchQuery));
+                }
+
+                var query = employeesQuery.Select(e => new
+                {
+                    Employee = e,
+                    Attendance = e.Attendances.FirstOrDefault(a => a.Date.Date == date.Value.Date)
+                });
+
+                if (!isAbsenceVisible)
+                {
+                    query = query.Where(x => x.Attendance != null);
+                }
+
+                if (!string.IsNullOrWhiteSpace(status))
+                {
+                    var sLower = status.ToLower();
+                    if (sLower == "completed") query = query.Where(x => x.Attendance != null && x.Attendance.ClockOut != null);
+                    else if (sLower == "working") query = query.Where(x => x.Attendance != null && x.Attendance.ClockOut == null);
+                    else if (sLower == "absent" && isAbsenceVisible) query = query.Where(x => x.Attendance == null);
+                }
+
+                query = query.OrderBy(x => x.Employee.FirstName);
+
+                var total = await query.CountAsync();
+                var pageItems = await query
+                                .Skip((pageNumber - 1) * pageSize)
+                                .Take(pageSize)
+                                .ToListAsync();
+
+                var dtoList = new List<AttendanceDto>();
+                foreach (var item in pageItems)
+                {
+                    if (item.Attendance != null)
+                    {
+                        var dto = mapper.Map<AttendanceDto>(item.Attendance);
+                        dto.Status = item.Attendance.ClockOut != null ? "Completed" : "Working";
+                        dtoList.Add(dto);
+                    }
+                    else
+                    {
+                        dtoList.Add(new AttendanceDto
+                        {
+                            Id = 0,
+                            EmployeeId = item.Employee.Id,
+                            EmployeeName = $"{item.Employee.FirstName} {item.Employee.LastName}",
+                            EmployeeProfilePictureUrl = item.Employee.User?.ProfilePictureUrl,
+                            Date = date.Value.Date,
+                            ClockIn = null,
+                            ClockOut = null,
+                            TotalHours = "0",
+                            Status = "Absent"
+                        });
+                    }
+                }
+                
+                return PagedResult<AttendanceDto>.Create(dtoList, total, pageNumber, pageSize);
+            }
+            else
             {
-                query = query.Where(a => 
-                    (a.Employee != null && (a.Employee.FirstName.Contains(searchQuery) || a.Employee.LastName.Contains(searchQuery))) ||
-                    a.EmployeeId.ToString().Contains(searchQuery));
+                var query = uow.Repository<Attendance>()
+                               .GetAllQueryable()
+                               .Include(a => a.Employee).ThenInclude(e => e.User)
+                               .AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(status))
+                {
+                    var sLower = status.ToLower();
+                    if (sLower == "completed") query = query.Where(a => a.ClockOut != null);
+                    else if (sLower == "working") query = query.Where(a => a.ClockOut == null);
+                    // if sLower == "absent", we can't filter here efficiently since date is not provided
+                }
+
+                if (!string.IsNullOrWhiteSpace(searchQuery))
+                {
+                    query = query.Where(a => 
+                        (a.Employee != null && (a.Employee.FirstName.Contains(searchQuery) || a.Employee.LastName.Contains(searchQuery))) ||
+                        a.EmployeeId.ToString().Contains(searchQuery));
+                }
+
+                query = query.OrderByDescending(a => a.Date);
+
+                var total = await query.CountAsync();
+                var items = await query
+                                .Skip((pageNumber - 1) * pageSize)
+                                .Take(pageSize)
+                                .ToListAsync();
+
+                var dtoList = mapper.Map<List<AttendanceDto>>(items);
+                foreach (var dto in dtoList)
+                {
+                    dto.Status = dto.ClockOut.HasValue ? "Completed" : "Working";
+                }
+
+                return PagedResult<AttendanceDto>.Create(dtoList, total, pageNumber, pageSize);
             }
-
-            query = query.OrderByDescending(a => a.Date);
-
-            var total = await query.CountAsync();
-            var items = await query
-                            .Skip((pageNumber - 1) * pageSize)
-                            .Take(pageSize)
-                            .ToListAsync();
-
-            return PagedResult<AttendanceDto>.Create(
-                mapper.Map<List<AttendanceDto>>(items), total, pageNumber, pageSize);
         }
 
         public async Task<PagedResult<AttendanceDto>> GetMyAttendanceAsync(
             int employeeId, int pageNumber, int pageSize, DateTime? date = null, string? searchQuery = null, string? status = null)
         {
-            var query = uow.Repository<Attendance>()
-                           .GetAllQueryable()
-                           .Include(a => a.Employee).ThenInclude(e => e.User)
-                           .Where(a => a.EmployeeId == employeeId);
-
-            if (date.HasValue) query = query.Where(a => a.Date.Date == date.Value.Date);
-
-            if (!string.IsNullOrWhiteSpace(searchQuery))
+            if (date.HasValue)
             {
-                var isCompletedSearch = searchQuery.Equals("Completed", StringComparison.OrdinalIgnoreCase);
-                var isWorkingSearch = searchQuery.Equals("Working", StringComparison.OrdinalIgnoreCase);
+                var isAbsenceVisible = date.Value.Date < DateTime.UtcNow.Date ||
+                    (date.Value.Date == DateTime.UtcNow.Date && DateTime.UtcNow.TimeOfDay > _attendanceSettings.WorkEndTime.ToTimeSpan());
+
+                var employeesQuery = uow.Repository<Employee>().GetAllQueryable()
+                    .Include(e => e.User)
+                    .Where(e => e.Id == employeeId && e.HireDate.Date <= date.Value.Date);
+
+                var query = employeesQuery.Select(e => new
+                {
+                    Employee = e,
+                    Attendance = e.Attendances.FirstOrDefault(a => a.Date.Date == date.Value.Date)
+                });
+
+                if (!isAbsenceVisible)
+                {
+                    query = query.Where(x => x.Attendance != null);
+                }
+
+                if (!string.IsNullOrWhiteSpace(status))
+                {
+                    var sLower = status.ToLower();
+                    if (sLower == "completed") query = query.Where(x => x.Attendance != null && x.Attendance.ClockOut != null);
+                    else if (sLower == "working") query = query.Where(x => x.Attendance != null && x.Attendance.ClockOut == null);
+                    else if (sLower == "absent" && isAbsenceVisible) query = query.Where(x => x.Attendance == null);
+                }
+
+                var total = await query.CountAsync();
+                var pageItems = await query
+                                .Skip((pageNumber - 1) * pageSize)
+                                .Take(pageSize)
+                                .ToListAsync();
+
+                var dtoList = new List<AttendanceDto>();
+                foreach (var item in pageItems)
+                {
+                    if (item.Attendance != null)
+                    {
+                        var dto = mapper.Map<AttendanceDto>(item.Attendance);
+                        dto.Status = item.Attendance.ClockOut != null ? "Completed" : "Working";
+                        dtoList.Add(dto);
+                    }
+                    else
+                    {
+                        dtoList.Add(new AttendanceDto
+                        {
+                            Id = 0,
+                            EmployeeId = item.Employee.Id,
+                            EmployeeName = $"{item.Employee.FirstName} {item.Employee.LastName}",
+                            EmployeeProfilePictureUrl = item.Employee.User?.ProfilePictureUrl,
+                            Date = date.Value.Date,
+                            ClockIn = null,
+                            ClockOut = null,
+                            TotalHours = "0",
+                            Status = "Absent"
+                        });
+                    }
+                }
                 
-                query = query.Where(a => 
-                    (isCompletedSearch && a.ClockOut != null) ||
-                    (isWorkingSearch && a.ClockOut == null));
+                return PagedResult<AttendanceDto>.Create(dtoList, total, pageNumber, pageSize);
             }
+            else
+            {
+                var query = uow.Repository<Attendance>()
+                               .GetAllQueryable()
+                               .Include(a => a.Employee).ThenInclude(e => e.User)
+                               .Where(a => a.EmployeeId == employeeId);
 
-            query = query.OrderByDescending(a => a.Date);
+                if (!string.IsNullOrWhiteSpace(searchQuery))
+                {
+                    var isCompletedSearch = searchQuery.Equals("Completed", StringComparison.OrdinalIgnoreCase);
+                    var isWorkingSearch = searchQuery.Equals("Working", StringComparison.OrdinalIgnoreCase);
+                    
+                    query = query.Where(a => 
+                        (isCompletedSearch && a.ClockOut != null) ||
+                        (isWorkingSearch && a.ClockOut == null));
+                }
 
-            var total = await query.CountAsync();
-            var items = await query
-                            .Skip((pageNumber - 1) * pageSize)
-                            .Take(pageSize)
-                            .ToListAsync();
+                if (!string.IsNullOrWhiteSpace(status))
+                {
+                    var sLower = status.ToLower();
+                    if (sLower == "completed") query = query.Where(a => a.ClockOut != null);
+                    else if (sLower == "working") query = query.Where(a => a.ClockOut == null);
+                }
 
-            return PagedResult<AttendanceDto>.Create(
-                mapper.Map<List<AttendanceDto>>(items), total, pageNumber, pageSize);
+                query = query.OrderByDescending(a => a.Date);
+
+                var total = await query.CountAsync();
+                var items = await query
+                                .Skip((pageNumber - 1) * pageSize)
+                                .Take(pageSize)
+                                .ToListAsync();
+
+                var dtoList = mapper.Map<List<AttendanceDto>>(items);
+                foreach (var dto in dtoList)
+                {
+                    dto.Status = dto.ClockOut.HasValue ? "Completed" : "Working";
+                }
+
+                return PagedResult<AttendanceDto>.Create(dtoList, total, pageNumber, pageSize);
+            }
         }
 
         public async Task<AttendanceDto?> GetByIdAsync(int id)
@@ -101,6 +254,11 @@ namespace Application.Services.Implementations
 
         public async Task<AttendanceDto> ClockInAsync(int employeeId, ClockInDto dto)
         {
+            if (dto.ClockIn < _attendanceSettings.WorkStartTime)
+            {
+                throw new InvalidOperationException($"You cannot clock in before the official start time ({_attendanceSettings.WorkStartTime:HH:mm}).");
+            }
+
             var date = DateTime.SpecifyKind(dto.Date.Date, DateTimeKind.Utc);
 
             var openSession = await uow.Repository<Attendance>()

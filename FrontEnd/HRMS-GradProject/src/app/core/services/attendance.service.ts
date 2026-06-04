@@ -65,4 +65,13 @@ export class AttendanceService {
       }),
     );
   }
+
+  getAttendanceSettings(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/settings`).pipe(
+      map((response) => {
+        if (response && response.data) return response.data;
+        return response;
+      })
+    );
+  }
 }

@@ -371,8 +371,21 @@
               </select>
             </div>
             <div class="col-md-6 d-flex flex-column justify-content-end">
-              <label class="form-label fw-semibold text-dark">{{ 'Expiry Date' | t }} <small class="text-muted fw-normal">({{ 'Optional' | t }})</small></label>
-              <input type="datetime-local" class="form-control" formControlName="expiryDate">
+              <label class="form-label fw-semibold text-dark">{{ 'Expiry Date & Time' | t }} <small class="text-muted fw-normal">({{ 'Optional' | t }})</small></label>
+              <div class="d-flex gap-2">
+                <div class="input-group shadow-sm">
+                    <input class="form-control bg-white border-end-0" matInput
+                        formControlName="expiryDate"
+                        [matDatepicker]="expiryPicker"
+                        mask="00/00/0000" [dropSpecialCharacters]="false"
+                        placeholder="DD/MM/YYYY" style="z-index: 1;">
+                    <span class="input-group-text bg-white border-start-0 p-0" style="z-index: 2;">
+                        <mat-datepicker-toggle matIconSuffix [for]="expiryPicker"></mat-datepicker-toggle>
+                    </span>
+                    <mat-datepicker #expiryPicker></mat-datepicker>
+                </div>
+                <input type="time" class="form-control shadow-sm" formControlName="expiryTime" style="max-width: 120px;">
+              </div>
             </div>
           </div>
 

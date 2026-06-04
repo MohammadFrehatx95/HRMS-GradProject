@@ -14,11 +14,14 @@ import { PositionService } from '../../core/services/position.service';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-employee-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, ImageCropperModalComponent, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, ImageCropperModalComponent, TranslatePipe, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
   templateUrl: './employee-form.component.html',
   styleUrl: './employee-form.component.css',
 })

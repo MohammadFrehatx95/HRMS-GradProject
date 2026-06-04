@@ -706,7 +706,7 @@ body.dark-mode .form-control:focus, body.dark-mode .form-select:focus {
   overflow: hidden;
 }
 
-/* Make default modals wider (more rectangular/square) across the project */
+
 @media (min-width: 576px) {
   .modal-dialog:not(.modal-sm):not(.modal-lg):not(.modal-xl) {
     max-width: 650px;
@@ -761,7 +761,7 @@ p {
   line-height: 1.6;
 }
 
-/* --- Dark Mode Fixes --- */
+
 body.dark-mode .swal2-popup {
   background-color: var(--color-modal-bg) !important;
   color: var(--color-text) !important;
@@ -780,7 +780,7 @@ body.dark-mode .ann-item:hover {
   background-color: var(--color-surface-3) !important;
 }
 
-/* --- Skeleton Loading --- */
+
 .skeleton-line {
   height: 16px;
   background: #e2e5e7;
@@ -817,8 +817,8 @@ body.dark-mode .skeleton-line::after {
   100% { transform: translateX(100%); }
 }
 
-/* --- Clean Date/Time Inputs --- */
-/* Hide the native calendar/clock icon visually, but make it cover the whole input so clicking anywhere opens the picker */
+
+
 input[type="date"],
 input[type="time"],
 input[type="datetime-local"] {
@@ -838,7 +838,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     background: transparent;
 }
 
-/* Hide the default mm/dd/yyyy placeholder when the input is empty */
+
 input[type="date"]:not(:focus):invalid,
 input[type="time"]:not(:focus):invalid,
 input[type="datetime-local"]:not(:focus):invalid,
@@ -848,7 +848,7 @@ input[type="datetime-local"].ng-invalid:not(:focus) {
     color: transparent;
 }
 
-/* --- Global RTL Spacing Fixes --- */
+
 html[dir="rtl"] .me-1 { margin-left: 0.25rem !important; margin-right: 0 !important; }
 html[dir="rtl"] .me-2 { margin-left: 0.5rem !important; margin-right: 0 !important; }
 html[dir="rtl"] .me-3 { margin-left: 1rem !important; margin-right: 0 !important; }

@@ -118,7 +118,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       const errMsg = err?.message?.toLowerCase() || '';
       
       if (errName === 'notallowederror' || errName === 'aborterror' || errMsg.includes('cancel') || errMsg.includes('abort') || errMsg.includes('timed out')) {
-         return; // Quietly ignore cancellation
+         return; 
       }
 
       const friendlyMsg = this.getFingerprintErrorMessage(err);

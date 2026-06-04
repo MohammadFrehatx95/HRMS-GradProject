@@ -7,13 +7,17 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
+using Microsoft.Extensions.Options;
+
 namespace HRMS_GradProject.Controllers
 {
     
     [ApiController]
     [Route("api/attendance")]
     [Authorize]
-    public class AttendanceController(IAttendanceService attendanceService) : ControllerBase
+    public class AttendanceController(
+        IAttendanceService attendanceService,
+        IOptions<Application.Settings.AttendanceSettings> attendanceOptions) : ControllerBase
     {
         // GET /api/attendance → HR · Admin
         [HttpGet]
@@ -84,6 +88,18 @@ namespace HRMS_GradProject.Controllers
 
             var result = await attendanceService.ClockOutAsync(employeeId, dto);
             return Ok(ApiResponse<AttendanceDto>.Ok(result, "Clocked out successfully"));
+        }
+        [HttpGet("settings")]
+        [AllowAnonymous] // Allow anyone to get the public settings
+        public IActionResult GetSettings()
+        {
+            var settings = attendanceOptions.Value;
+            return Ok(ApiResponse<object>.Ok(new
+            {
+                WorkStartTime = settings.WorkStartTime.ToString("HH:mm:ss"),
+                WorkEndTime = settings.WorkEndTime.ToString("HH:mm:ss"),
+                WorkDayEndTime = settings.WorkDayEndTime.ToString("HH:mm:ss")
+            }));
         }
     }
 }

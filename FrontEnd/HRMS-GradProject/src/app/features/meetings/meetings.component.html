@@ -214,16 +214,23 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold text-secondary">{{ 'Date' | t }} <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-calendar-event text-primary"></i></span>
-                                <input type="date" class="form-control border-start-0" formControlName="meetingDate" style="color-scheme: light;" required>
+                            <div class="input-group shadow-sm">
+                                <input class="form-control bg-light border-end-0" matInput
+                                    formControlName="meetingDate" [required]="true"
+                                    [matDatepicker]="meetPicker"
+                                    mask="00/00/0000" [dropSpecialCharacters]="false"
+                                    placeholder="DD/MM/YYYY" style="z-index: 1;">
+                                <span class="input-group-text bg-light border-start-0 p-0" style="z-index: 2;">
+                                    <mat-datepicker-toggle matIconSuffix [for]="meetPicker"></mat-datepicker-toggle>
+                                </span>
+                                <mat-datepicker #meetPicker></mat-datepicker>
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold text-secondary">{{ 'Time' | t }} <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-clock text-primary"></i></span>
-                                <input type="time" class="form-control border-start-0" formControlName="meetingTime" style="color-scheme: light;" required>
+                            <div class="input-group shadow-sm">
+                                <input type="time" class="form-control bg-light border-end-0" formControlName="meetingTime" style="color-scheme: light; z-index: 1;" required>
+                                <span class="input-group-text bg-light border-start-0" style="z-index: 2;"><i class="bi bi-clock text-primary"></i></span>
                             </div>
                         </div>
                     </div>

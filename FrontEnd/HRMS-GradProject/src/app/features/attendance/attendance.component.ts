@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -8,20 +8,29 @@ import Swal from 'sweetalert2';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { ExcelExportService } from '../../core/services/excel-export.service';
 import { PdfExportService } from '../../core/services/pdf-export.service';
+import { SettingsService } from '../../core/services/settings.service';
+import { TRANSLATIONS } from '../../core/i18n/translations';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-attendance',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, RouterLink],
+  imports: [CommonModule, FormsModule, TranslatePipe, RouterLink, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
   templateUrl: './attendance.component.html',
 })
-export class AttendanceComponent implements OnInit {
+export class AttendanceComponent implements OnInit, OnDestroy {
   private attendanceService = inject(AttendanceService);
   private authService = inject(AuthService);
   private excelExportService = inject(ExcelExportService);
   private pdfExportService = inject(PdfExportService);
+  private settingsService = inject(SettingsService);
 
   attendanceRecords: any[] = [];
+  attendanceSettings: any = null;
+  currentTime: Date = new Date();
+  timerInterval: any;
 
   searchQuery: string = '';
   selectedStatus: string = '';
@@ -79,6 +88,69 @@ export class AttendanceComponent implements OnInit {
     } else {
       this.loadMyAttendance();
     }
+
+    this.attendanceService.getAttendanceSettings().subscribe((settings: any) => {
+      this.attendanceSettings = settings;
+    });
+
+    this.timerInterval = setInterval(() => {
+      this.currentTime = new Date();
+    }, 1000);
+  }
+
+  ngOnDestroy() {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+    }
+  }
+
+  get isBeforeStartTime(): boolean {
+    if (!this.attendanceSettings?.workStartTime) return false;
+    const nowStr = this.currentTime.toTimeString().split(' ')[0];
+    return nowStr < this.attendanceSettings.workStartTime;
+  }
+
+  get isAfterEndTime(): boolean {
+    if (!this.attendanceSettings?.workEndTime) return false;
+    const nowStr = this.currentTime.toTimeString().split(' ')[0];
+    return nowStr > this.attendanceSettings.workEndTime;
+  }
+
+  get lateArrivalText(): string {
+    if (!this.attendanceSettings?.workStartTime) return '';
+    const nowStr = this.currentTime.toTimeString().split(' ')[0];
+    if (nowStr <= this.attendanceSettings.workStartTime) return '';
+    return this.calculateTimeDifference(this.attendanceSettings.workStartTime, nowStr);
+  }
+
+  get overtimeText(): string {
+    if (!this.attendanceSettings?.workEndTime) return '';
+    const nowStr = this.currentTime.toTimeString().split(' ')[0];
+    if (nowStr <= this.attendanceSettings.workEndTime) return '';
+    return this.calculateTimeDifference(this.attendanceSettings.workEndTime, nowStr);
+  }
+
+  private calculateTimeDifference(start: string, end: string): string {
+    const startParts = start.split(':').map(Number);
+    const endParts = end.split(':').map(Number);
+    
+    let startMins = startParts[0] * 60 + startParts[1];
+    let endMins = endParts[0] * 60 + endParts[1];
+    
+    let diff = endMins - startMins;
+    if (diff <= 0) return '';
+    
+    const hours = Math.floor(diff / 60);
+    const mins = diff % 60;
+    
+    const lang = this.settingsService.language;
+    const hrsStr = TRANSLATIONS['hrs'][lang] || 'hrs';
+    const andStr = TRANSLATIONS[' hrs and ']?.[lang] || ' and ';
+    const minsStr = TRANSLATIONS[' mins']?.[lang] || ' mins';
+    
+    if (hours > 0 && mins > 0) return `${hours} ${hrsStr}${andStr}${mins}${minsStr}`;
+    if (hours > 0) return `${hours} ${hrsStr}`;
+    return `${mins}${minsStr}`;
   }
 
   loadAllAttendance() {
@@ -153,11 +225,11 @@ export class AttendanceComponent implements OnInit {
     const today = new Date().toDateString();
 
     const openSession = records.find(
-      (r) => !r.clockOut || r.clockOut === '00:00:00' || r.clockOut === null,
+      (r) => r.clockIn && (!r.clockOut || r.clockOut === '00:00:00'),
     );
 
     const todayRecord = records.find(
-      (r) => new Date(r.date).toDateString() === today,
+      (r) => new Date(r.date).toDateString() === today && r.clockIn,
     );
 
     if (openSession) {
@@ -182,6 +254,11 @@ export class AttendanceComponent implements OnInit {
   }
 
   onClockIn() {
+    if (this.isBeforeStartTime) {
+      Swal.fire('Warning', `You cannot clock in before ${this.attendanceSettings?.workStartTime}`, 'warning');
+      return;
+    }
+
     this.isProcessing = true;
     const now = new Date();
     const dateIso = now.toISOString();
@@ -227,9 +304,13 @@ export class AttendanceComponent implements OnInit {
     this.attendanceService.clockOut({ clockOut: clockOutTime }).subscribe({
       next: () => {
         this.isProcessing = false;
+        let extraMsg = '';
+        if (!isOldSession && this.isAfterEndTime) {
+          extraMsg = `\nOvertime recorded: ${this.overtimeText}`;
+        }
         const msg = isOldSession
           ? `Previous session automatically closed at 23:59.`
-          : `Great job today! Clocked out at ${clockOutTime}`;
+          : `Great job today! Clocked out at ${clockOutTime}.${extraMsg}`;
         Swal.fire({
           icon: 'success',
           title: 'Clocked Out ✅',
@@ -271,8 +352,7 @@ export class AttendanceComponent implements OnInit {
     ];
 
     const data = this.attendanceRecords.map((rec) => {
-      const isCompleted = rec.clockOut && rec.clockOut !== '00:00:00';
-      const status = isCompleted ? 'Completed' : 'Working';
+      const status = rec.status || (rec.clockOut && rec.clockOut !== '00:00:00' ? 'Completed' : 'Working');
       const empName = rec.employeeName || 'Emp #' + rec.employeeId;
 
       return [
@@ -310,8 +390,7 @@ export class AttendanceComponent implements OnInit {
     ];
 
     const data = this.attendanceRecords.map((rec) => {
-      const isCompleted = rec.clockOut && rec.clockOut !== '00:00:00';
-      const status = isCompleted ? 'Completed' : 'Working';
+      const status = rec.status || (rec.clockOut && rec.clockOut !== '00:00:00' ? 'Completed' : 'Working');
       const empName = rec.employeeName || 'Emp #' + rec.employeeId;
 
       return [

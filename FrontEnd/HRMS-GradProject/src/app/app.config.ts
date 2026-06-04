@@ -1,4 +1,4 @@
-﻿import { ApplicationConfig, provideZoneChangeDetection, APP_INITIALIZER, inject, isDevMode } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection, APP_INITIALIZER, inject, isDevMode } from '@angular/core';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -7,6 +7,9 @@ import { AuthService } from './core/services/auth.service';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { provideServiceWorker } from '@angular/service-worker';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
 
 function initializeApp(authService: AuthService) {
   return () => {
@@ -24,7 +27,9 @@ function initializeApp(authService: AuthService) {
 
 export const appConfig: ApplicationConfig = {
   providers: [
-
+    provideAnimationsAsync(),
+    provideNativeDateAdapter(),
+    provideEnvironmentNgxMask(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withHashLocation()),
     provideHttpClient(withInterceptors([authInterceptor])),

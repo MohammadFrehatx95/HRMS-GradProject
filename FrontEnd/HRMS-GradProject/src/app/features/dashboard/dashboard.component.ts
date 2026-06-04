@@ -26,6 +26,10 @@ import { ExcelExportService } from '../../core/services/excel-export.service';
 
 Chart.register(...registerables);
 
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { NgxMaskDirective } from 'ngx-mask';
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -35,6 +39,9 @@ Chart.register(...registerables);
     RouterLink,
     ReactiveFormsModule,
     FormsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    NgxMaskDirective
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
@@ -429,6 +436,7 @@ export class DashboardComponent implements OnInit {
       isGeneral: [true],
       targetEmployeeIds: [[]],
       expiryDate: [''],
+      expiryTime: [''],
     });
   }
 
@@ -470,6 +478,8 @@ export class DashboardComponent implements OnInit {
       priority: 'Normal',
       isGeneral: true,
       targetEmployeeIds: [],
+      expiryDate: '',
+      expiryTime: ''
     });
     this.showAnnouncementModal = true;
   }
@@ -504,8 +514,12 @@ export class DashboardComponent implements OnInit {
     if (!formValue.expiryDate) {
       formValue.expiryDate = null;
     } else {
-      formValue.expiryDate = new Date(formValue.expiryDate).toISOString();
+      const date = new Date(formValue.expiryDate);
+      const dateString = date.toISOString().split('T')[0];
+      const timeString = formValue.expiryTime || '00:00';
+      formValue.expiryDate = new Date(`${dateString}T${timeString}`).toISOString();
     }
+    delete formValue.expiryTime;
 
     this.announcementService.createAnnouncement(formValue).subscribe({
       next: () => {

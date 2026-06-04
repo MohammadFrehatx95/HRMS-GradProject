@@ -445,10 +445,18 @@
                         <label
                             class="form-label fw-semibold text-secondary small">Effective
                             Date <span class="text-danger">*</span></label>
-                        <input type="date"
-                            class="form-control bg-light border-0"
-                            name="effectiveDate"
-                            [(ngModel)]="salaryData.effectiveDate" required>
+                        <div class="input-group shadow-sm">
+                            <input class="form-control bg-light border-end-0" matInput
+                                name="effectiveDate"
+                                [(ngModel)]="salaryData.effectiveDate" [required]="true"
+                                [matDatepicker]="effPicker"
+                                mask="00/00/0000" [dropSpecialCharacters]="false"
+                                placeholder="DD/MM/YYYY" style="z-index: 1;">
+                            <span class="input-group-text bg-light border-start-0 p-0" style="z-index: 2;">
+                                <mat-datepicker-toggle matIconSuffix [for]="effPicker"></mat-datepicker-toggle>
+                            </span>
+                            <mat-datepicker #effPicker></mat-datepicker>
+                        </div>
                     </div>
                 </form>
             </div>

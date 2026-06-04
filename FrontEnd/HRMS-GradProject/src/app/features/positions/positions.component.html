@@ -1,30 +1,41 @@
-<div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-3">
-    
+<div
+    class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-3">
+
     <div class="d-flex align-items-center mt-1">
-        <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+        <div
+            class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3"
+            style="width: 48px; height: 48px;">
             <i class="bi bi-briefcase-fill fs-4"></i>
         </div>
         <div>
             <h2 class="fw-bold text-dark mb-1">{{ 'Job Positions' | t }}</h2>
-            <p class="text-muted mb-0 small">{{ 'Manage company job titles and roles' | t }}</p>
+            <p class="text-muted mb-0 small">{{
+                'Manage company job titles and roles' | t }}</p>
         </div>
     </div>
-    
+
     <div class="d-flex gap-2">
-        <button class="btn btn-primary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="openModal()">
-            <i class="bi bi-plus-lg" [class.me-md-1]="true"></i> 
+        <button
+            class="btn btn-primary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap"
+            (click)="openModal()">
+            <i class="bi bi-plus-lg" [class.me-md-1]="true"></i>
             <span class="d-none d-md-inline">{{ 'Add Position' | t }}</span>
         </button>
     </div>
 </div>
-<div class="d-flex justify-content-end align-items-center mb-4 flex-wrap gap-3 bg-white p-3 rounded-4 shadow-sm border border-light">
+<div
+    class="d-flex justify-content-end align-items-center mb-4 flex-wrap gap-3 bg-white p-3 rounded-4 shadow-sm border border-light">
     <div class="d-flex gap-2">
-        <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
-            <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> 
+        <button
+            class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap"
+            (click)="exportToPDF()" title="Export to PDF">
+            <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i>
             <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
         </button>
-        <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
-            <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i> 
+        <button
+            class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap"
+            (click)="exportToExcel()" title="Export to Excel">
+            <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i>
             <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
         </button>
     </div>
@@ -37,7 +48,8 @@
 } @else {
 <div class="card shadow-sm border-0">
     <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0 text-center text-nowrap">
+        <table
+            class="table table-hover align-middle mb-0 text-center text-nowrap">
             <thead class="table-light text-uppercase small fw-bold">
                 <tr>
                     <th>ID</th>
@@ -50,15 +62,19 @@
             <tbody>
                 @for (pos of positionsList; track pos.id) {
                 <tr>
-                    <td data-label="ID" class="text-muted fw-bold">#{{ pos.id }}</td>
-                    <td data-label="Job Title" class="fw-bold text-dark">{{ pos.title }}</td>
+                    <td data-label="ID" class="text-muted fw-bold">#{{ pos.id
+                        }}</td>
+                    <td data-label="Job Title" class="fw-bold text-dark">{{
+                        pos.title }}</td>
                     <td data-label="Department">
                         <span
-                            class="badge bg-light text-secondary border px-3 py-2 fw-semibold shadow-sm" style="font-size: 0.85rem;">
+                            class="badge bg-light text-secondary border px-3 py-2 fw-semibold shadow-sm"
+                            style="font-size: 0.85rem;">
                             {{ getDepartmentName(pos.departmentId) }}
                         </span>
                     </td>
-                    <td data-label="Salary Range" class="fw-semibold text-secondary">
+                    <td data-label="Salary Range"
+                        class="fw-semibold text-secondary">
                         {{ pos.salaryMin | currency }} -
                         <span class="text-success">{{ pos.salaryMax | currency
                             }}</span>
@@ -78,7 +94,8 @@
                 </tr>
                 } @empty {
                 <tr>
-                    <td colspan="5" class="text-center py-5 text-muted no-data-td">
+                    <td colspan="5"
+                        class="text-center py-5 text-muted no-data-td">
                         <i
                             class="bi bi-briefcase fs-1 d-block mb-2 opacity-25"></i>
                         {{ 'No positions defined in the system.' | t }}
@@ -98,7 +115,8 @@
                 <h5 class="modal-title text-primary fw-bold">
                     <i class="bi" [class.bi-plus-circle]="!isEditMode"
                         [class.bi-pencil-square]="isEditMode"></i>
-                    {{ isEditMode ? ('Modify Position' | t) : ('Create New Position' | t) }}
+                    {{ isEditMode ? ('Modify Position' | t) :
+                    ('Create New Position' | t) }}
                 </h5>
                 <button type="button" class="btn-close shadow-none"
                     data-bs-dismiss="modal" aria-label="Close"></button>
@@ -164,4 +182,4 @@
     </div>
 </div>
 <style>
-</style>
+</style>

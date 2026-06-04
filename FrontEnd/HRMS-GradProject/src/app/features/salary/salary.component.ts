@@ -12,13 +12,16 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
 import { PdfExportService } from '../../core/services/pdf-export.service';
 import { ExcelExportService } from '../../core/services/excel-export.service';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { NgxMaskDirective } from 'ngx-mask';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-salary',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, TranslatePipe, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
   templateUrl: './salary.component.html',
 })
 export class SalaryComponent implements OnInit {
