@@ -59,6 +59,7 @@ export class SalaryComponent implements OnInit {
   previewData: any = null;
   isPreviewLoading = false;
   payrollWizardModal: any;
+  excludedEmployees: Set<number> = new Set<number>();
 
   currentPage: number = 1;
   itemsPerPage: number = 10;
@@ -259,6 +260,7 @@ export class SalaryComponent implements OnInit {
     this.previewYear = new Date().getFullYear();
     this.previewDepartmentId = null;
     this.previewData = null;
+    this.excludedEmployees.clear();
 
     const modalEl = document.getElementById('payrollWizardModal');
     if (modalEl) {
@@ -284,7 +286,8 @@ export class SalaryComponent implements OnInit {
 
   confirmGeneratePayroll() {
     this.isPreviewLoading = true;
-    this.salaryService.generateBatch(this.previewMonth, this.previewYear, this.previewDepartmentId).subscribe({
+    const excludedIds = Array.from(this.excludedEmployees);
+    this.salaryService.generateBatch(this.previewMonth, this.previewYear, this.previewDepartmentId, excludedIds).subscribe({
       next: (res: any) => {
         const count = res?.data ?? res;
         this.isPreviewLoading = false;
@@ -303,6 +306,26 @@ export class SalaryComponent implements OnInit {
 
   generatePayroll() {
     this.openWizard();
+  }
+
+  toggleExcludeEmployee(employeeId: number) {
+    if (this.excludedEmployees.has(employeeId)) {
+      this.excludedEmployees.delete(employeeId);
+    } else {
+      this.excludedEmployees.add(employeeId);
+    }
+  }
+
+  get dynamicEmployeeCount(): number {
+    if (!this.previewData || !this.previewData.salaries) return 0;
+    return this.previewData.salaries.filter((s: any) => !this.excludedEmployees.has(s.employeeId)).length;
+  }
+
+  get dynamicTotalCost(): number {
+    if (!this.previewData || !this.previewData.salaries) return 0;
+    return this.previewData.salaries
+      .filter((s: any) => !this.excludedEmployees.has(s.employeeId))
+      .reduce((sum: number, s: any) => sum + s.netAmount, 0);
   }
 
   markAsPaid() {
@@ -390,6 +413,50 @@ export class SalaryComponent implements OnInit {
     this.isProcessing = false;
     console.error('Salary save error:', err);
     Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to save salary data.'), 'error');
+  }
+
+  deleteSalary(id: number) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.salaryService.deleteSalary(id).subscribe({
+          next: () => {
+            Swal.fire('Deleted!', 'The salary record has been deleted.', 'success');
+            this.loadSalaries();
+          },
+          error: (err) => this.handleError(err)
+        });
+      }
+    });
+  }
+
+  approveSalary(id: number) {
+    Swal.fire({
+      title: 'Approve Salary?',
+      text: "This will mark the salary as Paid.",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#198754',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Yes, Approve'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.salaryService.approveSalary(id).subscribe({
+          next: () => {
+            Swal.fire('Approved!', 'The salary has been approved.', 'success');
+            this.loadSalaries();
+          },
+          error: (err) => this.handleError(err)
+        });
+      }
+    });
   }
 
   downloadPayslip(salary: any) {

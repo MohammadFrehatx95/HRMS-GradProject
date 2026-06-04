@@ -3,9 +3,9 @@
     
     <div class="row mb-4">
         <div class="col-12">
-            <div class="ann-panel shadow-sm border-0 rounded-4 overflow-hidden">
+            <div class="ann-panel card shadow-sm border-0 rounded-4 overflow-hidden">
                 
-                <div class="ann-header px-4 py-3 d-flex justify-content-between align-items-center border-bottom border-light flex-wrap gap-3">
+                <div class="ann-header card-header px-4 py-3 d-flex justify-content-between align-items-center border-bottom border-light flex-wrap gap-3">
                     <div class="d-flex align-items-center gap-3">
                         <div class="bg-primary bg-gradient rounded-circle d-flex align-items-center justify-content-center border-0 shadow-sm" 
                              style="width: 48px; height: 48px;">
@@ -20,14 +20,17 @@
                             </small>
                         </div>
                     </div>
-                    <div class="d-flex gap-2">
+                    <div class="d-flex gap-2 align-items-center">
                         <button *ngIf="isAdminOrHR" class="btn btn-primary px-3 rounded-pill d-flex align-items-center gap-2 shadow-sm fw-semibold" (click)="openAnnouncementModal()" style="font-size: 0.9rem;">
                             <i class="bi bi-plus-lg"></i> <span class="d-none d-md-inline">{{ 'Post' | t }}</span>
+                        </button>
+                        <button class="btn btn-sm btn-light border rounded-circle shadow-sm d-flex align-items-center justify-content-center text-secondary" style="width: 32px; height: 32px;" (click)="toggleAnnouncements()" [title]="(isAnnouncementsExpanded ? 'Collapse' : 'Expand') | t">
+                            <i class="bi" [ngClass]="isAnnouncementsExpanded ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
                         </button>
                     </div>
                 </div>
 
-                <div class="announcements-body-wrapper">
+                <div class="announcements-body-wrapper" *ngIf="isAnnouncementsExpanded">
                     
                     <div *ngIf="announcements.length === 0" class="text-center py-4 px-4 ann-empty-state">
                         <i class="bi bi-megaphone text-muted" style="font-size: 2rem; opacity: 0.4;"></i>

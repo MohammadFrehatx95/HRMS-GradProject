@@ -68,8 +68,8 @@ export class SalaryService {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 
-  generateBatch(month: number, year: number, departmentId?: number | null): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/generate-batch`, { month, year, departmentId });
+  generateBatch(month: number, year: number, departmentId?: number | null, excludedEmployeeIds: number[] = []): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/generate-batch`, { month, year, departmentId, excludedEmployeeIds });
   }
 
   previewBatch(month: number, year: number, departmentId?: number | null): Observable<any> {
@@ -78,6 +78,10 @@ export class SalaryService {
 
   markAsPaid(month: number, year: number): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/mark-paid`, { month, year });
+  }
+
+  approveSalary(id: number): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}/approve`, {});
   }
 }
 

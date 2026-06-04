@@ -36,7 +36,7 @@ namespace Application.Services.Implementations
                 s.Status.ToString().Contains(searchQuery));
         }
 
-        query = query.OrderByDescending(s => s.Year).ThenByDescending(s => s.Month);
+        query = query.OrderByDescending(s => s.Status == SalaryStatus.Draft).ThenByDescending(s => s.Year).ThenByDescending(s => s.Month);
 
             var total = await query.CountAsync();
             var items = await query
@@ -64,7 +64,7 @@ namespace Application.Services.Implementations
                 s.Status.ToString().Contains(searchQuery));
         }
 
-        query = query.OrderByDescending(s => s.Year).ThenByDescending(s => s.Month);
+        query = query.OrderByDescending(s => s.Status == SalaryStatus.Draft).ThenByDescending(s => s.Year).ThenByDescending(s => s.Month);
 
             var total = await query.CountAsync();
             var items = await query
@@ -268,7 +268,8 @@ namespace Application.Services.Implementations
                            .GetAllQueryable()
                            .Include(e => e.Position)
                            .Include(e => e.Department)
-                           .Where(e => e.IsActive);
+                           .Where(e => e.IsActive && 
+                                       (e.HireDate.Year < dto.Year || (e.HireDate.Year == dto.Year && e.HireDate.Month <= dto.Month)));
 
             if (dto.DepartmentId.HasValue && dto.DepartmentId.Value > 0)
             {
@@ -329,7 +330,8 @@ namespace Application.Services.Implementations
             var query = uow.Repository<Employee>()
                            .GetAllQueryable()
                            .Include(e => e.Position)
-                           .Where(e => e.IsActive);
+                           .Where(e => e.IsActive && 
+                                       (e.HireDate.Year < dto.Year || (e.HireDate.Year == dto.Year && e.HireDate.Month <= dto.Month)));
 
             if (dto.DepartmentId.HasValue && dto.DepartmentId.Value > 0)
             {
@@ -345,7 +347,8 @@ namespace Application.Services.Implementations
                                             .ToListAsync();
 
             var employeesWithoutSalary = activeEmployees
-                                         .Where(e => !existingSalaries.Contains(e.Id))
+                                         .Where(e => !existingSalaries.Contains(e.Id) && 
+                                                     (dto.ExcludedEmployeeIds == null || !dto.ExcludedEmployeeIds.Contains(e.Id)))
                                          .ToList();
 
             int generatedCount = 0;
@@ -397,6 +400,24 @@ namespace Application.Services.Implementations
 
             await uow.SaveChangesAsync();
             return salaries.Count;
+        }
+
+        public async Task<SalaryDto> ApproveAsync(int id)
+        {
+            var salary = await uow.Repository<Salary>()
+                                  .GetAllQueryable()
+                                  .Include(s => s.Employee).ThenInclude(e => e.User)
+                                  .FirstOrDefaultAsync(s => s.Id == id)
+                        ?? throw new KeyNotFoundException($"Salary {id} not found");
+
+            if (salary.Status == SalaryStatus.Paid)
+                throw new InvalidOperationException("Salary is already paid.");
+
+            salary.Status = SalaryStatus.Paid;
+            uow.Repository<Salary>().Update(salary);
+            await uow.SaveChangesAsync();
+
+            return mapper.Map<SalaryDto>(salary);
         }
     }
 }

@@ -158,14 +158,11 @@
 
 .ann-panel {
   border: 1px solid var(--bs-border-color, rgba(0,0,0,0.1));
-  background-color: var(--bs-body-bg, #ffffff);
 }
 .ann-header {
-  background-color: var(--bs-tertiary-bg, #f8f9fa);
   border-bottom: 1px solid var(--bs-border-color, rgba(0,0,0,0.1));
 }
 .ann-empty-state {
-  background-color: var(--bs-body-bg, #ffffff);
 }
 .ann-icon-wrap {
   width: 32px;
@@ -179,7 +176,6 @@
   font-size: 14px;
 }
 .ann-scroll-area {
-  background-color: var(--bs-body-bg, #ffffff);
 }
 .ann-scroll-area::-webkit-scrollbar {
   width: 6px;

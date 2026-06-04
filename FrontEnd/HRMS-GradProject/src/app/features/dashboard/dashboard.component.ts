@@ -53,6 +53,7 @@ export class DashboardComponent implements OnInit {
   announcements: Announcement[] = [];
   announcementForm: FormGroup;
   showAnnouncementModal = false;
+  isAnnouncementsExpanded = true;
 
   totalEmployees = 0;
   pendingLeaves = 0;
@@ -475,6 +476,10 @@ export class DashboardComponent implements OnInit {
 
   closeAnnouncementModal() {
     this.showAnnouncementModal = false;
+  }
+
+  toggleAnnouncements() {
+    this.isAnnouncementsExpanded = !this.isAnnouncementsExpanded;
   }
 
   toggleEmployeeForAnnouncement(empId: number) {

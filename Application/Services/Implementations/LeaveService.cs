@@ -49,7 +49,7 @@ namespace Application.Services.Implementations
                     l.EmployeeId.ToString().Contains(searchQuery));
             }
 
-            query = query.OrderByDescending(l => l.StartDate);
+            query = query.OrderByDescending(l => l.Status == LeaveStatus.Pending).ThenByDescending(l => l.StartDate);
 
             var total = await query.CountAsync();
             var items = await query
@@ -89,7 +89,7 @@ namespace Application.Services.Implementations
                     l.LeaveType.ToString().Contains(searchQuery));
             }
 
-            query = query.OrderByDescending(l => l.StartDate);
+            query = query.OrderByDescending(l => l.Status == LeaveStatus.Pending).ThenByDescending(l => l.StartDate);
 
             var total = await query.CountAsync();
             var items = await query

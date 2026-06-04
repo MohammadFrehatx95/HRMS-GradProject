@@ -15,7 +15,7 @@
         <div class="d-flex gap-2" *ngIf="isAdmin">
             <button
                 class="btn btn-success px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
-                [disabled]="!hasDraftSalaries || isLoading"
+                [disabled]="!selectedMonth || !selectedYear || isLoading"
                 (click)="markAsPaid()" [title]="'Approve Salaries' | t">
                 <i class="bi bi-check-circle" [class.me-md-1]="true"></i>
                 <span class="d-none d-md-inline">{{ 'Approve Salaries' | t }}</span>
@@ -231,8 +231,18 @@
                         </td>
                         <td data-label="Actions"
                             class="py-3 px-4 text-end text-nowrap actions-cell">
-                            <button
+                            <button *ngIf="isAdmin && salary.status === 'Draft'"
+                                class="btn btn-sm btn-outline-success rounded-circle shadow-sm me-2"
+                                (click)="approveSalary(salary.id)" title="Approve Salary">
+                                <i class="bi bi-check-lg"></i>
+                            </button>
+                            <button *ngIf="isAdmin && salary.status === 'Draft'"
                                 class="btn btn-sm btn-outline-danger rounded-circle shadow-sm me-2"
+                                (click)="deleteSalary(salary.id)" title="Delete Salary">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                            <button
+                                class="btn btn-sm btn-outline-secondary rounded-circle shadow-sm me-2"
                                 (click)="downloadPayslip(salary)"
                                 title="Download Payslip (PDF)">
                                 <i class="bi bi-file-earmark-pdf-fill"></i>
@@ -531,11 +541,12 @@
                                         <th>Allowances</th>
                                         <th>Deductions</th>
                                         <th class="text-end">Net Pay</th>
+                                        <th class="text-center">Exclude</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let s of previewData.salaries">
-                                        <td>{{ s.employeeName }}</td>
+                                    <tr *ngFor="let s of previewData.salaries" [ngClass]="{'opacity-50 bg-light': excludedEmployees.has(s.employeeId)}">
+                                        <td>{{ s.employeeName }} <span *ngIf="excludedEmployees.has(s.employeeId)" class="badge bg-danger ms-1">Excluded</span></td>
                                         <td><span class="badge bg-secondary">{{
                                                 s.departmentName }}</span></td>
                                         <td>{{ s.baseAmount | currency:'JD '
@@ -547,10 +558,15 @@
                                             | currency:'JD ' }}</td>
                                         <td class="text-end fw-bold">{{
                                             s.netAmount | currency:'JD ' }}</td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm" [ngClass]="excludedEmployees.has(s.employeeId) ? 'btn-success' : 'btn-outline-danger'" (click)="toggleExcludeEmployee(s.employeeId)">
+                                                <i class="bi" [ngClass]="excludedEmployees.has(s.employeeId) ? 'bi-plus-circle' : 'bi-x-circle'"></i>
+                                            </button>
+                                        </td>
                                     </tr>
                                     <tr
                                         *ngIf="previewData.salaries?.length === 0">
-                                        <td colspan="6"
+                                        <td colspan="7"
                                             class="text-center text-muted py-3">No
                                             pending salaries found for this
                                             selection.</td>
@@ -566,13 +582,13 @@
                                     <h6 class="mb-0 text-muted">Total
                                         Employees</h6>
                                     <h4 class="mb-0 fw-bold">{{
-                                        previewData.employeeCount }}</h4>
+                                        dynamicEmployeeCount }}</h4>
                                 </div>
                                 <div class="text-end">
                                     <h6 class="mb-0 text-muted">Total Payroll
                                         Cost</h6>
                                     <h3 class="mb-0 fw-bold text-success">{{
-                                        previewData.totalCost | currency:'JD '
+                                        dynamicTotalCost | currency:'JD '
                                         }}</h3>
                                 </div>
                             </div>

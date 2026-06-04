@@ -119,5 +119,14 @@ namespace HRMS_GradProject.Controllers
             int count = await salaryService.MarkAsPaidAsync(dto.Month, dto.Year);
             return Ok(ApiResponse<int>.Ok(count, $"Marked {count} salaries as paid successfully"));
         }
+
+        // PUT /api/salaries/{id}/approve → Admin
+        [HttpPut("{id}/approve")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Approve(int id)
+        {
+            var result = await salaryService.ApproveAsync(id);
+            return Ok(ApiResponse<SalaryDto>.Ok(result, "Salary approved successfully"));
+        }
     }
 }

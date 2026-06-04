@@ -888,32 +888,40 @@ export class AttendanceService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/attendance`;
 
-  getAllAttendance(date?: string): Observable<any[]> {
-    let url = `${this.apiUrl}?pageNumber=1&pageSize=1000`;
+  getAllAttendance(date?: string, pageNumber: number = 1, pageSize: number = 10, searchQuery: string = '', status: string = ''): Observable<{items: any[], totalCount: number}> {
+    let url = `${this.apiUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     if (date) url += `&date=${date}`;
+    if (searchQuery) url += `&searchQuery=${encodeURIComponent(searchQuery)}`;
+    if (status) url += `&status=${status}`;
     return this.http.get<any>(url).pipe(
       map((response) => {
-        if (response && response.data && response.data.items)
-          return response.data.items;
-        if (Array.isArray(response)) return response;
-        if (response && Array.isArray(response.data)) return response.data;
-        return [];
+        if (response && response.data) {
+          return {
+            items: response.data.items || [],
+            totalCount: response.data.totalCount || 0
+          };
+        }
+        return { items: [], totalCount: 0 };
       }),
     );
   }
 
-  getMyAttendance(date?: string): Observable<any[]> {
-    let url = `${this.apiUrl}/my?pageNumber=1&pageSize=1000`;
+  getMyAttendance(date?: string, pageNumber: number = 1, pageSize: number = 10, searchQuery: string = '', status: string = ''): Observable<{items: any[], totalCount: number}> {
+    let url = `${this.apiUrl}/my?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     if (date) url += `&date=${date}`;
+    if (searchQuery) url += `&searchQuery=${encodeURIComponent(searchQuery)}`;
+    if (status) url += `&status=${status}`;
     return this.http
       .get<any>(url)
       .pipe(
         map((response) => {
-          if (response && response.data && response.data.items)
-            return response.data.items;
-          if (Array.isArray(response)) return response;
-          if (response && Array.isArray(response.data)) return response.data;
-          return [];
+          if (response && response.data) {
+            return {
+              items: response.data.items || [],
+              totalCount: response.data.totalCount || 0
+            };
+          }
+          return { items: [], totalCount: 0 };
         }),
       );
   }
@@ -935,7 +943,6 @@ export class AttendanceService {
     );
   }
 }
-
 
 ```
 
@@ -987,9 +994,6 @@ export class AuthService {
 
   async loginWithFingerprint(): Promise<any> {
     const optionsRes = await this.http.post<any>(`${this.apiUrl}/webauthn/login-options`, {}).toPromise();
-    // Override userVerification to 'required' so the browser triggers
-    // the device biometric prompt directly, instead of showing a
-    // password-manager account picker.
     const assertionOptions = {
       ...optionsRes,
       userVerification: 'required' as UserVerificationRequirement,
@@ -1047,18 +1051,26 @@ export class AuthService {
     );
   }
 
-  approveProfilePicture(userId: number): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/approve-profile-picture/${userId}`, {});
+  approveProfilePicture(requestId: number): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/approve-profile-picture/${requestId}`, {});
   }
 
-  rejectProfilePicture(userId: number): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/reject-profile-picture/${userId}`, {});
+  rejectProfilePicture(requestId: number): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/reject-profile-picture/${requestId}`, {});
   }
 
   adminUpdateProfilePicture(userId: number, file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
     return this.http.post<any>(`${this.apiUrl}/admin-update-profile-picture/${userId}`, formData);
+  }
+
+  deleteProfilePicture(): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/profile-picture`);
+  }
+
+  adminDeleteProfilePicture(userId: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/admin-delete-profile-picture/${userId}`);
   }
 
   isLoggedIn(): boolean {
@@ -1253,22 +1265,29 @@ export class EmployeeService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/employees`;
 
-  getEmployees(): Observable<any[]> {
-    return this.http.get<any>(`${this.apiUrl}?pageNumber=1&pageSize=1000`).pipe(
-      map((response) => {
-        if (response && response.data && response.data.items) {
-          return response.data.items;
-        }
-        if (Array.isArray(response)) return response;
-        if (response && Array.isArray(response.data)) return response.data;
+  getEmployees(pageNumber: number = 1, pageSize: number = 10, searchQuery: string = '', departmentId?: number | string, isActive?: boolean | string): Observable<{items: any[], totalCount: number}> {
+    let url = `${this.apiUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+    if (searchQuery) url += `&searchQuery=${encodeURIComponent(searchQuery)}`;
+    if (departmentId) url += `&departmentId=${departmentId}`;
+    if (isActive !== undefined && isActive !== '') url += `&isActive=${isActive}`;
 
-        return [];
+    return this.http.get<any>(url).pipe(
+      map((response) => {
+        if (response && response.data) {
+          return {
+            items: response.data.items || [],
+            totalCount: response.data.totalCount || 0
+          };
+        }
+        return { items: [], totalCount: 0 };
       }),
     );
   }
+
   addEmployee(employee: any): Observable<any> {
     return this.http.post(this.apiUrl, employee);
   }
+  
   getEmployeeFullProfile(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}/profile`).pipe(
       map((response) => {
@@ -1304,7 +1323,6 @@ export class EmployeeService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }
-
 
 ```
 
@@ -1414,19 +1432,24 @@ export class LeaveService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/leaves`;
 
-  getMyLeaves(month?: number, year?: number): Observable<any[]> {
-    let url = `${this.apiUrl}/my?pageNumber=1&pageSize=1000`;
+  getMyLeaves(month?: number, year?: number, pageNumber: number = 1, pageSize: number = 10, searchQuery: string = '', status?: number | string, leaveType?: number | string): Observable<{items: any[], totalCount: number}> {
+    let url = `${this.apiUrl}/my?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     if (month) url += `&month=${month}`;
     if (year) url += `&year=${year}`;
+    if (searchQuery) url += `&searchQuery=${encodeURIComponent(searchQuery)}`;
+    if (status !== undefined && status !== '') url += `&status=${status}`;
+    if (leaveType !== undefined && leaveType !== '') url += `&leaveType=${leaveType}`;
     return this.http
       .get<any>(url)
       .pipe(
         map((response) => {
-          if (response && response.data && response.data.items)
-            return response.data.items;
-          if (Array.isArray(response)) return response;
-          if (response && Array.isArray(response.data)) return response.data;
-          return [];
+          if (response && response.data) {
+            return {
+              items: response.data.items || [],
+              totalCount: response.data.totalCount || 0
+            };
+          }
+          return { items: [], totalCount: 0 };
         }),
       );
   }
@@ -1435,17 +1458,22 @@ export class LeaveService {
     return this.http.post<any>(this.apiUrl, payload);
   }
 
-  getAllLeaves(month?: number, year?: number): Observable<any[]> {
-    let url = `${this.apiUrl}?pageNumber=1&pageSize=1000`;
+  getAllLeaves(month?: number, year?: number, pageNumber: number = 1, pageSize: number = 10, searchQuery: string = '', status?: number | string, leaveType?: number | string): Observable<{items: any[], totalCount: number}> {
+    let url = `${this.apiUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     if (month) url += `&month=${month}`;
     if (year) url += `&year=${year}`;
+    if (searchQuery) url += `&searchQuery=${encodeURIComponent(searchQuery)}`;
+    if (status !== undefined && status !== '') url += `&status=${status}`;
+    if (leaveType !== undefined && leaveType !== '') url += `&leaveType=${leaveType}`;
     return this.http.get<any>(url).pipe(
       map((response) => {
-        if (response && response.data && response.data.items)
-          return response.data.items;
-        if (Array.isArray(response)) return response;
-        if (response && Array.isArray(response.data)) return response.data;
-        return [];
+        if (response && response.data) {
+          return {
+            items: response.data.items || [],
+            totalCount: response.data.totalCount || 0
+          };
+        }
+        return { items: [], totalCount: 0 };
       }),
     );
   }
@@ -1475,7 +1503,6 @@ export class LeaveService {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }
-
 
 ```
 
@@ -2010,32 +2037,38 @@ export class SalaryService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/salaries`;
 
-  getAllSalaries(month?: number, year?: number): Observable<any[]> {
-    let url = `${this.apiUrl}?pageNumber=1&pageSize=1000`;
+  getAllSalaries(month?: number, year?: number, pageNumber: number = 1, pageSize: number = 10, searchQuery: string = ''): Observable<{items: any[], totalCount: number}> {
+    let url = `${this.apiUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     if (month) url += `&month=${month}`;
     if (year) url += `&year=${year}`;
+    if (searchQuery) url += `&searchQuery=${encodeURIComponent(searchQuery)}`;
     return this.http.get<any>(url).pipe(
       map((response) => {
-        if (response && response.data && response.data.items)
-          return response.data.items;
-        if (Array.isArray(response)) return response;
-        if (response && Array.isArray(response.data)) return response.data;
-        return [];
+        if (response && response.data) {
+          return {
+            items: response.data.items || [],
+            totalCount: response.data.totalCount || 0
+          };
+        }
+        return { items: [], totalCount: 0 };
       }),
     );
   }
 
-  getMySalaries(month?: number, year?: number): Observable<any[]> {
-    let url = `${this.apiUrl}/my?pageNumber=1&pageSize=1000`;
+  getMySalaries(month?: number, year?: number, pageNumber: number = 1, pageSize: number = 10, searchQuery: string = ''): Observable<{items: any[], totalCount: number}> {
+    let url = `${this.apiUrl}/my?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     if (month) url += `&month=${month}`;
     if (year) url += `&year=${year}`;
+    if (searchQuery) url += `&searchQuery=${encodeURIComponent(searchQuery)}`;
     return this.http.get<any>(url).pipe(
         map((response) => {
-          if (response && response.data && response.data.items)
-            return response.data.items;
-          if (Array.isArray(response)) return response;
-          if (response && Array.isArray(response.data)) return response.data;
-          return [];
+          if (response && response.data) {
+            return {
+              items: response.data.items || [],
+              totalCount: response.data.totalCount || 0
+            };
+          }
+          return { items: [], totalCount: 0 };
         }),
       );
   }
@@ -3018,11 +3051,25 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
         </div>
 
         
-        <div *ngIf="records.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <small class="text-muted fw-medium">
-                Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, records.length) }} of {{ records.length }} entries
-            </small>
+        <div *ngIf="totalCount > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <div class="d-flex align-items-center gap-2">
+                    <label class="small text-muted mb-0 text-nowrap">{{ 'Per page' | t }}:</label>
+                    <select class="form-select form-select-sm border-light-subtle" style="width: 70px;" [(ngModel)]="itemsPerPage" (change)="filterRecords()">
+                        <option [ngValue]="10">10</option>
+                        <option [ngValue]="25">25</option>
+                        <option [ngValue]="50">50</option>
+                        <option [ngValue]="100">100</option>
+                    </select>
+                </div>
+                <small class="text-muted fw-medium">
+                    Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, totalCount) }} of {{ totalCount }} entries
+                </small>
+            </div>
             <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                    <a class="page-link cursor-pointer px-2" (click)="changePage(1)" title="First Page"><i class="bi bi-chevron-double-left"></i></a>
+                </li>
                 <li class="page-item" [class.disabled]="currentPage === 1">
                     <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
                 </li>
@@ -3031,6 +3078,9 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
                 </li>
                 <li class="page-item" [class.disabled]="currentPage === totalPages">
                     <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                    <a class="page-link cursor-pointer px-2" (click)="changePage(totalPages)" title="Last Page"><i class="bi bi-chevron-double-right"></i></a>
                 </li>
             </ul>
         </div>
@@ -3057,6 +3107,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { PdfExportService } from '../../core/services/pdf-export.service';
 import { ExcelExportService } from '../../core/services/excel-export.service';
 import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-all-attendance',
   standalone: true,
@@ -3068,29 +3119,30 @@ export class AllAttendanceComponent implements OnInit {
   private pdfExportService = inject(PdfExportService);
   private excelExportService = inject(ExcelExportService);
 
-  allRecords: any[] = [];
   records: any[] = [];
 
   searchQuery: string = '';
   selectedStatus: string = '';
+  selectedDate: string = '';
 
   isLoading = true;
 
   currentPage: number = 1;
-  itemsPerPage: number = 7;
+  itemsPerPage: number = 10;
+  totalCount: number = 0;
 
   get paginatedRecords() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.records.slice(startIndex, startIndex + this.itemsPerPage);
+    return this.records;
   }
 
   get totalPages() {
-    return Math.ceil(this.records.length / this.itemsPerPage) || 1;
+    return Math.ceil(this.totalCount / this.itemsPerPage) || 1;
   }
 
   changePage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+      this.loadAllAttendance();
     }
   }
 
@@ -3099,29 +3151,16 @@ export class AllAttendanceComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loadAllAttendance();
+  }
 
-    this.attendanceService.getAllAttendance().subscribe({
+  loadAllAttendance() {
+    this.isLoading = true;
+    const d = this.selectedDate || undefined;
+    this.attendanceService.getAllAttendance(d, this.currentPage, this.itemsPerPage, this.searchQuery, this.selectedStatus).subscribe({
       next: (res: any) => {
-        const items = Array.isArray(res)
-          ? res
-          : (res?.items ?? res?.data?.items ?? res?.data ?? []);
-        
-        const rawRecords = Array.isArray(items) ? items : [];
-        const uniqueRecords = new Map<string, any>();
-        
-        for (const rec of rawRecords) {
-          const key = `${rec.employeeId}_${rec.date}_${rec.clockIn}_${rec.clockOut}`;
-          if (!uniqueRecords.has(key)) {
-            uniqueRecords.set(key, rec);
-          }
-        }
-        
-        this.allRecords = Array.from(uniqueRecords.values());
-        
-        this.allRecords.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-        );
-        this.records = [...this.allRecords];
+        this.records = res.items || [];
+        this.totalCount = res.totalCount || 0;
         this.isLoading = false;
       },
       error: () => {
@@ -3131,30 +3170,8 @@ export class AllAttendanceComponent implements OnInit {
   }
 
   filterRecords() {
-
-    this.records = this.allRecords.filter((rec) => {
-      let matchesSearch = true;
-      if (this.searchQuery) {
-        const query = this.searchQuery.toLowerCase();
-        const empName = (rec.employeeName || '').toLowerCase();
-        const empId = String(rec.employeeId || '');
-        const dateStr = String(rec.date || '').toLowerCase();
-        matchesSearch =
-          empName.includes(query) ||
-          empId.includes(query) ||
-          dateStr.includes(query);
-      }
-
-      let matchesStatus = true;
-      if (this.selectedStatus) {
-        const currentStatus = this.getStatusLabel(rec);
-        matchesStatus = currentStatus === this.selectedStatus;
-      }
-
-      return matchesSearch && matchesStatus;
-    });
-
     this.currentPage = 1;
+    this.loadAllAttendance();
   }
 
   getStatusClass(rec: any): string {
@@ -3192,7 +3209,7 @@ export class AllAttendanceComponent implements OnInit {
     ]);
 
     const additionalInfo = [
-      { label: 'Total Records', value: String(this.records.length) },
+      { label: 'Total Records', value: String(this.totalCount) },
       { label: 'Completed Sessions', value: String(this.records.filter(r => this.getStatusLabel(r) === 'Completed').length) },
       { label: 'Currently Working', value: String(this.records.filter(r => this.getStatusLabel(r) === 'Working').length) }
     ];
@@ -3231,10 +3248,7 @@ export class AllAttendanceComponent implements OnInit {
 ### File: src\app\features\attendance\attendance.component.html
 ```html
 <div class="page-container p-4">
-
-    <!-- Top Row: Title and Primary Actions -->
     <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-3">
-        <!-- Title Section -->
         <div class="d-flex align-items-center mt-1">
             <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
                 <i class="bi bi-clock-history fs-4"></i>
@@ -3248,8 +3262,6 @@ export class AllAttendanceComponent implements OnInit {
                 </p>
             </div>
         </div>
-
-        <!-- Primary Action Buttons (Clock in/out) -->
         <div *ngIf="!isAdmin" class="d-flex flex-column align-items-end gap-2">
             <div *ngIf="isStaleSession"
                  class="alert alert-warning py-2 px-3 mb-0 rounded-3 small d-flex align-items-center gap-2 w-100 shadow-sm border border-warning">
@@ -3259,7 +3271,6 @@ export class AllAttendanceComponent implements OnInit {
                     {{ 'Click Clock Out to close it.' | t }}
                 </span>
             </div>
-
             <div class="d-flex align-items-center gap-2">
                 <button *ngIf="!isCheckedInToday"
                     class="btn btn-success px-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
@@ -3268,7 +3279,6 @@ export class AllAttendanceComponent implements OnInit {
                     <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2"></span>
                     <i *ngIf="!isProcessing" class="bi bi-box-arrow-in-right me-2"></i> {{ 'Clock In' | t }}
                 </button>
-
                 <button *ngIf="isCheckedInToday && !isCheckedOutToday"
                     class="btn btn-warning px-4 py-2 rounded-3 fw-semibold shadow-sm text-dark text-nowrap"
                     (click)="onClockOut()"
@@ -3276,7 +3286,6 @@ export class AllAttendanceComponent implements OnInit {
                     <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2"></span>
                     <i *ngIf="!isProcessing" class="bi bi-box-arrow-right me-2"></i> {{ 'Clock Out' | t }}
                 </button>
-
                 <span *ngIf="isCheckedInToday && isCheckedOutToday"
                     class="badge bg-success bg-opacity-10 text-success px-4 py-2 rounded-3 fw-semibold border border-success border-opacity-25 text-nowrap">
                     <i class="bi bi-check-circle-fill me-2"></i> {{ 'Shift Completed' | t }} ({{ todayWorkedHours | number:'1.1-2' }} {{ 'hrs' | t }})
@@ -3284,8 +3293,6 @@ export class AllAttendanceComponent implements OnInit {
             </div>
         </div>
     </div>
-
-    <!-- Bottom Row: Search, Filters, and Secondary Actions -->
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3 bg-white p-3 rounded-4 shadow-sm border border-light">
         <div class="d-flex align-items-center gap-2 flex-grow-1 flex-wrap">
             <div class="input-group shadow-sm" style="max-width: 350px; min-width: 200px;">
@@ -3293,14 +3300,12 @@ export class AllAttendanceComponent implements OnInit {
                 <input type="text" class="form-control border-start-0 ps-0" 
                     placeholder="{{ 'Search employees...' | t }}" 
                     [(ngModel)]="searchQuery" 
-                    (input)="filterRecordsLocal()">
+                    (input)="onFilterChange()">
             </div>
-            
             <div class="input-group shadow-sm" style="max-width: 250px;">
                 <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-calendar"></i></span>
-                <input type="date" class="form-control border-start-0 ps-0" [(ngModel)]="selectedDate" (change)="filterRecords()">
+                <input type="date" class="form-control border-start-0 ps-0" [(ngModel)]="selectedDate" (change)="onFilterChange()">
             </div>
-
             <div class="dropdown">
                 <button class="btn btn-outline-secondary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-filter" [class.me-md-1]="true"></i> 
@@ -3310,7 +3315,7 @@ export class AllAttendanceComponent implements OnInit {
                     <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">{{ 'Filter Options' | t }}</h6>
                     <div class="mb-0">
                         <label class="form-label small fw-semibold text-muted mb-1">{{ 'Status' | t }}</label>
-                        <select class="form-select form-select-sm border-light-subtle" [(ngModel)]="selectedStatus" (change)="filterRecordsLocal()">
+                        <select class="form-select form-select-sm border-light-subtle" [(ngModel)]="selectedStatus" (change)="onFilterChange()">
                             <option value="">{{ 'All Statuses' | t }}</option>
                             <option value="Completed">{{ 'Completed' | t }}</option>
                             <option value="Working">{{ 'Working' | t }}</option>
@@ -3318,13 +3323,11 @@ export class AllAttendanceComponent implements OnInit {
                     </div>
                 </div>
             </div>
-
             <a *ngIf="isHR" routerLink="/all-attendance"
                class="btn btn-outline-primary px-3 px-md-4 py-2 rounded-3 shadow-sm text-nowrap">
                 <i class="bi bi-people" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'View All' | t }}</span>
             </a>
         </div>
-
         <div class="d-flex gap-2">
             <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
                 <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> 
@@ -3336,11 +3339,9 @@ export class AllAttendanceComponent implements OnInit {
             </button>
         </div>
     </div>
-
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0 text-nowrap">
-
                 <thead class="bg-light text-muted small text-uppercase"
                     style="letter-spacing: 0.5px;">
                     <tr>
@@ -3352,9 +3353,7 @@ export class AllAttendanceComponent implements OnInit {
                         <th class="py-3 px-4 border-bottom-0 fw-semibold text-end">{{ 'Total Hours' | t }}</th>
                     </tr>
                 </thead>
-
                 <tbody class="border-top-0">
-
                     <tr *ngIf="isLoading">
                         <td colspan="6" class="text-center py-5 text-muted no-data-td">
                             <span
@@ -3362,7 +3361,6 @@ export class AllAttendanceComponent implements OnInit {
                             {{ 'Loading attendance data...' | t }}
                         </td>
                     </tr>
-
                     <tr *ngIf="!isLoading && attendanceRecords.length === 0">
                         <td [colSpan]="isAdmin ? 6 : 5" class="text-center py-5 no-data-td">
                             <div class="d-flex flex-column align-items-center">
@@ -3374,7 +3372,6 @@ export class AllAttendanceComponent implements OnInit {
                             </div>
                         </td>
                     </tr>
-
                     <tr *ngFor="let record of paginatedRecords">
                         <td data-label="Date" class="py-3 px-4 fw-bold text-dark">
                             {{ record.date | date:'dd MMM yyyy' }}
@@ -3393,25 +3390,21 @@ export class AllAttendanceComponent implements OnInit {
                                 <span class="fw-bold text-dark">{{ record.employeeName || ('Emp #' + record.employeeId) }}</span>
                             </div>
                         </td>
-
                         <td data-label="Clock-in Time" class="py-3 px-3 text-success fw-medium">
                             <i class="bi bi-arrow-down-right-circle me-1"></i>
                             {{ record.clockIn || '--:--' }}
                         </td>
-
                         <td data-label="Clock-out Time" class="py-3 px-3 text-danger fw-medium">
                             <i class="bi bi-arrow-up-right-circle me-1"></i>
                             {{ (record.clockOut && record.clockOut !==
                             '00:00:00') ? record.clockOut : '--:--' }}
                         </td>
-
                         <td data-label="Status" class="py-3 px-4 text-center">
                             <span class="badge px-3 py-2 rounded-pill"
                                 [ngClass]="(record.clockOut && record.clockOut !== '00:00:00') ? 'bg-success bg-opacity-10 text-success' : 'bg-primary bg-opacity-10 text-primary'">
                                 {{ (record.clockOut && record.clockOut !== '00:00:00') ? ('Completed' | t) : ('Working' | t) }}
                             </span>
                         </td>
-
                         <td data-label="Total Hours" class="py-3 px-3 text-end">
                             <span class="fw-bold fs-6">{{ record.totalHours || '-' }}</span>
                         </td>
@@ -3419,16 +3412,25 @@ export class AllAttendanceComponent implements OnInit {
                 </tbody>
             </table>
         </div>
-
-        
-        <div *ngIf="allAttendanceRecords.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <small class="text-muted fw-medium">
-                Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, attendanceRecords.length) }} of {{ attendanceRecords.length }} entries
-                <span *ngIf="attendanceRecords.length !== allAttendanceRecords.length" class="text-primary ms-1">
-                    (filtered from {{ allAttendanceRecords.length }} total)
-                </span>
-            </small>
+        <div *ngIf="totalCount > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <div class="d-flex align-items-center gap-2">
+                    <label class="small text-muted mb-0 text-nowrap">{{ 'Per page' | t }}:</label>
+                    <select class="form-select form-select-sm border-light-subtle" style="width: 70px;" [(ngModel)]="itemsPerPage" (change)="onFilterChange()">
+                        <option [ngValue]="10">10</option>
+                        <option [ngValue]="25">25</option>
+                        <option [ngValue]="50">50</option>
+                        <option [ngValue]="100">100</option>
+                    </select>
+                </div>
+                <small class="text-muted fw-medium">
+                    Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, totalCount) }} of {{ totalCount }} entries
+                </small>
+            </div>
             <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                    <a class="page-link cursor-pointer px-2" (click)="changePage(1)" title="First Page"><i class="bi bi-chevron-double-left"></i></a>
+                </li>
                 <li class="page-item" [class.disabled]="currentPage === 1">
                     <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
                 </li>
@@ -3437,6 +3439,9 @@ export class AllAttendanceComponent implements OnInit {
                 </li>
                 <li class="page-item" [class.disabled]="currentPage === totalPages">
                     <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                    <a class="page-link cursor-pointer px-2" (click)="changePage(totalPages)" title="Last Page"><i class="bi bi-chevron-double-right"></i></a>
                 </li>
             </ul>
         </div>
@@ -3447,7 +3452,6 @@ export class AllAttendanceComponent implements OnInit {
   cursor: pointer;
 }
 </style>
-
 ```
 
 ### File: src\app\features\attendance\attendance.component.ts
@@ -3475,7 +3479,6 @@ export class AttendanceComponent implements OnInit {
   private excelExportService = inject(ExcelExportService);
   private pdfExportService = inject(PdfExportService);
 
-  allAttendanceRecords: any[] = [];
   attendanceRecords: any[] = [];
 
   searchQuery: string = '';
@@ -3489,23 +3492,21 @@ export class AttendanceComponent implements OnInit {
   isHR = false;
 
   currentPage: number = 1;
-  itemsPerPage: number = 7;
+  itemsPerPage: number = 10;
+  totalCount: number = 0;
 
   get paginatedRecords() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.attendanceRecords.slice(
-      startIndex,
-      startIndex + this.itemsPerPage,
-    );
+    return this.attendanceRecords;
   }
 
   get totalPages() {
-    return Math.ceil(this.attendanceRecords.length / this.itemsPerPage) || 1;
+    return Math.ceil(this.totalCount / this.itemsPerPage) || 1;
   }
 
   changePage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+      this.filterRecords();
     }
   }
 
@@ -3539,52 +3540,58 @@ export class AttendanceComponent implements OnInit {
   }
 
   loadAllAttendance() {
-
     this.isLoading = true;
     const d = this.selectedDate || undefined;
-    this.attendanceService.getAllAttendance(d).subscribe({
-      next: (res: any) => {
-        const items = Array.isArray(res)
-          ? res
-          : (res?.items ?? res?.data?.items ?? res?.data ?? []);
-        this.allAttendanceRecords = Array.isArray(items) ? items : [];
-        
-        if (!d) {
-           this.allAttendanceRecords.sort(
-             (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-           );
-        }
-        
-        this.attendanceRecords = [...this.allAttendanceRecords];
-        this.filterRecordsLocal();
-        this.isLoading = false;
-      },
-      error: () => {
-        this.isLoading = false;
-      },
-    });
+    this.attendanceService
+      .getAllAttendance(
+        d,
+        this.currentPage,
+        this.itemsPerPage,
+        this.searchQuery,
+        this.selectedStatus,
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.attendanceRecords = res.items || [];
+          this.totalCount = res.totalCount || 0;
+          this.isLoading = false;
+        },
+        error: () => {
+          this.isLoading = false;
+        },
+      });
   }
 
   loadMyAttendance() {
-
     this.isLoading = true;
     const d = this.selectedDate || undefined;
-    this.attendanceService.getMyAttendance(d).subscribe({
-      next: (res: any) => {
-        const items = Array.isArray(res)
-          ? res
-          : (res?.items ?? res?.data?.items ?? res?.data ?? []);
-        this.allAttendanceRecords = Array.isArray(items) ? items : [];
-        this.attendanceRecords = [...this.allAttendanceRecords];
-        this.analyzeSessionStatus(this.attendanceRecords);
-        this.filterRecordsLocal();
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error fetching my attendance:', err);
-        this.isLoading = false;
-      },
-    });
+    this.attendanceService
+      .getMyAttendance(
+        d,
+        this.currentPage,
+        this.itemsPerPage,
+        this.searchQuery,
+        this.selectedStatus,
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.attendanceRecords = res.items || [];
+          this.totalCount = res.totalCount || 0;
+          if (
+            this.currentPage === 1 &&
+            !this.selectedDate &&
+            !this.searchQuery &&
+            !this.selectedStatus
+          ) {
+            this.analyzeSessionStatus(this.attendanceRecords);
+          }
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error fetching my attendance:', err);
+          this.isLoading = false;
+        },
+      });
   }
 
   filterRecords() {
@@ -3595,40 +3602,12 @@ export class AttendanceComponent implements OnInit {
     }
   }
 
-  filterRecordsLocal() {
-    this.attendanceRecords = this.allAttendanceRecords.filter((rec) => {
-      let matchesSearch = true;
-      if (this.searchQuery) {
-        const query = this.searchQuery.toLowerCase();
-        const empName = (rec.employeeName || '').toLowerCase();
-        const empId = String(rec.employeeId || '');
-        const dateStr = String(rec.date || '').toLowerCase();
-        matchesSearch =
-          empName.includes(query) ||
-          empId.includes(query) ||
-          dateStr.includes(query);
-      }
-
-      let matchesStatus = true;
-      if (this.selectedStatus) {
-        const isCompleted = rec.clockOut && rec.clockOut !== '00:00:00';
-        const currentStatus = isCompleted ? 'Completed' : 'Working';
-        matchesStatus = currentStatus === this.selectedStatus;
-      }
-
-      return matchesSearch && matchesStatus;
-    });
-
+  onFilterChange() {
     this.currentPage = 1;
-    if (this.attendanceRecords.length > 0) {
-      this.attendanceRecords.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-      );
-    }
+    this.filterRecords();
   }
 
   private analyzeSessionStatus(records: any[]) {
-
     const today = new Date().toDateString();
 
     const openSession = records.find(
@@ -3661,7 +3640,6 @@ export class AttendanceComponent implements OnInit {
   }
 
   onClockIn() {
-
     this.isProcessing = true;
     const now = new Date();
     const dateIso = now.toISOString();
@@ -3675,7 +3653,7 @@ export class AttendanceComponent implements OnInit {
           Swal.fire({
             icon: 'success',
             title: 'Clocked In ✅',
-            text: `Have a great day! Clocked in at ${timeString}`,
+            text: `Clocked in at ${timeString}`,
             timer: 2000,
             showConfirmButton: false,
           });
@@ -3731,7 +3709,6 @@ export class AttendanceComponent implements OnInit {
   }
 
   exportToExcel() {
-
     if (this.attendanceRecords.length === 0) {
       Swal.fire(
         'No Data',
@@ -3810,7 +3787,7 @@ export class AttendanceComponent implements OnInit {
       this.isAdmin ? 'Employee Attendance Tracking' : 'My Attendance Tracking',
       headers,
       data,
-      'Attendance_Report'
+      'Attendance_Report',
     );
   }
 }
@@ -4405,7 +4382,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   private getFingerprintErrorMessage(err: any): string {
-    // User cancelled or dismissed the fingerprint prompt
     if (
       err?.name === 'NotAllowedError' ||
       err?.message?.includes('NotAllowedError') ||
@@ -4415,9 +4391,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       return 'Fingerprint scan was cancelled.<br><small class="text-muted">Please try again and follow your device prompt.</small>';
     }
 
-    // No fingerprint registered for this user (400 from backend)
     const status = err?.status;
-    // Backend returns ApiResponse: { success: false, message: "..." }
     const backendMsg: string =
       err?.error?.message ||
       (typeof err?.error === 'string' ? err.error : '') ||
@@ -4445,7 +4419,6 @@ export class LoginComponent implements OnInit, OnDestroy {
       return 'No internet connection. Please check your network.';
     }
 
-    // Hardware not available
     if (
       err?.name === 'NotSupportedError' ||
       err?.message?.includes('authenticator')
@@ -4668,10 +4641,10 @@ export class RegisterComponent {
                     <div class="d-flex align-items-center gap-3">
                         <div class="bg-primary bg-gradient rounded-circle d-flex align-items-center justify-content-center border-0 shadow-sm" 
                              style="width: 48px; height: 48px;">
-                            <i class="bi bi-megaphone-fill text-white fs-5" [ngClass]="{'pulse-animation': !isAnnouncementsVisible && announcements.length > 0}"></i>
+                            <i class="bi bi-megaphone-fill text-white fs-5"></i>
                         </div>
                         <div>
-                            <h6 class="fw-bold m-0 text-dark d-flex align-items-center gap-2" style="font-size: 1.1rem;">
+                            <h6 class="fw-bold m-0 d-flex align-items-center gap-2" style="font-size: 1.1rem;">
                                 {{ 'Company Announcements' | t }}
                             </h6>
                             <small class="text-muted fw-medium d-flex align-items-center gap-1 mt-1" style="font-size: 0.8rem;">
@@ -4680,26 +4653,21 @@ export class RegisterComponent {
                         </div>
                     </div>
                     <div class="d-flex gap-2">
-                        <button class="btn btn-outline-primary rounded-pill px-3 px-md-4 d-flex align-items-center gap-2 shadow-sm fw-semibold" (click)="toggleAnnouncements()" style="font-size: 0.9rem;">
-                            <span class="d-none d-md-inline">{{ isAnnouncementsVisible ? ('Hide Announcements' | t) : ('View Announcements' | t) }}</span>
-                            <span class="d-inline d-md-none">{{ isAnnouncementsVisible ? ('Hide' | t) : ('View' | t) }}</span>
-                            <i class="bi transition-all" [ngClass]="isAnnouncementsVisible ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
-                        </button>
                         <button *ngIf="isAdminOrHR" class="btn btn-primary px-3 rounded-pill d-flex align-items-center gap-2 shadow-sm fw-semibold" (click)="openAnnouncementModal()" style="font-size: 0.9rem;">
                             <i class="bi bi-plus-lg"></i> <span class="d-none d-md-inline">{{ 'Post' | t }}</span>
                         </button>
                     </div>
                 </div>
 
-                <div *ngIf="isAnnouncementsVisible" class="announcements-body-wrapper" style="animation: fadeIn 0.3s ease-in-out;">
+                <div class="announcements-body-wrapper">
                     
-                    <div *ngIf="announcements.length === 0" class="text-center py-4 px-4 bg-white">
+                    <div *ngIf="announcements.length === 0" class="text-center py-4 px-4 ann-empty-state">
                         <i class="bi bi-megaphone text-muted" style="font-size: 2rem; opacity: 0.4;"></i>
                         <p class="text-muted small mt-2 mb-0">{{ 'No announcements at this time.' | t }}</p>
                     </div>
 
                 
-                <div class="ann-scroll-area bg-white" style="max-height: 260px; overflow-y: auto;">
+                <div class="ann-scroll-area" style="max-height: 260px; overflow-y: auto;">
                     <div *ngFor="let ann of announcements; let last = last" class="ann-item px-4 py-3 d-flex gap-3 align-items-start" [class.border-bottom]="!last">
                         
                         
@@ -4718,7 +4686,7 @@ export class RegisterComponent {
                                     <i class="bi bi-clock"></i>{{ ann.createdAt | date:'MMM d, y' }}
                                 </span>
                             </div>
-                            <div class="fw-semibold text-dark mb-1" style="font-size: 0.88rem;">{{ ann.title }}</div>
+                            <div class="fw-semibold mb-1" style="font-size: 0.88rem;">{{ ann.title }}</div>
                             <div class="text-secondary" style="font-size: 0.81rem; line-height: 1.5; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">{{ ann.content }}</div>
                             <div class="d-flex align-items-center gap-2 mt-2">
                                 <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center fw-bold flex-shrink-0" style="width: 20px; height: 20px; font-size: 9px;">
@@ -5169,7 +5137,6 @@ export class DashboardComponent implements OnInit {
   announcements: Announcement[] = [];
   announcementForm: FormGroup;
   showAnnouncementModal = false;
-  isAnnouncementsVisible = false;
 
   totalEmployees = 0;
   pendingLeaves = 0;
@@ -5563,9 +5530,9 @@ export class DashboardComponent implements OnInit {
   }
 
   loadEmployeesForSelect() {
-    this.empService.getEmployees().subscribe({
+    this.empService.getEmployees(1, 1000).subscribe({
       next: (res) => {
-        this.allEmployeesList = res;
+        this.allEmployeesList = res.items || [];
       },
       error: (err) =>
         console.error('Failed to load employees for announcements', err),
@@ -5592,10 +5559,6 @@ export class DashboardComponent implements OnInit {
 
   closeAnnouncementModal() {
     this.showAnnouncementModal = false;
-  }
-
-  toggleAnnouncements() {
-    this.isAnnouncementsVisible = !this.isAnnouncementsVisible;
   }
 
   toggleEmployeeForAnnouncement(empId: number) {
@@ -5678,22 +5641,24 @@ export class DashboardComponent implements OnInit {
       });
     }
 
-    this.empService.getEmployees().subscribe({
-      next: (employees: any[]) => {
+    this.empService.getEmployees(1, 1000).subscribe({
+      next: (res: any) => {
+        const employees = res?.items || [];
         this.totalEmployees = employees.length;
         this.calculateAttendanceRate();
       },
       error: (err) => console.error('Error fetching employees:', err),
     });
 
-    this.leaveService.getAllLeaves().subscribe({
-      next: (leaves: any[]) => {
+    this.leaveService.getAllLeaves(undefined, undefined, 1, 1000).subscribe({
+      next: (res: any) => {
+        const leaves = res?.items || [];
         this.pendingLeaves = leaves.filter(
           (l: any) => l.status === 'Pending',
         ).length;
 
         leaves.sort(
-          (a, b) =>
+          (a: any, b: any) =>
             new Date(b.startDate).getTime() - new Date(a.startDate).getTime(),
         );
         this.recentLeaves = leaves.slice(0, 5);
@@ -5739,20 +5704,22 @@ export class DashboardComponent implements OnInit {
       error: (err) => console.error('Error fetching departments:', err),
     });
 
-    this.salaryService.getAllSalaries().subscribe({
-      next: (salaries: any[]) => {
+    this.salaryService.getAllSalaries(undefined, undefined, 1, 1000).subscribe({
+      next: (res: any) => {
+        const salaries = res?.items || [];
         this.totalSalaries = salaries.reduce(
-          (sum, current) => sum + (current.netAmount || 0),
+          (sum: number, current: any) => sum + (current.netAmount || 0),
           0,
         );
       },
       error: (err) => console.error('Error fetching salaries:', err),
     });
 
-    this.attendanceService.getAllAttendance().subscribe({
-      next: (attendances: any[]) => {
+    this.attendanceService.getAllAttendance(undefined, 1, 1000).subscribe({
+      next: (res: any) => {
+        const attendances = res?.items || [];
         attendances.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+          (a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime(),
         );
         this.recentAttendances = attendances.slice(0, 5);
         this.allAttendances = attendances;
@@ -5778,8 +5745,9 @@ export class DashboardComponent implements OnInit {
   }
 
   loadNextPayday() {
-    this.salaryService.getMySalaries().subscribe({
-      next: (salaries: any[]) => {
+    this.salaryService.getMySalaries(undefined, undefined, 1, 1000).subscribe({
+      next: (res: any) => {
+        const salaries = res?.items || [];
         if (!salaries || salaries.length === 0) return;
 
         const sorted = [...salaries].sort((a, b) => {
@@ -5843,8 +5811,9 @@ export class DashboardComponent implements OnInit {
 
     this.loadNextPayday();
 
-    this.leaveService.getMyLeaves().subscribe({
-      next: (leaves: any[]) => {
+    this.leaveService.getMyLeaves(undefined, undefined, 1, 1000).subscribe({
+      next: (res: any) => {
+        const leaves = res?.items || [];
         this.employeePendingLeaves = leaves.filter(
           (l: any) => l.status === 'Pending',
         ).length;
@@ -5860,8 +5829,9 @@ export class DashboardComponent implements OnInit {
       error: (err) => console.error('Error fetching my leaves:', err),
     });
 
-    this.attendanceService.getMyAttendance().subscribe({
-      next: (attendances: any[]) => {
+    this.attendanceService.getMyAttendance(undefined, 1, 1000).subscribe({
+      next: (res: any) => {
+        const attendances = res?.items || [];
         const currentMonthNum = today.getMonth();
         const currentYear = today.getFullYear();
 
@@ -5890,7 +5860,7 @@ export class DashboardComponent implements OnInit {
         });
 
         attendances.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+          (a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime(),
         );
         this.myRecentAttendances = attendances.slice(0, 5);
 
@@ -6051,11 +6021,15 @@ export class DashboardComponent implements OnInit {
             },
             padding: { bottom: 15 },
           },
-          legend: { display: false },
+          legend: {
+            display: false,
+          },
           tooltip: {
+            backgroundColor: 'rgba(30, 41, 59, 0.9)',
+            padding: 10,
             callbacks: {
-              label: function (context: any) {
-                return context.parsed.y + '%';
+              label: function (context) {
+                return context.raw + '% Attendance';
               },
             },
           },
@@ -6065,12 +6039,7 @@ export class DashboardComponent implements OnInit {
             beginAtZero: true,
             max: 100,
             grid: {
-              color: 'rgba(0, 0, 0, 0.05)',
-            },
-            ticks: {
-              callback: function (value: any) {
-                return value + '%';
-              },
+              color: 'rgba(0,0,0,0.05)',
             },
           },
           x: {
@@ -6138,10 +6107,7 @@ export class DashboardComponent implements OnInit {
 ### File: src\app\features\departments\departments.component.html
 ```html
 <div class="page-container p-4">
-
-    <!-- Top Row: Title and Primary Actions -->
     <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-3">
-        <!-- Title Section -->
         <div class="d-flex align-items-center mt-1">
             <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
                 <i class="bi bi-diagram-3-fill fs-4"></i>
@@ -6151,8 +6117,6 @@ export class DashboardComponent implements OnInit {
                 <p class="text-muted small mb-0">{{ 'Manage organizational departments and view their employee structures' | t }}</p>
             </div>
         </div>
-
-        <!-- Primary Action Buttons -->
         <div class="d-flex gap-2">
             <button class="btn btn-primary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="openAddModal()">
                 <i class="bi bi-plus-lg" [class.me-md-1]="true"></i> 
@@ -6160,8 +6124,6 @@ export class DashboardComponent implements OnInit {
             </button>
         </div>
     </div>
-
-    <!-- Bottom Row: Secondary Actions -->
     <div class="d-flex justify-content-end align-items-center mb-4 flex-wrap gap-3 bg-white p-3 rounded-4 shadow-sm border border-light">
         <div class="d-flex gap-2">
             <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
@@ -6174,7 +6136,6 @@ export class DashboardComponent implements OnInit {
             </button>
         </div>
     </div>
-
     @if (isLoading) {
     <div class="text-center my-5 py-5">
         <div class="spinner-border text-primary mb-3" role="status"
@@ -6276,7 +6237,6 @@ export class DashboardComponent implements OnInit {
     </div>
     }
 </div>
-
 <div class="modal fade" id="deptDetailsModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
@@ -6296,13 +6256,11 @@ export class DashboardComponent implements OnInit {
             <div class="modal-body p-0 bg-light">
                 @if (selectedDepartment) {
                 <div class="row g-0">
-                    
                     <div class="col-lg-4 border-end bg-white">
                         <div class="p-4 h-100">
                             <h6 class="fw-bold text-dark mb-4 text-uppercase"
                                 style="letter-spacing: 0.5px; font-size: 13px;">Department
                                 Overview</h6>
-
                             <div
                                 class="d-flex align-items-center mb-4 p-3 bg-light rounded-4 border">
                                 <div
@@ -6319,7 +6277,6 @@ export class DashboardComponent implements OnInit {
                                         || 0 }}</h3>
                                 </div>
                             </div>
-
                             <div
                                 class="d-flex align-items-center mb-4 p-3 bg-light rounded-4 border">
                                 <div
@@ -6338,8 +6295,6 @@ export class DashboardComponent implements OnInit {
                             </div>
                         </div>
                     </div>
-
-                    
                     <div class="col-lg-8 bg-light">
                         <div class="p-4 h-100 d-flex flex-column">
                             <div
@@ -6348,7 +6303,6 @@ export class DashboardComponent implements OnInit {
                                     class="fw-bold text-dark mb-0 text-uppercase"
                                     style="letter-spacing: 0.5px; font-size: 13px;">Employees
                                     Directory</h6>
-
                                 <div class="d-flex gap-2">
                                     <div
                                         class="input-group input-group-sm shadow-sm"
@@ -6373,7 +6327,6 @@ export class DashboardComponent implements OnInit {
                                     </select>
                                 </div>
                             </div>
-
                             <div
                                 class="card border-0 shadow-sm rounded-4 flex-grow-1 overflow-hidden">
                                 <div class="table-responsive h-100"
@@ -6473,11 +6426,9 @@ export class DashboardComponent implements OnInit {
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="addDeptModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg">
-
             <div
                 class="modal-header border-bottom border-success border-4 bg-light">
                 <h5 class="modal-title text-success fw-bold">
@@ -6488,7 +6439,6 @@ export class DashboardComponent implements OnInit {
                 <button type="button" class="btn-close shadow-none"
                     data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <form [formGroup]="addForm" (ngSubmit)="saveDepartment()">
                 <div class="modal-body p-4">
                     <div class="mb-3">
@@ -6508,7 +6458,6 @@ export class DashboardComponent implements OnInit {
                         }
                     </div>
                 </div>
-
                 <div class="modal-footer bg-light border-top-0">
                     <button type="button" class="btn btn-light px-4 border"
                         data-bs-dismiss="modal"
@@ -6524,15 +6473,11 @@ export class DashboardComponent implements OnInit {
                     </button>
                 </div>
             </form>
-
         </div>
     </div>
 </div>
-
 <style>
-</style>
-
-
+</style>
 ```
 
 ### File: src\app\features\departments\departments.component.ts
@@ -6611,11 +6556,9 @@ export class DepartmentsComponent implements OnInit {
   }
 
   loadEmployees() {
-    this.employeeService.getEmployees().subscribe({
+    this.employeeService.getEmployees(1, 1000).subscribe({
       next: (res: any) => {
-        const extracted: any[] = Array.isArray(res)
-          ? res
-          : res?.data?.items || res?.data || [];
+        const extracted: any[] = res?.items || [];
 
         this.allEmployees = extracted.map((emp) => {
           if (!emp.positionName && emp.positionId) {
@@ -7082,8 +7025,8 @@ export class DepartmentsComponent implements OnInit {
               <img *ngIf="picturePreviewUrl" [src]="picturePreviewUrl" 
                    class="rounded-circle object-fit-cover w-100 h-100 border shadow-sm" alt="Profile Preview">
               <div *ngIf="!picturePreviewUrl" 
-                   class="rounded-circle bg-light d-flex align-items-center justify-content-center w-100 h-100 border shadow-sm text-secondary">
-                <i class="bi bi-person-fill fs-1"></i>
+                   class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center w-100 h-100 border shadow-sm text-primary fw-bold" style="font-size: 2.5rem;">
+                {{ getProfileInitials() }}
               </div>
               
               
@@ -7096,7 +7039,13 @@ export class DepartmentsComponent implements OnInit {
 
             <input type="file" id="profilePicInput" class="d-none" accept="image/*" (change)="onFileSelected($event)">
             
-            <small class="text-muted text-center mt-1">
+            <div class="mt-2" *ngIf="picturePreviewUrl && isEditMode">
+              <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3" (click)="deleteProfilePicture()" [disabled]="isLoading">
+                <i class="bi bi-trash-fill me-1"></i> {{ 'Delete Picture' | t }}
+              </button>
+            </div>
+
+            <small class="text-muted text-center mt-2">
               Click the camera icon to upload or change picture.<br>
               <i class="bi bi-info-circle me-1"></i>Max size: 5MB. Formats: JPG, PNG.
             </small>
@@ -7228,7 +7177,7 @@ export class DepartmentsComponent implements OnInit {
       <div class="form-section" style="border-left: 4px solid #f59e0b;">
         <div class="section-header" style="color: #d97706;">
           <i class="bi bi-key-fill" style="color: #f59e0b;"></i>
-          <span>Reset Password</span>
+          <span>Account & Permissions</span>
         </div>
         <div class="row g-3">
           <div class="col-md-6">
@@ -7251,6 +7200,24 @@ export class DepartmentsComponent implements OnInit {
               Password will be securely hashed before saving.
             </small>
           </div>
+
+          @if (isAdmin) {
+          <div class="col-md-6">
+            <label class="field-label">
+              <i class="bi bi-shield-lock text-warning"></i>
+              System Role
+            </label>
+            <select class="form-select field-input" formControlName="role">
+              <option value="Employee">Employee</option>
+              <option value="HR">HR</option>
+              <option value="Admin">Admin</option>
+            </select>
+            <small class="field-hint">
+              <i class="bi bi-info-circle me-1"></i>
+              Change the system permissions for this user.
+            </small>
+          </div>
+          }
         </div>
       </div>
       }
@@ -7305,11 +7272,12 @@ import { DepartmentService } from '../../core/services/department.service';
 import { PositionService } from '../../core/services/position.service';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 @Component({
   selector: 'app-employee-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, ImageCropperModalComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, ImageCropperModalComponent, TranslatePipe],
   templateUrl: './employee-form.component.html',
   styleUrl: './employee-form.component.css',
 })
@@ -7322,6 +7290,7 @@ export class EmployeeFormComponent implements OnInit {
 
   isLoading = false;
   isEditMode = false;
+  isAdmin = false;
   currentEmployeeId: number | null = null;
   departments: any[] = [];
   positions: any[] = [];
@@ -7353,10 +7322,12 @@ export class EmployeeFormComponent implements OnInit {
     ),
     userId: new FormControl('', Validators.required),
     password: new FormControl('', [Validators.minLength(6)]),
+    role: new FormControl(''),
     isActive: new FormControl(true),
   });
 
   ngOnInit() {
+    this.isAdmin = this.authService.isAdmin();
 
     const state = window.history.state;
 
@@ -7430,6 +7401,7 @@ export class EmployeeFormComponent implements OnInit {
           departmentId: profile.departmentId || '',
           positionId: profile.positionId || '',
           userId: profile.userId || '',
+          role: profile.role || '',
           isActive: profile.isActive !== false,
         });
 
@@ -7490,6 +7462,15 @@ export class EmployeeFormComponent implements OnInit {
     return this.employeeForm.getRawValue().email || '';
   }
 
+  getProfileInitials(): string {
+    const fName = this.employeeForm.getRawValue().firstName || '';
+    const lName = this.employeeForm.getRawValue().lastName || '';
+    if (fName || lName) {
+      return ((fName[0] || '') + (lName[0] || '')).toUpperCase();
+    }
+    return this.linkedUserInfo?.username?.charAt(0)?.toUpperCase() || 'U';
+  }
+
   private parseBackendError(err: any): string {
     const body = err?.error;
 
@@ -7547,6 +7528,42 @@ export class EmployeeFormComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
+  deleteProfilePicture() {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to delete this employee\'s profile picture?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (!this.isEditMode || !this.employeeForm.getRawValue().userId) {
+          this.selectedPictureFile = null;
+          this.picturePreviewUrl = null;
+          return;
+        }
+        
+        this.isLoading = true;
+        this.authService.adminDeleteProfilePicture(Number(this.employeeForm.getRawValue().userId)).subscribe({
+          next: () => {
+            this.isLoading = false;
+            this.picturePreviewUrl = null;
+            this.selectedPictureFile = null;
+            if (this.linkedUserInfo) this.linkedUserInfo.profilePictureUrl = null;
+            Swal.fire('Deleted!', 'Profile picture has been deleted.', 'success');
+          },
+          error: (err) => {
+            this.isLoading = false;
+            Swal.fire('Error', 'Failed to delete picture.', 'error');
+            console.error(err);
+          }
+        });
+      }
+    });
+  }
+
   onSubmit() {
     if (this.employeeForm.invalid) {
       this.employeeForm.markAllAsTouched();
@@ -7584,6 +7601,10 @@ export class EmployeeFormComponent implements OnInit {
 
     if (this.isEditMode && rawValues.password) {
       payload.password = rawValues.password;
+    }
+
+    if (this.isEditMode && rawValues.role && this.isAdmin) {
+      payload.role = rawValues.role;
     }
 
     if (this.isEditMode && this.currentEmployeeId) {
@@ -7649,11 +7670,7 @@ export class EmployeeFormComponent implements OnInit {
 
 ### File: src\app\features\employees\employees.component.html
 ```html
-
-
-<!-- Top Row: Title and Primary Actions -->
 <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-3">
-    <!-- Title Section -->
     <div class="d-flex align-items-center mt-1">
         <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
             <i class="bi bi-people-fill fs-4"></i>
@@ -7663,8 +7680,6 @@ export class EmployeeFormComponent implements OnInit {
             <p class="text-muted mb-0 small">{{ 'Manage and track all company employees' | t }}</p>
         </div>
     </div>
-
-    <!-- Primary Action Buttons -->
     <div class="d-flex gap-2">
         @if (isAdminOrHR) {
         <button class="btn btn-primary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" routerLink="/employee-form" title="Add Employee">
@@ -7674,8 +7689,6 @@ export class EmployeeFormComponent implements OnInit {
         }
     </div>
 </div>
-
-<!-- Bottom Row: Search, Filters, and Secondary Actions -->
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3 bg-white p-3 rounded-4 shadow-sm border border-light">
     <div class="d-flex align-items-center gap-2 flex-grow-1 flex-wrap">
         <div class="input-group shadow-sm" style="max-width: 350px; min-width: 200px;">
@@ -7685,7 +7698,6 @@ export class EmployeeFormComponent implements OnInit {
                 [(ngModel)]="searchQuery"
                 (input)="filterEmployees()">
         </div>
-
         <div class="dropdown">
             <button class="btn btn-outline-secondary shadow-sm" type="button"
                 data-bs-toggle="dropdown" aria-expanded="false" title="Filter Employees">
@@ -7697,8 +7709,8 @@ export class EmployeeFormComponent implements OnInit {
                     <label class="form-label small fw-semibold text-muted mb-1">{{ 'Department' | t }}</label>
                     <select class="form-select form-select-sm" [(ngModel)]="selectedDepartment" (change)="filterEmployees()">
                         <option value>All Departments</option>
-                        @for (dept of uniqueDepartments; track dept) {
-                        <option [value]="dept">{{ dept }}</option>
+                        @for (dept of departmentsList; track dept.id) {
+                        <option [value]="dept.id">{{ dept.name }}</option>
                         }
                     </select>
                 </div>
@@ -7713,7 +7725,6 @@ export class EmployeeFormComponent implements OnInit {
             </div>
         </div>
     </div>
-
     @if (isAdminOrHR) {
     <div class="d-flex gap-2">
         <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
@@ -7727,7 +7738,6 @@ export class EmployeeFormComponent implements OnInit {
     </div>
     }
 </div>
-
 @if (isLoading) {
 <div class="text-center my-5">
     <div class="spinner-border text-primary" role="status"></div>
@@ -7755,7 +7765,6 @@ export class EmployeeFormComponent implements OnInit {
                     <td data-label="ID" class="py-3 px-4 fw-bold text-dark">#{{ emp.id }}</td>
                     <td data-label="Full Name" class="py-3 px-4 fw-bold text-dark">
                         <div class="d-flex align-items-center">
-                            
                             <div class="me-3 flex-shrink-0" style="width: 36px; height: 36px;">
                                 <img *ngIf="emp.profilePictureUrl"
                                     [src]="emp.profilePictureUrl"
@@ -7813,36 +7822,48 @@ export class EmployeeFormComponent implements OnInit {
             </tbody>
         </table>
     </div>
-
-    
-    @if (employeesList.length > 0) {
+    @if (totalCount > 0) {
     <div class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-        <small class="text-muted fw-medium">
-            Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, employeesList.length) }} of {{ employeesList.length }} entries
-        </small>
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <div class="d-flex align-items-center gap-2">
+                <label class="small text-muted mb-0 text-nowrap">{{ 'Per page' | t }}:</label>
+                <select class="form-select form-select-sm border-light-subtle" style="width: 70px;" [(ngModel)]="itemsPerPage" (change)="filterEmployees()">
+                    <option [ngValue]="10">10</option>
+                    <option [ngValue]="25">25</option>
+                    <option [ngValue]="50">50</option>
+                    <option [ngValue]="100">100</option>
+                </select>
+            </div>
+            <small class="text-muted fw-medium">
+                {{ 'Showing' | t }} {{ (currentPage - 1) * itemsPerPage + 1 }} {{ 'to' | t }} {{ getMathMin(currentPage * itemsPerPage, totalCount) }} {{ 'of' | t }} {{ totalCount }} {{ 'entries' | t }}
+            </small>
+        </div>
         <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
             <li class="page-item" [class.disabled]="currentPage === 1">
-                <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
+                <a class="page-link cursor-pointer px-2" (click)="changePage(1)" title="First Page"><i class="bi bi-chevron-double-left"></i></a>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">{{ 'Previous' | t }}</a>
             </li>
             <li class="page-item active">
                 <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
             </li>
             <li class="page-item" [class.disabled]="currentPage === totalPages">
-                <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
+                <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">{{ 'Next' | t }}</a>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <a class="page-link cursor-pointer px-2" (click)="changePage(totalPages)" title="Last Page"><i class="bi bi-chevron-double-right"></i></a>
             </li>
         </ul>
     </div>
     }
 </div>
 }
-
 <div class="modal fade" id="employeeDetailsModal" tabindex="-1" aria-labelledby="employeeDetailsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-
             <div class="modal-header border-0 p-0">
                 <div class="emp-modal-header w-100 p-4 d-flex align-items-center gap-3">
-                    
                     <div class="emp-modal-avatar" [class.p-0]="selectedEmployeeProfile?.profilePictureUrl" style="overflow: hidden;">
                         <img *ngIf="selectedEmployeeProfile?.profilePictureUrl"
                             [src]="selectedEmployeeProfile.profilePictureUrl"
@@ -7863,7 +7884,6 @@ export class EmployeeFormComponent implements OnInit {
                     <button type="button" class="btn-close btn-close-white ms-auto shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
-
             <div class="modal-body p-4">
                 @if (selectedEmployeeProfile?.isLoadingDetails) {
                 <div class="text-center py-4">
@@ -7872,7 +7892,6 @@ export class EmployeeFormComponent implements OnInit {
                 </div>
                 }
                 @if (selectedEmployeeProfile && !selectedEmployeeProfile?.isLoadingDetails) {
-
                 <h6 class="detail-section-title">
                     <i class="bi bi-person-lines-fill text-primary me-2"></i>Personal Information
                 </h6>
@@ -7908,7 +7927,6 @@ export class EmployeeFormComponent implements OnInit {
                         </div>
                     </div>
                 </div>
-
                 <h6 class="detail-section-title">
                     <i class="bi bi-briefcase-fill text-success me-2"></i>Employment Details
                 </h6>
@@ -7926,7 +7944,6 @@ export class EmployeeFormComponent implements OnInit {
                         </div>
                     </div>
                 </div>
-
                 <h6 class="detail-section-title">
                     <i class="bi bi-activity text-warning me-2"></i>Account Status
                 </h6>
@@ -7938,10 +7955,8 @@ export class EmployeeFormComponent implements OnInit {
                         {{ selectedEmployeeProfile?.isActive !== false ? 'Active' : 'Inactive' }}
                     </span>
                 </div>
-
                 }
             </div>
-
             <div class="modal-footer border-0 bg-light d-flex justify-content-between align-items-center">
                 <span class="text-muted small">
                     <i class="bi bi-shield-lock-fill me-1 text-secondary"></i>Confidential Employee Record
@@ -7970,12 +7985,10 @@ export class EmployeeFormComponent implements OnInit {
         </div>
     </div>
 </div>
-
 <style>
 .emp-modal-header {
   background: linear-gradient(135deg, #4361ee, #3a0ca3);
 }
-
 .emp-modal-avatar {
   width: 60px;
   height: 60px;
@@ -7991,7 +8004,6 @@ export class EmployeeFormComponent implements OnInit {
   flex-shrink: 0;
   line-height: 1;
 }
-
 .detail-section-title {
   font-size: 0.8rem;
   font-weight: 700;
@@ -8002,7 +8014,6 @@ export class EmployeeFormComponent implements OnInit {
   padding-bottom: 0.5rem;
   margin-bottom: 0.75rem;
 }
-
 .detail-item {
   background: #f8fafc;
   border: 1px solid #e8ecf0;
@@ -8012,7 +8023,6 @@ export class EmployeeFormComponent implements OnInit {
   flex-direction: column;
   gap: 0.2rem;
 }
-
 .detail-label {
   font-size: 0.72rem;
   text-transform: uppercase;
@@ -8020,7 +8030,6 @@ export class EmployeeFormComponent implements OnInit {
   color: #8592a3;
   font-weight: 600;
 }
-
 .detail-value {
   font-size: 0.95rem;
   font-weight: 600;
@@ -8028,12 +8037,10 @@ export class EmployeeFormComponent implements OnInit {
   overflow-wrap: anywhere;
   word-break: break-word;
 }
-
 .cursor-pointer {
   cursor: pointer;
 }
 </style>
-
 ```
 
 ### File: src\app\features\employees\employees.component.ts
@@ -8049,6 +8056,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { AttendanceService } from '../../core/services/attendance.service';
 import { LeaveService } from '../../core/services/leave.service';
 import { SalaryService } from '../../core/services/salary.service';
+import { DepartmentService } from '../../core/services/department.service';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -8072,11 +8080,12 @@ export class EmployeesComponent implements OnInit, OnDestroy {
   private attendanceService = inject(AttendanceService);
   private leaveService = inject(LeaveService);
   private salaryService = inject(SalaryService);
+  private departmentService = inject(DepartmentService);
   private pdfExportService = inject(PdfExportService);
   private excelExportService = inject(ExcelExportService);
 
-  allEmployeesList: any[] = [];
   employeesList: any[] = [];
+  departmentsList: any[] = [];
   isLoading: boolean = true;
   isGeneratingReport: boolean = false;
   isAdmin: boolean = false;
@@ -8086,25 +8095,25 @@ export class EmployeesComponent implements OnInit, OnDestroy {
   searchQuery: string = '';
   selectedDepartment: string = '';
   selectedStatus: string = '';
-  uniqueDepartments: string[] = [];
-
+  
   detailsModal: any;
 
   currentPage: number = 1;
-  itemsPerPage: number = 7;
+  itemsPerPage: number = 10;
+  totalCount: number = 0;
 
   get paginatedEmployees() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.employeesList.slice(startIndex, startIndex + this.itemsPerPage);
+    return this.employeesList;
   }
 
   get totalPages() {
-    return Math.ceil(this.employeesList.length / this.itemsPerPage) || 1;
+    return Math.ceil(this.totalCount / this.itemsPerPage) || 1;
   }
 
   changePage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+      this.loadEmployees();
     }
   }
 
@@ -8125,6 +8134,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
+    this.loadDepartments();
     this.loadEmployees();
   }
 
@@ -8137,6 +8147,15 @@ export class EmployeesComponent implements OnInit, OnDestroy {
     backdrops.forEach((backdrop) => backdrop.remove());
     document.body.style.overflow = '';
     document.body.style.paddingRight = '';
+  }
+
+  loadDepartments() {
+    this.departmentService.getDepartments().subscribe({
+      next: (data) => {
+        this.departmentsList = data;
+      },
+      error: (err) => console.error('Error fetching departments:', err)
+    });
   }
 
   getRoleBadgeClass(roleId: number): string {
@@ -8196,16 +8215,14 @@ export class EmployeesComponent implements OnInit, OnDestroy {
 
   loadEmployees() {
     this.isLoading = true;
-    this.employeeService.getEmployees().subscribe({
+    let isActiveParams: boolean | string = '';
+    if (this.selectedStatus === 'Active') isActiveParams = true;
+    if (this.selectedStatus === 'Inactive') isActiveParams = false;
+
+    this.employeeService.getEmployees(this.currentPage, this.itemsPerPage, this.searchQuery, this.selectedDepartment, isActiveParams).subscribe({
       next: (data) => {
-        this.allEmployeesList = data;
-        this.employeesList = [...this.allEmployeesList];
-
-        const depts = data
-          .map((e: any) => e.departmentName || e.departmentId)
-          .filter(Boolean);
-        this.uniqueDepartments = Array.from(new Set(depts)) as string[];
-
+        this.employeesList = data.items;
+        this.totalCount = data.totalCount;
         this.isLoading = false;
       },
       error: (err) => {
@@ -8216,40 +8233,8 @@ export class EmployeesComponent implements OnInit, OnDestroy {
   }
 
   filterEmployees() {
-    this.employeesList = this.allEmployeesList.filter((emp) => {
-      let matchesSearch = true;
-      if (this.searchQuery) {
-        const query = this.searchQuery.toLowerCase();
-        const fullName =
-          `${emp.firstName || ''} ${emp.lastName || ''}`.toLowerCase();
-        const idStr = String(emp.id);
-        const deptStr = String(
-          emp.departmentName || emp.departmentId || '',
-        ).toLowerCase();
-
-        matchesSearch =
-          fullName.includes(query) ||
-          idStr.includes(query) ||
-          deptStr.includes(query);
-      }
-
-      let matchesDept = true;
-      if (this.selectedDepartment) {
-        matchesDept =
-          (emp.departmentName || String(emp.departmentId)) ===
-          this.selectedDepartment;
-      }
-
-      let matchesStatus = true;
-      if (this.selectedStatus) {
-        matchesStatus =
-          this.selectedStatus === 'Active' ? emp.isActive : !emp.isActive;
-      }
-
-      return matchesSearch && matchesDept && matchesStatus;
-    });
-
     this.currentPage = 1;
+    this.loadEmployees();
   }
 
   onDelete(id: number) {
@@ -8265,14 +8250,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
       if (result.isConfirmed) {
         this.employeeService.deleteEmployee(id).subscribe({
           next: () => {
-            this.employeesList = this.employeesList.filter(
-              (emp) => emp.id !== id,
-            );
-
-            if (this.currentPage > this.totalPages) {
-              this.currentPage = this.totalPages;
-            }
-
+            this.loadEmployees();
             this.showToast('Employee deleted successfully', 'success');
           },
           error: (err) => {
@@ -8323,16 +8301,19 @@ export class EmployeesComponent implements OnInit, OnDestroy {
 
     forkJoin({
       attendance: this.attendanceService
-        .getAllAttendance()
-        .pipe(catchError(() => of([]))),
-      leaves: this.leaveService.getAllLeaves().pipe(catchError(() => of([]))),
+        .getAllAttendance(undefined, 1, 1000)
+        .pipe(catchError(() => of({items: [], totalCount: 0}))),
+      leaves: this.leaveService.getAllLeaves(1, 1000).pipe(catchError(() => of({items: [], totalCount: 0}))),
       salaries: this.salaryService
-        .getAllSalaries()
-        .pipe(catchError(() => of([]))),
+        .getAllSalaries(1, 1000)
+        .pipe(catchError(() => of({items: [], totalCount: 0}))),
     }).subscribe(({ attendance, leaves, salaries }) => {
       this.isGeneratingReport = false;
+      const attendanceItems = attendance.items || [];
+      const leavesItems = leaves.items || [];
+      const salariesItems = salaries.items || [];
 
-      const empAttendance = attendance
+      const empAttendance = attendanceItems
         .filter((a: any) => a.employeeId === emp.id)
         .sort(
           (a: any, b: any) =>
@@ -8340,7 +8321,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
         )
         .slice(0, 15);
 
-      const empLeaves = leaves
+      const empLeaves = leavesItems
         .filter((l: any) => l.employeeId === emp.id)
         .sort(
           (a: any, b: any) =>
@@ -8348,7 +8329,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
             new Date(a.startDate || 0).getTime(),
         );
 
-      const empSalaries = salaries
+      const empSalaries = salariesItems
         .filter((s: any) => s.employeeId === emp.id)
         .sort((a: any, b: any) => {
           if (b.year !== a.year) return b.year - a.year;
@@ -8650,11 +8631,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
     ]);
 
     const additionalInfo = [
-      { label: 'Total Employees', value: String(this.employeesList.length) },
-      {
-        label: 'Active Employees',
-        value: String(this.employeesList.filter((e) => e.isActive).length),
-      },
+      { label: 'Total Employees', value: String(this.totalCount) },
       {
         label: 'Filtered Department',
         value: this.selectedDepartment ? this.selectedDepartment : 'All',
@@ -8685,7 +8662,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
       <p class="text-muted mb-0 small">{{ 'Stay updated on birthdays and company events' | t }}</p>
     </div>
   </div>
-
   @if (isAdminOrHR) {
   <div class="d-flex gap-2">
     <button class="btn btn-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold" data-bs-toggle="modal" data-bs-target="#addEventModal">
@@ -8694,7 +8670,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
   </div>
   }
 </div>
-
 @if (isLoading) {
 <div class="text-center my-5 py-5">
   <div class="spinner-border text-success" role="status"></div>
@@ -8717,20 +8692,17 @@ export class EmployeesComponent implements OnInit, OnDestroy {
         <div class="col-md-6 col-lg-4">
           <div class="card h-100 border-0 shadow-sm rounded-4 event-card" [ngClass]="{'border-start border-4 border-info': event.eventType === 'Birthday', 'border-start border-4 border-success': event.eventType !== 'Birthday'}">
             <div class="card-body position-relative p-4">
-              
               <div class="d-flex justify-content-between align-items-start mb-3">
                 <span class="badge rounded-pill" [ngClass]="event.eventType === 'Birthday' ? 'bg-info-subtle text-info' : 'bg-success-subtle text-success'">
                   <i class="bi me-1" [ngClass]="event.eventType === 'Birthday' ? 'bi-gift-fill' : 'bi-star-fill'"></i>
                   {{ event.eventType | t }}
                 </span>
-                
                 @if (isAdminOrHR && event.id !== 0) {
                 <button class="btn btn-sm btn-link text-danger p-0 m-0" (click)="deleteEvent(event.id)" title="Delete Event">
                   <i class="bi bi-trash"></i>
                 </button>
                 }
               </div>
-
               <div class="d-flex align-items-center mb-3">
                 @if (event.eventType === 'Birthday') {
                   <div class="me-3" style="width: 50px; height: 50px;">
@@ -8744,7 +8716,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
                     <i class="bi bi-building fs-4"></i>
                   </div>
                 }
-                
                 <div>
                   <h5 class="fw-bold mb-1">{{ event.title }}</h5>
                   <div class="text-primary fw-medium small">
@@ -8754,7 +8725,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
                   </div>
                 </div>
               </div>
-
               <p class="text-muted small mb-0">{{ event.description }}</p>
             </div>
           </div>
@@ -8763,8 +8733,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
     </div>
   }
 }
-
-<!-- Add Event Modal -->
 <div class="modal fade" id="addEventModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
@@ -8803,7 +8771,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
     </div>
   </div>
 </div>
-
 ```
 
 ### File: src\app\features\events\events.component.ts
@@ -8831,7 +8798,6 @@ export class EventsComponent implements OnInit {
   isLoading = true;
   isAdminOrHR = false;
 
-  // New Event Form
   newEvent = {
     title: '',
     description: '',
@@ -8887,14 +8853,11 @@ export class EventsComponent implements OnInit {
         this.isSubmitting = false;
         Swal.fire('Success', 'Event added successfully.', 'success');
 
-        // Hide modal
         const modalEl = document.getElementById('addEventModal');
         if (modalEl) {
-          // Note: using bootstrap types or any
           (window as any).bootstrap.Modal.getInstance(modalEl)?.hide();
         }
 
-        // Reset form
         this.newEvent = { title: '', description: '', eventDate: '', eventType: 'Company' };
         this.loadEvents();
       },
@@ -8942,10 +8905,7 @@ export class EventsComponent implements OnInit {
 ### File: src\app\features\leave\leave.component.html
 ```html
 <div class="page-container p-4">
-
-    <!-- Top Row: Title and Primary Actions -->
     <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-3">
-        <!-- Title Section -->
         <div class="d-flex align-items-center mt-1">
             <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
                 <i class="bi bi-calendar2-check-fill fs-4"></i>
@@ -8955,8 +8915,6 @@ export class EventsComponent implements OnInit {
                 <p class="text-muted small mb-0">{{ 'Manage and track time-off requests effectively' | t }}</p>
             </div>
         </div>
-
-        <!-- Primary Action Buttons -->
         <div class="d-flex gap-2">
             <button *ngIf="isAdminOrHR" class="btn btn-outline-dark px-3 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="openSettingsModal()" title="Leave Settings">
                 <i class="bi bi-gear-fill" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'Settings' | t }}</span>
@@ -8968,8 +8926,6 @@ export class EventsComponent implements OnInit {
             </button>
         </div>
     </div>
-
-    <!-- Bottom Row: Search, Filters, and Secondary Actions -->
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3 bg-white p-3 rounded-4 shadow-sm border border-light">
         <div class="d-flex align-items-center gap-2 flex-grow-1 flex-wrap">
             <div class="input-group shadow-sm" style="max-width: 350px; min-width: 200px;">
@@ -8977,34 +8933,30 @@ export class EventsComponent implements OnInit {
                 <input type="text" class="form-control border-start-0 ps-0" 
                     placeholder="{{ 'Search by name, ID, or reason...' | t }}"
                     [(ngModel)]="leaveSearchQuery" 
-                    (input)="filterLeavesLocal()">
+                    (input)="filterLeaves()">
             </div>
-
             <div class="dropdown">
                 <button class="btn btn-outline-secondary shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Filter Leaves">
                     <i class="bi bi-funnel-fill"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4" style="width: 250px;">
                     <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">{{ 'Filter Options' | t }}</h6>
-                    
                     <div class="mb-3">
                         <label class="form-label small fw-semibold text-muted mb-1">{{ 'Leave Type' | t }}</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="selectedLeaveType" (change)="filterLeavesLocal()">
+                        <select class="form-select form-select-sm" [(ngModel)]="selectedLeaveType" (change)="filterLeaves()">
                             <option value="">{{ 'All Types' | t }}</option>
                             <option *ngFor="let type of leaveTypes" [value]="type.name">{{ type.name }}</option>
                         </select>
                     </div>
-                    
                     <div class="mb-3">
                         <label class="form-label small fw-semibold text-muted mb-1">{{ 'Status' | t }}</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="selectedLeaveStatus" (change)="filterLeavesLocal()">
+                        <select class="form-select form-select-sm" [(ngModel)]="selectedLeaveStatus" (change)="filterLeaves()">
                             <option value="">{{ 'All Statuses' | t }}</option>
                             <option value="Pending">{{ 'Pending' | t }}</option>
                             <option value="Approved">{{ 'Approved' | t }}</option>
                             <option value="Rejected">{{ 'Rejected' | t }}</option>
                         </select>
                     </div>
-                    
                     <div class="mb-3">
                         <label class="form-label small fw-semibold text-muted mb-1">{{ 'Year' | t }}</label>
                         <select class="form-select form-select-sm" [(ngModel)]="selectedYear" (change)="filterLeaves()">
@@ -9012,7 +8964,6 @@ export class EventsComponent implements OnInit {
                             <option *ngFor="let yr of uniqueYears" [value]="yr">{{ yr }}</option>
                         </select>
                     </div>
-
                     <div class="mb-2">
                         <label class="form-label small fw-semibold text-muted mb-1">{{ 'Month' | t }}</label>
                         <select class="form-select form-select-sm" [(ngModel)]="selectedMonth" (change)="filterLeaves()">
@@ -9034,7 +8985,6 @@ export class EventsComponent implements OnInit {
                 </div>
             </div>
         </div>
-
         <div class="d-flex gap-2">
             <button class="btn btn-outline-danger px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="exportToPDF()" title="Export to PDF">
                 <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
@@ -9044,10 +8994,7 @@ export class EventsComponent implements OnInit {
             </button>
         </div>
     </div>
-
-    
     <div class="row mb-4 g-3" *ngIf="!isAdmin">
-        
         <div class="col-md-4">
             <div class="card border-0 shadow-sm rounded-4 bg-primary bg-opacity-10 position-relative overflow-hidden h-100">
                 <div class="position-absolute end-0 top-0 h-100 w-50" style="background: linear-gradient(90deg, transparent, rgba(13, 110, 253, 0.05)); z-index: 0;"></div>
@@ -9062,8 +9009,6 @@ export class EventsComponent implements OnInit {
                 </div>
             </div>
         </div>
-
-        
         <div class="col-md-4">
             <div class="card border-0 shadow-sm rounded-4 bg-success bg-opacity-10 position-relative overflow-hidden h-100">
                 <div class="position-absolute end-0 top-0 h-100 w-50" style="background: linear-gradient(90deg, transparent, rgba(25, 135, 84, 0.05)); z-index: 0;"></div>
@@ -9078,8 +9023,6 @@ export class EventsComponent implements OnInit {
                 </div>
             </div>
         </div>
-
-        
         <div class="col-md-4">
             <div class="card border-0 shadow-sm rounded-4 bg-danger bg-opacity-10 position-relative overflow-hidden h-100">
                 <div class="position-absolute end-0 top-0 h-100 w-50" style="background: linear-gradient(90deg, transparent, rgba(220, 53, 69, 0.05)); z-index: 0;"></div>
@@ -9095,11 +9038,9 @@ export class EventsComponent implements OnInit {
             </div>
         </div>
     </div>
-
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0 text-nowrap">
-
                 <thead class="bg-light text-muted small text-uppercase"
                     style="letter-spacing: 0.5px;">
                     <tr>
@@ -9112,9 +9053,7 @@ export class EventsComponent implements OnInit {
                             class="py-3 px-4 border-bottom-0 fw-semibold text-end">{{ 'Actions' | t }}</th>
                     </tr>
                 </thead>
-
                 <tbody class="border-top-0">
-
                     <tr *ngIf="isLoading">
                         <td [colSpan]="isAdminOrHR ? 6 : 5" class="text-center py-5 text-muted no-data-td">
                             <span
@@ -9122,7 +9061,6 @@ export class EventsComponent implements OnInit {
                             {{ 'Loading requests...' | t }}
                         </td>
                     </tr>
-
                     <tr *ngIf="!isLoading && leavesList.length === 0">
                         <td [colSpan]="isAdminOrHR ? 7 : 6" class="text-center py-5 no-data-td">
                             <div class="d-flex flex-column align-items-center">
@@ -9134,7 +9072,6 @@ export class EventsComponent implements OnInit {
                             </div>
                         </td>
                     </tr>
-
                     <tr *ngFor="let leave of paginatedLeaves">
                         <td *ngIf="isAdminOrHR" data-label="Employee" class="py-3 px-3">
                             <div class="d-flex align-items-center">
@@ -9160,14 +9097,12 @@ export class EventsComponent implements OnInit {
                                 {{ getLeaveTypeText(leave.leaveType) }}
                             </div>
                         </td>
-
                         <td data-label="Duration" class="py-3 px-4">
                             <div class="fw-medium text-dark">{{ leave.startDate
                                 | date:'MMM dd' }} <i
                                     class="bi bi-arrow-right text-muted mx-1"></i>
                                 {{ leave.endDate | date:'MMM dd, yyyy' }}</div>
                         </td>
-
                         <td data-label="Reason" class="py-3 px-4 text-secondary">
                             <div class="d-flex align-items-center gap-2">
                                 <span class="d-inline-block text-truncate"
@@ -9183,7 +9118,6 @@ export class EventsComponent implements OnInit {
                                 </a>
                             </div>
                         </td>
-
                         <td data-label="Status" class="py-3 px-4 text-center">
                             <span class="status-badge"
                                 [ngClass]="{
@@ -9209,7 +9143,6 @@ export class EventsComponent implements OnInit {
                                 </button>
                             </div>
                         </td>
-
                         <td *ngIf="isAdminOrHR" data-label="Actions" class="py-3 px-4 text-end actions-cell">
                             <div
                                 *ngIf="getStatusText(leave.status) === 'Pending'"
@@ -9233,13 +9166,25 @@ export class EventsComponent implements OnInit {
                 </tbody>
             </table>
         </div>
-
-        
-        <div *ngIf="leavesList.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <small class="text-muted fw-medium">
-                {{ 'Showing' | t }} {{ (currentPage - 1) * itemsPerPage + 1 }} {{ 'to' | t }} {{ getMathMin(currentPage * itemsPerPage, leavesList.length) }} {{ 'of' | t }} {{ leavesList.length }} {{ 'entries' | t }}
-            </small>
+        <div *ngIf="totalCount > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <div class="d-flex align-items-center gap-2">
+                    <label class="small text-muted mb-0 text-nowrap">{{ 'Per page' | t }}:</label>
+                    <select class="form-select form-select-sm border-light-subtle" style="width: 70px;" [(ngModel)]="itemsPerPage" (change)="filterLeaves()">
+                        <option [ngValue]="10">10</option>
+                        <option [ngValue]="25">25</option>
+                        <option [ngValue]="50">50</option>
+                        <option [ngValue]="100">100</option>
+                    </select>
+                </div>
+                <small class="text-muted fw-medium">
+                    {{ 'Showing' | t }} {{ (currentPage - 1) * itemsPerPage + 1 }} {{ 'to' | t }} {{ getMathMin(currentPage * itemsPerPage, totalCount) }} {{ 'of' | t }} {{ totalCount }} {{ 'entries' | t }}
+                </small>
+            </div>
             <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                    <a class="page-link cursor-pointer px-2" (click)="changePage(1)" title="First Page"><i class="bi bi-chevron-double-left"></i></a>
+                </li>
                 <li class="page-item" [class.disabled]="currentPage === 1">
                     <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">{{ 'Previous' | t }}</a>
                 </li>
@@ -9249,11 +9194,13 @@ export class EventsComponent implements OnInit {
                 <li class="page-item" [class.disabled]="currentPage === totalPages">
                     <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">{{ 'Next' | t }}</a>
                 </li>
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                    <a class="page-link cursor-pointer px-2" (click)="changePage(totalPages)" title="Last Page"><i class="bi bi-chevron-double-right"></i></a>
+                </li>
             </ul>
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="leaveModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow rounded-4">
@@ -9266,7 +9213,6 @@ export class EventsComponent implements OnInit {
             </div>
             <div class="modal-body p-4">
                 <form #leaveForm="ngForm">
-
                     <div class="mb-4">
                         <label
                             class="form-label fw-semibold text-secondary small">Leave
@@ -9278,7 +9224,6 @@ export class EventsComponent implements OnInit {
                                 [value]="type.id">{{ type.name }}</option>
                         </select>
                     </div>
-
                     <div class="row mb-4">
                         <div class="col-6">
                             <label
@@ -9300,7 +9245,6 @@ export class EventsComponent implements OnInit {
                                 [min]="leaveData.startDate || getToday()" required>
                         </div>
                     </div>
-
                     <div class="mb-3">
                         <label
                             class="form-label fw-semibold text-secondary small">Reason
@@ -9310,12 +9254,10 @@ export class EventsComponent implements OnInit {
                             rows="3" required
                             placeholder="Explain why you need this leave..."></textarea>
                     </div>
-
                     <div class="mb-2">
                         <label class="form-label fw-semibold text-secondary small">Medical Excuse / Attachment (Optional)</label>
                         <input type="file" class="form-control bg-light border-0" (change)="onFileSelected($event)" accept="image/*,.pdf">
                     </div>
-
                 </form>
             </div>
             <div class="modal-footer border-top-0 pb-4 px-4">
@@ -9334,8 +9276,6 @@ export class EventsComponent implements OnInit {
         </div>
     </div>
 </div>
-
-
 <div class="modal fade" id="settingsModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow rounded-4">
@@ -9344,7 +9284,6 @@ export class EventsComponent implements OnInit {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
-                
                 <form #settingsForm="ngForm">
                     <h6 class="fw-bold text-primary mb-3">{{ 'Reset Date Schedule' | t }}</h6>
                     <div class="row mb-4">
@@ -9357,7 +9296,6 @@ export class EventsComponent implements OnInit {
                             <input type="number" class="form-control bg-light border-0" name="resetDay" [(ngModel)]="leaveSettings.resetDay" required min="1" max="31" [disabled]="!isAdmin">
                         </div>
                     </div>
-
                     <h6 class="fw-bold text-success mb-3">{{ 'Default Balances (Days)' | t }}</h6>
                     <div class="row mb-3">
                         <div class="col-4">
@@ -9373,11 +9311,9 @@ export class EventsComponent implements OnInit {
                             <input type="number" class="form-control bg-light border-0" name="defaultEmergency" [(ngModel)]="leaveSettings.defaultEmergencyLeave" required min="0" [disabled]="!isAdmin">
                         </div>
                     </div>
-
                     <div class="mt-4 text-muted small" *ngIf="leaveSettings.lastResetDate">
                         <i class="bi bi-clock-history me-1"></i> {{ 'Last automatic reset was on:' | t }} <strong>{{ leaveSettings.lastResetDate | date:'mediumDate' }}</strong>
                     </div>
-
                 </form>
             </div>
             <div class="modal-footer border-top-0 pb-4 px-4 bg-light">
@@ -9390,7 +9326,6 @@ export class EventsComponent implements OnInit {
         </div>
     </div>
 </div>
-
 <app-image-cropper-modal
   *ngIf="showCropperModal"
   [showModal]="showCropperModal"
@@ -9400,10 +9335,8 @@ export class EventsComponent implements OnInit {
   (imageCroppedEventOut)="handleCroppedImage($event)"
   (closeModalEvent)="showCropperModal = false">
 </app-image-cropper-modal>
-
 <style>
 </style>
-
 ```
 
 ### File: src\app\features\leave\leave.component.ts
@@ -9436,7 +9369,6 @@ export class LeaveComponent implements OnInit {
   private pdfExportService = inject(PdfExportService);
   private leaveSettingService = inject(LeaveSettingService);
 
-  allLeavesList: any[] = [];
   leavesList: any[] = [];
 
   leaveSearchQuery: string = '';
@@ -9469,20 +9401,21 @@ export class LeaveComponent implements OnInit {
   isAdmin: boolean = false;
 
   currentPage: number = 1;
-  itemsPerPage: number = 7;
+  itemsPerPage: number = 10;
+  totalCount: number = 0;
 
   get paginatedLeaves() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.leavesList.slice(startIndex, startIndex + this.itemsPerPage);
+    return this.leavesList;
   }
 
   get totalPages() {
-    return Math.ceil(this.leavesList.length / this.itemsPerPage) || 1;
+    return Math.ceil(this.totalCount / this.itemsPerPage) || 1;
   }
 
   changePage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+      this.loadLeaves();
     }
   }
 
@@ -9528,6 +9461,12 @@ export class LeaveComponent implements OnInit {
   ngOnInit() {
     this.isAdminOrHR = this.authService.isAdminOrHR();
     this.isAdmin = this.authService.isAdmin();
+    
+    const currentYear = new Date().getFullYear();
+    for(let i = 0; i < 5; i++) {
+        this.uniqueYears.push(currentYear - i);
+    }
+
     this.loadBalances();
     this.loadLeaves();
     if (this.isAdminOrHR) {
@@ -9585,41 +9524,29 @@ export class LeaveComponent implements OnInit {
   }
 
   loadLeaves() {
-
     this.isLoading = true;
     const m = this.selectedMonth ? Number(this.selectedMonth) : undefined;
     const y = this.selectedYear ? Number(this.selectedYear) : undefined;
 
+    let statusParam: number | string = '';
+    if (this.selectedLeaveStatus === 'Pending') statusParam = 0;
+    else if (this.selectedLeaveStatus === 'Approved') statusParam = 1;
+    else if (this.selectedLeaveStatus === 'Rejected') statusParam = 2;
+
+    let typeParam: number | string = '';
+    if (this.selectedLeaveType === 'Annual') typeParam = 0;
+    else if (this.selectedLeaveType === 'Sick') typeParam = 1;
+    else if (this.selectedLeaveType === 'Emergency') typeParam = 2;
+    else if (this.selectedLeaveType === 'Unpaid') typeParam = 3;
+
     const request = this.isAdminOrHR
-      ? this.leaveService.getAllLeaves(m, y)
-      : this.leaveService.getMyLeaves(m, y);
+      ? this.leaveService.getAllLeaves(m, y, this.currentPage, this.itemsPerPage, this.leaveSearchQuery, statusParam, typeParam)
+      : this.leaveService.getMyLeaves(m, y, this.currentPage, this.itemsPerPage, this.leaveSearchQuery, statusParam, typeParam);
 
     request.subscribe({
       next: (res: any) => {
-        let extracted: any[] = [];
-
-        if (Array.isArray(res)) {
-          extracted = res;
-        } else if (res?.data?.items && Array.isArray(res.data.items)) {
-          extracted = res.data.items;
-        } else if (res?.data && Array.isArray(res.data)) {
-          extracted = res.data;
-        }
-
-        this.allLeavesList = extracted;
-        
-        if (!m && !y) {
-          const years = this.allLeavesList
-            .map((s) => new Date(s.startDate).getFullYear())
-            .filter((y) => !isNaN(y));
-          this.uniqueYears = Array.from(new Set(years))
-            .sort()
-            .reverse() as number[];
-        }
-        
-        this.leavesList = [...this.allLeavesList];
-        this.filterLeavesLocal();
-
+        this.leavesList = res.items || [];
+        this.totalCount = res.totalCount || 0;
         this.isLoading = false;
       },
       error: (err) => {
@@ -9631,63 +9558,14 @@ export class LeaveComponent implements OnInit {
   }
 
   filterLeaves() {
+    this.currentPage = 1;
     this.loadLeaves();
   }
 
-  filterLeavesLocal() {
-
-    this.leavesList = this.allLeavesList.filter((l) => {
-      let matchesSearch = true;
-      if (this.leaveSearchQuery) {
-        const query = this.leaveSearchQuery.toLowerCase();
-        const empName = (l.employeeName || '').toLowerCase();
-        const empId = String(l.employeeId || '');
-        const reason = (l.reason || '').toLowerCase();
-        matchesSearch =
-          empName.includes(query) ||
-          empId.includes(query) ||
-          reason.includes(query);
-      }
-
-      let matchesStatus = true;
-      if (this.selectedLeaveStatus) {
-        matchesStatus =
-          this.getStatusText(l.status).toLowerCase() ===
-          this.selectedLeaveStatus.toLowerCase();
-      }
-
-      let matchesType = true;
-      if (this.selectedLeaveType) {
-
-        const leaveTypeName = this.getLeaveTypeText(l.leaveType).toLowerCase();
-        matchesType = leaveTypeName === this.selectedLeaveType.toLowerCase();
-      }
-
-      return matchesSearch && matchesStatus && matchesType;
-    });
-
-    this.currentPage = 1;
-    if (this.leavesList.length > 0) {
-      this.leavesList.sort((a, b) => {
-        if (this.isAdminOrHR) {
-          const statusA = this.getStatusText(a.status);
-          const statusB = this.getStatusText(b.status);
-          if (statusA === 'Pending' && statusB !== 'Pending') return -1;
-          if (statusA !== 'Pending' && statusB === 'Pending') return 1;
-        }
-        return (
-          new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
-        );
-      });
-    }
-  }
-
   getStatusText(statusCode: any): string {
-
     if (typeof statusCode === 'string' && isNaN(Number(statusCode))) {
       return statusCode;
     }
-
     if (statusCode === 0 || statusCode === '0') return 'Pending';
     if (statusCode === 1 || statusCode === '1') return 'Approved';
     if (statusCode === 2 || statusCode === '2') return 'Rejected';
@@ -9695,7 +9573,6 @@ export class LeaveComponent implements OnInit {
   }
 
   getLeaveTypeText(typeCode: any): string {
-
     if (typeof typeCode === 'string' && isNaN(Number(typeCode))) {
       const found = this.leaveTypes.find(
         (t) => t.name.toLowerCase() === typeCode.toLowerCase(),
@@ -9704,7 +9581,6 @@ export class LeaveComponent implements OnInit {
         ? found.name
         : typeCode.charAt(0).toUpperCase() + typeCode.slice(1);
     }
-
     const type = this.leaveTypes.find((t) => t.id === Number(typeCode));
     return type ? type.name : typeCode != null ? String(typeCode) : 'Unknown';
   }
@@ -9738,7 +9614,6 @@ export class LeaveComponent implements OnInit {
   }
 
   submitLeaveRequest() {
-
     if (this.leaveData.startDate < this.getToday()) {
       Swal.fire('Invalid Date', 'Start Date cannot be in the past.', 'warning');
       return;
@@ -9758,7 +9633,6 @@ export class LeaveComponent implements OnInit {
     const diffTime = Math.abs(end.getTime() - start.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
-    
     const selectedType = Number(this.leaveData.leaveType);
     let availableBalance = 0;
     let typeName = '';
@@ -9822,7 +9696,6 @@ export class LeaveComponent implements OnInit {
   }
 
   changeStatus(id: number, newStatusCode: number) {
-
     if (newStatusCode === 2) {
       Swal.fire({
         title: 'Reject Leave Request',
@@ -10064,9 +9937,7 @@ export class LeaveFormComponent {
 ### File: src\app\features\meetings\meetings.component.html
 ```html
 <div class="container-fluid py-4">
-    <!-- Top Row: Title and Primary Actions -->
     <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-3">
-        <!-- Title Section -->
         <div class="d-flex align-items-center mt-1">
             <div class="icon-box bg-secondary bg-opacity-10 text-secondary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
                 <i class="bi bi-calendar-event fs-4"></i>
@@ -10076,8 +9947,6 @@ export class LeaveFormComponent {
                 <p class="text-muted small mb-0">{{ 'Manage schedules and appointments' | t }}</p>
             </div>
         </div>
-
-        <!-- Primary Action Buttons -->
         <div class="d-flex gap-2">
             <button *ngIf="isHrOrAdmin" class="btn btn-primary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="openAddModal()">
                 <i class="bi bi-plus-lg" [class.me-md-1]="true"></i> 
@@ -10085,8 +9954,6 @@ export class LeaveFormComponent {
             </button>
         </div>
     </div>
-
-    <!-- Bottom Row: Secondary Actions -->
     <div class="d-flex justify-content-end align-items-center mb-4 flex-wrap gap-3 bg-white p-3 rounded-4 shadow-sm border border-light">
         <div class="d-flex gap-2">
             <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap d-flex align-items-center gap-2" (click)="exportToPDF()" title="Export to PDF">
@@ -10099,8 +9966,6 @@ export class LeaveFormComponent {
             </button>
         </div>
     </div>
-
-    
     <div class="card shadow-sm border-0 rounded-4">
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -10160,7 +10025,6 @@ export class LeaveFormComponent {
                             </td>
                             <td class="text-end pe-4">
                                 <div class="d-flex align-items-center justify-content-end gap-2">
-                                    
                                     <ng-container *ngIf="isHrOrAdmin && group.status === 'Scheduled'">
                                         <button
                                             class="btn btn-success btn-sm rounded-pill d-inline-flex align-items-center gap-1 px-3"
@@ -10177,7 +10041,6 @@ export class LeaveFormComponent {
                                             <span class="small">{{ 'Cancel' | t }}</span>
                                         </button>
                                     </ng-container>
-                                    
                                     <a *ngIf="group.meetLink && group.status === 'Scheduled'"
                                         [href]="group.meetLink" target="_blank"
                                         class="btn btn-outline-primary btn-sm rounded-pill d-inline-flex align-items-center gap-1 px-3"
@@ -10185,7 +10048,6 @@ export class LeaveFormComponent {
                                         <i class="bi bi-camera-video"></i>
                                         <span class="small">{{ 'Join' | t }}</span>
                                     </a>
-                                    
                                     <span *ngIf="group.status !== 'Scheduled'" class="text-muted small fst-italic">—</span>
                                 </div>
                             </td>
@@ -10202,13 +10064,25 @@ export class LeaveFormComponent {
                     </tbody>
                 </table>
             </div>
-
-            <!-- Pagination Footer -->
-            <div *ngIf="groupedMeetings.length > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-                <small class="text-muted fw-medium">
-                    {{ 'Showing' | t }} {{ (currentPage - 1) * itemsPerPage + 1 }} {{ 'to' | t }} {{ getMathMin(currentPage * itemsPerPage, groupedMeetings.length) }} {{ 'of' | t }} {{ groupedMeetings.length }} {{ 'entries' | t }}
-                </small>
+            <div *ngIf="totalCount > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="small text-muted mb-0 text-nowrap">{{ 'Per page' | t }}:</label>
+                        <select class="form-select form-select-sm border-light-subtle" style="width: 70px;" [(ngModel)]="itemsPerPage" (change)="onPageSizeChange()">
+                            <option [ngValue]="10">10</option>
+                            <option [ngValue]="25">25</option>
+                            <option [ngValue]="50">50</option>
+                            <option [ngValue]="100">100</option>
+                        </select>
+                    </div>
+                    <small class="text-muted fw-medium">
+                        Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, totalCount) }} of {{ totalCount }} entries
+                    </small>
+                </div>
                 <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
+                    <li class="page-item" [class.disabled]="currentPage === 1">
+                        <a class="page-link cursor-pointer px-2" (click)="changePage(1)" title="First Page"><i class="bi bi-chevron-double-left"></i></a>
+                    </li>
                     <li class="page-item" [class.disabled]="currentPage === 1">
                         <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
                     </li>
@@ -10218,12 +10092,14 @@ export class LeaveFormComponent {
                     <li class="page-item" [class.disabled]="currentPage === totalPages">
                         <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
                     </li>
+                    <li class="page-item" [class.disabled]="currentPage === totalPages">
+                        <a class="page-link cursor-pointer px-2" (click)="changePage(totalPages)" title="Last Page"><i class="bi bi-chevron-double-right"></i></a>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="addMeetingModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow rounded-4">
@@ -10233,16 +10109,12 @@ export class LeaveFormComponent {
             </div>
             <div class="modal-body p-4">
                 <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
-                    
                     <div class="mb-3">
                         <label class="form-label fw-bold text-secondary">{{ 'Title / Subject' | t }} <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" formControlName="title" placeholder="e.g., Performance Review">
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label fw-bold text-secondary">{{ 'Employee' | t }} <span class="text-danger">*</span></label>
-                        
-                        
                         <div class="d-flex gap-2 mb-2">
                             <input type="text" class="form-control form-control-sm" placeholder="Search employee..." [(ngModel)]="employeeSearchQuery" [ngModelOptions]="{standalone: true}">
                             <select class="form-select form-select-sm" [(ngModel)]="selectedDepartmentFilter" [ngModelOptions]="{standalone: true}">
@@ -10250,8 +10122,6 @@ export class LeaveFormComponent {
                                 <option *ngFor="let dept of uniqueDepartments" [value]="dept">{{ dept }}</option>
                             </select>
                         </div>
-                        
-                        
                         <div class="form-check mb-2 bg-light p-2 rounded border">
                             <input class="form-check-input ms-1" type="checkbox" id="selectAllMeet"
                                 [checked]="isAllFilteredSelected"
@@ -10260,7 +10130,6 @@ export class LeaveFormComponent {
                                 Select All Filtered Employees
                             </label>
                         </div>
-
                         <div class="border rounded p-2 overflow-auto" style="max-height: 250px; background: #fff; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);">
                             <div class="form-check mb-2" *ngFor="let emp of filteredEmployees">
                                 <input class="form-check-input" type="checkbox" [id]="'empMeet' + emp.id"
@@ -10280,8 +10149,6 @@ export class LeaveFormComponent {
                         </div>
                         <small class="text-muted d-block mt-1">{{ 'Select one or more employees to schedule a group meeting' | t }}</small>
                     </div>
-
-
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold text-secondary">{{ 'Date' | t }} <span class="text-danger">*</span></label>
@@ -10298,7 +10165,6 @@ export class LeaveFormComponent {
                             </div>
                         </div>
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label fw-bold text-secondary">{{ 'Duration' | t }} <span class="text-danger">*</span></label>
                         <select class="form-select" formControlName="durationMinutes">
@@ -10310,7 +10176,6 @@ export class LeaveFormComponent {
                             <option value="120">2 Hours</option>
                         </select>
                     </div>
-
                     <div class="mb-4">
                         <label class="form-label fw-bold text-secondary">{{ 'Reason / Notes' | t }} <span class="text-danger">*</span></label>
                         <textarea class="form-control" rows="3" formControlName="reason"
@@ -10324,7 +10189,6 @@ export class LeaveFormComponent {
                             }
                         </div>
                     </div>
-
                     <div class="d-flex justify-content-end gap-2">
                         <button type="button" class="btn btn-light rounded-pill px-4" (click)="closeModal('addMeetingModal')">{{ 'Cancel' | t }}</button>
                         <button type="submit" class="btn btn-dark rounded-pill px-4" [disabled]="addForm.invalid || isSubmitting">
@@ -10337,7 +10201,6 @@ export class LeaveFormComponent {
         </div>
     </div>
 </div>
-
 ```
 
 ### File: src\app\features\meetings\meetings.component.ts
@@ -10401,23 +10264,31 @@ export class MeetingsComponent implements OnInit {
   itemsPerPage: number = 7;
 
   get paginatedMeetings(): Meeting[] {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.meetings.slice(startIndex, startIndex + this.itemsPerPage);
+    return this.meetings;
   }
 
   get paginatedGroupedMeetings(): GroupedMeeting[] {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.groupedMeetings.slice(startIndex, startIndex + this.itemsPerPage);
+    return this.groupedMeetings;
   }
 
+  totalCount: number = 0;
+
   get totalPages(): number {
-    return Math.ceil(this.groupedMeetings.length / this.itemsPerPage) || 1;
+    return Math.ceil(this.totalCount / this.itemsPerPage) || 1;
   }
 
   changePage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+      if (this.isHrOrAdmin) this.loadAllMeetings();
+      else this.loadMyMeetings();
     }
+  }
+
+  onPageSizeChange() {
+    this.currentPage = 1;
+    if (this.isHrOrAdmin) this.loadAllMeetings();
+    else this.loadMyMeetings();
   }
 
   getMathMin(a: number, b: number): number {
@@ -10489,11 +10360,11 @@ export class MeetingsComponent implements OnInit {
 
   loadAllMeetings() {
     this.isLoading = true;
-    this.meetingService.getAll(this.pageNumber, this.pageSize).subscribe({
+    this.meetingService.getAll(this.currentPage, this.itemsPerPage).subscribe({
       next: (res: any) => {
         this.meetings = res.data?.items || res.items || [];
+        this.totalCount = res.data?.totalCount || res.totalCount || 0;
         
-        // Group meetings by MeetLink
         const groups = new Map<string, GroupedMeeting>();
         this.meetings.forEach(m => {
           const key = m.meetLink || m.title + m.scheduledAt;
@@ -10527,11 +10398,11 @@ export class MeetingsComponent implements OnInit {
 
   loadMyMeetings() {
     this.isLoading = true;
-    this.meetingService.getMyMeetings(this.pageNumber, this.pageSize).subscribe({
+    this.meetingService.getMyMeetings(this.currentPage, this.itemsPerPage).subscribe({
       next: (res: any) => {
         this.meetings = res.data?.items || res.items || [];
+        this.totalCount = res.data?.totalCount || res.totalCount || 0;
         
-        // Group meetings by MeetLink
         const groups = new Map<string, GroupedMeeting>();
         this.meetings.forEach(m => {
           const key = m.meetLink || m.title + m.scheduledAt;
@@ -10564,8 +10435,8 @@ export class MeetingsComponent implements OnInit {
   }
 
   loadEmployees() {
-    this.employeeService.getEmployees().subscribe(res => {
-      this.employees = res;
+    this.employeeService.getEmployees(1, 1000).subscribe((res: any) => {
+      this.employees = res?.items || [];
     });
   }
 
@@ -10821,6 +10692,11 @@ export class MeetingsComponent implements OnInit {
             <input type="file" class="d-none" accept="image/*" (change)="onFileSelected($event)" [disabled]="isUploadingPic">
           </label>
         </div>
+        <div class="mt-3" *ngIf="profilePicUrl">
+          <button class="btn btn-sm btn-outline-danger rounded-pill px-3" (click)="deleteProfilePicture()" [disabled]="isUploadingPic">
+            <i class="bi bi-trash-fill me-1"></i> {{ 'Delete Picture' | t }}
+          </button>
+        </div>
       </div>
       
       
@@ -10955,6 +10831,11 @@ export class MeetingsComponent implements OnInit {
             <span class="spinner-border spinner-border-sm" *ngIf="isUploadingPic"></span>
             <input type="file" class="d-none" accept="image/*" (change)="onFileSelected($event)" [disabled]="isUploadingPic">
           </label>
+        </div>
+        <div class="mt-3" *ngIf="profilePicUrl">
+          <button class="btn btn-sm btn-outline-danger rounded-pill px-3" (click)="deleteProfilePicture()" [disabled]="isUploadingPic">
+            <i class="bi bi-trash-fill me-1"></i> {{ 'Delete Picture' | t }}
+          </button>
         </div>
       </div>
 
@@ -11370,6 +11251,35 @@ export class MyProfileComponent implements OnInit {
     });
   }
 
+  deleteProfilePicture() {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to delete your profile picture?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isUploadingPic = true;
+        this.authService.deleteProfilePicture().subscribe({
+          next: () => {
+            this.isUploadingPic = false;
+            this.profilePicUrl = null;
+            localStorage.removeItem('user_profile_pic');
+            window.dispatchEvent(new Event('profile_pic_updated'));
+            Swal.fire('Deleted!', 'Your profile picture has been deleted.', 'success');
+          },
+          error: (err) => {
+            this.isUploadingPic = false;
+            Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to delete picture.'), 'error');
+          }
+        });
+      }
+    });
+  }
+
   openEditModal() {
     this.editData.email = this.profile?.email || this.userEmail || '';
     this.editData.phone =
@@ -11515,7 +11425,6 @@ export class MyProfileComponent implements OnInit {
       const errMsg = err?.message?.toLowerCase() || '';
       
       if (errName === 'notallowederror' || errName === 'aborterror' || errMsg.includes('cancel') || errMsg.includes('abort') || errMsg.includes('timed out')) {
-         // Do absolutely nothing, just return quietly
          return;
       }
 
@@ -11593,9 +11502,7 @@ export class MyProfileComponent implements OnInit {
 ### File: src\app\features\payroll-adjustments\payroll-adjustments.component.html
 ```html
 <div class="page-container p-4">
-    <!-- Top Row: Title and Primary Actions -->
     <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-3">
-        <!-- Title Section -->
         <div class="d-flex align-items-center mt-1">
             <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
                 <i class="bi bi-wallet2 fs-4"></i>
@@ -11605,8 +11512,6 @@ export class MyProfileComponent implements OnInit {
                 <p class="text-muted small mb-0">{{ 'Manage employee deductions and allowances before payroll' | t }}</p>
             </div>
         </div>
-
-        <!-- Primary Action Buttons -->
         <div class="d-flex gap-2">
             @if (isAdminOrHR) {
             <button
@@ -11618,11 +11523,8 @@ export class MyProfileComponent implements OnInit {
             }
         </div>
     </div>
-
-    <!-- Bottom Row: Filters and Secondary Actions -->
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3 bg-white p-3 rounded-4 shadow-sm border border-light">
         <div class="d-flex align-items-center gap-3 flex-grow-1 flex-wrap">
-            <!-- Filter Dropdown -->
             <div class="dropdown">
                 <button class="btn btn-outline-secondary shadow-sm" type="button"
                     data-bs-toggle="dropdown" aria-expanded="false" title="Filter Options">
@@ -11644,7 +11546,6 @@ export class MyProfileComponent implements OnInit {
                 </div>
             </div>
         </div>
-
         <div class="d-flex gap-2">
             <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
                 <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> 
@@ -11656,7 +11557,6 @@ export class MyProfileComponent implements OnInit {
             </button>
         </div>
     </div>
-
     @if (isLoading) {
     <div class="text-center my-5 py-5">
         <div class="spinner-border text-primary mb-3" role="status"
@@ -11714,11 +11614,9 @@ export class MyProfileComponent implements OnInit {
                         </td>
                         <td class="py-3 px-4">
                             @if (adj.type === 0) {
-                            <span
-                                class="badge bg-danger bg-opacity-10 text-danger px-2 py-1 rounded-2 fw-semibold">Penalty</span>
+                            <span class="status-badge status-rejected rounded-2 px-2 py-1" style="font-size: 0.8rem;">Penalty</span>
                             } @else {
-                            <span
-                                class="badge bg-success bg-opacity-10 text-success px-2 py-1 rounded-2 fw-semibold">Bonus</span>
+                            <span class="status-badge status-approved rounded-2 px-2 py-1" style="font-size: 0.8rem;">Bonus</span>
                             }
                         </td>
                         <td class="py-3 px-4 fw-bold"
@@ -11732,11 +11630,11 @@ export class MyProfileComponent implements OnInit {
                         </td>
                         <td class="py-3 px-4">
                             @if (adj.isApplied) {
-                            <span class="badge rounded-pill px-3 py-2" style="background-color:#d1fae5; color:#065f46; font-size:0.78rem;">
+                            <span class="status-badge status-approved">
                                 <i class="bi bi-check-circle-fill me-1"></i>Applied & Paid
                             </span>
                             } @else {
-                            <span class="badge rounded-pill px-3 py-2" style="background-color:#fef3c7; color:#92400e; font-size:0.78rem;">
+                            <span class="status-badge status-pending">
                                 <i class="bi bi-hourglass-split me-1"></i>Pending
                             </span>
                             }
@@ -11775,10 +11673,42 @@ export class MyProfileComponent implements OnInit {
                 </tbody>
             </table>
         </div>
+        <div *ngIf="totalCount > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <div class="d-flex align-items-center gap-2">
+                    <label class="small text-muted mb-0 text-nowrap">{{ 'Per page' | t }}:</label>
+                    <select class="form-select form-select-sm border-light-subtle" style="width: 70px;" [(ngModel)]="itemsPerPage" (change)="onPageSizeChange()">
+                        <option [ngValue]="10">10</option>
+                        <option [ngValue]="25">25</option>
+                        <option [ngValue]="50">50</option>
+                        <option [ngValue]="100">100</option>
+                    </select>
+                </div>
+                <small class="text-muted fw-medium">
+                    Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ (currentPage * itemsPerPage > totalCount) ? totalCount : (currentPage * itemsPerPage) }} of {{ totalCount }} entries
+                </small>
+            </div>
+            <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                    <a class="page-link cursor-pointer px-2" (click)="changePage(1)" title="First Page"><i class="bi bi-chevron-double-left"></i></a>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
+                </li>
+                <li class="page-item active">
+                    <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                    <a class="page-link cursor-pointer px-2" (click)="changePage(totalPages)" title="Last Page"><i class="bi bi-chevron-double-right"></i></a>
+                </li>
+            </ul>
+        </div>
     </div>
     }
 </div>
-
 <div class="modal fade" id="addAdjustmentModal" tabindex="-1"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -11808,7 +11738,6 @@ export class MyProfileComponent implements OnInit {
                             <label class="form-check-label" for="targetAll">All Employees</label>
                         </div>
                     </div>
-
                     <div class="mb-3" *ngIf="addForm.get('targetType')?.value === 'individual'">
                         <label class="form-label fw-bold text-secondary">{{
                             'Employee' | t }} <span
@@ -11822,7 +11751,6 @@ export class MyProfileComponent implements OnInit {
                         </select>
                         <div class="invalid-feedback">Please select an employee.</div>
                     </div>
-
                     <div class="mb-3" *ngIf="addForm.get('targetType')?.value === 'department'">
                         <label class="form-label fw-bold text-secondary">{{
                             'Department' | t }} <span
@@ -11833,7 +11761,6 @@ export class MyProfileComponent implements OnInit {
                                 [value]="dept.id">{{ dept.name }}</option>
                         </select>
                     </div>
-
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold text-secondary">{{
@@ -11856,7 +11783,6 @@ export class MyProfileComponent implements OnInit {
                                 required.</div>
                         </div>
                     </div>
-
                     <div class="row mb-3">
                         <div class="col-6">
                             <label class="form-label fw-bold text-secondary">Target Month <span class="text-danger">*</span></label>
@@ -11875,7 +11801,6 @@ export class MyProfileComponent implements OnInit {
                             </select>
                         </div>
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label fw-bold text-secondary">{{
                             'Reason' | t }} <span
@@ -11906,7 +11831,6 @@ export class MyProfileComponent implements OnInit {
         </div>
     </div>
 </div>
-
 ```
 
 ### File: src\app\features\payroll-adjustments\payroll-adjustments.component.ts
@@ -11966,9 +11890,25 @@ export class PayrollAdjustmentsComponent implements OnInit {
     { value: AdjustmentType.Bonus, label: 'Bonus (Allowance)' },
   ];
 
-  pageNumber = 1;
-  pageSize = 100;
-  totalItems = 0;
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  totalCount: number = 0;
+
+  get totalPages(): number {
+    return Math.ceil(this.totalCount / this.itemsPerPage) || 1;
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.loadAdjustments();
+    }
+  }
+
+  onPageSizeChange() {
+    this.currentPage = 1;
+    this.loadAdjustments();
+  }
 
   filterMonth: number | '' = '';
   filterYear: number | '' = new Date().getFullYear();
@@ -12019,7 +11959,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
   }
 
   onFilterChange() {
-    this.pageNumber = 1;
+    this.currentPage = 1;
     this.loadAdjustments();
   }
 
@@ -12041,10 +11981,10 @@ export class PayrollAdjustmentsComponent implements OnInit {
     const y = this.filterYear ? Number(this.filterYear) : undefined;
 
     const request = this.isAdminOrHR
-      ? this.adjustmentService.getAll(this.pageNumber, this.pageSize, m, y)
+      ? this.adjustmentService.getAll(this.currentPage, this.itemsPerPage, m, y)
       : this.adjustmentService.getMyAdjustments(
-          this.pageNumber,
-          this.pageSize,
+          this.currentPage,
+          this.itemsPerPage,
           m,
           y,
         );
@@ -12059,7 +11999,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
         else if (res?.data && Array.isArray(res.data)) extracted = res.data;
 
         this.adjustments = extracted;
-        this.totalItems = res?.totalCount || res?.data?.totalCount || 0;
+        this.totalCount = res?.totalCount || res?.data?.totalCount || 0;
         this.isLoading = false;
       },
       error: (err: any) => {
@@ -12073,14 +12013,9 @@ export class PayrollAdjustmentsComponent implements OnInit {
   }
 
   loadEmployees() {
-    this.employeeService.getEmployees().subscribe({
+    this.employeeService.getEmployees(1, 1000).subscribe({
       next: (res: any) => {
-        let extracted: any[] = [];
-        if (Array.isArray(res)) extracted = res;
-        else if (res?.data?.items && Array.isArray(res.data.items))
-          extracted = res.data.items;
-        else if (res?.data && Array.isArray(res.data)) extracted = res.data;
-        this.employees = extracted;
+        this.employees = res?.items || [];
       },
       error: (err: any) => {
         console.error(err);
@@ -12271,11 +12206,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
 ### File: src\app\features\pending-approvals\pending-approvals.component.html
 ```html
 <div class="page-wrapper">
-
-  
-  <!-- Top Row: Title and Primary Actions -->
   <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-3">
-    <!-- Title Section -->
     <div class="d-flex align-items-center mt-1">
       <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
         <i class="bi bi-person-bounding-box fs-4"></i>
@@ -12286,8 +12217,6 @@ export class PayrollAdjustmentsComponent implements OnInit {
       </div>
     </div>
   </div>
-
-  <!-- Bottom Row: Secondary Actions -->
   <div class="d-flex justify-content-end align-items-center mb-4 flex-wrap gap-3 bg-white p-3 rounded-4 shadow-sm border border-light">
     <div class="d-flex gap-2">
       <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
@@ -12300,16 +12229,12 @@ export class PayrollAdjustmentsComponent implements OnInit {
       </button>
     </div>
   </div>
-
-  
   @if (isLoading) {
   <div class="text-center py-5">
     <div class="spinner-border text-warning" role="status"></div>
     <p class="mt-3 text-muted">Loading pending requests...</p>
   </div>
   }
-
-  
   @else if (pendingPictures.length === 0) {
   <div class="card border-0 shadow-sm rounded-4 text-center py-5">
     <div class="d-flex flex-column align-items-center gap-3">
@@ -12317,22 +12242,19 @@ export class PayrollAdjustmentsComponent implements OnInit {
         <i class="bi bi-check-circle-fill text-success fs-1"></i>
       </div>
       <h5 class="fw-bold text-dark mb-0">{{ 'All Caught Up!' | t }}</h5>
-      <p class="text-muted small mb-0">{{ 'There are no pending profile picture requests at this time.' | t }}</p>
+      <p class="text-muted small mb-0">{{ 'There are no profile picture requests at this time.' | t }}</p>
     </div>
   </div>
   }
-
-  
   @else {
   <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
     <div class="card-header bg-white border-0 p-3 d-flex justify-content-between align-items-center">
       <span class="fw-semibold text-dark">
-        <i class="bi bi-clock-history text-warning me-2"></i>
-        {{ 'Pending Requests' | t }}
-        <span class="badge bg-warning text-dark ms-2 rounded-pill">{{ pendingPictures.length }}</span>
+        <i class="bi bi-clock-history text-primary me-2"></i>
+        {{ 'Profile Picture Requests' | t }}
+        <span *ngIf="pendingCount > 0" class="badge bg-primary text-light ms-2 rounded-pill">{{ pendingCount }}</span>
       </span>
     </div>
-
     <div class="table-responsive">
       <table class="table align-middle mb-0">
         <thead class="bg-light text-muted small text-uppercase" style="letter-spacing: 0.5px;">
@@ -12344,9 +12266,8 @@ export class PayrollAdjustmentsComponent implements OnInit {
           </tr>
         </thead>
         <tbody>
-          @for (pic of pendingPictures; track pic.userId) {
+          @for (pic of pendingPictures; track pic.id) {
           <tr class="border-top">
-            
             <td class="ps-4 py-3">
               <div class="d-flex align-items-center gap-3">
                 <div class="rounded-circle bg-primary bg-opacity-10 text-primary fw-bold d-flex align-items-center justify-content-center flex-shrink-0"
@@ -12359,8 +12280,6 @@ export class PayrollAdjustmentsComponent implements OnInit {
                 </div>
               </div>
             </td>
-
-            
             <td class="py-3">
               <div class="d-flex align-items-center gap-2">
                 <img *ngIf="pic.currentProfilePictureUrl"
@@ -12376,29 +12295,44 @@ export class PayrollAdjustmentsComponent implements OnInit {
                 <span *ngIf="!pic.currentProfilePictureUrl" class="text-muted small fst-italic">No picture</span>
               </div>
             </td>
-
-            
             <td class="py-3">
               <div class="d-flex align-items-center gap-2">
-                <img [src]="pic.pendingProfilePictureUrl"
-                  class="rounded-circle object-fit-cover border border-2 border-warning shadow"
+                <img [src]="pic.requestedPictureUrl"
+                  class="rounded-circle object-fit-cover border shadow"
+                  [class.border-warning]="pic.status === 0 || pic.status === 'Pending'"
+                  [class.border-success]="pic.status === 1 || pic.status === 'Approved'"
+                  [class.border-danger]="pic.status === 2 || pic.status === 'Rejected'"
+                  [class.border-2]="true"
                   style="width: 60px; height: 60px;"
-                  alt="Pending">
-                <span class="badge bg-warning text-dark rounded-pill px-2 py-1" style="font-size: 10px;">
+                  alt="Requested">
+                <span *ngIf="pic.status === 0 || pic.status === 'Pending'" class="badge bg-warning text-dark rounded-pill px-2 py-1" style="font-size: 10px;">
                   <i class="bi bi-clock me-1"></i>Pending
                 </span>
+                <span *ngIf="pic.status === 1 || pic.status === 'Approved'" class="badge bg-success text-light rounded-pill px-2 py-1" style="font-size: 10px;">
+                  <i class="bi bi-check-circle me-1"></i>Approved
+                </span>
+                <span *ngIf="pic.status === 2 || pic.status === 'Rejected'" class="badge bg-danger text-light rounded-pill px-2 py-1" style="font-size: 10px;">
+                  <i class="bi bi-x-circle me-1"></i>Rejected
+                </span>
+              </div>
+              <div class="small text-muted mt-1" style="font-size: 0.7rem;">
+                {{ pic.requestedAt | date:'short' }}
               </div>
             </td>
-
-            
             <td class="py-3 pe-4 text-end">
-              <div class="d-flex gap-2 justify-content-end">
-                <button class="btn btn-success btn-sm px-3 shadow-sm" (click)="approve(pic.userId)">
+              <div class="d-flex gap-2 justify-content-end" *ngIf="pic.status === 0 || pic.status === 'Pending'">
+                <button class="btn btn-success btn-sm px-3 shadow-sm" (click)="approve(pic.id)">
                   <i class="bi bi-check-lg me-1"></i>{{ 'Approve' | t }}
                 </button>
-                <button class="btn btn-outline-danger btn-sm px-3" (click)="reject(pic.userId)">
+                <button class="btn btn-outline-danger btn-sm px-3" (click)="reject(pic.id)">
                   <i class="bi bi-x-lg me-1"></i>{{ 'Reject' | t }}
                 </button>
+              </div>
+              <div class="text-muted small fst-italic text-end" *ngIf="pic.status !== 0 && pic.status !== 'Pending'">
+                <ng-container *ngIf="pic.status === 1 || pic.status === 'Approved'">Approved on</ng-container>
+                <ng-container *ngIf="pic.status === 2 || pic.status === 'Rejected'">Rejected on</ng-container>
+                <ng-container *ngIf="pic.status !== 1 && pic.status !== 'Approved' && pic.status !== 2 && pic.status !== 'Rejected'">Resolved on</ng-container>
+                <br>{{ pic.resolvedAt | date:'short' }}
               </div>
             </td>
           </tr>
@@ -12408,15 +12342,12 @@ export class PayrollAdjustmentsComponent implements OnInit {
     </div>
   </div>
   }
-
 </div>
-
 <style>
 .page-wrapper {
   padding: 1.5rem;
 }
 </style>
-
 ```
 
 ### File: src\app\features\pending-approvals\pending-approvals.component.ts
@@ -12444,6 +12375,10 @@ export class PendingApprovalsComponent implements OnInit {
   pendingPictures: any[] = [];
   isLoading = true;
 
+  get pendingCount(): number {
+    return this.pendingPictures.filter(p => p.status === 0 || p.status === 'Pending').length;
+  }
+
   ngOnInit() {
     this.load();
   }
@@ -12462,7 +12397,7 @@ export class PendingApprovalsComponent implements OnInit {
     });
   }
 
-  approve(userId: number) {
+  approve(requestId: number) {
     Swal.fire({
       title: 'Approve Picture?',
       text: 'This will replace the employee\'s current profile picture.',
@@ -12474,7 +12409,7 @@ export class PendingApprovalsComponent implements OnInit {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.authService.approveProfilePicture(userId).subscribe({
+        this.authService.approveProfilePicture(requestId).subscribe({
           next: () => {
             Swal.fire({ icon: 'success', title: 'Approved!', text: 'Profile picture has been approved and applied.', timer: 2000, showConfirmButton: false });
             this.load();
@@ -12485,7 +12420,7 @@ export class PendingApprovalsComponent implements OnInit {
     });
   }
 
-  reject(userId: number) {
+  reject(requestId: number) {
     Swal.fire({
       title: 'Reject Picture?',
       text: 'The employee will be notified that their picture was rejected.',
@@ -12497,7 +12432,7 @@ export class PendingApprovalsComponent implements OnInit {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.authService.rejectProfilePicture(userId).subscribe({
+        this.authService.rejectProfilePicture(requestId).subscribe({
           next: () => {
             Swal.fire({ icon: 'success', title: 'Rejected', text: 'Profile picture request has been rejected.', timer: 2000, showConfirmButton: false });
             this.load();
@@ -12510,40 +12445,50 @@ export class PendingApprovalsComponent implements OnInit {
 
   exportToExcel() {
     if (this.pendingPictures.length === 0) {
-      Swal.fire('No Data', 'There are no pending approvals to export.', 'info');
+      Swal.fire('No Data', 'There are no profile picture requests to export.', 'info');
       return;
     }
 
-    const headers = ['User ID', 'Name', 'Email', 'Upload Date'];
-    const data = this.pendingPictures.map(p => [
-      `#${p.userId}`,
-      `${p.firstName} ${p.lastName}`,
-      p.email,
-      new Date(p.uploadedAt).toLocaleString()
-    ]);
+    const headers = ['Request ID', 'User ID', 'Name', 'Email', 'Upload Date', 'Status'];
+    const data = this.pendingPictures.map(p => {
+      let statusStr = p.status || 'Pending';
+      return [
+        `#${p.id}`,
+        `#${p.userId}`,
+        `${p.username}`,
+        p.email,
+        p.requestedAt ? new Date(p.requestedAt).toLocaleString() : '—',
+        statusStr
+      ];
+    });
 
-    this.excelExportService.exportTableToExcel(headers, data, 'Pending_Profile_Pictures');
+    this.excelExportService.exportTableToExcel(headers, data, 'Profile_Picture_Requests');
   }
 
   exportToPDF() {
     if (this.pendingPictures.length === 0) {
-      Swal.fire('No Data', 'There are no pending approvals to export.', 'info');
+      Swal.fire('No Data', 'There are no profile picture requests to export.', 'info');
       return;
     }
 
-    const headers = ['User ID', 'Name', 'Email', 'Upload Date'];
-    const data = this.pendingPictures.map(p => [
-      `#${p.userId}`,
-      `${p.firstName || p.username || ''} ${p.lastName || ''}`.trim() || '—',
-      p.email || '—',
-      p.uploadedAt ? new Date(p.uploadedAt).toLocaleString() : '—'
-    ]);
+    const headers = ['Request ID', 'User ID', 'Name', 'Email', 'Upload Date', 'Status'];
+    const data = this.pendingPictures.map(p => {
+      let statusStr = p.status || 'Pending';
+      return [
+        `#${p.id}`,
+        `#${p.userId}`,
+        `${p.username || ''}`.trim() || '—',
+        p.email || '—',
+        p.requestedAt ? new Date(p.requestedAt).toLocaleString() : '—',
+        statusStr
+      ];
+    });
 
     this.pdfExportService.generateTableReport(
-      'Pending Profile Pictures',
+      'Profile Picture Requests',
       headers,
       data,
-      'Pending_Profile_Pictures_Report'
+      'Profile_Picture_Requests_Report'
     );
   }
 }
@@ -12552,9 +12497,8 @@ export class PendingApprovalsComponent implements OnInit {
 
 ### File: src\app\features\positions\positions.component.html
 ```html
-<!-- Top Row: Title and Primary Actions -->
 <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-3">
-    <!-- Title Section -->
+    
     <div class="d-flex align-items-center mt-1">
         <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
             <i class="bi bi-briefcase-fill fs-4"></i>
@@ -12564,8 +12508,7 @@ export class PendingApprovalsComponent implements OnInit {
             <p class="text-muted mb-0 small">{{ 'Manage company job titles and roles' | t }}</p>
         </div>
     </div>
-
-    <!-- Primary Action Buttons -->
+    
     <div class="d-flex gap-2">
         <button class="btn btn-primary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="openModal()">
             <i class="bi bi-plus-lg" [class.me-md-1]="true"></i> 
@@ -12573,8 +12516,6 @@ export class PendingApprovalsComponent implements OnInit {
         </button>
     </div>
 </div>
-
-<!-- Bottom Row: Secondary Actions -->
 <div class="d-flex justify-content-end align-items-center mb-4 flex-wrap gap-3 bg-white p-3 rounded-4 shadow-sm border border-light">
     <div class="d-flex gap-2">
         <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
@@ -12587,7 +12528,6 @@ export class PendingApprovalsComponent implements OnInit {
         </button>
     </div>
 </div>
-
 @if (isLoading) {
 <div class="text-center my-5">
     <div class="spinner-border text-primary" role="status"></div>
@@ -12649,7 +12589,6 @@ export class PendingApprovalsComponent implements OnInit {
     </div>
 </div>
 }
-
 <div class="modal fade" id="positionModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg">
@@ -12663,7 +12602,6 @@ export class PendingApprovalsComponent implements OnInit {
                 <button type="button" class="btn-close shadow-none"
                     data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <div class="modal-body p-4">
                 <form #positionForm="ngForm">
                     <div class="row g-3">
@@ -12675,7 +12613,6 @@ export class PendingApprovalsComponent implements OnInit {
                                 [(ngModel)]="positionData.title" required
                                 placeholder="e.g. Software Engineer">
                         </div>
-
                         <div class="col-12">
                             <label
                                 class="fw-bold mb-1 small text-uppercase text-muted">Department
@@ -12691,7 +12628,6 @@ export class PendingApprovalsComponent implements OnInit {
                                 }
                             </select>
                         </div>
-
                         <div class="col-6 mt-4">
                             <label
                                 class="fw-bold mb-1 small text-uppercase text-muted">Minimum
@@ -12700,7 +12636,6 @@ export class PendingApprovalsComponent implements OnInit {
                                 name="sMin" [(ngModel)]="positionData.salaryMin"
                                 min="0" required>
                         </div>
-
                         <div class="col-6 mt-4">
                             <label
                                 class="fw-bold mb-1 small text-uppercase text-muted">Maximum
@@ -12712,7 +12647,6 @@ export class PendingApprovalsComponent implements OnInit {
                     </div>
                 </form>
             </div>
-
             <div class="modal-footer bg-light border-top-0">
                 <button type="button" class="btn btn-secondary px-4 fw-bold"
                     data-bs-dismiss="modal">Cancel</button>
@@ -12728,11 +12662,8 @@ export class PendingApprovalsComponent implements OnInit {
         </div>
     </div>
 </div>
-
 <style>
-
-</style>
-
+</style>
 ```
 
 ### File: src\app\features\positions\positions.component.ts
@@ -12959,10 +12890,9 @@ export class PositionsComponent implements OnInit {
 ### File: src\app\features\salary\salary.component.html
 ```html
 <div class="page-container p-4">
-
-    <!-- Top Row: Title and Primary Actions -->
+    
     <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
-        <!-- Title Section -->
+        
         <div class="d-flex align-items-center">
             <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
                 <i class="bi bi-cash-stack fs-4"></i>
@@ -12972,8 +12902,7 @@ export class PositionsComponent implements OnInit {
                 <p class="text-muted small mb-0">{{ 'View and manage employee payroll records' | t }}</p>
             </div>
         </div>
-
-        <!-- Primary Action Buttons -->
+        
         <div class="d-flex gap-2" *ngIf="isAdmin">
             <button
                 class="btn btn-success px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
@@ -12996,20 +12925,18 @@ export class PositionsComponent implements OnInit {
             </button>
         </div>
     </div>
-
-    <!-- Bottom Row: Search, Filters, and Secondary Actions -->
+    
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3 bg-white p-3 rounded-4 shadow-sm border border-light">
         <div class="d-flex align-items-center gap-2 flex-grow-1 flex-wrap">
-            <!-- Search -->
+            
             <div class="input-group shadow-sm" style="max-width: 350px; min-width: 200px;">
                 <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
                 <input type="text" class="form-control border-start-0 ps-0"
                     placeholder="{{ 'Search by name, ID, or amount...' | t }}"
                     [(ngModel)]="salarySearchQuery"
-                    (input)="filterSalariesLocal()">
+                    (input)="filterSalaries()">
             </div>
-
-            <!-- Filter Dropdown -->
+            
             <div class="dropdown">
                 <button class="btn btn-outline-secondary shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Filter Salaries">
                     <i class="bi bi-funnel-fill"></i>
@@ -13043,8 +12970,7 @@ export class PositionsComponent implements OnInit {
                     </div>
                 </div>
             </div>
-
-            <!-- View Toggle -->
+            
             <button *ngIf="isAdminOrHR && !isAdmin"
                 class="btn btn-outline-primary px-3 px-md-4 py-2 rounded-3 shadow-sm text-nowrap"
                 (click)="toggleViewAll()"
@@ -13053,8 +12979,7 @@ export class PositionsComponent implements OnInit {
                 <span class="d-none d-md-inline">{{ isViewingAll ? ('My Salaries' | t) : ('View All' | t) }}</span>
             </button>
         </div>
-
-        <!-- Export Buttons -->
+        
         <div class="d-flex gap-2">
             <button class="btn btn-outline-danger px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap" (click)="exportToPDF()" title="Export to PDF">
                 <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i>
@@ -13066,11 +12991,9 @@ export class PositionsComponent implements OnInit {
             </button>
         </div>
     </div>
-
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0 text-nowrap">
-
                 <thead class="bg-light text-muted small text-uppercase"
                     style="letter-spacing: 0.5px;">
                     <tr>
@@ -13096,9 +13019,7 @@ export class PositionsComponent implements OnInit {
                             'Actions' | t }}</th>
                     </tr>
                 </thead>
-
                 <tbody class="border-top-0">
-
                     <ng-container *ngIf="isLoading">
                         <tr *ngFor="let i of [1,2,3,4,5]">
                             <td *ngIf="isAdminOrHR && isViewingAll" class="py-3 px-4">
@@ -13122,7 +13043,6 @@ export class PositionsComponent implements OnInit {
                             <td class="py-3 px-4 text-end"><div class="skeleton-line w-50 ms-auto"></div></td>
                         </tr>
                     </ng-container>
-
                     <tr *ngIf="!isLoading && salariesList.length === 0">
                         <td [colSpan]="(isAdminOrHR && isViewingAll) ? 8 : 7"
                             class="text-center py-5 no-data-td">
@@ -13140,9 +13060,7 @@ export class PositionsComponent implements OnInit {
                             </div>
                         </td>
                     </tr>
-
                     <tr *ngFor="let salary of paginatedSalaries">
-
                         <td *ngIf="isAdminOrHR && isViewingAll"
                             data-label="Employee" class="py-3 px-4">
                             <div class="d-flex align-items-center">
@@ -13202,7 +13120,6 @@ export class PositionsComponent implements OnInit {
                                 {{ salary.status }}
                             </span>
                         </td>
-
                         <td data-label="Actions"
                             class="py-3 px-4 text-end text-nowrap actions-cell">
                             <button
@@ -13221,15 +13138,28 @@ export class PositionsComponent implements OnInit {
                 </tbody>
             </table>
         </div>
-
-        <div *ngIf="salariesList.length > 0"
+        <div *ngIf="totalCount > 0"
             class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <small class="text-muted fw-medium">
-                Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{
-                getMathMin(currentPage * itemsPerPage,
-                salariesList.length) }} of {{ salariesList.length }} entries
-            </small>
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <div class="d-flex align-items-center gap-2">
+                    <label class="small text-muted mb-0 text-nowrap">{{ 'Per page' | t }}:</label>
+                    <select class="form-select form-select-sm border-light-subtle" style="width: 85px;" [(ngModel)]="itemsPerPage" (change)="filterSalaries()">
+                        <option [ngValue]="10">10</option>
+                        <option [ngValue]="25">25</option>
+                        <option [ngValue]="50">50</option>
+                        <option [ngValue]="100">100</option>
+                    </select>
+                </div>
+                <small class="text-muted fw-medium">
+                    Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{
+                    getMathMin(currentPage * itemsPerPage,
+                    totalCount) }} of {{ totalCount }} entries
+                </small>
+            </div>
             <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                    <a class="page-link cursor-pointer px-2" (click)="changePage(1)" title="First Page"><i class="bi bi-chevron-double-left"></i></a>
+                </li>
                 <li class="page-item" [class.disabled]="currentPage === 1">
                     <a class="page-link cursor-pointer px-3"
                         (click)="changePage(currentPage - 1)">Previous</a>
@@ -13243,11 +13173,13 @@ export class PositionsComponent implements OnInit {
                     <a class="page-link cursor-pointer px-3"
                         (click)="changePage(currentPage + 1)">Next</a>
                 </li>
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                    <a class="page-link cursor-pointer px-2" (click)="changePage(totalPages)" title="Last Page"><i class="bi bi-chevron-double-right"></i></a>
+                </li>
             </ul>
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="salaryModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow rounded-4">
@@ -13272,7 +13204,6 @@ export class PositionsComponent implements OnInit {
                     </div>
                 </div>
                 <form #salaryForm="ngForm">
-
                     <div class="mb-4 position-relative">
                         <label
                             class="form-label fw-semibold text-secondary small">Employee
@@ -13292,12 +13223,10 @@ export class PositionsComponent implements OnInit {
                                 autocomplete="off" required
                                 placeholder="Search by name or ID...">
                         </div>
-
                         <div
                             class="dropdown-menu w-100 shadow-lg border-0 rounded-4 mt-2 py-2"
                             [class.show]="showEmployeeDropdown"
                             style="position: absolute; top: 100%; left: 0; max-height: 250px; overflow-y: auto; z-index: 1050;">
-
                             <ng-container
                                 *ngIf="filteredEmployeesList.length > 0; else noEmployees">
                                 <button type="button"
@@ -13326,7 +13255,6 @@ export class PositionsComponent implements OnInit {
                                         }}</span>
                                 </button>
                             </ng-container>
-
                             <ng-template #noEmployees>
                                 <div class="text-center py-4 text-muted">
                                     <i
@@ -13337,7 +13265,6 @@ export class PositionsComponent implements OnInit {
                             </ng-template>
                         </div>
                     </div>
-
                     <div class="row mb-4">
                         <div class="col-6">
                             <label
@@ -13360,7 +13287,6 @@ export class PositionsComponent implements OnInit {
                                 min="2000">
                         </div>
                     </div>
-
                     <div class="mb-4">
                         <label
                             class="form-label fw-semibold text-secondary small">Base
@@ -13372,7 +13298,6 @@ export class PositionsComponent implements OnInit {
                             [(ngModel)]="salaryData.baseAmount" required
                             min="0">
                     </div>
-
                     <div class="row mb-4">
                         <div class="col-6">
                             <label
@@ -13397,7 +13322,6 @@ export class PositionsComponent implements OnInit {
                                 min="0">
                         </div>
                     </div>
-
                     <div class="mb-2">
                         <label
                             class="form-label fw-semibold text-secondary small">Effective
@@ -13407,7 +13331,6 @@ export class PositionsComponent implements OnInit {
                             name="effectiveDate"
                             [(ngModel)]="salaryData.effectiveDate" required>
                     </div>
-
                 </form>
             </div>
             <div class="modal-footer border-top-0 pb-4 px-4">
@@ -13426,7 +13349,6 @@ export class PositionsComponent implements OnInit {
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="payrollWizardModal" tabindex="-1"
     aria-labelledby="payrollWizardModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -13438,9 +13360,8 @@ export class PositionsComponent implements OnInit {
                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-
             <div class="modal-body p-4 bg-light">
-                <!-- Step 1: Configuration -->
+                
                 <div *ngIf="wizardStep === 1">
                     <h6 class="text-primary mb-3"><i
                             class="bi bi-1-circle-fill me-2"></i>Step 1:
@@ -13472,8 +13393,7 @@ export class PositionsComponent implements OnInit {
                         </div>
                     </div>
                 </div>
-
-                <!-- Step 2: Preview -->
+                
                 <div *ngIf="wizardStep === 2">
                     <h6 class="text-success mb-3">
                         <i class="bi bi-2-circle-fill me-2"></i>Step 2: Preview
@@ -13484,13 +13404,11 @@ export class PositionsComponent implements OnInit {
                             <i class="bi bi-arrow-left"></i> Back
                         </button>
                     </h6>
-
                     <div *ngIf="isPreviewLoading" class="text-center py-4">
                         <div class="spinner-border text-primary" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>
                     </div>
-
                     <div *ngIf="!isPreviewLoading && previewData">
                         <div class="table-responsive"
                             style="max-height: 300px;">
@@ -13531,7 +13449,6 @@ export class PositionsComponent implements OnInit {
                                 </tbody>
                             </table>
                         </div>
-
                         <div
                             class="mt-4 p-3 bg-white rounded-3 shadow-sm border border-success">
                             <div
@@ -13554,7 +13471,6 @@ export class PositionsComponent implements OnInit {
                     </div>
                 </div>
             </div>
-
             <div class="modal-footer border-0 bg-light">
                 <button type="button" class="btn btn-light"
                     data-bs-dismiss="modal">Cancel</button>
@@ -13577,14 +13493,11 @@ export class PositionsComponent implements OnInit {
         </div>
     </div>
 </div>
-
 <style>
     .cursor-pointer {
         cursor: pointer;
     }
-
-</style>
-
+</style>
 ```
 
 ### File: src\app\features\salary\salary.component.ts
@@ -13620,7 +13533,6 @@ export class SalaryComponent implements OnInit {
   private pdfExportService = inject(PdfExportService);
   private excelExportService = inject(ExcelExportService);
 
-  allSalariesList: any[] = [];
   salariesList: any[] = [];
   isLoading: boolean = true;
   isAdmin: boolean = false;
@@ -13644,7 +13556,6 @@ export class SalaryComponent implements OnInit {
   uniqueYears: number[] = [];
   departments: any[] = [];
 
-  // Wizard state
   wizardStep = 1;
   previewMonth = new Date().getMonth() + 1;
   previewYear = new Date().getFullYear();
@@ -13654,20 +13565,21 @@ export class SalaryComponent implements OnInit {
   payrollWizardModal: any;
 
   currentPage: number = 1;
-  itemsPerPage: number = 7;
+  itemsPerPage: number = 10;
+  totalCount: number = 0;
 
   get paginatedSalaries() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.salariesList.slice(startIndex, startIndex + this.itemsPerPage);
+    return this.salariesList;
   }
 
   get totalPages() {
-    return Math.ceil(this.salariesList.length / this.itemsPerPage) || 1;
+    return Math.ceil(this.totalCount / this.itemsPerPage) || 1;
   }
 
   changePage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+      this.loadSalaries();
     }
   }
 
@@ -13693,6 +13605,11 @@ export class SalaryComponent implements OnInit {
         this.isViewingAll = true;
     }
 
+    const currentYear = new Date().getFullYear();
+    for(let i = 0; i < 5; i++) {
+        this.uniqueYears.push(currentYear - i);
+    }
+
     this.loadInitialData();
     if (this.isAdmin) {
       this.loadEmployees();
@@ -13714,11 +13631,10 @@ export class SalaryComponent implements OnInit {
   }
 
   loadEmployees() {
-
-    this.employeeService.getEmployees().subscribe({
+    this.employeeService.getEmployees(1, 1000).subscribe({
       next: (res: any) => {
-        const extractedData = Array.isArray(res) ? res : res?.data || [];
-        this.employeesList = Array.isArray(extractedData) ? extractedData : [];
+        const extractedData = res.items || [];
+        this.employeesList = extractedData;
         this.filteredEmployeesList = [...this.employeesList];
       },
       error: (err: any) => {
@@ -13758,34 +13674,20 @@ export class SalaryComponent implements OnInit {
   }
 
   loadSalaries() {
-
     this.isLoading = true;
     
     const m = this.selectedMonth ? Number(this.selectedMonth) : undefined;
     const y = this.selectedYear ? Number(this.selectedYear) : undefined;
 
     const request = (this.isAdminOrHR && this.isViewingAll)
-      ? this.salaryService.getAllSalaries(m, y)
-      : this.salaryService.getMySalaries(m, y);
+      ? this.salaryService.getAllSalaries(m, y, this.currentPage, this.itemsPerPage, this.salarySearchQuery)
+      : this.salaryService.getMySalaries(m, y, this.currentPage, this.itemsPerPage, this.salarySearchQuery);
 
     request.subscribe({
       next: (res: any) => {
-        const extractedData = Array.isArray(res) ? res : res?.data || [];
-        this.allSalariesList = Array.isArray(extractedData)
-          ? extractedData
-          : [];
-        this.salariesList = [...this.allSalariesList];
-
-        if (!m && !y) {
-          const years = this.allSalariesList
-            .map((s) => s.year)
-            .filter((y) => y != null);
-          this.uniqueYears = Array.from(new Set(years))
-            .sort()
-            .reverse() as number[];
-        }
-
-        this.filterSalariesLocal();
+        this.salariesList = res.items || [];
+        this.totalCount = res.totalCount || 0;
+        this.hasDraftSalaries = this.salariesList.some(s => s.status === 'Draft');
         this.isLoading = false;
       },
       error: (err) => {
@@ -13796,36 +13698,8 @@ export class SalaryComponent implements OnInit {
   }
 
   filterSalaries() {
-    this.loadSalaries();
-  }
-
-  filterSalariesLocal() {
-    this.salariesList = this.allSalariesList.filter((s) => {
-      let matchesSearch = true;
-      if (this.salarySearchQuery) {
-        const query = this.salarySearchQuery.toLowerCase();
-        const empName = (s.employeeName || '').toLowerCase();
-        const empId = String(s.employeeId || '');
-        const baseAmt = String(s.baseAmount || '');
-        matchesSearch =
-          empName.includes(query) ||
-          empId.includes(query) ||
-          baseAmt.includes(query);
-      }
-      return matchesSearch;
-    });
-
-    if (this.salariesList.length > 0) {
-      this.salariesList.sort((a, b) => {
-        if (b.year !== a.year) {
-          return b.year - a.year;
-        }
-        return b.month - a.month;
-      });
-    }
-
-    this.hasDraftSalaries = this.salariesList.some(s => s.status === 'Draft');
     this.currentPage = 1;
+    this.loadSalaries();
   }
 
   toggleViewAll() {
@@ -13833,6 +13707,7 @@ export class SalaryComponent implements OnInit {
     this.salarySearchQuery = '';
     this.selectedYear = '';
     this.selectedMonth = '';
+    this.currentPage = 1;
     this.loadSalaries();
   }
 
@@ -13931,7 +13806,6 @@ export class SalaryComponent implements OnInit {
   }
 
   generatePayroll() {
-    // We now use openWizard instead. Leaving this empty or removing it.
     this.openWizard();
   }
 
@@ -13963,9 +13837,7 @@ export class SalaryComponent implements OnInit {
   }
 
   saveSalary() {
-
     this.isProcessing = true;
-
     const isoDate = new Date(this.salaryData.effectiveDate).toISOString();
 
     const base = Number(this.salaryData.baseAmount) || 0;
@@ -14092,7 +13964,7 @@ export class SalaryComponent implements OnInit {
     ]);
 
     const additionalInfo = [
-      { label: 'Total Records', value: String(this.salariesList.length) },
+      { label: 'Total Records', value: String(this.totalCount) },
       { label: 'Filtered Year', value: this.selectedYear ? this.selectedYear : 'All' },
       { label: 'Filtered Month', value: this.selectedMonth ? this.selectedMonth : 'All' }
     ];
@@ -14120,10 +13992,7 @@ export class SalaryComponent implements OnInit {
                 <i class="bi bi-list fs-4 text-primary"></i>
             </button>
         </div>
-
         <ul class="navbar-nav ms-auto align-items-center flex-row gap-1">
-
-            
             @if (pwaService.canInstall) {
             <li class="nav-item me-3">
                 <button
@@ -14135,8 +14004,6 @@ export class SalaryComponent implements OnInit {
                 </button>
             </li>
             }
-
-            
             <li class="nav-item me-3 dropdown">
                 <button
                     class="btn btn-light btn-sm border-0 shadow-none settings-btn"
@@ -14144,20 +14011,15 @@ export class SalaryComponent implements OnInit {
                     aria-expanded="false">
                     <i class="bi bi-gear-fill fs-5" style="color: #8b5cf6;"></i>
                 </button>
-
                 <div class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-0 settings-panel overflow-hidden"
                     aria-labelledby="settingsDropdown"
                     style="width: 280px;">
-
-                    
                     <div class="p-3 border-bottom" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
                         <div class="d-flex align-items-center gap-2">
                             <i class="bi bi-gear-wide-connected text-white fs-5"></i>
                             <span class="fw-bold text-white">{{ 'Settings' | t }}</span>
                         </div>
                     </div>
-
-                    
                     <div class="px-3 py-3 border-bottom">
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="d-flex align-items-center gap-2">
@@ -14180,8 +14042,6 @@ export class SalaryComponent implements OnInit {
                             </div>
                         </div>
                     </div>
-
-                    <!-- Language Settings -->
                     <div class="px-3 py-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="d-flex align-items-center gap-2">
@@ -14203,15 +14063,12 @@ export class SalaryComponent implements OnInit {
                     </div>
                 </div>
             </li>
-
-            
             <li class="nav-item dropdown" style="margin-inline-end: 0.5rem;">
                 <button
                     class="btn btn-light btn-sm border-0 position-relative shadow-none"
                     id="notificationDropdown" data-bs-toggle="dropdown"
                     aria-expanded="false">
                     <i class="bi bi-bell-fill fs-5" style="color: #f59e0b;"></i>
-
                     @if (unreadCount > 0) {
                     <span
                         class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -14219,11 +14076,9 @@ export class SalaryComponent implements OnInit {
                     </span>
                     }
                 </button>
-
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-0 notification-dropdown"
                     aria-labelledby="notificationDropdown"
                     style="max-height: 400px; overflow-y: auto;">
-
                     <li
                         class="p-3 border-bottom bg-light d-flex justify-content-between align-items-center">
                         <div>
@@ -14249,14 +14104,12 @@ export class SalaryComponent implements OnInit {
                             </button>
                         </div>
                     </li>
-
                     @for (note of notifications; track note.id) {
                     <li>
                         <a class="dropdown-item py-3 border-bottom"
                             href="javascript:void(0)"
                             [class.bg-light]="!note.isRead"
                             (click)="markAsRead(note)">
-
                             <div
                                 class="d-flex w-100 justify-content-between align-items-start mb-1">
                                 <div>
@@ -14271,7 +14124,6 @@ export class SalaryComponent implements OnInit {
                                     <i class="bi bi-x-circle fs-6"></i>
                                 </button>
                             </div>
-
                             <p class="mb-0 text-secondary text-wrap pe-4"
                                 style="font-size: 0.85rem;">
                                 {{ note.message }}
@@ -14287,13 +14139,10 @@ export class SalaryComponent implements OnInit {
                     }
                 </ul>
             </li>
-
             <li class="nav-item">
                 <div class="d-flex align-items-center">
-
                 </div>
             </li>
-
         </ul>
     </div>
 </nav>
@@ -14627,7 +14476,6 @@ export class ImageCropperModalComponent {
   }
   
   cropperReady() {
-    // cropper ready
   }
   
   loadImageFailed() {
@@ -14942,7 +14790,7 @@ export class SidebarComponent implements OnInit {
     <link rel="apple-touch-icon" sizes="192x192" href="/kawadir-logo.png?v=3">
     <link rel="manifest" href="manifest.webmanifest">
     <meta name="theme-color" content="#0d6efd">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Kawadir">
 </head>

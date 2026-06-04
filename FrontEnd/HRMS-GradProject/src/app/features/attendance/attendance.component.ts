@@ -84,35 +84,56 @@ export class AttendanceComponent implements OnInit {
   loadAllAttendance() {
     this.isLoading = true;
     const d = this.selectedDate || undefined;
-    this.attendanceService.getAllAttendance(d, this.currentPage, this.itemsPerPage, this.searchQuery, this.selectedStatus).subscribe({
-      next: (res: any) => {
-        this.attendanceRecords = res.items || [];
-        this.totalCount = res.totalCount || 0;
-        this.isLoading = false;
-      },
-      error: () => {
-        this.isLoading = false;
-      },
-    });
+    this.attendanceService
+      .getAllAttendance(
+        d,
+        this.currentPage,
+        this.itemsPerPage,
+        this.searchQuery,
+        this.selectedStatus,
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.attendanceRecords = res.items || [];
+          this.totalCount = res.totalCount || 0;
+          this.isLoading = false;
+        },
+        error: () => {
+          this.isLoading = false;
+        },
+      });
   }
 
   loadMyAttendance() {
     this.isLoading = true;
     const d = this.selectedDate || undefined;
-    this.attendanceService.getMyAttendance(d, this.currentPage, this.itemsPerPage, this.searchQuery, this.selectedStatus).subscribe({
-      next: (res: any) => {
-        this.attendanceRecords = res.items || [];
-        this.totalCount = res.totalCount || 0;
-        if (this.currentPage === 1 && !this.selectedDate && !this.searchQuery && !this.selectedStatus) {
+    this.attendanceService
+      .getMyAttendance(
+        d,
+        this.currentPage,
+        this.itemsPerPage,
+        this.searchQuery,
+        this.selectedStatus,
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.attendanceRecords = res.items || [];
+          this.totalCount = res.totalCount || 0;
+          if (
+            this.currentPage === 1 &&
+            !this.selectedDate &&
+            !this.searchQuery &&
+            !this.selectedStatus
+          ) {
             this.analyzeSessionStatus(this.attendanceRecords);
-        }
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error fetching my attendance:', err);
-        this.isLoading = false;
-      },
-    });
+          }
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error fetching my attendance:', err);
+          this.isLoading = false;
+        },
+      });
   }
 
   filterRecords() {
@@ -124,8 +145,8 @@ export class AttendanceComponent implements OnInit {
   }
 
   onFilterChange() {
-      this.currentPage = 1;
-      this.filterRecords();
+    this.currentPage = 1;
+    this.filterRecords();
   }
 
   private analyzeSessionStatus(records: any[]) {
@@ -174,7 +195,7 @@ export class AttendanceComponent implements OnInit {
           Swal.fire({
             icon: 'success',
             title: 'Clocked In ✅',
-            text: `Have a great day! Clocked in at ${timeString}`,
+            text: `Clocked in at ${timeString}`,
             timer: 2000,
             showConfirmButton: false,
           });
@@ -308,7 +329,7 @@ export class AttendanceComponent implements OnInit {
       this.isAdmin ? 'Employee Attendance Tracking' : 'My Attendance Tracking',
       headers,
       data,
-      'Attendance_Report'
+      'Attendance_Report',
     );
   }
 }

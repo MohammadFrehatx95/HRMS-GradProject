@@ -41,7 +41,8 @@ public class MeetingService(
             .GetAllQueryable()
             .Include(m => m.Employee).ThenInclude(e => e.User)
             .Include(m => m.Organizer)
-            .OrderByDescending(m => m.ScheduledAt);
+            .OrderByDescending(m => m.Status == MeetingStatus.Scheduled)
+            .ThenByDescending(m => m.ScheduledAt);
 
         var total = await query.CountAsync();
         var items = await query
@@ -62,7 +63,8 @@ public class MeetingService(
             .Include(m => m.Employee).ThenInclude(e => e.User)
             .Include(m => m.Organizer)
             .Where(m => m.EmployeeId == employeeId)
-            .OrderByDescending(m => m.ScheduledAt);
+            .OrderByDescending(m => m.Status == MeetingStatus.Scheduled)
+            .ThenByDescending(m => m.ScheduledAt);
 
         var total = await query.CountAsync();
         var items = await query

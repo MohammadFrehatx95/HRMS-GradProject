@@ -7,6 +7,8 @@ using System.Text;
 using System.Text.Json.Serialization;
 using HRMS_API.Middleware;
 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();

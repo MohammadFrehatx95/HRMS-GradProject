@@ -20,5 +20,6 @@ namespace Application.Services.Interfaces
         Task<PayrollPreviewResultDto> PreviewBatchAsync(GeneratePayrollDto dto);
         Task<int> GenerateBatchAsync(GeneratePayrollDto dto);
         Task<int> MarkAsPaidAsync(int month, int year);
+        Task<SalaryDto> ApproveAsync(int id);
     }
 }

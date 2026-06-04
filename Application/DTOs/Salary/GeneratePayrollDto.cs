@@ -13,5 +13,7 @@ namespace Application.DTOs.Salary
         public int Year { get; set; }
 
         public int? DepartmentId { get; set; }
+
+        public List<int> ExcludedEmployeeIds { get; set; } = new();
     }
 }
