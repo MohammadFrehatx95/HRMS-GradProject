@@ -364,3 +364,4 @@ FodyWeavers.xsd
 # Sensitive config files
 appsettings.Development.json
 usersecrets.json
+*.rar
