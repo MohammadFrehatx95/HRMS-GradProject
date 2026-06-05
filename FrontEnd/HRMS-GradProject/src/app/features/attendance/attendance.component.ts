@@ -157,7 +157,16 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     let d = undefined;
     if (this.selectedDate) {
-      const dateObj = new Date(this.selectedDate);
+      let dateObj = new Date(this.selectedDate);
+      // If Invalid Date, it might be due to DD/MM/YYYY format from mask
+      if (isNaN(dateObj.getTime()) && typeof this.selectedDate === 'string') {
+        const parts = this.selectedDate.split('/');
+        if (parts.length === 3) {
+          // Attempt parsing as YYYY-MM-DD
+          dateObj = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+        }
+      }
+      
       if (!isNaN(dateObj.getTime())) {
         d = new Date(dateObj.getTime() - (dateObj.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
       }
@@ -186,7 +195,16 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     let d = undefined;
     if (this.selectedDate) {
-      const dateObj = new Date(this.selectedDate);
+      let dateObj = new Date(this.selectedDate);
+      // If Invalid Date, it might be due to DD/MM/YYYY format from mask
+      if (isNaN(dateObj.getTime()) && typeof this.selectedDate === 'string') {
+        const parts = this.selectedDate.split('/');
+        if (parts.length === 3) {
+          // Attempt parsing as YYYY-MM-DD
+          dateObj = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+        }
+      }
+      
       if (!isNaN(dateObj.getTime())) {
         d = new Date(dateObj.getTime() - (dateObj.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
       }
