@@ -9,14 +9,11 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { LeaveService } from '../../core/services/leave.service';
 import Swal from 'sweetalert2';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-leave-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, MatDatepickerModule, MatNativeDateModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './leave-form.component.html',
 })
 export class LeaveFormComponent {

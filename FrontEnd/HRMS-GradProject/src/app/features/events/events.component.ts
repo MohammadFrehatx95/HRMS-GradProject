@@ -5,14 +5,11 @@ import { EventService } from '../../core/services/event.service';
 import { AuthService } from '../../core/services/auth.service';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import Swal from 'sweetalert2';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, MatDatepickerModule, MatNativeDateModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './events.component.html',
   styleUrl: './events.component.css'
 })

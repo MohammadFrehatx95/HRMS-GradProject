@@ -24,31 +24,13 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold text-muted small">Start Date</label>
-                        <div class="input-group shadow-sm">
-                            <input class="form-control bg-light border-end-0" matInput
-                                formControlName="startDate"
-                                [matDatepicker]="startPicker"
-                                
-                                placeholder="DD/MM/YYYY" style="z-index: 1;">
-                            <span class="input-group-text bg-light border-start-0 p-0" style="z-index: 2;">
-                                <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
-                            </span>
-                            <mat-datepicker #startPicker></mat-datepicker>
-                        </div>
+                        <input type="date" class="form-control bg-light shadow-sm"
+                            formControlName="startDate">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold text-muted small">End Date</label>
-                        <div class="input-group shadow-sm">
-                            <input class="form-control bg-light border-end-0" matInput
-                                formControlName="endDate"
-                                [matDatepicker]="endPicker"
-                                
-                                placeholder="DD/MM/YYYY" style="z-index: 1;">
-                            <span class="input-group-text bg-light border-start-0 p-0" style="z-index: 2;">
-                                <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
-                            </span>
-                            <mat-datepicker #endPicker></mat-datepicker>
-                        </div>
+                        <input type="date" class="form-control bg-light shadow-sm"
+                            formControlName="endDate">
                     </div>
                 </div>
 

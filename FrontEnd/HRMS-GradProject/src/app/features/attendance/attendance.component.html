@@ -96,16 +96,8 @@
                     [(ngModel)]="searchQuery" 
                     (input)="onFilterChange()">
             </div>
-            <div class="input-group shadow-sm" style="max-width: 250px;">
-                <input class="form-control bg-white border-end-0" matInput
-                    [(ngModel)]="selectedDate" (ngModelChange)="onFilterChange()" (dateChange)="onFilterChange()"
-                    [matDatepicker]="attPicker"
-                    placeholder="DD/MM/YYYY" style="z-index: 1;">
-                <span class="input-group-text bg-white border-start-0 p-0" style="z-index: 2;">
-                    <mat-datepicker-toggle matIconSuffix [for]="attPicker"></mat-datepicker-toggle>
-                </span>
-                <mat-datepicker #attPicker></mat-datepicker>
-            </div>
+            <input type="date" class="form-control bg-white shadow-sm" style="max-width: 250px;"
+                [(ngModel)]="selectedDate" (change)="onFilterChange()">
             <div class="dropdown">
                 <button class="btn btn-outline-secondary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-filter" [class.me-md-1]="true"></i> 

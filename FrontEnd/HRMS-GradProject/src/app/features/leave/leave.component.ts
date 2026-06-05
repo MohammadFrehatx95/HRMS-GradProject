@@ -10,16 +10,13 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { ExcelExportService } from '../../core/services/excel-export.service';
 import { PdfExportService } from '../../core/services/pdf-export.service';
 import { ImageCropperModalComponent } from '../../shared/image-cropper-modal/image-cropper-modal.component';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { NgxMaskDirective } from 'ngx-mask';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-leave',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, ImageCropperModalComponent, MatDatepickerModule, MatNativeDateModule],
+  imports: [CommonModule, FormsModule, TranslatePipe, ImageCropperModalComponent],
   templateUrl: './leave.component.html',
 })
 export class LeaveComponent implements OnInit {

@@ -10,14 +10,11 @@ import { ExcelExportService } from '../../core/services/excel-export.service';
 import { PdfExportService } from '../../core/services/pdf-export.service';
 import { SettingsService } from '../../core/services/settings.service';
 import { TRANSLATIONS } from '../../core/i18n/translations';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-attendance',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, RouterLink, MatDatepickerModule, MatNativeDateModule],
+  imports: [CommonModule, FormsModule, TranslatePipe, RouterLink],
   templateUrl: './attendance.component.html',
 })
 export class AttendanceComponent implements OnInit, OnDestroy {

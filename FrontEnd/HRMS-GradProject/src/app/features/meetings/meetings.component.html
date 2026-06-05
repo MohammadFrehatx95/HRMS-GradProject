@@ -214,17 +214,8 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold text-secondary">{{ 'Date' | t }} <span class="text-danger">*</span></label>
-                            <div class="input-group shadow-sm">
-                                <input class="form-control bg-light border-end-0" matInput
-                                    formControlName="meetingDate" [required]="true"
-                                    [matDatepicker]="meetPicker"
-                                    
-                                    placeholder="DD/MM/YYYY" style="z-index: 1;">
-                                <span class="input-group-text bg-light border-start-0 p-0" style="z-index: 2;">
-                                    <mat-datepicker-toggle matIconSuffix [for]="meetPicker"></mat-datepicker-toggle>
-                                </span>
-                                <mat-datepicker #meetPicker></mat-datepicker>
-                            </div>
+                            <input type="date" class="form-control bg-light shadow-sm"
+                                formControlName="meetingDate" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold text-secondary">{{ 'Time' | t }} <span class="text-danger">*</span></label>

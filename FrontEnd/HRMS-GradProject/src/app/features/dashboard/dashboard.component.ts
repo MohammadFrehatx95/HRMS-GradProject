@@ -26,9 +26,6 @@ import { ExcelExportService } from '../../core/services/excel-export.service';
 
 Chart.register(...registerables);
 
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-dashboard',
@@ -38,9 +35,7 @@ import { NgxMaskDirective } from 'ngx-mask';
     TranslatePipe,
     RouterLink,
     ReactiveFormsModule,
-    FormsModule,
-    MatDatepickerModule,
-    MatNativeDateModule
+    FormsModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
