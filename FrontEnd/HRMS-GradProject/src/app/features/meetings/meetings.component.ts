@@ -379,12 +379,12 @@ export class MeetingsComponent implements OnInit {
     const s = String(status);
     switch (s) {
       case '0':
-      case 'Scheduled': return 'bg-primary';
+      case 'Scheduled': return 'bg-primary text-white';
       case '1':
-      case 'Completed': return 'bg-success';
+      case 'Completed': return 'bg-success text-white';
       case '2':
-      case 'Cancelled': return 'bg-danger';
-      default: return 'bg-secondary';
+      case 'Cancelled': return 'bg-danger text-white';
+      default: return 'bg-secondary text-white';
     }
   }
 
