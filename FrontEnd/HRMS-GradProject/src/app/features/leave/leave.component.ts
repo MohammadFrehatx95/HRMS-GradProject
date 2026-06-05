@@ -274,12 +274,20 @@ export class LeaveComponent implements OnInit {
   }
 
   submitLeaveRequest() {
-    if (this.leaveData.startDate < this.getToday()) {
+    const start = new Date(this.leaveData.startDate);
+    start.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (start.getTime() < today.getTime()) {
       Swal.fire('Invalid Date', 'Start Date cannot be in the past.', 'warning');
       return;
     }
 
-    if (this.leaveData.endDate < this.leaveData.startDate) {
+    const end = new Date(this.leaveData.endDate);
+    end.setHours(0, 0, 0, 0);
+
+    if (end.getTime() < start.getTime()) {
       Swal.fire(
         'Invalid Date',
         'End Date cannot be before the Start Date.',

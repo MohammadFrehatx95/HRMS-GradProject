@@ -194,6 +194,7 @@ D:\PROJECTS\HRMS-TEAM\FRONTEND\HRMS-GRADPROJECT\SRC
   },
   "private": true,
   "dependencies": {
+    "@angular/animations": "^21.2.16",
     "@angular/cdk": "^19.2.19",
     "@angular/common": "^19.2.0",
     "@angular/compiler": "^19.2.0",
@@ -211,10 +212,13 @@ D:\PROJECTS\HRMS-TEAM\FRONTEND\HRMS-GRADPROJECT\SRC
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
     "chart.js": "^4.5.1",
+    "glob": "^13.0.6",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.7",
     "ngx-image-cropper": "^9.1.6",
+    "ngx-mask": "^21.0.1",
     "rxjs": "~7.8.0",
+    "strip-comments": "^2.0.1",
     "sweetalert2": "^11.26.24",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
@@ -318,6 +322,9 @@ import { AuthService } from './core/services/auth.service';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { provideServiceWorker } from '@angular/service-worker';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
 
 function initializeApp(authService: AuthService) {
   return () => {
@@ -335,7 +342,9 @@ function initializeApp(authService: AuthService) {
 
 export const appConfig: ApplicationConfig = {
   providers: [
-
+    provideAnimationsAsync(),
+    provideNativeDateAdapter(),
+    provideEnvironmentNgxMask(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withHashLocation()),
     provideHttpClient(withInterceptors([authInterceptor])),
@@ -355,125 +364,6 @@ export const appConfig: ApplicationConfig = {
 
 ### File: src\app\app.routes.ts
 ```typescript
-import { Routes } from '@angular/router';
-import { DashboardComponent } from './features/dashboard/dashboard.component';
-import { EmployeesComponent } from './features/employees/employees.component';
-import { DepartmentsComponent } from './features/departments/departments.component';
-import { LeaveComponent } from './features/leave/leave.component';
-import { AttendanceComponent } from './features/attendance/attendance.component';
-import { SalaryComponent } from './features/salary/salary.component';
-import { EmployeeFormComponent } from './features/employee-form/employee-form.component';
-import { LoginComponent } from './features/auth/login/login.component';
-import { authGuard, noAuthGuard } from './core/guards/auth.guard';
-import { adminGuard } from './core/guards/admin.guard';
-import { hrGuard } from './core/guards/hr.guard';
-import { AllAttendanceComponent } from './features/all-attendance/all-attendance.component';
-import { PositionsComponent } from './features/positions/positions.component';
-import { RegisterComponent } from './features/auth/register/register.component';
-
-export const routes: Routes = [
-  { path: 'login', component: LoginComponent, canActivate: [noAuthGuard] },
-
-  {
-    path: 'register',
-    component: RegisterComponent,
-    canActivate: [authGuard, adminGuard],
-  },
-
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-
-  {
-    path: 'dashboard',
-    component: DashboardComponent,
-    canActivate: [authGuard],
-  },
-  {
-    path: 'events',
-    loadComponent: () => import('./features/events/events.component').then(m => m.EventsComponent),
-    canActivate: [authGuard]
-  },
-  {
-    path: 'meetings',
-    loadComponent: () => import('./features/meetings/meetings.component').then(c => c.MeetingsComponent),
-    canActivate: [authGuard]
-  },
-  {
-    path: 'leave-form',
-    loadComponent: () =>
-      import('./features/leave-form/leave-form.component').then(
-        (m) => m.LeaveFormComponent,
-      ),
-    canActivate: [authGuard],
-  },
-  {
-    path: 'employees',
-    component: EmployeesComponent,
-    canActivate: [authGuard],
-  },
-  {
-    path: 'departments',
-    component: DepartmentsComponent,
-    canActivate: [authGuard, hrGuard],
-  },
-
-  { path: 'leave', component: LeaveComponent, canActivate: [authGuard] },
-  {
-    path: 'attendance',
-    component: AttendanceComponent,
-    canActivate: [authGuard],
-  },
-  {
-    path: 'all-attendance',
-    component: AllAttendanceComponent,
-    canActivate: [authGuard, hrGuard],
-  },
-
-  { path: 'salary', component: SalaryComponent, canActivate: [authGuard] },
-  {
-    path: 'employee-form',
-    component: EmployeeFormComponent,
-    canActivate: [authGuard, hrGuard],
-  },
-  {
-    path: 'positions',
-    component: PositionsComponent,
-    canActivate: [authGuard, hrGuard],
-  },
-  {
-    path: 'my-profile',
-    loadComponent: () =>
-      import('./features/my-profile/my-profile.component').then(
-        (m) => m.MyProfileComponent,
-      ),
-    canActivate: [authGuard],
-  },
-  {
-    path: 'ai-assistant',
-    loadComponent: () =>
-      import('./features/ai-assistant/ai-assistant.component').then(
-        (m) => m.AiAssistantComponent,
-      ),
-    canActivate: [authGuard],
-  },
-  {
-    path: 'payroll-adjustments',
-    loadComponent: () =>
-      import('./features/payroll-adjustments/payroll-adjustments.component').then(
-        (m) => m.PayrollAdjustmentsComponent,
-      ),
-    canActivate: [authGuard],
-  },
-  {
-    path: 'pending-approvals',
-    loadComponent: () =>
-      import('./features/pending-approvals/pending-approvals.component').then(
-        (m) => m.PendingApprovalsComponent,
-      ),
-    canActivate: [authGuard, hrGuard],
-  },
-  { path: '**', redirectTo: 'login' },
-];
-
 ```
 
 ### File: src\app\core\guards\admin.guard.ts
@@ -940,6 +830,15 @@ export class AttendanceService {
         if (response && response.data) return response.data;
         return response;
       }),
+    );
+  }
+
+  getAttendanceSettings(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/settings`).pipe(
+      map((response) => {
+        if (response && response.data) return response.data;
+        return response;
+      })
     );
   }
 }
@@ -2094,8 +1993,8 @@ export class SalaryService {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 
-  generateBatch(month: number, year: number, departmentId?: number | null): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/generate-batch`, { month, year, departmentId });
+  generateBatch(month: number, year: number, departmentId?: number | null, excludedEmployeeIds: number[] = []): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/generate-batch`, { month, year, departmentId, excludedEmployeeIds });
   }
 
   previewBatch(month: number, year: number, departmentId?: number | null): Observable<any> {
@@ -2105,6 +2004,10 @@ export class SalaryService {
   markAsPaid(month: number, year: number): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/mark-paid`, { month, year });
   }
+
+  approveSalary(id: number): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}/approve`, {});
+  }
 }
 
 
@@ -2112,68 +2015,6 @@ export class SalaryService {
 
 ### File: src\app\core\services\settings.service.ts
 ```typescript
-import { Injectable, signal } from '@angular/core';
-
-@Injectable({
-  providedIn: 'root',
-})
-export class SettingsService {
-
-  private _isDarkMode = signal(false);
-
-  private _language = signal<'en' | 'ar'>('en');
-
-  get isDarkMode() {
-    return this._isDarkMode();
-  }
-
-  get language() {
-    return this._language();
-  }
-
-  constructor() {
-    const savedTheme = localStorage.getItem('hrms_theme');
-    const savedLang = localStorage.getItem('hrms_language') as 'en' | 'ar';
-
-    if (savedTheme === 'dark') {
-      this._isDarkMode.set(true);
-      this.applyTheme(true);
-    }
-
-    if (savedLang === 'ar' || savedLang === 'en') {
-      this._language.set(savedLang);
-      this.applyLanguage(savedLang);
-    }
-  }
-
-  toggleTheme() {
-    const newMode = !this._isDarkMode();
-    this._isDarkMode.set(newMode);
-    localStorage.setItem('hrms_theme', newMode ? 'dark' : 'light');
-    this.applyTheme(newMode);
-  }
-
-  toggleLanguage() {
-    const newLang = this._language() === 'en' ? 'ar' : 'en';
-    this._language.set(newLang);
-    localStorage.setItem('hrms_language', newLang);
-    this.applyLanguage(newLang);
-  }
-
-  private applyTheme(isDark: boolean) {
-    document.documentElement.setAttribute(
-      'data-theme',
-      isDark ? 'dark' : 'light',
-    );
-    document.body.classList.toggle('dark-mode', isDark);
-  }
-
-  private applyLanguage(lang: 'en' | 'ar') {
-    document.documentElement.lang = lang;
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-  }
-}
-
 ```
 
 ### File: src\app\core\services\sidebar.service.ts
@@ -3031,13 +2872,9 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
                             {{ calcHours(rec) }}
                         </td>
                         <td data-label="Status" class="py-3 px-4">
-                            <span class="badge rounded-pill px-3 py-2"
+                            <span class="badge rounded-pill px-3 py-2 shadow-sm text-white"
                                 [class.bg-success]="rec.clockOut && rec.clockOut !== '00:00:00'"
-                                [class.bg-opacity-10]="true"
-                                [class.text-success]="rec.clockOut && rec.clockOut !== '00:00:00'"
-                                [class.bg-warning]="!rec.clockOut || rec.clockOut === '00:00:00'"
-                                [class.text-warning]="!rec.clockOut || rec.clockOut === '00:00:00'"
-                                style="border: 1px solid currentColor; opacity: 0.9;">
+                                [class.bg-primary]="!rec.clockOut || rec.clockOut === '00:00:00'">
                                 <i class="bi me-1"
                                    [class.bi-check-circle-fill]="rec.clockOut && rec.clockOut !== '00:00:00'"
                                    [class.bi-clock-fill]="!rec.clockOut || rec.clockOut === '00:00:00'"></i>
@@ -3262,33 +3099,76 @@ export class AllAttendanceComponent implements OnInit {
                 </p>
             </div>
         </div>
-        <div *ngIf="!isAdmin" class="d-flex flex-column align-items-end gap-2">
+        <div *ngIf="!isAdmin" class="d-flex flex-column align-items-md-end gap-3 ms-md-auto">
+            
+            <div class="d-flex flex-column flex-md-row align-items-md-center gap-3">
+                <div class="d-flex align-items-center gap-2 text-muted small fw-medium bg-light px-3 py-2 rounded-3 border border-light-subtle text-nowrap">
+                    <i class="bi bi-clock text-primary fs-5"></i>
+                    <span>{{ 'Work Hours:' | t }}</span>
+                    <span class="text-dark fw-bold ms-1">{{ attendanceSettings?.workStartTime || '08:00:00' }}</span>
+                    <span class="mx-1">-</span>
+                    <span class="text-dark fw-bold">{{ attendanceSettings?.workEndTime || '16:00:00' }}</span>
+                </div>
+                
+                <div class="d-flex align-items-center gap-2">
+                    <div class="d-flex flex-column align-items-md-end">
+                        <button *ngIf="!isCheckedInToday"
+                            class="btn btn-success px-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
+                            (click)="onClockIn()"
+                            [disabled]="isProcessing || isLoading || isBeforeStartTime">
+                            <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2"></span>
+                            <i *ngIf="!isProcessing" class="bi bi-box-arrow-in-right me-2"></i> {{ 'Clock In' | t }}
+                        </button>
+                    </div>
+
+                    <div class="d-flex flex-column align-items-md-end">
+                        <button *ngIf="isCheckedInToday && !isCheckedOutToday"
+                            class="btn btn-warning px-4 py-2 rounded-3 fw-semibold shadow-sm text-dark text-nowrap"
+                            (click)="onClockOut()"
+                            [disabled]="isProcessing || isLoading">
+                            <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2"></span>
+                            <i *ngIf="!isProcessing" class="bi bi-box-arrow-right me-2"></i> {{ 'Clock Out' | t }}
+                        </button>
+                    </div>
+
+                    <span *ngIf="isCheckedInToday && isCheckedOutToday"
+                        class="badge bg-success bg-opacity-10 text-success px-4 py-2 rounded-3 fw-semibold border border-success border-opacity-25 text-nowrap">
+                        <i class="bi bi-check-circle-fill me-2"></i> {{ 'Shift Completed' | t }} ({{ todayWorkedHours | number:'1.1-2' }} {{ 'hrs' | t }})
+                    </span>
+                </div>
+            </div>
+
+            <div *ngIf="!isCheckedInToday && lateArrivalText"
+                 class="alert alert-danger py-1 px-3 mt-1 mb-0 rounded-3 small d-inline-flex align-items-center gap-2 shadow-sm border border-danger">
+                <i class="bi bi-exclamation-circle-fill text-danger fs-6"></i>
+                <span class="text-start">
+                    {{ 'You are late by' | t }} <strong class="ms-1">{{ lateArrivalText }}</strong>
+                </span>
+            </div>
+
+            <div *ngIf="!isCheckedInToday && isBeforeStartTime"
+                 class="alert alert-warning py-1 px-3 mt-1 mb-0 rounded-3 small d-inline-flex align-items-center gap-2 shadow-sm border border-warning" style="max-width: 450px; background-color: #fff3cd; color: #856404;">
+                <i class="bi bi-info-circle-fill text-warning fs-6"></i>
+                <span class="text-start">
+                    {{ 'You cannot clock in before' | t }} <strong class="ms-1">{{ attendanceSettings?.workStartTime }}</strong>
+                </span>
+            </div>
+
             <div *ngIf="isStaleSession"
-                 class="alert alert-warning py-2 px-3 mb-0 rounded-3 small d-flex align-items-center gap-2 w-100 shadow-sm border border-warning">
+                 class="alert alert-warning py-2 px-3 mb-0 rounded-3 small d-flex align-items-center gap-2 shadow-sm border border-warning" style="max-width: 450px; background-color: #fff3cd; color: #856404;">
                 <i class="bi bi-exclamation-triangle-fill text-warning fs-5"></i>
-                <span>
+                <span class="text-start">
                     {{ 'Open session from' | t }} <strong>{{ activeSession?.date | date:'dd MMM yyyy' }}</strong>.<br>
                     {{ 'Click Clock Out to close it.' | t }}
                 </span>
             </div>
-            <div class="d-flex align-items-center gap-2">
-                <button *ngIf="!isCheckedInToday"
-                    class="btn btn-success px-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
-                    (click)="onClockIn()"
-                    [disabled]="isProcessing || isLoading">
-                    <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2"></span>
-                    <i *ngIf="!isProcessing" class="bi bi-box-arrow-in-right me-2"></i> {{ 'Clock In' | t }}
-                </button>
-                <button *ngIf="isCheckedInToday && !isCheckedOutToday"
-                    class="btn btn-warning px-4 py-2 rounded-3 fw-semibold shadow-sm text-dark text-nowrap"
-                    (click)="onClockOut()"
-                    [disabled]="isProcessing || isLoading">
-                    <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2"></span>
-                    <i *ngIf="!isProcessing" class="bi bi-box-arrow-right me-2"></i> {{ 'Clock Out' | t }}
-                </button>
-                <span *ngIf="isCheckedInToday && isCheckedOutToday"
-                    class="badge bg-success bg-opacity-10 text-success px-4 py-2 rounded-3 fw-semibold border border-success border-opacity-25 text-nowrap">
-                    <i class="bi bi-check-circle-fill me-2"></i> {{ 'Shift Completed' | t }} ({{ todayWorkedHours | number:'1.1-2' }} {{ 'hrs' | t }})
+
+            <div *ngIf="isCheckedInToday && !isCheckedOutToday && isAfterEndTime" 
+                 class="alert alert-danger py-2 px-3 mb-0 rounded-3 small d-flex align-items-center gap-2 shadow-sm border border-danger" style="max-width: 450px;">
+                <i class="bi bi-exclamation-octagon-fill text-danger fs-5"></i>
+                <span class="text-start">
+                    <strong>{{ 'Official work time has ended.' | t }}</strong><br>
+                    {{ 'Overtime:' | t }} <span class="fw-bold">{{ overtimeText }}</span>
                 </span>
             </div>
         </div>
@@ -3303,8 +3183,14 @@ export class AllAttendanceComponent implements OnInit {
                     (input)="onFilterChange()">
             </div>
             <div class="input-group shadow-sm" style="max-width: 250px;">
-                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-calendar"></i></span>
-                <input type="date" class="form-control border-start-0 ps-0" [(ngModel)]="selectedDate" (change)="onFilterChange()">
+                <input class="form-control bg-white border-end-0" matInput
+                    [(ngModel)]="selectedDate" (ngModelChange)="onFilterChange()" (dateChange)="onFilterChange()"
+                    [matDatepicker]="attPicker"
+                    placeholder="DD/MM/YYYY" style="z-index: 1;">
+                <span class="input-group-text bg-white border-start-0 p-0" style="z-index: 2;">
+                    <mat-datepicker-toggle matIconSuffix [for]="attPicker"></mat-datepicker-toggle>
+                </span>
+                <mat-datepicker #attPicker></mat-datepicker>
             </div>
             <div class="dropdown">
                 <button class="btn btn-outline-secondary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -3319,6 +3205,7 @@ export class AllAttendanceComponent implements OnInit {
                             <option value="">{{ 'All Statuses' | t }}</option>
                             <option value="Completed">{{ 'Completed' | t }}</option>
                             <option value="Working">{{ 'Working' | t }}</option>
+                            <option value="Absent">{{ 'Absent' | t }}</option>
                         </select>
                     </div>
                 </div>
@@ -3400,9 +3287,13 @@ export class AllAttendanceComponent implements OnInit {
                             '00:00:00') ? record.clockOut : '--:--' }}
                         </td>
                         <td data-label="Status" class="py-3 px-4 text-center">
-                            <span class="badge px-3 py-2 rounded-pill"
-                                [ngClass]="(record.clockOut && record.clockOut !== '00:00:00') ? 'bg-success bg-opacity-10 text-success' : 'bg-primary bg-opacity-10 text-primary'">
-                                {{ (record.clockOut && record.clockOut !== '00:00:00') ? ('Completed' | t) : ('Working' | t) }}
+                            <span class="badge px-3 py-2 rounded-pill shadow-sm"
+                                [ngClass]="{
+                                    'bg-success text-white': record.status === 'Completed' || (record.clockOut && record.clockOut !== '00:00:00'),
+                                    'bg-primary text-white': record.status === 'Working' || (!record.clockOut || record.clockOut === '00:00:00') && record.status !== 'Absent',
+                                    'bg-danger text-white': record.status === 'Absent'
+                                }">
+                                {{ record.status ? (record.status | t) : ((record.clockOut && record.clockOut !== '00:00:00') ? ('Completed' | t) : ('Working' | t)) }}
                             </span>
                         </td>
                         <td data-label="Total Hours" class="py-3 px-3 text-end">
@@ -3456,7 +3347,7 @@ export class AllAttendanceComponent implements OnInit {
 
 ### File: src\app\features\attendance\attendance.component.ts
 ```typescript
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -3466,20 +3357,29 @@ import Swal from 'sweetalert2';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { ExcelExportService } from '../../core/services/excel-export.service';
 import { PdfExportService } from '../../core/services/pdf-export.service';
+import { SettingsService } from '../../core/services/settings.service';
+import { TRANSLATIONS } from '../../core/i18n/translations';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-attendance',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, RouterLink],
+  imports: [CommonModule, FormsModule, TranslatePipe, RouterLink, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
   templateUrl: './attendance.component.html',
 })
-export class AttendanceComponent implements OnInit {
+export class AttendanceComponent implements OnInit, OnDestroy {
   private attendanceService = inject(AttendanceService);
   private authService = inject(AuthService);
   private excelExportService = inject(ExcelExportService);
   private pdfExportService = inject(PdfExportService);
+  private settingsService = inject(SettingsService);
 
   attendanceRecords: any[] = [];
+  attendanceSettings: any = null;
+  currentTime: Date = new Date();
+  timerInterval: any;
 
   searchQuery: string = '';
   selectedStatus: string = '';
@@ -3537,11 +3437,93 @@ export class AttendanceComponent implements OnInit {
     } else {
       this.loadMyAttendance();
     }
+
+    this.attendanceService.getAttendanceSettings().subscribe((settings: any) => {
+      this.attendanceSettings = settings;
+    });
+
+    this.timerInterval = setInterval(() => {
+      this.currentTime = new Date();
+    }, 1000);
+  }
+
+  ngOnDestroy() {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+    }
+  }
+
+  get isBeforeStartTime(): boolean {
+    if (!this.attendanceSettings?.workStartTime) return false;
+    const nowStr = this.currentTime.toTimeString().split(' ')[0];
+    return nowStr < this.attendanceSettings.workStartTime;
+  }
+
+  get isAfterEndTime(): boolean {
+    if (!this.attendanceSettings?.workEndTime) return false;
+    const nowStr = this.currentTime.toTimeString().split(' ')[0];
+    return nowStr > this.attendanceSettings.workEndTime;
+  }
+
+  get lateArrivalText(): string {
+    if (!this.attendanceSettings?.workStartTime) return '';
+    const nowStr = this.currentTime.toTimeString().split(' ')[0];
+    if (nowStr <= this.attendanceSettings.workStartTime) return '';
+    return this.calculateTimeDifference(this.attendanceSettings.workStartTime, nowStr);
+  }
+
+  get overtimeText(): string {
+    if (!this.attendanceSettings?.workEndTime) return '';
+    const nowStr = this.currentTime.toTimeString().split(' ')[0];
+    if (nowStr <= this.attendanceSettings.workEndTime) return '';
+    return this.calculateTimeDifference(this.attendanceSettings.workEndTime, nowStr);
+  }
+
+  private calculateTimeDifference(start: string, end: string): string {
+    const startParts = start.split(':').map(Number);
+    const endParts = end.split(':').map(Number);
+    
+    let startMins = startParts[0] * 60 + startParts[1];
+    let endMins = endParts[0] * 60 + endParts[1];
+    
+    let diff = endMins - startMins;
+    if (diff <= 0) return '';
+    
+    const hours = Math.floor(diff / 60);
+    const mins = diff % 60;
+    
+    const lang = this.settingsService.language;
+    const hrsStr = TRANSLATIONS['hrs'][lang] || 'hrs';
+    const andStr = TRANSLATIONS[' hrs and ']?.[lang] || ' and ';
+    const minsStr = TRANSLATIONS[' mins']?.[lang] || ' mins';
+    
+    if (hours > 0 && mins > 0) return `${hours} ${hrsStr}${andStr}${mins}${minsStr}`;
+    if (hours > 0) return `${hours} ${hrsStr}`;
+    return `${mins}${minsStr}`;
   }
 
   loadAllAttendance() {
     this.isLoading = true;
-    const d = this.selectedDate || undefined;
+    let d = undefined;
+    if (this.selectedDate) {
+      try {
+        let temp: any = this.selectedDate;
+        if (temp && typeof temp.toDate === 'function') {
+          temp = temp.toDate();
+        }
+        if (temp instanceof Date && !isNaN(temp.getTime())) {
+          d = new Date(temp.getTime() - (temp.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+        } else if (typeof temp === 'string') {
+          const parts = temp.split('/');
+          if (parts.length === 3) {
+            d = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+            if (isNaN(new Date(d).getTime())) d = new Date(temp).toISOString().split('T')[0];
+          } else d = new Date(temp).toISOString().split('T')[0];
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
     this.attendanceService
       .getAllAttendance(
         d,
@@ -3564,7 +3546,26 @@ export class AttendanceComponent implements OnInit {
 
   loadMyAttendance() {
     this.isLoading = true;
-    const d = this.selectedDate || undefined;
+    let d = undefined;
+    if (this.selectedDate) {
+      try {
+        let temp: any = this.selectedDate;
+        if (temp && typeof temp.toDate === 'function') {
+          temp = temp.toDate();
+        }
+        if (temp instanceof Date && !isNaN(temp.getTime())) {
+          d = new Date(temp.getTime() - (temp.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+        } else if (typeof temp === 'string') {
+          const parts = temp.split('/');
+          if (parts.length === 3) {
+            d = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+            if (isNaN(new Date(d).getTime())) d = new Date(temp).toISOString().split('T')[0];
+          } else d = new Date(temp).toISOString().split('T')[0];
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
     this.attendanceService
       .getMyAttendance(
         d,
@@ -3611,11 +3612,11 @@ export class AttendanceComponent implements OnInit {
     const today = new Date().toDateString();
 
     const openSession = records.find(
-      (r) => !r.clockOut || r.clockOut === '00:00:00' || r.clockOut === null,
+      (r) => r.clockIn && (!r.clockOut || r.clockOut === '00:00:00'),
     );
 
     const todayRecord = records.find(
-      (r) => new Date(r.date).toDateString() === today,
+      (r) => new Date(r.date).toDateString() === today && r.clockIn,
     );
 
     if (openSession) {
@@ -3640,6 +3641,11 @@ export class AttendanceComponent implements OnInit {
   }
 
   onClockIn() {
+    if (this.isBeforeStartTime) {
+      Swal.fire('Warning', `You cannot clock in before ${this.attendanceSettings?.workStartTime}`, 'warning');
+      return;
+    }
+
     this.isProcessing = true;
     const now = new Date();
     const dateIso = now.toISOString();
@@ -3685,9 +3691,13 @@ export class AttendanceComponent implements OnInit {
     this.attendanceService.clockOut({ clockOut: clockOutTime }).subscribe({
       next: () => {
         this.isProcessing = false;
+        let extraMsg = '';
+        if (!isOldSession && this.isAfterEndTime) {
+          extraMsg = `\nOvertime recorded: ${this.overtimeText}`;
+        }
         const msg = isOldSession
           ? `Previous session automatically closed at 23:59.`
-          : `Great job today! Clocked out at ${clockOutTime}`;
+          : `Great job today! Clocked out at ${clockOutTime}.${extraMsg}`;
         Swal.fire({
           icon: 'success',
           title: 'Clocked Out ✅',
@@ -3729,8 +3739,7 @@ export class AttendanceComponent implements OnInit {
     ];
 
     const data = this.attendanceRecords.map((rec) => {
-      const isCompleted = rec.clockOut && rec.clockOut !== '00:00:00';
-      const status = isCompleted ? 'Completed' : 'Working';
+      const status = rec.status || (rec.clockOut && rec.clockOut !== '00:00:00' ? 'Completed' : 'Working');
       const empName = rec.employeeName || 'Emp #' + rec.employeeId;
 
       return [
@@ -3768,8 +3777,7 @@ export class AttendanceComponent implements OnInit {
     ];
 
     const data = this.attendanceRecords.map((rec) => {
-      const isCompleted = rec.clockOut && rec.clockOut !== '00:00:00';
-      const status = isCompleted ? 'Completed' : 'Working';
+      const status = rec.status || (rec.clockOut && rec.clockOut !== '00:00:00' ? 'Completed' : 'Working');
       const empName = rec.employeeName || 'Emp #' + rec.employeeId;
 
       return [
@@ -4365,7 +4373,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       const errMsg = err?.message?.toLowerCase() || '';
       
       if (errName === 'notallowederror' || errName === 'aborterror' || errMsg.includes('cancel') || errMsg.includes('abort') || errMsg.includes('timed out')) {
-         return; // Quietly ignore cancellation
+         return; 
       }
 
       const friendlyMsg = this.getFingerprintErrorMessage(err);
@@ -4635,9 +4643,9 @@ export class RegisterComponent {
     
     <div class="row mb-4">
         <div class="col-12">
-            <div class="ann-panel shadow-sm border-0 rounded-4 overflow-hidden">
+            <div class="ann-panel card shadow-sm border-0 rounded-4 overflow-hidden">
                 
-                <div class="ann-header px-4 py-3 d-flex justify-content-between align-items-center border-bottom border-light flex-wrap gap-3">
+                <div class="ann-header card-header px-4 py-3 d-flex justify-content-between align-items-center border-bottom border-light flex-wrap gap-3">
                     <div class="d-flex align-items-center gap-3">
                         <div class="bg-primary bg-gradient rounded-circle d-flex align-items-center justify-content-center border-0 shadow-sm" 
                              style="width: 48px; height: 48px;">
@@ -4652,14 +4660,17 @@ export class RegisterComponent {
                             </small>
                         </div>
                     </div>
-                    <div class="d-flex gap-2">
+                    <div class="d-flex gap-2 align-items-center">
                         <button *ngIf="isAdminOrHR" class="btn btn-primary px-3 rounded-pill d-flex align-items-center gap-2 shadow-sm fw-semibold" (click)="openAnnouncementModal()" style="font-size: 0.9rem;">
                             <i class="bi bi-plus-lg"></i> <span class="d-none d-md-inline">{{ 'Post' | t }}</span>
+                        </button>
+                        <button class="btn btn-sm btn-light border rounded-circle shadow-sm d-flex align-items-center justify-content-center text-secondary" style="width: 32px; height: 32px;" (click)="toggleAnnouncements()" [title]="(isAnnouncementsExpanded ? 'Collapse' : 'Expand') | t">
+                            <i class="bi" [ngClass]="isAnnouncementsExpanded ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
                         </button>
                     </div>
                 </div>
 
-                <div class="announcements-body-wrapper">
+                <div class="announcements-body-wrapper" *ngIf="isAnnouncementsExpanded">
                     
                     <div *ngIf="announcements.length === 0" class="text-center py-4 px-4 ann-empty-state">
                         <i class="bi bi-megaphone text-muted" style="font-size: 2rem; opacity: 0.4;"></i>
@@ -5000,8 +5011,21 @@ export class RegisterComponent {
               </select>
             </div>
             <div class="col-md-6 d-flex flex-column justify-content-end">
-              <label class="form-label fw-semibold text-dark">{{ 'Expiry Date' | t }} <small class="text-muted fw-normal">({{ 'Optional' | t }})</small></label>
-              <input type="datetime-local" class="form-control" formControlName="expiryDate">
+              <label class="form-label fw-semibold text-dark">{{ 'Expiry Date & Time' | t }} <small class="text-muted fw-normal">({{ 'Optional' | t }})</small></label>
+              <div class="d-flex gap-2">
+                <div class="input-group shadow-sm">
+                    <input class="form-control bg-white border-end-0" matInput
+                        formControlName="expiryDate"
+                        [matDatepicker]="expiryPicker"
+                        mask="00/00/0000" [dropSpecialCharacters]="false"
+                        placeholder="DD/MM/YYYY" style="z-index: 1;">
+                    <span class="input-group-text bg-white border-start-0 p-0" style="z-index: 2;">
+                        <mat-datepicker-toggle matIconSuffix [for]="expiryPicker"></mat-datepicker-toggle>
+                    </span>
+                    <mat-datepicker #expiryPicker></mat-datepicker>
+                </div>
+                <input type="time" class="form-control shadow-sm" formControlName="expiryTime" style="max-width: 120px;">
+              </div>
             </div>
           </div>
 
@@ -5110,6 +5134,10 @@ import { ExcelExportService } from '../../core/services/excel-export.service';
 
 Chart.register(...registerables);
 
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { NgxMaskDirective } from 'ngx-mask';
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -5119,6 +5147,9 @@ Chart.register(...registerables);
     RouterLink,
     ReactiveFormsModule,
     FormsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    NgxMaskDirective
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
@@ -5137,6 +5168,7 @@ export class DashboardComponent implements OnInit {
   announcements: Announcement[] = [];
   announcementForm: FormGroup;
   showAnnouncementModal = false;
+  isAnnouncementsExpanded = true;
 
   totalEmployees = 0;
   pendingLeaves = 0;
@@ -5512,6 +5544,7 @@ export class DashboardComponent implements OnInit {
       isGeneral: [true],
       targetEmployeeIds: [[]],
       expiryDate: [''],
+      expiryTime: [''],
     });
   }
 
@@ -5553,12 +5586,18 @@ export class DashboardComponent implements OnInit {
       priority: 'Normal',
       isGeneral: true,
       targetEmployeeIds: [],
+      expiryDate: '',
+      expiryTime: ''
     });
     this.showAnnouncementModal = true;
   }
 
   closeAnnouncementModal() {
     this.showAnnouncementModal = false;
+  }
+
+  toggleAnnouncements() {
+    this.isAnnouncementsExpanded = !this.isAnnouncementsExpanded;
   }
 
   toggleEmployeeForAnnouncement(empId: number) {
@@ -5583,8 +5622,12 @@ export class DashboardComponent implements OnInit {
     if (!formValue.expiryDate) {
       formValue.expiryDate = null;
     } else {
-      formValue.expiryDate = new Date(formValue.expiryDate).toISOString();
+      const date = new Date(formValue.expiryDate);
+      const dateString = date.toISOString().split('T')[0];
+      const timeString = formValue.expiryTime || '00:00';
+      formValue.expiryDate = new Date(`${dateString}T${timeString}`).toISOString();
     }
+    delete formValue.expiryTime;
 
     this.announcementService.createAnnouncement(formValue).subscribe({
       next: () => {
@@ -7003,8 +7046,17 @@ export class DepartmentsComponent implements OnInit {
               <i class="bi bi-calendar-event text-primary"></i>
               Date of Birth <span class="text-danger">*</span>
             </label>
-            <input type="date" class="form-control field-input" formControlName="birthDate"
-              [class.is-invalid]="employeeForm.get('birthDate')?.invalid && employeeForm.get('birthDate')?.touched">
+            <div class="input-group shadow-sm" [class.is-invalid]="employeeForm.get('birthDate')?.invalid && employeeForm.get('birthDate')?.touched">
+                <input class="form-control field-input border-end-0" matInput
+                    formControlName="birthDate"
+                    [matDatepicker]="birthPicker"
+                    mask="00/00/0000" [dropSpecialCharacters]="false"
+                    placeholder="DD/MM/YYYY" style="z-index: 1;">
+                <span class="input-group-text bg-white border-start-0 p-0" style="z-index: 2;">
+                    <mat-datepicker-toggle matIconSuffix [for]="birthPicker"></mat-datepicker-toggle>
+                </span>
+                <mat-datepicker #birthPicker></mat-datepicker>
+            </div>
             <div class="invalid-feedback">Date of Birth is required.</div>
           </div>
         </div>
@@ -7128,8 +7180,17 @@ export class DepartmentsComponent implements OnInit {
               <i class="bi bi-calendar-date text-primary"></i>
               Hire Date <span class="text-danger">*</span>
             </label>
-            <input type="date" class="form-control field-input" formControlName="hireDate"
-              [class.is-invalid]="employeeForm.get('hireDate')?.invalid && employeeForm.get('hireDate')?.touched">
+            <div class="input-group shadow-sm" [class.is-invalid]="employeeForm.get('hireDate')?.invalid && employeeForm.get('hireDate')?.touched">
+                <input class="form-control field-input border-end-0" matInput
+                    formControlName="hireDate"
+                    [matDatepicker]="hirePicker"
+                    mask="00/00/0000" [dropSpecialCharacters]="false"
+                    placeholder="DD/MM/YYYY" style="z-index: 1;">
+                <span class="input-group-text bg-white border-start-0 p-0" style="z-index: 2;">
+                    <mat-datepicker-toggle matIconSuffix [for]="hirePicker"></mat-datepicker-toggle>
+                </span>
+                <mat-datepicker #hirePicker></mat-datepicker>
+            </div>
             <div class="invalid-feedback">Hire date is required.</div>
           </div>
           <div class="col-md-4">
@@ -7273,11 +7334,14 @@ import { PositionService } from '../../core/services/position.service';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-employee-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, ImageCropperModalComponent, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, ImageCropperModalComponent, TranslatePipe, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
   templateUrl: './employee-form.component.html',
   styleUrl: './employee-form.component.css',
 })
@@ -7941,6 +8005,29 @@ export class EmployeeFormComponent implements OnInit {
                         <div class="detail-item">
                             <span class="detail-label"><i class="bi bi-person-badge me-1"></i>Position</span>
                             <span class="detail-value">{{ selectedEmployeeProfile?.positionTitle || '—' }}</span>
+                        </div>
+                    </div>
+                </div>
+                <h6 class="detail-section-title">
+                    <i class="bi bi-airplane-engines-fill text-info me-2"></i>Leave Balances
+                </h6>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="detail-item border-primary border-opacity-25 bg-primary bg-opacity-10">
+                            <span class="detail-label text-primary"><i class="bi bi-airplane-engines me-1"></i>Annual</span>
+                            <span class="detail-value text-primary fs-5">{{ selectedEmployeeProfile?.annualLeaveBalance !== undefined ? selectedEmployeeProfile?.annualLeaveBalance + ' Days' : '—' }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="detail-item border-success border-opacity-25 bg-success bg-opacity-10">
+                            <span class="detail-label text-success"><i class="bi bi-heart-pulse me-1"></i>Sick</span>
+                            <span class="detail-value text-success fs-5">{{ selectedEmployeeProfile?.sickLeaveBalance !== undefined ? selectedEmployeeProfile?.sickLeaveBalance + ' Days' : '—' }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="detail-item border-danger border-opacity-25 bg-danger bg-opacity-10">
+                            <span class="detail-label text-danger"><i class="bi bi-exclamation-triangle me-1"></i>Emergency</span>
+                            <span class="detail-value text-danger fs-5">{{ selectedEmployeeProfile?.emergencyLeaveBalance !== undefined ? selectedEmployeeProfile?.emergencyLeaveBalance + ' Days' : '—' }}</span>
                         </div>
                     </div>
                 </div>
@@ -8750,7 +8837,17 @@ export class EmployeesComponent implements OnInit, OnDestroy {
           </div>
           <div class="mb-3">
             <label class="form-label fw-semibold text-muted small">{{ 'Event Date' | t }} <span class="text-danger">*</span></label>
-            <input type="date" class="form-control rounded-3" [(ngModel)]="newEvent.eventDate" name="eventDate" required>
+            <div class="input-group shadow-sm">
+                <input class="form-control bg-light border-end-0" matInput
+                    [(ngModel)]="newEvent.eventDate" name="eventDate" [required]="true"
+                    [matDatepicker]="eventPicker"
+                    mask="00/00/0000" [dropSpecialCharacters]="false"
+                    placeholder="DD/MM/YYYY" style="z-index: 1;">
+                <span class="input-group-text bg-light border-start-0 p-0" style="z-index: 2;">
+                    <mat-datepicker-toggle matIconSuffix [for]="eventPicker"></mat-datepicker-toggle>
+                </span>
+                <mat-datepicker #eventPicker></mat-datepicker>
+            </div>
           </div>
           <div class="mb-3">
             <label class="form-label fw-semibold text-muted small">{{ 'Description' | t }}</label>
@@ -8782,11 +8879,14 @@ import { EventService } from '../../core/services/event.service';
 import { AuthService } from '../../core/services/auth.service';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import Swal from 'sweetalert2';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, TranslatePipe, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
   templateUrl: './events.component.html',
   styleUrl: './events.component.css'
 })
@@ -9148,6 +9248,12 @@ export class EventsComponent implements OnInit {
                                 *ngIf="getStatusText(leave.status) === 'Pending'"
                                 class="d-flex justify-content-end gap-2">
                                 <button
+                                    class="btn btn-sm btn-outline-info rounded-3 px-2 shadow-sm"
+                                    (click)="showLeaveBalance(leave)"
+                                    title="View Leave Balance">
+                                    <i class="bi bi-info-circle-fill"></i>
+                                </button>
+                                <button
                                     class="btn btn-sm btn-success rounded-3 shadow-sm px-3"
                                     (click)="changeStatus(leave.id, 1)">
                                     {{ 'Approve' | t }}
@@ -9226,23 +9332,36 @@ export class EventsComponent implements OnInit {
                     </div>
                     <div class="row mb-4">
                         <div class="col-6">
-                            <label
-                                class="form-label fw-semibold text-secondary small">Start
-                                Date *</label>
-                            <input type="date"
-                                class="form-control bg-light border-0"
-                                name="startDate"
-                                [(ngModel)]="leaveData.startDate"
-                                [min]="getToday()" required>
+                            <label class="form-label fw-semibold text-secondary small">Start Date *</label>
+                            <div class="input-group shadow-sm">
+                                <input class="form-control bg-light border-end-0" matInput
+                                    name="startDate"
+                                    [(ngModel)]="leaveData.startDate"
+                                    [min]="getToday()" [required]="true"
+                                    [matDatepicker]="startPicker"
+                                    mask="00/00/0000" [dropSpecialCharacters]="false"
+                                    placeholder="DD/MM/YYYY" style="z-index: 1;">
+                                <span class="input-group-text bg-light border-start-0 p-0" style="z-index: 2;">
+                                    <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+                                </span>
+                                <mat-datepicker #startPicker></mat-datepicker>
+                            </div>
                         </div>
                         <div class="col-6">
-                            <label
-                                class="form-label fw-semibold text-secondary small">End
-                                Date *</label>
-                            <input type="date"
-                                class="form-control bg-light border-0"
-                                name="endDate" [(ngModel)]="leaveData.endDate"
-                                [min]="leaveData.startDate || getToday()" required>
+                            <label class="form-label fw-semibold text-secondary small">End Date *</label>
+                            <div class="input-group shadow-sm">
+                                <input class="form-control bg-light border-end-0" matInput
+                                    name="endDate"
+                                    [(ngModel)]="leaveData.endDate"
+                                    [min]="leaveData.startDate || getToday()" [required]="true"
+                                    [matDatepicker]="endPicker"
+                                    mask="00/00/0000" [dropSpecialCharacters]="false"
+                                    placeholder="DD/MM/YYYY" style="z-index: 1;">
+                                <span class="input-group-text bg-light border-start-0 p-0" style="z-index: 2;">
+                                    <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+                                </span>
+                                <mat-datepicker #endPicker></mat-datepicker>
+                            </div>
                         </div>
                     </div>
                     <div class="mb-3">
@@ -9353,13 +9472,16 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { ExcelExportService } from '../../core/services/excel-export.service';
 import { PdfExportService } from '../../core/services/pdf-export.service';
 import { ImageCropperModalComponent } from '../../shared/image-cropper-modal/image-cropper-modal.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { NgxMaskDirective } from 'ngx-mask';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-leave',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, ImageCropperModalComponent],
+  imports: [CommonModule, FormsModule, TranslatePipe, ImageCropperModalComponent, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
   templateUrl: './leave.component.html',
 })
 export class LeaveComponent implements OnInit {
@@ -9759,6 +9881,34 @@ export class LeaveComponent implements OnInit {
     });
   }
 
+  showLeaveBalance(leave: any) {
+    const annual = leave.employeeAnnualLeaveBalance !== undefined && leave.employeeAnnualLeaveBalance !== null ? leave.employeeAnnualLeaveBalance : '?';
+    const sick = leave.employeeSickLeaveBalance !== undefined && leave.employeeSickLeaveBalance !== null ? leave.employeeSickLeaveBalance : '?';
+    const emergency = leave.employeeEmergencyLeaveBalance !== undefined && leave.employeeEmergencyLeaveBalance !== null ? leave.employeeEmergencyLeaveBalance : '?';
+    
+    Swal.fire({
+      title: `${leave.employeeName}'s Balance`,
+      html: `
+        <div class="d-flex flex-column gap-3 text-start mt-3">
+          <div class="d-flex justify-content-between align-items-center p-3 bg-primary bg-opacity-10 rounded-3 border border-primary border-opacity-25">
+            <span class="fw-bold text-primary"><i class="bi bi-airplane-engines me-2"></i>Annual Leave</span>
+            <span class="badge bg-primary text-white fs-6 rounded-pill px-3 py-2">${annual} Days</span>
+          </div>
+          <div class="d-flex justify-content-between align-items-center p-3 bg-success bg-opacity-10 rounded-3 border border-success border-opacity-25">
+            <span class="fw-bold text-success"><i class="bi bi-heart-pulse me-2"></i>Sick Leave</span>
+            <span class="badge bg-success text-white fs-6 rounded-pill px-3 py-2">${sick} Days</span>
+          </div>
+          <div class="d-flex justify-content-between align-items-center p-3 bg-danger bg-opacity-10 rounded-3 border border-danger border-opacity-25">
+            <span class="fw-bold text-danger"><i class="bi bi-exclamation-triangle me-2"></i>Emergency Leave</span>
+            <span class="badge bg-danger text-white fs-6 rounded-pill px-3 py-2">${emergency} Days</span>
+          </div>
+        </div>
+      `,
+      confirmButtonText: 'Close',
+      confirmButtonColor: '#0d6efd'
+    });
+  }
+
   exportToExcel() {
     this.excelExportService.exportTableToExcel(
       ['Employee', 'Type', 'Start Date', 'End Date', 'Days', 'Status'],
@@ -9819,14 +9969,32 @@ export class LeaveComponent implements OnInit {
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold text-muted small">Start
-                            Date</label>
-                        <input type="date" class="form-control bg-light" formControlName="startDate">
+                        <label class="form-label fw-bold text-muted small">Start Date</label>
+                        <div class="input-group shadow-sm">
+                            <input class="form-control bg-light border-end-0" matInput
+                                formControlName="startDate"
+                                [matDatepicker]="startPicker"
+                                mask="00/00/0000" [dropSpecialCharacters]="false"
+                                placeholder="DD/MM/YYYY" style="z-index: 1;">
+                            <span class="input-group-text bg-light border-start-0 p-0" style="z-index: 2;">
+                                <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+                            </span>
+                            <mat-datepicker #startPicker></mat-datepicker>
+                        </div>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold text-muted small">End
-                            Date</label>
-                        <input type="date" class="form-control bg-light" formControlName="endDate">
+                        <label class="form-label fw-bold text-muted small">End Date</label>
+                        <div class="input-group shadow-sm">
+                            <input class="form-control bg-light border-end-0" matInput
+                                formControlName="endDate"
+                                [matDatepicker]="endPicker"
+                                mask="00/00/0000" [dropSpecialCharacters]="false"
+                                placeholder="DD/MM/YYYY" style="z-index: 1;">
+                            <span class="input-group-text bg-light border-start-0 p-0" style="z-index: 2;">
+                                <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+                            </span>
+                            <mat-datepicker #endPicker></mat-datepicker>
+                        </div>
                     </div>
                 </div>
 
@@ -9863,11 +10031,14 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { LeaveService } from '../../core/services/leave.service';
 import Swal from 'sweetalert2';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-leave-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
   templateUrl: './leave-form.component.html',
 })
 export class LeaveFormComponent {
@@ -10152,16 +10323,23 @@ export class LeaveFormComponent {
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold text-secondary">{{ 'Date' | t }} <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-calendar-event text-primary"></i></span>
-                                <input type="date" class="form-control border-start-0" formControlName="meetingDate" style="color-scheme: light;" required>
+                            <div class="input-group shadow-sm">
+                                <input class="form-control bg-light border-end-0" matInput
+                                    formControlName="meetingDate" [required]="true"
+                                    [matDatepicker]="meetPicker"
+                                    mask="00/00/0000" [dropSpecialCharacters]="false"
+                                    placeholder="DD/MM/YYYY" style="z-index: 1;">
+                                <span class="input-group-text bg-light border-start-0 p-0" style="z-index: 2;">
+                                    <mat-datepicker-toggle matIconSuffix [for]="meetPicker"></mat-datepicker-toggle>
+                                </span>
+                                <mat-datepicker #meetPicker></mat-datepicker>
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold text-secondary">{{ 'Time' | t }} <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-clock text-primary"></i></span>
-                                <input type="time" class="form-control border-start-0" formControlName="meetingTime" style="color-scheme: light;" required>
+                            <div class="input-group shadow-sm">
+                                <input type="time" class="form-control bg-light border-end-0" formControlName="meetingTime" style="color-scheme: light; z-index: 1;" required>
+                                <span class="input-group-text bg-light border-start-0" style="z-index: 2;"><i class="bi bi-clock text-primary"></i></span>
                             </div>
                         </div>
                     </div>
@@ -10217,6 +10395,9 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { Observable, forkJoin } from 'rxjs';
 import { ExcelExportService } from '../../core/services/excel-export.service';
 import { PdfExportService } from '../../core/services/pdf-export.service';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { NgxMaskDirective } from 'ngx-mask';
 
 export interface GroupedMeeting {
   meetLink: string;
@@ -10235,7 +10416,7 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-meetings',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
   templateUrl: './meetings.component.html',
   styleUrls: ['./meetings.component.css']
 })
@@ -10583,12 +10764,12 @@ export class MeetingsComponent implements OnInit {
     const s = String(status);
     switch (s) {
       case '0':
-      case 'Scheduled': return 'bg-primary';
+      case 'Scheduled': return 'bg-primary text-white';
       case '1':
-      case 'Completed': return 'bg-success';
+      case 'Completed': return 'bg-success text-white';
       case '2':
-      case 'Cancelled': return 'bg-danger';
-      default: return 'bg-secondary';
+      case 'Cancelled': return 'bg-danger text-white';
+      default: return 'bg-secondary text-white';
     }
   }
 
@@ -12497,33 +12678,44 @@ export class PendingApprovalsComponent implements OnInit {
 
 ### File: src\app\features\positions\positions.component.html
 ```html
-<div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-3">
-    
+<div
+    class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-3">
+
     <div class="d-flex align-items-center mt-1">
-        <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+        <div
+            class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3"
+            style="width: 48px; height: 48px;">
             <i class="bi bi-briefcase-fill fs-4"></i>
         </div>
         <div>
             <h2 class="fw-bold text-dark mb-1">{{ 'Job Positions' | t }}</h2>
-            <p class="text-muted mb-0 small">{{ 'Manage company job titles and roles' | t }}</p>
+            <p class="text-muted mb-0 small">{{
+                'Manage company job titles and roles' | t }}</p>
         </div>
     </div>
-    
+
     <div class="d-flex gap-2">
-        <button class="btn btn-primary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="openModal()">
-            <i class="bi bi-plus-lg" [class.me-md-1]="true"></i> 
+        <button
+            class="btn btn-primary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap"
+            (click)="openModal()">
+            <i class="bi bi-plus-lg" [class.me-md-1]="true"></i>
             <span class="d-none d-md-inline">{{ 'Add Position' | t }}</span>
         </button>
     </div>
 </div>
-<div class="d-flex justify-content-end align-items-center mb-4 flex-wrap gap-3 bg-white p-3 rounded-4 shadow-sm border border-light">
+<div
+    class="d-flex justify-content-end align-items-center mb-4 flex-wrap gap-3 bg-white p-3 rounded-4 shadow-sm border border-light">
     <div class="d-flex gap-2">
-        <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
-            <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> 
+        <button
+            class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap"
+            (click)="exportToPDF()" title="Export to PDF">
+            <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i>
             <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
         </button>
-        <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
-            <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i> 
+        <button
+            class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap"
+            (click)="exportToExcel()" title="Export to Excel">
+            <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i>
             <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
         </button>
     </div>
@@ -12536,7 +12728,8 @@ export class PendingApprovalsComponent implements OnInit {
 } @else {
 <div class="card shadow-sm border-0">
     <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0 text-center text-nowrap">
+        <table
+            class="table table-hover align-middle mb-0 text-center text-nowrap">
             <thead class="table-light text-uppercase small fw-bold">
                 <tr>
                     <th>ID</th>
@@ -12549,15 +12742,19 @@ export class PendingApprovalsComponent implements OnInit {
             <tbody>
                 @for (pos of positionsList; track pos.id) {
                 <tr>
-                    <td data-label="ID" class="text-muted fw-bold">#{{ pos.id }}</td>
-                    <td data-label="Job Title" class="fw-bold text-dark">{{ pos.title }}</td>
+                    <td data-label="ID" class="text-muted fw-bold">#{{ pos.id
+                        }}</td>
+                    <td data-label="Job Title" class="fw-bold text-dark">{{
+                        pos.title }}</td>
                     <td data-label="Department">
                         <span
-                            class="badge bg-light text-secondary border px-3 py-2 fw-semibold shadow-sm" style="font-size: 0.85rem;">
+                            class="badge bg-light text-secondary border px-3 py-2 fw-semibold shadow-sm"
+                            style="font-size: 0.85rem;">
                             {{ getDepartmentName(pos.departmentId) }}
                         </span>
                     </td>
-                    <td data-label="Salary Range" class="fw-semibold text-secondary">
+                    <td data-label="Salary Range"
+                        class="fw-semibold text-secondary">
                         {{ pos.salaryMin | currency }} -
                         <span class="text-success">{{ pos.salaryMax | currency
                             }}</span>
@@ -12577,7 +12774,8 @@ export class PendingApprovalsComponent implements OnInit {
                 </tr>
                 } @empty {
                 <tr>
-                    <td colspan="5" class="text-center py-5 text-muted no-data-td">
+                    <td colspan="5"
+                        class="text-center py-5 text-muted no-data-td">
                         <i
                             class="bi bi-briefcase fs-1 d-block mb-2 opacity-25"></i>
                         {{ 'No positions defined in the system.' | t }}
@@ -12597,7 +12795,8 @@ export class PendingApprovalsComponent implements OnInit {
                 <h5 class="modal-title text-primary fw-bold">
                     <i class="bi" [class.bi-plus-circle]="!isEditMode"
                         [class.bi-pencil-square]="isEditMode"></i>
-                    {{ isEditMode ? ('Modify Position' | t) : ('Create New Position' | t) }}
+                    {{ isEditMode ? ('Modify Position' | t) :
+                    ('Create New Position' | t) }}
                 </h5>
                 <button type="button" class="btn-close shadow-none"
                     data-bs-dismiss="modal" aria-label="Close"></button>
@@ -12663,7 +12862,8 @@ export class PendingApprovalsComponent implements OnInit {
     </div>
 </div>
 <style>
-</style>
+</style>
+
 ```
 
 ### File: src\app\features\positions\positions.component.ts
@@ -12906,7 +13106,7 @@ export class PositionsComponent implements OnInit {
         <div class="d-flex gap-2" *ngIf="isAdmin">
             <button
                 class="btn btn-success px-3 px-md-4 py-2 rounded-3 fw-semibold shadow-sm text-nowrap"
-                [disabled]="!hasDraftSalaries || isLoading"
+                [disabled]="!selectedMonth || !selectedYear || isLoading"
                 (click)="markAsPaid()" [title]="'Approve Salaries' | t">
                 <i class="bi bi-check-circle" [class.me-md-1]="true"></i>
                 <span class="d-none d-md-inline">{{ 'Approve Salaries' | t }}</span>
@@ -13115,15 +13315,25 @@ export class PositionsComponent implements OnInit {
                                 }}</div>
                         </td>
                         <td data-label="Status" class="py-3 px-3">
-                            <span class="badge" 
+                            <span class="badge text-white" 
                                   [ngClass]="{'bg-secondary': salary.status === 'Draft', 'bg-success': salary.status === 'Paid'}">
                                 {{ salary.status }}
                             </span>
                         </td>
                         <td data-label="Actions"
                             class="py-3 px-4 text-end text-nowrap actions-cell">
-                            <button
+                            <button *ngIf="isAdmin && salary.status === 'Draft'"
+                                class="btn btn-sm btn-outline-success rounded-circle shadow-sm me-2"
+                                (click)="approveSalary(salary.id)" title="Approve Salary">
+                                <i class="bi bi-check-lg"></i>
+                            </button>
+                            <button *ngIf="isAdmin && salary.status === 'Draft'"
                                 class="btn btn-sm btn-outline-danger rounded-circle shadow-sm me-2"
+                                (click)="deleteSalary(salary.id)" title="Delete Salary">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                            <button
+                                class="btn btn-sm btn-outline-secondary rounded-circle shadow-sm me-2"
                                 (click)="downloadPayslip(salary)"
                                 title="Download Payslip (PDF)">
                                 <i class="bi bi-file-earmark-pdf-fill"></i>
@@ -13326,10 +13536,18 @@ export class PositionsComponent implements OnInit {
                         <label
                             class="form-label fw-semibold text-secondary small">Effective
                             Date <span class="text-danger">*</span></label>
-                        <input type="date"
-                            class="form-control bg-light border-0"
-                            name="effectiveDate"
-                            [(ngModel)]="salaryData.effectiveDate" required>
+                        <div class="input-group shadow-sm">
+                            <input class="form-control bg-light border-end-0" matInput
+                                name="effectiveDate"
+                                [(ngModel)]="salaryData.effectiveDate" [required]="true"
+                                [matDatepicker]="effPicker"
+                                mask="00/00/0000" [dropSpecialCharacters]="false"
+                                placeholder="DD/MM/YYYY" style="z-index: 1;">
+                            <span class="input-group-text bg-light border-start-0 p-0" style="z-index: 2;">
+                                <mat-datepicker-toggle matIconSuffix [for]="effPicker"></mat-datepicker-toggle>
+                            </span>
+                            <mat-datepicker #effPicker></mat-datepicker>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -13422,11 +13640,12 @@ export class PositionsComponent implements OnInit {
                                         <th>Allowances</th>
                                         <th>Deductions</th>
                                         <th class="text-end">Net Pay</th>
+                                        <th class="text-center">Exclude</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let s of previewData.salaries">
-                                        <td>{{ s.employeeName }}</td>
+                                    <tr *ngFor="let s of previewData.salaries" [ngClass]="{'opacity-50 bg-light': excludedEmployees.has(s.employeeId)}">
+                                        <td>{{ s.employeeName }} <span *ngIf="excludedEmployees.has(s.employeeId)" class="badge bg-danger ms-1">Excluded</span></td>
                                         <td><span class="badge bg-secondary">{{
                                                 s.departmentName }}</span></td>
                                         <td>{{ s.baseAmount | currency:'JD '
@@ -13438,10 +13657,15 @@ export class PositionsComponent implements OnInit {
                                             | currency:'JD ' }}</td>
                                         <td class="text-end fw-bold">{{
                                             s.netAmount | currency:'JD ' }}</td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm" [ngClass]="excludedEmployees.has(s.employeeId) ? 'btn-success' : 'btn-outline-danger'" (click)="toggleExcludeEmployee(s.employeeId)">
+                                                <i class="bi" [ngClass]="excludedEmployees.has(s.employeeId) ? 'bi-plus-circle' : 'bi-x-circle'"></i>
+                                            </button>
+                                        </td>
                                     </tr>
                                     <tr
                                         *ngIf="previewData.salaries?.length === 0">
-                                        <td colspan="6"
+                                        <td colspan="7"
                                             class="text-center text-muted py-3">No
                                             pending salaries found for this
                                             selection.</td>
@@ -13457,13 +13681,13 @@ export class PositionsComponent implements OnInit {
                                     <h6 class="mb-0 text-muted">Total
                                         Employees</h6>
                                     <h4 class="mb-0 fw-bold">{{
-                                        previewData.employeeCount }}</h4>
+                                        dynamicEmployeeCount }}</h4>
                                 </div>
                                 <div class="text-end">
                                     <h6 class="mb-0 text-muted">Total Payroll
                                         Cost</h6>
                                     <h3 class="mb-0 fw-bold text-success">{{
-                                        previewData.totalCost | currency:'JD '
+                                        dynamicTotalCost | currency:'JD '
                                         }}</h3>
                                 </div>
                             </div>
@@ -13516,13 +13740,16 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
 import { PdfExportService } from '../../core/services/pdf-export.service';
 import { ExcelExportService } from '../../core/services/excel-export.service';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { NgxMaskDirective } from 'ngx-mask';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-salary',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, TranslatePipe, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
   templateUrl: './salary.component.html',
 })
 export class SalaryComponent implements OnInit {
@@ -13563,6 +13790,7 @@ export class SalaryComponent implements OnInit {
   previewData: any = null;
   isPreviewLoading = false;
   payrollWizardModal: any;
+  excludedEmployees: Set<number> = new Set<number>();
 
   currentPage: number = 1;
   itemsPerPage: number = 10;
@@ -13763,6 +13991,7 @@ export class SalaryComponent implements OnInit {
     this.previewYear = new Date().getFullYear();
     this.previewDepartmentId = null;
     this.previewData = null;
+    this.excludedEmployees.clear();
 
     const modalEl = document.getElementById('payrollWizardModal');
     if (modalEl) {
@@ -13788,7 +14017,8 @@ export class SalaryComponent implements OnInit {
 
   confirmGeneratePayroll() {
     this.isPreviewLoading = true;
-    this.salaryService.generateBatch(this.previewMonth, this.previewYear, this.previewDepartmentId).subscribe({
+    const excludedIds = Array.from(this.excludedEmployees);
+    this.salaryService.generateBatch(this.previewMonth, this.previewYear, this.previewDepartmentId, excludedIds).subscribe({
       next: (res: any) => {
         const count = res?.data ?? res;
         this.isPreviewLoading = false;
@@ -13807,6 +14037,26 @@ export class SalaryComponent implements OnInit {
 
   generatePayroll() {
     this.openWizard();
+  }
+
+  toggleExcludeEmployee(employeeId: number) {
+    if (this.excludedEmployees.has(employeeId)) {
+      this.excludedEmployees.delete(employeeId);
+    } else {
+      this.excludedEmployees.add(employeeId);
+    }
+  }
+
+  get dynamicEmployeeCount(): number {
+    if (!this.previewData || !this.previewData.salaries) return 0;
+    return this.previewData.salaries.filter((s: any) => !this.excludedEmployees.has(s.employeeId)).length;
+  }
+
+  get dynamicTotalCost(): number {
+    if (!this.previewData || !this.previewData.salaries) return 0;
+    return this.previewData.salaries
+      .filter((s: any) => !this.excludedEmployees.has(s.employeeId))
+      .reduce((sum: number, s: any) => sum + s.netAmount, 0);
   }
 
   markAsPaid() {
@@ -13894,6 +14144,50 @@ export class SalaryComponent implements OnInit {
     this.isProcessing = false;
     console.error('Salary save error:', err);
     Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to save salary data.'), 'error');
+  }
+
+  deleteSalary(id: number) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.salaryService.deleteSalary(id).subscribe({
+          next: () => {
+            Swal.fire('Deleted!', 'The salary record has been deleted.', 'success');
+            this.loadSalaries();
+          },
+          error: (err) => this.handleError(err)
+        });
+      }
+    });
+  }
+
+  approveSalary(id: number) {
+    Swal.fire({
+      title: 'Approve Salary?',
+      text: "This will mark the salary as Paid.",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#198754',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Yes, Approve'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.salaryService.approveSalary(id).subscribe({
+          next: () => {
+            Swal.fire('Approved!', 'The salary has been approved.', 'success');
+            this.loadSalaries();
+          },
+          error: (err) => this.handleError(err)
+        });
+      }
+    });
   }
 
   downloadPayslip(salary: any) {
@@ -14374,69 +14668,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 ### File: src\app\shared\image-cropper-modal\image-cropper-modal.component.html
 ```html
-<div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0,0,0,0.5); z-index: 1070;" *ngIf="showModal">
-  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-      <div class="modal-header bg-light border-bottom-0 pb-3">
-        <h5 class="modal-title fw-bold text-dark"><i class="bi bi-crop me-2"></i>{{ title }}</h5>
-        <button type="button" class="btn-close" aria-label="Close" (click)="onCancel()"></button>
-      </div>
-      <div class="modal-body p-4 bg-white text-center">
-        
-        <div *ngIf="isLoading" class="py-5">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <p class="mt-2 text-muted">Loading image...</p>
-        </div>
-
-        <div class="cropper-container bg-light rounded-3 p-2 border" [class.d-none]="isLoading">
-            <image-cropper
-              [imageChangedEvent]="imageChangedEvent"
-              [maintainAspectRatio]="maintainAspectRatio"
-              [aspectRatio]="aspectRatio"
-              [transform]="transform"
-              [canvasRotation]="rotation"
-              format="png"
-              (imageCropped)="imageCropped($event)"
-              (imageLoaded)="imageLoaded($event)"
-              (cropperReady)="cropperReady()"
-              (loadImageFailed)="loadImageFailed()"
-              style="max-height: 50vh;">
-            </image-cropper>
-            <div class="d-flex justify-content-center gap-2 mt-3 mb-2 flex-wrap">
-                <button type="button" class="btn btn-sm btn-outline-secondary" (click)="zoomOut()" title="Zoom Out">
-                    <i class="bi bi-zoom-out"></i>
-                </button>
-                <button type="button" class="btn btn-sm btn-outline-secondary" (click)="zoomIn()" title="Zoom In">
-                    <i class="bi bi-zoom-in"></i>
-                </button>
-                <button type="button" class="btn btn-sm btn-outline-secondary" (click)="rotateLeft()" title="Rotate Left">
-                    <i class="bi bi-arrow-counterclockwise"></i>
-                </button>
-                <button type="button" class="btn btn-sm btn-outline-secondary" (click)="rotateRight()" title="Rotate Right">
-                    <i class="bi bi-arrow-clockwise"></i>
-                </button>
-                <button type="button" class="btn btn-sm btn-outline-danger" (click)="resetImage()" title="Reset">
-                    <i class="bi bi-arrow-counterclockwise"></i> Reset
-                </button>
-            </div>
-        </div>
-      </div>
-      <div class="modal-footer bg-light border-top-0 pt-3">
-        <button type="button" class="btn btn-outline-secondary px-4 rounded-3 fw-medium" (click)="onCancel()">Cancel</button>
-        <button type="button" class="btn btn-primary px-4 rounded-3 fw-medium" (click)="onSave()">
-            <i class="bi bi-check2 me-1"></i> Crop & Save
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-```
-
-### File: src\app\shared\image-cropper-modal\image-cropper-modal.component.ts
-```typescript
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImageCroppedEvent, ImageCropperComponent, LoadedImage, ImageTransform } from 'ngx-image-cropper';
