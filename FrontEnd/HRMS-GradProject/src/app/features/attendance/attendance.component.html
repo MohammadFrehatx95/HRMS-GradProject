@@ -98,9 +98,8 @@
             </div>
             <div class="input-group shadow-sm" style="max-width: 250px;">
                 <input class="form-control bg-white border-end-0" matInput
-                    [(ngModel)]="selectedDate" (ngModelChange)="onFilterChange()"
+                    [(ngModel)]="selectedDate" (ngModelChange)="onFilterChange()" (dateChange)="onFilterChange()"
                     [matDatepicker]="attPicker"
-                    mask="00/00/0000" [dropSpecialCharacters]="false"
                     placeholder="DD/MM/YYYY" style="z-index: 1;">
                 <span class="input-group-text bg-white border-start-0 p-0" style="z-index: 2;">
                     <mat-datepicker-toggle matIconSuffix [for]="attPicker"></mat-datepicker-toggle>
