@@ -344,8 +344,8 @@
 <div class="modal fade show" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0,0,0,0.5);" *ngIf="showAnnouncementModal">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-      <div class="modal-header bg-light border-0 py-3">
-        <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2">
+        <div class="modal-header border-0 py-3" style="background-color: rgba(var(--bs-primary-rgb), 0.05);">
+        <h5 class="modal-title fw-bold d-flex align-items-center gap-2">
           <i class="bi bi-megaphone-fill text-primary"></i> {{ 'Post Announcement' | t }}
         </h5>
         <button type="button" class="btn-close" (click)="closeAnnouncementModal()"></button>
@@ -371,9 +371,9 @@
               </select>
             </div>
             <div class="col-md-6 d-flex flex-column justify-content-end">
-              <label class="form-label fw-semibold text-dark">{{ 'Expiry Date & Time' | t }} <small class="text-muted fw-normal">({{ 'Optional' | t }})</small></label>
+              <label class="form-label fw-semibold">{{ 'Expiry Date & Time' | t }} <small class="text-muted fw-normal">({{ 'Optional' | t }})</small></label>
               <div class="d-flex gap-2">
-                <input type="date" class="form-control bg-white shadow-sm"
+                <input type="date" class="form-control shadow-sm"
                     formControlName="expiryDate">
                 <input type="time" class="form-control shadow-sm" formControlName="expiryTime" style="max-width: 120px;">
               </div>
@@ -383,12 +383,12 @@
           <div class="mb-3">
             <div class="form-check form-switch mb-2">
               <input class="form-check-input" type="checkbox" id="isGeneralSwitch" formControlName="isGeneral">
-              <label class="form-check-label fw-semibold text-dark" for="isGeneralSwitch">{{ 'General Announcement (All Employees)' | t }}</label>
+              <label class="form-check-label fw-semibold" for="isGeneralSwitch">{{ 'General Announcement (All Employees)' | t }}</label>
             </div>
           </div>
 
           <div class="mb-4" *ngIf="!announcementForm.get('isGeneral')?.value">
-            <label class="form-label fw-semibold text-dark">{{ 'Select Target Employees' | t }}</label>
+            <label class="form-label fw-semibold">{{ 'Select Target Employees' | t }}</label>
             
             
             <div class="d-flex gap-2 mb-2">
@@ -400,16 +400,16 @@
             </div>
             
             
-            <div class="form-check mb-2 bg-light p-2 rounded border">
+            <div class="form-check mb-2 p-2 rounded border" style="background-color: rgba(var(--bs-primary-rgb), 0.05);">
                 <input class="form-check-input ms-1" type="checkbox" id="selectAllAnn"
                     [checked]="isAllFilteredAnnouncementEmployeesSelected"
                     (change)="selectAllFilteredAnnouncementEmployees($event)" style="cursor: pointer;">
-                <label class="form-check-label fw-bold text-dark ms-2" for="selectAllAnn" style="cursor: pointer;">
+                <label class="form-check-label fw-bold ms-2" for="selectAllAnn" style="cursor: pointer;">
                     Select All Filtered Employees
                 </label>
             </div>
 
-            <div class="border rounded p-2 overflow-auto" style="max-height: 250px; background-color: var(--bs-body-bg); box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);">
+            <div class="border rounded p-2 overflow-auto" style="max-height: 250px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);">
               <div class="form-check mb-2" *ngFor="let emp of filteredAnnouncementEmployees">
                 <input class="form-check-input" type="checkbox" [id]="'empAnn' + emp.id" 
                        [checked]="announcementForm.get('targetEmployeeIds')?.value?.includes(emp.id)"
@@ -419,8 +419,8 @@
                   <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 10px;">
                     {{ emp.firstName.charAt(0).toUpperCase() }}
                   </div>
-                  <span class="fw-medium text-dark">{{ emp.firstName }} {{ emp.lastName }}</span>
-                  <span class="ms-auto badge bg-light text-secondary border">{{ emp.departmentName || 'No Dept' }}</span>
+                  <span class="fw-medium">{{ emp.firstName }} {{ emp.lastName }}</span>
+                  <span class="ms-auto badge text-secondary border">{{ emp.departmentName || 'No Dept' }}</span>
                 </label>
               </div>
               <div *ngIf="filteredAnnouncementEmployees.length === 0" class="text-center text-muted small py-2">
