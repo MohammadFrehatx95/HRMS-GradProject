@@ -157,18 +157,22 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     let d = undefined;
     if (this.selectedDate) {
-      let dateObj = new Date(this.selectedDate);
-      // If Invalid Date, it might be due to DD/MM/YYYY format from mask
-      if (isNaN(dateObj.getTime()) && typeof this.selectedDate === 'string') {
-        const parts = this.selectedDate.split('/');
-        if (parts.length === 3) {
-          // Attempt parsing as YYYY-MM-DD
-          dateObj = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+      try {
+        let temp: any = this.selectedDate;
+        if (temp && typeof temp.toDate === 'function') {
+          temp = temp.toDate();
         }
-      }
-      
-      if (!isNaN(dateObj.getTime())) {
-        d = new Date(dateObj.getTime() - (dateObj.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+        if (temp instanceof Date && !isNaN(temp.getTime())) {
+          d = new Date(temp.getTime() - (temp.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+        } else if (typeof temp === 'string') {
+          const parts = temp.split('/');
+          if (parts.length === 3) {
+            d = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+            if (isNaN(new Date(d).getTime())) d = new Date(temp).toISOString().split('T')[0];
+          } else d = new Date(temp).toISOString().split('T')[0];
+        }
+      } catch (e) {
+        console.error(e);
       }
     }
     this.attendanceService
@@ -195,18 +199,22 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     let d = undefined;
     if (this.selectedDate) {
-      let dateObj = new Date(this.selectedDate);
-      // If Invalid Date, it might be due to DD/MM/YYYY format from mask
-      if (isNaN(dateObj.getTime()) && typeof this.selectedDate === 'string') {
-        const parts = this.selectedDate.split('/');
-        if (parts.length === 3) {
-          // Attempt parsing as YYYY-MM-DD
-          dateObj = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+      try {
+        let temp: any = this.selectedDate;
+        if (temp && typeof temp.toDate === 'function') {
+          temp = temp.toDate();
         }
-      }
-      
-      if (!isNaN(dateObj.getTime())) {
-        d = new Date(dateObj.getTime() - (dateObj.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+        if (temp instanceof Date && !isNaN(temp.getTime())) {
+          d = new Date(temp.getTime() - (temp.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+        } else if (typeof temp === 'string') {
+          const parts = temp.split('/');
+          if (parts.length === 3) {
+            d = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+            if (isNaN(new Date(d).getTime())) d = new Date(temp).toISOString().split('T')[0];
+          } else d = new Date(temp).toISOString().split('T')[0];
+        }
+      } catch (e) {
+        console.error(e);
       }
     }
     this.attendanceService
