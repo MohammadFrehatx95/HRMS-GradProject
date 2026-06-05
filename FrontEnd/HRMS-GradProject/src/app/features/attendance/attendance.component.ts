@@ -155,7 +155,13 @@ export class AttendanceComponent implements OnInit, OnDestroy {
 
   loadAllAttendance() {
     this.isLoading = true;
-    const d = this.selectedDate || undefined;
+    let d = undefined;
+    if (this.selectedDate) {
+      const dateObj = new Date(this.selectedDate);
+      if (!isNaN(dateObj.getTime())) {
+        d = new Date(dateObj.getTime() - (dateObj.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+      }
+    }
     this.attendanceService
       .getAllAttendance(
         d,
@@ -178,7 +184,13 @@ export class AttendanceComponent implements OnInit, OnDestroy {
 
   loadMyAttendance() {
     this.isLoading = true;
-    const d = this.selectedDate || undefined;
+    let d = undefined;
+    if (this.selectedDate) {
+      const dateObj = new Date(this.selectedDate);
+      if (!isNaN(dateObj.getTime())) {
+        d = new Date(dateObj.getTime() - (dateObj.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+      }
+    }
     this.attendanceService
       .getMyAttendance(
         d,
