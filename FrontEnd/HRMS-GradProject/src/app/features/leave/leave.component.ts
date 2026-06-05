@@ -419,6 +419,34 @@ export class LeaveComponent implements OnInit {
     });
   }
 
+  showLeaveBalance(leave: any) {
+    const annual = leave.employeeAnnualLeaveBalance !== undefined && leave.employeeAnnualLeaveBalance !== null ? leave.employeeAnnualLeaveBalance : '?';
+    const sick = leave.employeeSickLeaveBalance !== undefined && leave.employeeSickLeaveBalance !== null ? leave.employeeSickLeaveBalance : '?';
+    const emergency = leave.employeeEmergencyLeaveBalance !== undefined && leave.employeeEmergencyLeaveBalance !== null ? leave.employeeEmergencyLeaveBalance : '?';
+    
+    Swal.fire({
+      title: `${leave.employeeName}'s Balance`,
+      html: `
+        <div class="d-flex flex-column gap-3 text-start mt-3">
+          <div class="d-flex justify-content-between align-items-center p-3 bg-primary bg-opacity-10 rounded-3 border border-primary border-opacity-25">
+            <span class="fw-bold text-primary"><i class="bi bi-airplane-engines me-2"></i>Annual Leave</span>
+            <span class="badge bg-primary text-white fs-6 rounded-pill px-3 py-2">${annual} Days</span>
+          </div>
+          <div class="d-flex justify-content-between align-items-center p-3 bg-success bg-opacity-10 rounded-3 border border-success border-opacity-25">
+            <span class="fw-bold text-success"><i class="bi bi-heart-pulse me-2"></i>Sick Leave</span>
+            <span class="badge bg-success text-white fs-6 rounded-pill px-3 py-2">${sick} Days</span>
+          </div>
+          <div class="d-flex justify-content-between align-items-center p-3 bg-danger bg-opacity-10 rounded-3 border border-danger border-opacity-25">
+            <span class="fw-bold text-danger"><i class="bi bi-exclamation-triangle me-2"></i>Emergency Leave</span>
+            <span class="badge bg-danger text-white fs-6 rounded-pill px-3 py-2">${emergency} Days</span>
+          </div>
+        </div>
+      `,
+      confirmButtonText: 'Close',
+      confirmButtonColor: '#0d6efd'
+    });
+  }
+
   exportToExcel() {
     this.excelExportService.exportTableToExcel(
       ['Employee', 'Type', 'Start Date', 'End Date', 'Days', 'Status'],

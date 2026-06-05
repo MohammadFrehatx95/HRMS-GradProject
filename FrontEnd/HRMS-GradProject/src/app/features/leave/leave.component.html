@@ -242,6 +242,12 @@
                                 *ngIf="getStatusText(leave.status) === 'Pending'"
                                 class="d-flex justify-content-end gap-2">
                                 <button
+                                    class="btn btn-sm btn-outline-info rounded-3 px-2 shadow-sm"
+                                    (click)="showLeaveBalance(leave)"
+                                    title="View Leave Balance">
+                                    <i class="bi bi-info-circle-fill"></i>
+                                </button>
+                                <button
                                     class="btn btn-sm btn-success rounded-3 shadow-sm px-3"
                                     (click)="changeStatus(leave.id, 1)">
                                     {{ 'Approve' | t }}

@@ -116,13 +116,9 @@
                             {{ calcHours(rec) }}
                         </td>
                         <td data-label="Status" class="py-3 px-4">
-                            <span class="badge rounded-pill px-3 py-2"
+                            <span class="badge rounded-pill px-3 py-2 shadow-sm text-white"
                                 [class.bg-success]="rec.clockOut && rec.clockOut !== '00:00:00'"
-                                [class.bg-opacity-10]="true"
-                                [class.text-success]="rec.clockOut && rec.clockOut !== '00:00:00'"
-                                [class.bg-warning]="!rec.clockOut || rec.clockOut === '00:00:00'"
-                                [class.text-warning]="!rec.clockOut || rec.clockOut === '00:00:00'"
-                                style="border: 1px solid currentColor; opacity: 0.9;">
+                                [class.bg-primary]="!rec.clockOut || rec.clockOut === '00:00:00'">
                                 <i class="bi me-1"
                                    [class.bi-check-circle-fill]="rec.clockOut && rec.clockOut !== '00:00:00'"
                                    [class.bi-clock-fill]="!rec.clockOut || rec.clockOut === '00:00:00'"></i>

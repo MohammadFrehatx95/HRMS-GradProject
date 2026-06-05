@@ -11,4 +11,7 @@ public class EmployeeProfileDto
     public DateTime HireDate { get; set; }
     public string? ProfilePictureUrl { get; set; }
     public string Role { get; set; } = string.Empty;
+    public int? AnnualLeaveBalance { get; set; }
+    public int? SickLeaveBalance { get; set; }
+    public int? EmergencyLeaveBalance { get; set; }
 }

@@ -91,7 +91,10 @@ public class MappingProfile : Profile
             .ForMember(d => d.Reason, o => o.MapFrom(s => s.Reason))
             .ForMember(d => d.RejectionReason, o => o.MapFrom(s => s.RejectionReason))
             .ForMember(d => d.ReviewedById, o => o.MapFrom(s => s.ReviewedById))
-            .ForMember(d => d.ReviewedAt, o => o.MapFrom(s => s.ReviewedAt));
+            .ForMember(d => d.ReviewedAt, o => o.MapFrom(s => s.ReviewedAt))
+            .ForMember(d => d.EmployeeAnnualLeaveBalance, o => o.MapFrom(s => s.Employee.AnnualLeaveBalance))
+            .ForMember(d => d.EmployeeSickLeaveBalance, o => o.MapFrom(s => s.Employee.SickLeaveBalance))
+            .ForMember(d => d.EmployeeEmergencyLeaveBalance, o => o.MapFrom(s => s.Employee.EmergencyLeaveBalance));
 
        
         CreateMap<Meeting, MeetingDto>()

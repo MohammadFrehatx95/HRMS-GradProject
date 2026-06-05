@@ -20,5 +20,9 @@ namespace Application.DTOs.Leave
         public DateTime? ReviewedAt { get; set; }
         
         public string? AttachmentUrl { get; set; }
+        
+        public int? EmployeeAnnualLeaveBalance { get; set; }
+        public int? EmployeeSickLeaveBalance { get; set; }
+        public int? EmployeeEmergencyLeaveBalance { get; set; }
     }
 }

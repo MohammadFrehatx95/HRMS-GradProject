@@ -273,6 +273,29 @@
                     </div>
                 </div>
                 <h6 class="detail-section-title">
+                    <i class="bi bi-airplane-engines-fill text-info me-2"></i>Leave Balances
+                </h6>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="detail-item border-primary border-opacity-25 bg-primary bg-opacity-10">
+                            <span class="detail-label text-primary"><i class="bi bi-airplane-engines me-1"></i>Annual</span>
+                            <span class="detail-value text-primary fs-5">{{ selectedEmployeeProfile?.annualLeaveBalance !== undefined ? selectedEmployeeProfile?.annualLeaveBalance + ' Days' : '—' }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="detail-item border-success border-opacity-25 bg-success bg-opacity-10">
+                            <span class="detail-label text-success"><i class="bi bi-heart-pulse me-1"></i>Sick</span>
+                            <span class="detail-value text-success fs-5">{{ selectedEmployeeProfile?.sickLeaveBalance !== undefined ? selectedEmployeeProfile?.sickLeaveBalance + ' Days' : '—' }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="detail-item border-danger border-opacity-25 bg-danger bg-opacity-10">
+                            <span class="detail-label text-danger"><i class="bi bi-exclamation-triangle me-1"></i>Emergency</span>
+                            <span class="detail-value text-danger fs-5">{{ selectedEmployeeProfile?.emergencyLeaveBalance !== undefined ? selectedEmployeeProfile?.emergencyLeaveBalance + ' Days' : '—' }}</span>
+                        </div>
+                    </div>
+                </div>
+                <h6 class="detail-section-title">
                     <i class="bi bi-activity text-warning me-2"></i>Account Status
                 </h6>
                 <div class="d-flex gap-3 flex-wrap">
