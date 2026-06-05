@@ -31,7 +31,7 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-meetings',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe, MatDatepickerModule, MatNativeDateModule],
   templateUrl: './meetings.component.html',
   styleUrls: ['./meetings.component.css']
 })

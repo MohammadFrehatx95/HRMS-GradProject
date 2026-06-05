@@ -40,8 +40,7 @@ import { NgxMaskDirective } from 'ngx-mask';
     ReactiveFormsModule,
     FormsModule,
     MatDatepickerModule,
-    MatNativeDateModule,
-    NgxMaskDirective
+    MatNativeDateModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],

@@ -12,7 +12,7 @@ import { NgxMaskDirective } from 'ngx-mask';
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
+  imports: [CommonModule, FormsModule, TranslatePipe, MatDatepickerModule, MatNativeDateModule],
   templateUrl: './events.component.html',
   styleUrl: './events.component.css'
 })

@@ -17,7 +17,7 @@ import { NgxMaskDirective } from 'ngx-mask';
 @Component({
   selector: 'app-attendance',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, RouterLink, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
+  imports: [CommonModule, FormsModule, TranslatePipe, RouterLink, MatDatepickerModule, MatNativeDateModule],
   templateUrl: './attendance.component.html',
 })
 export class AttendanceComponent implements OnInit, OnDestroy {

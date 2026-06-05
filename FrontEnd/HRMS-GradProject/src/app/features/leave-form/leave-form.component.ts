@@ -16,7 +16,7 @@ import { NgxMaskDirective } from 'ngx-mask';
 @Component({
   selector: 'app-leave-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, MatDatepickerModule, MatNativeDateModule],
   templateUrl: './leave-form.component.html',
 })
 export class LeaveFormComponent {

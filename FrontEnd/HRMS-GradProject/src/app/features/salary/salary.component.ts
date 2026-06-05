@@ -21,7 +21,7 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-salary',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
+  imports: [CommonModule, FormsModule, TranslatePipe, MatDatepickerModule, MatNativeDateModule],
   templateUrl: './salary.component.html',
 })
 export class SalaryComponent implements OnInit {

@@ -21,7 +21,7 @@ import { NgxMaskDirective } from 'ngx-mask';
 @Component({
   selector: 'app-employee-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, ImageCropperModalComponent, TranslatePipe, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, ImageCropperModalComponent, TranslatePipe, MatDatepickerModule, MatNativeDateModule],
   templateUrl: './employee-form.component.html',
   styleUrl: './employee-form.component.css',
 })

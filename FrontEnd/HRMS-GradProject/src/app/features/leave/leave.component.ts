@@ -19,7 +19,7 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-leave',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, ImageCropperModalComponent, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
+  imports: [CommonModule, FormsModule, TranslatePipe, ImageCropperModalComponent, MatDatepickerModule, MatNativeDateModule],
   templateUrl: './leave.component.html',
 })
 export class LeaveComponent implements OnInit {
@@ -274,20 +274,20 @@ export class LeaveComponent implements OnInit {
   }
 
   submitLeaveRequest() {
-    const start = new Date(this.leaveData.startDate);
-    start.setHours(0, 0, 0, 0);
+    const reqStart = new Date(this.leaveData.startDate);
+    reqStart.setHours(0, 0, 0, 0);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    if (start.getTime() < today.getTime()) {
+    if (reqStart.getTime() < today.getTime()) {
       Swal.fire('Invalid Date', 'Start Date cannot be in the past.', 'warning');
       return;
     }
 
-    const end = new Date(this.leaveData.endDate);
-    end.setHours(0, 0, 0, 0);
+    const reqEnd = new Date(this.leaveData.endDate);
+    reqEnd.setHours(0, 0, 0, 0);
 
-    if (end.getTime() < start.getTime()) {
+    if (reqEnd.getTime() < reqStart.getTime()) {
       Swal.fire(
         'Invalid Date',
         'End Date cannot be before the Start Date.',
