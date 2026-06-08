@@ -42,8 +42,6 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   cooldownSeconds: number = 0;
   totalTokensUsed: number = 0;
   isAdminOrHR: boolean = false;
-  
-  isAdminOrHR: boolean = false;
 
   readonly MAX_CHARS = 250;
   readonly COOLDOWN_DURATION = 4;
