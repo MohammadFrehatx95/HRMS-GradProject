@@ -18,19 +18,28 @@ public class EmailService(IOptions<EmailSettings> options) : IEmailService
         {
             try
             {
-                var message = new MimeMessage();
-                message.From.Add(new MailboxAddress(_settings.FromName, _settings.FromEmail));
-                message.To.Add(new MailboxAddress(toName, toEmail));
-                message.Subject = subject;
-                message.Body = new BodyBuilder { HtmlBody = htmlBody }.ToMessageBody();
+                using var client = new HttpClient();
 
-                using var client = new SmtpClient();
-                client.Timeout = 10000; // 10 seconds timeout
-                await client.ConnectAsync(
-                    _settings.Host, _settings.Port, SecureSocketOptions.StartTls);
-                await client.AuthenticateAsync(_settings.Username, _settings.Password);
-                await client.SendAsync(message);
-                await client.DisconnectAsync(true);
+                var payload = new
+                {
+                    to = toEmail,
+                    subject = subject,
+                    htmlBody = htmlBody
+                };
+
+                var content = new System.Net.Http.StringContent(
+                    System.Text.Json.JsonSerializer.Serialize(payload),
+                    System.Text.Encoding.UTF8,
+                    "application/json");
+
+                // Send to Google Apps Script Web App
+                var response = await client.PostAsync(_settings.GasUrl, content);
+                
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorDetails = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"[EmailService] GAS API Error: {response.StatusCode} - {errorDetails}");
+                }
             }
             catch (Exception ex)
             {

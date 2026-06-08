@@ -1,4 +1,4 @@
-﻿
+
 
 namespace Application.Settings
 {
@@ -10,5 +10,7 @@ namespace Application.Settings
         public string Password { get; set; } = string.Empty;
         public string FromName { get; set; } = string.Empty;
         public string FromEmail { get; set; } = string.Empty;
+        public string ResendApiKey { get; set; } = string.Empty;
+        public string GasUrl { get; set; } = string.Empty;
     }
 }
