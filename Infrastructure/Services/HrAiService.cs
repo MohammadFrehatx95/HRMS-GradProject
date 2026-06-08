@@ -15,8 +15,7 @@ namespace Infrastructure.Services;
 public class HrAiService(
     IHttpClientFactory httpFactory,
     IUnitOfWork uow,
-    IOptions<GroqSettings> options,
-    ITokenTrackerService tokenTracker) : IHrAiService
+    IOptions<GroqSettings> options) : IHrAiService
 {
 
     private readonly GroqSettings _cfg = options.Value;
@@ -296,8 +295,6 @@ public class HrAiService(
         var tokens = root.GetProperty("usage")
                          .GetProperty("total_tokens")
                          .GetInt32();
-
-        await tokenTracker.AddTokensAsync(tokens);
 
         return new AiResponseDto
         {
@@ -680,8 +677,6 @@ public class HrAiService(
                 // No tool calls, we have the final answer
                 var reply = contentProp.ValueKind == JsonValueKind.String ? contentProp.GetString() : string.Empty;
                 
-                await tokenTracker.AddTokensAsync(totalTokens);
-                
                 return new AiResponseDto
                 {
                     Reply = reply?.Trim() ?? string.Empty,
@@ -690,8 +685,6 @@ public class HrAiService(
                 };
             }
         }
-
-        await tokenTracker.AddTokensAsync(totalTokens);
 
         return new AiResponseDto
         {

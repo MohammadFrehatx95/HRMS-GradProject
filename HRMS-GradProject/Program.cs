@@ -144,6 +144,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.MapControllers();
-app.MapHub<Infrastructure.Services.AiHub>("/hubs/ai");
+
 
 app.Run();

@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AiService, AiResponseDto, TokenStatsDto } from '../../core/services/ai.service';
+import { AiService, AiResponseDto } from '../../core/services/ai.service';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
@@ -43,9 +43,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   totalTokensUsed: number = 0;
   isAdminOrHR: boolean = false;
   
-  tokenStats: TokenStatsDto = { usedTokens: 0, maxTokensPerMinute: 14400, secondsUntilReset: 60 };
-  private tokenSub: Subscription | undefined;
-  private timerInterval: any;
+  isAdminOrHR: boolean = false;
 
   readonly MAX_CHARS = 250;
   readonly COOLDOWN_DURATION = 4;
@@ -78,16 +76,6 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.isAdminOrHR = this.authService.isAdminOrHR();
     this.loadChat();
-
-    this.tokenSub = this.aiService.tokenStats$.subscribe(stats => {
-      this.tokenStats = stats;
-    });
-
-    this.timerInterval = setInterval(() => {
-      if (this.tokenStats.secondsUntilReset > 0) {
-        this.tokenStats.secondsUntilReset--;
-      }
-    }, 1000);
 
     if (this.messages.length === 0) {
       this.messages.push({
@@ -130,8 +118,6 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.tokenSub) this.tokenSub.unsubscribe();
-    if (this.timerInterval) clearInterval(this.timerInterval);
   }
 
   scrollToBottom(): void {

@@ -67,7 +67,7 @@ public static class DependencyInjection
         services.Configure<GroqSettings>(configuration.GetSection("GroqSettings"));
         services.AddHttpClient(); 
         services.AddScoped<IHrAiService, HrAiService>();
-        services.AddSingleton<ITokenTrackerService, TokenTrackerService>();
+
 
         // obtain IConfiguration from the service collection to avoid missing 'configuration' variable
 

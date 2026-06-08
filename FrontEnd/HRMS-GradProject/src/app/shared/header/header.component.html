@@ -110,12 +110,13 @@
                                     title="Mark all as read">
                                 <i class="bi bi-check2-all fs-6"></i>
                             </button>
-                            <button class="btn btn-link action-icon-btn text-decoration-none p-0 text-danger" 
+                            <button class="btn btn-link action-icon-btn text-decoration-none p-0 text-danger d-flex align-items-center gap-1" 
                                     (click)="deleteAllNotifications($event)" 
                                     [disabled]="notifications.length === 0"
                                     [class.text-muted]="notifications.length === 0"
                                     title="Delete all notifications">
                                 <i class="bi bi-trash fs-6"></i>
+                                <span class="small">{{ 'Clear All' | t }}</span>
                             </button>
                         </div>
                     </li>
