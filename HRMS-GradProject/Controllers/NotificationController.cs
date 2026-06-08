@@ -15,55 +15,54 @@ namespace HRMS_GradProject.Controllers
     public class NotificationController(
         INotificationService notificationService) : ControllerBase
     {
-        private int GetUserId() =>
-            int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        private int? GetUserId() =>
+            int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var id) ? id : null;
 
-        // GET /api/notifications
         [HttpGet]
         public async Task<IActionResult> GetMy()
         {
-            var result = await notificationService
-                             .GetMyNotificationsAsync(GetUserId());
+            var uid = GetUserId(); if (uid is null) return Unauthorized();
+            var result = await notificationService.GetMyNotificationsAsync(uid.Value);
             return Ok(ApiResponse<List<NotificationDto>>.Ok(result));
         }
 
-        // GET /api/notifications/unread-count
         [HttpGet("unread-count")]
         public async Task<IActionResult> GetUnreadCount()
         {
-            var count = await notificationService.GetUnreadCountAsync(GetUserId());
+            var uid = GetUserId(); if (uid is null) return Unauthorized();
+            var count = await notificationService.GetUnreadCountAsync(uid.Value);
             return Ok(ApiResponse<int>.Ok(count));
         }
 
-        // PUT /api/notifications/{id}/read
         [HttpPut("{id}/read")]
         public async Task<IActionResult> MarkAsRead(int id)
         {
-            await notificationService.MarkAsReadAsync(id, GetUserId());
+            var uid = GetUserId(); if (uid is null) return Unauthorized();
+            await notificationService.MarkAsReadAsync(id, uid.Value);
             return Ok(ApiResponse.Ok("Notification marked as read"));
         }
 
-        // PUT /api/notifications/read-all
         [HttpPut("read-all")]
         public async Task<IActionResult> MarkAllAsRead()
         {
-            await notificationService.MarkAllAsReadAsync(GetUserId());
+            var uid = GetUserId(); if (uid is null) return Unauthorized();
+            await notificationService.MarkAllAsReadAsync(uid.Value);
             return Ok(ApiResponse.Ok("All notifications marked as read"));
         }
 
-        // DELETE /api/notifications/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await notificationService.DeleteAsync(id, GetUserId());
+            var uid = GetUserId(); if (uid is null) return Unauthorized();
+            await notificationService.DeleteAsync(id, uid.Value);
             return Ok(ApiResponse.Ok("Notification deleted"));
         }
 
-        // DELETE /api/notifications/delete-all
         [HttpDelete("delete-all")]
         public async Task<IActionResult> DeleteAll()
         {
-            await notificationService.DeleteAllAsync(GetUserId());
+            var uid = GetUserId(); if (uid is null) return Unauthorized();
+            await notificationService.DeleteAllAsync(uid.Value);
             return Ok(ApiResponse.Ok("All notifications deleted"));
         }
     }

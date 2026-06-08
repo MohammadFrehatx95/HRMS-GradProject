@@ -135,7 +135,6 @@ export class SalaryComponent implements OnInit {
         this.filteredEmployeesList = [...this.employeesList];
       },
       error: (err: any) => {
-        console.error('Error fetching employees:', err);
       },
     });
   }
@@ -188,7 +187,6 @@ export class SalaryComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching salaries:', err);
         this.isLoading = false;
       },
     });
@@ -411,7 +409,6 @@ export class SalaryComponent implements OnInit {
 
   private handleError(err: any) {
     this.isProcessing = false;
-    console.error('Salary save error:', err);
     Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to save salary data.'), 'error');
   }
 

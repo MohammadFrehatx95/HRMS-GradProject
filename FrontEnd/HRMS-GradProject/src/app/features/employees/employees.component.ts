@@ -107,7 +107,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.departmentsList = data;
       },
-      error: (err) => console.error('Error fetching departments:', err)
     });
   }
 
@@ -179,7 +178,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching employees:', err);
         this.isLoading = false;
       },
     });
@@ -207,7 +205,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
             this.showToast('Employee deleted successfully', 'success');
           },
           error: (err) => {
-            console.error('Error deleting employee:', err);
             this.showToast('Failed to delete employee', 'error');
           },
         });

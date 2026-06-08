@@ -111,7 +111,6 @@ export class MyProfileComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching my profile:', err);
         this.isLoading = false;
       },
     });
@@ -226,13 +225,27 @@ export class MyProfileComponent implements OnInit {
     let requestsPending = 0;
     let hasError = false;
 
-    if (this.pwdData.oldPassword && this.pwdData.newPassword) {
+    if (this.pwdData.newPassword || this.pwdData.confirmNewPassword || this.pwdData.oldPassword) {
+      if (!this.pwdData.oldPassword) {
+        Swal.fire('Validation Error', 'Current password is required to change your password.', 'warning');
+        return;
+      }
+      if (!this.pwdData.newPassword || !this.pwdData.confirmNewPassword) {
+        Swal.fire('Validation Error', 'Please enter and confirm your new password.', 'warning');
+        return;
+      }
+      if (this.pwdData.newPassword !== this.pwdData.confirmNewPassword) {
+        Swal.fire('Validation Error', 'New passwords do not match.', 'warning');
+        return;
+      }
+      
       requestsPending++;
       this.isChangingPwd = true;
       this.authService
         .changePassword({
-          oldPassword: this.pwdData.oldPassword,
+          currentPassword: this.pwdData.oldPassword,
           newPassword: this.pwdData.newPassword,
+          confirmNewPassword: this.pwdData.confirmNewPassword
         })
         .subscribe({
           next: () => {
@@ -376,7 +389,6 @@ export class MyProfileComponent implements OnInit {
         this.isLoadingFingerprints = false;
       })
       .catch(err => {
-        console.error('Failed to load fingerprints:', err);
         this.isLoadingFingerprints = false;
       });
   }

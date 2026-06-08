@@ -42,7 +42,6 @@ export class EventsComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error loading events:', err);
         this.isLoading = false;
         Swal.fire('Error', 'Failed to load upcoming events.', 'error');
       }
@@ -86,7 +85,6 @@ export class EventsComponent implements OnInit {
       },
       error: (err) => {
         this.isSubmitting = false;
-        console.error(err);
         Swal.fire('Error', 'Failed to add event.', 'error');
       }
     });
@@ -109,7 +107,6 @@ export class EventsComponent implements OnInit {
             this.loadEvents();
           },
           error: (err) => {
-            console.error(err);
             Swal.fire('Error', 'Failed to delete event.', 'error');
           }
         });

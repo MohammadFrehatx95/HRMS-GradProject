@@ -27,10 +27,14 @@ public class HrAiController(IHrAiService aiService) : ControllerBase
     [ValidateModel]
     public async Task<IActionResult> Chat([FromBody] AiChatDto dto)
     {
+        var role = GetRole();
+        if (dto.Mode == Domain.Enums.AiMode.DeepThink && role == "Employee")
+            return StatusCode(403, Application.Common.ApiResponse.Fail("Deep Think mode is not available for your account."));
+
         var result = await aiService.ChatAsync(
             dto.Message,
             GetEmployeeId(),
-            GetRole(),
+            role,
             dto.Mode,
             dto.History);
 

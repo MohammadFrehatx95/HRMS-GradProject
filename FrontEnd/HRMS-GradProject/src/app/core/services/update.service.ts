@@ -38,7 +38,6 @@ export class UpdateService {
             : 'Already on the latest version.',
         );
       } catch (err) {
-        console.error('Failed to check for updates:', err);
       }
     });
   }

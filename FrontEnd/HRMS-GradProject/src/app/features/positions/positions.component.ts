@@ -52,7 +52,6 @@ export class PositionsComponent implements OnInit {
         const extracted = Array.isArray(res) ? res : res?.data || [];
         this.departmentsList = Array.isArray(extracted) ? extracted : [];
       },
-      error: (err) => console.error('Error fetching departments:', err),
     });
   }
 
@@ -65,7 +64,6 @@ export class PositionsComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching positions:', err);
         this.isLoading = false;
       },
     });
@@ -143,7 +141,6 @@ export class PositionsComponent implements OnInit {
             this.loadPositions();
           },
           error: (err) => {
-            console.error('Delete error:', err);
             Swal.fire('Error!', 'Failed to delete position.', 'error');
           },
         });
@@ -165,7 +162,6 @@ export class PositionsComponent implements OnInit {
 
   private handleError(err: any) {
     this.isProcessing = false;
-    console.error('Position save error:', err);
     Swal.fire(
       'Error',
       getFriendlyErrorMessage(err, 'Failed to save position data.'),

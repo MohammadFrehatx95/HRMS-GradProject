@@ -66,6 +66,7 @@ export class DashboardComponent implements OnInit {
   allAttendances: any[] = [];
   isAdmin: boolean = false;
   isAdminOrHR: boolean = false;
+  isUserOnly: boolean = false;
 
   annualLeavePercent: number = 0;
   sickLeavePercent: number = 0;
@@ -87,7 +88,8 @@ export class DashboardComponent implements OnInit {
   attendanceRateChartInstance: any;
 
   downloadSystemReport() {
-    const doc = new jsPDF({
+    try {
+      const doc = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
       format: 'a4',
@@ -347,6 +349,9 @@ export class DashboardComponent implements OnInit {
     }
 
     doc.save(`System_Summary_Report_${todayStr}.pdf`);
+    } catch (error) {
+      Swal.fire('Error', 'Failed to generate PDF report. Please try again.', 'error');
+    }
   }
 
   private _pdfSectionHeader(
@@ -429,19 +434,20 @@ export class DashboardComponent implements OnInit {
       priority: ['Normal', Validators.required],
       isGeneral: [true],
       targetEmployeeIds: [[]],
-      expiryDate: [''],
-      expiryTime: [''],
+      expiryDate: ['', Validators.required],
+      expiryTime: ['', Validators.required],
     });
   }
 
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
+    this.isUserOnly = this.authService.getUserRole()?.toLowerCase() === 'user';
 
     if (this.isAdminOrHR) {
       this.loadAdminStats();
       this.loadEmployeesForSelect();
-    } else {
+    } else if (!this.isUserOnly) {
       this.loadEmployeeStats();
     }
 
@@ -463,7 +469,6 @@ export class DashboardComponent implements OnInit {
       next: (res) => {
         this.announcements = res.items;
       },
-      error: (err) => console.error('Failed to load announcements', err),
     });
   }
 
@@ -566,7 +571,6 @@ export class DashboardComponent implements OnInit {
             this.pendingPayrollCount = preview.employeeCount;
           }
         },
-        error: (err) => console.error('Error fetching payroll preview:', err),
       });
     }
 
@@ -576,7 +580,6 @@ export class DashboardComponent implements OnInit {
         this.totalEmployees = employees.length;
         this.calculateAttendanceRate();
       },
-      error: (err) => console.error('Error fetching employees:', err),
     });
 
     this.leaveService.getAllLeaves(undefined, undefined, 1, 1000).subscribe({
@@ -623,14 +626,12 @@ export class DashboardComponent implements OnInit {
           this.renderLeaveChart(annual, sick, emergency, unpaid);
         }, 100);
       },
-      error: (err) => console.error('Error fetching leaves:', err),
     });
 
     this.deptService.getDepartments().subscribe({
       next: (departments: any[]) => {
         this.departmentsCount = departments.length;
       },
-      error: (err) => console.error('Error fetching departments:', err),
     });
 
     this.salaryService.getAllSalaries(undefined, undefined, 1, 1000).subscribe({
@@ -641,7 +642,6 @@ export class DashboardComponent implements OnInit {
           0,
         );
       },
-      error: (err) => console.error('Error fetching salaries:', err),
     });
 
     this.attendanceService.getAllAttendance(undefined, 1, 1000).subscribe({
@@ -654,7 +654,6 @@ export class DashboardComponent implements OnInit {
         this.allAttendances = attendances;
         this.calculateAttendanceRate();
       },
-      error: (err) => console.error('Error fetching attendance overview:', err),
     });
   }
 
@@ -755,7 +754,6 @@ export class DashboardComponent implements OnInit {
 
         this.employeeAnnualLeaveBalance = 14 - approvedAnnualLeavesDays;
       },
-      error: (err) => console.error('Error fetching my leaves:', err),
     });
 
     this.attendanceService.getMyAttendance(undefined, 1, 1000).subscribe({
@@ -795,7 +793,6 @@ export class DashboardComponent implements OnInit {
 
         this.employeeHoursWorked = Math.round(totalHours);
       },
-      error: (err) => console.error('Error fetching my attendance:', err),
     });
   }
 
@@ -991,19 +988,23 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
-    const headers = ['Employee', 'Date', 'Clock In', 'Clock Out'];
-    const data = this.recentAttendances.map((att) => [
+    try {
+      const headers = ['Employee', 'Date', 'Clock In', 'Clock Out'];
+      const data = this.recentAttendances.map((att) => [
       att.employeeName || 'Emp #' + att.employeeId,
       att.date ? new Date(att.date).toLocaleDateString() : '',
       att.clockIn || '--:--',
       att.clockOut && att.clockOut !== '00:00:00' ? att.clockOut : '--:--',
     ]);
 
-    this.excelExportService.exportTableToExcel(
-      headers,
-      data,
-      'Recent_Attendances',
-    );
+      this.excelExportService.exportTableToExcel(
+        headers,
+        data,
+        'Recent_Attendances',
+      );
+    } catch (error) {
+      Swal.fire('Error', 'Failed to export to Excel. Please try again.', 'error');
+    }
   }
 
   exportMyRecentAttendancesToExcel() {
@@ -1016,17 +1017,21 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
-    const headers = ['Date', 'Clock In', 'Clock Out'];
-    const data = this.myRecentAttendances.map((att) => [
+    try {
+      const headers = ['Date', 'Clock In', 'Clock Out'];
+      const data = this.myRecentAttendances.map((att) => [
       att.date ? new Date(att.date).toLocaleDateString() : '',
       att.clockIn || '--:--',
       att.clockOut && att.clockOut !== '00:00:00' ? att.clockOut : '--:--',
     ]);
 
-    this.excelExportService.exportTableToExcel(
-      headers,
-      data,
-      'My_Recent_Attendances',
-    );
+      this.excelExportService.exportTableToExcel(
+        headers,
+        data,
+        'My_Recent_Attendances',
+      );
+    } catch (error) {
+      Swal.fire('Error', 'Failed to export to Excel. Please try again.', 'error');
+    }
   }
 }

@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../core/services/notification.service';
 import { Router } from '@angular/router';
@@ -71,13 +71,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.notifications = extracted;
         this.unreadCount = this.notifications.filter((n) => !n.isRead).length;
       },
-      error: (err) => console.error('Error fetching notifications:', err),
     });
   }
 
-  markAsRead(notification: any) {
+  markAsRead(notification: any, event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    
     if (notification.isRead) {
-      this.navigateBasedOnNotification(notification);
+      if (!event) this.navigateBasedOnNotification(notification);
       return;
     }
 
@@ -85,9 +88,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
       next: () => {
         notification.isRead = true;
         this.unreadCount = Math.max(0, this.unreadCount - 1);
-        this.navigateBasedOnNotification(notification);
+        if (!event) this.navigateBasedOnNotification(notification);
       },
-      error: (err) => console.error('Error marking as read:', err),
     });
   }
 
@@ -100,7 +102,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.notifications.forEach(n => n.isRead = true);
         this.unreadCount = 0;
       },
-      error: (err) => console.error('Error marking all as read:', err),
     });
   }
 
@@ -122,7 +123,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
             this.notifications = this.notifications.filter(n => n.id !== id);
             this.unreadCount = this.notifications.filter((n) => !n.isRead).length;
           },
-          error: (err) => console.error('Error deleting notification:', err)
         });
       }
     });
@@ -148,7 +148,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
             this.notifications = [];
             this.unreadCount = 0;
           },
-          error: (err) => console.error('Error deleting all notifications:', err)
         });
       }
     });

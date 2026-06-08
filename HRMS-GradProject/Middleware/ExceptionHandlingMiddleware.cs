@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Text.Json;
 using Application.Common;
 
@@ -29,7 +29,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
             UnauthorizedAccessException => (HttpStatusCode.Unauthorized, ex.Message),
             ArgumentException => (HttpStatusCode.BadRequest, ex.Message),
             InvalidOperationException => (HttpStatusCode.BadRequest, ex.Message),
-            _  => (HttpStatusCode.InternalServerError, ex.InnerException?.Message ?? ex.Message)
+            _ => (HttpStatusCode.InternalServerError, "An unexpected error occurred. Please try again later.")
         };
 
         context.Response.StatusCode = (int) statusCode;

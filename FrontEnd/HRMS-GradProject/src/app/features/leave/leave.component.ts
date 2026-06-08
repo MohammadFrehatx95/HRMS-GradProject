@@ -138,7 +138,6 @@ export class LeaveComponent implements OnInit {
           this.leaveSettings = res;
         }
       },
-      error: (err) => console.error('Failed to load leave settings', err)
     });
   }
 
@@ -175,7 +174,6 @@ export class LeaveComponent implements OnInit {
           this.sickLeaveBalance = res?.sickLeaveBalance ?? 0;
           this.emergencyLeaveBalance = res?.emergencyLeaveBalance ?? 0;
         },
-        error: (err) => console.error('Error fetching balances:', err)
       });
     }
   }
@@ -207,7 +205,6 @@ export class LeaveComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching leaves:', err);
         this.isLoading = false;
         this.leavesList = [];
       },
@@ -400,7 +397,6 @@ export class LeaveComponent implements OnInit {
           this.loadLeaves();
         },
         error: (err) => {
-          console.error('Status update error:', err);
           Swal.fire(
             'Error!',
             getFriendlyErrorMessage(

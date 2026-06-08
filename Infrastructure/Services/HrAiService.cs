@@ -9,7 +9,6 @@ using Domain.Enums;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Infrastructure.Services;
 
@@ -17,8 +16,7 @@ public class HrAiService(
     IHttpClientFactory httpFactory,
     IUnitOfWork uow,
     IOptions<GroqSettings> options,
-    ITokenTrackerService tokenTracker,
-    IMemoryCache cache) : IHrAiService
+    ITokenTrackerService tokenTracker) : IHrAiService
 {
 
     private readonly GroqSettings _cfg = options.Value;
@@ -321,17 +319,6 @@ public class HrAiService(
         Domain.Enums.AiMode mode = Domain.Enums.AiMode.Normal,
         List<ChatMessageDto>? history = null)
     {
-        var cacheKey = $"AI_Cache_{employeeId}_{mode}_{message.GetHashCode()}";
-        if (cache.TryGetValue(cacheKey, out AiResponseDto? cachedResponse) && cachedResponse != null)
-        {
-            return new AiResponseDto
-            {
-                Reply = cachedResponse.Reply,
-                Model = cachedResponse.Model,
-                Tokens = 0 
-            };
-        }
-
         var context = employeeId.HasValue
             ? await BuildEmployeeContextAsync(employeeId.Value)
             : null;
@@ -352,22 +339,12 @@ public class HrAiService(
 
         messages.Add(new { role = "user", content = message });
 
-        AiResponseDto result;
-        if (mode == Domain.Enums.AiMode.DeepThink || mode == Domain.Enums.AiMode.Executive)
+        if (mode == Domain.Enums.AiMode.DeepThink)
         {
-            result = await CallGroqWithToolsAsync(messages, mode, userRole);
-        }
-        else
-        {
-            result = await CallGroqAsync(messages);
+            return await CallGroqWithToolsAsync(messages, mode, userRole);
         }
 
-        if (!result.Reply.Contains("أعتذر") && !result.Reply.Contains("عذراً"))
-        {
-            cache.Set(cacheKey, result, TimeSpan.FromMinutes(10));
-        }
-
-        return result;
+        return await CallGroqAsync(messages);
     }
 
 
@@ -567,29 +544,7 @@ public class HrAiService(
             }
         };
 
-        if (mode == Domain.Enums.AiMode.Executive)
-        {
-            toolsList.Add(new
-            {
-                type = "function",
-                function = new
-                {
-                    name = "ApproveOrRejectLeave",
-                    description = "Approve or reject a leave request. ONLY available if the user has HR or Admin permissions. Requires leaveId, isApproved (true for approve, false for reject), and an optional reason.",
-                    parameters = new
-                    {
-                        type = "object",
-                        properties = new
-                        {
-                            leaveId = new { type = "integer", description = "The ID of the leave request." },
-                            isApproved = new { type = "boolean", description = "True to approve, false to reject." },
-                            reason = new { type = "string", description = "Reason for rejection (if applicable)." }
-                        },
-                        required = new[] { "leaveId", "isApproved" }
-                    }
-                }
-            });
-        }
+
         
         var tools = toolsList.ToArray();
 
@@ -623,15 +578,6 @@ public class HrAiService(
                     return new AiResponseDto
                     {
                         Reply = "أعتذر، ولكن هناك ضغط كبير على الخدمة حالياً (تم تجاوز الحد المسموح للطلبات). يرجى الانتظار لبضع ثوانٍ والمحاولة مرة أخرى.",
-                        Model = _cfg.Model,
-                        Tokens = totalTokens
-                    };
-                }
-                if ((int)response.StatusCode == 400 && error.Contains("failed_generation"))
-                {
-                    return new AiResponseDto
-                    {
-                        Reply = "عذراً، ليس لدي الصلاحية للوصول إلى هذه البيانات أو تنفيذ هذا الإجراء. يرجى التأكد من صلاحياتك أو إعادة صياغة السؤال.",
                         Model = _cfg.Model,
                         Tokens = totalTokens
                     };
@@ -705,13 +651,7 @@ public class HrAiService(
                         {
                             toolResult = await GetSystemOverviewAsync();
                         }
-                        else if (functionName == "ApproveOrRejectLeave")
-                        {
-                            var leaveId = argsDoc.RootElement.GetProperty("leaveId").GetInt32();
-                            var isApproved = argsDoc.RootElement.GetProperty("isApproved").GetBoolean();
-                            var reason = argsDoc.RootElement.TryGetProperty("reason", out var rProp) && rProp.ValueKind == JsonValueKind.String ? rProp.GetString() : null;
-                            toolResult = await ApproveLeaveRequestAsync(leaveId, isApproved, reason, userRole);
-                        }
+
                         else
                         {
                             toolResult = $"Error: Tool {functionName} not found.";
@@ -885,26 +825,4 @@ public class HrAiService(
         return sb.ToString();
     }
 
-    private async Task<string> ApproveLeaveRequestAsync(int leaveId, bool isApproved, string? reason, string userRole)
-    {
-        if (userRole != "Admin" && userRole != "HR")
-        {
-            return "Error: You do not have permission to approve or reject leave requests. Only HR and Admins can perform this action.";
-        }
-
-        var leave = await uow.Repository<Leave>().GetByIdAsync(leaveId);
-        if (leave == null) return $"Error: Leave request with ID {leaveId} not found.";
-
-        if (leave.Status != LeaveStatus.Pending)
-        {
-            return $"Error: Leave request is already {leave.Status}. Only Pending requests can be approved or rejected.";
-        }
-
-        leave.Status = isApproved ? LeaveStatus.Approved : LeaveStatus.Rejected;
-        leave.RejectionReason = isApproved ? null : reason;
-
-        await uow.SaveChangesAsync();
-        
-        return $"Success: Leave request {leaveId} has been successfully {(isApproved ? "Approved" : "Rejected")}.";
-    }
 }

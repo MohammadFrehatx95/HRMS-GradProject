@@ -70,6 +70,9 @@ namespace HRMS_GradProject.Controllers
                 return BadRequest(ApiResponse.Fail(
                     "Your account is not linked to an employee profile"));
 
+            dto.ClockIn = TimeOnly.FromDateTime(DateTime.UtcNow);
+            dto.Date = DateTime.UtcNow.Date;
+
             var result = await attendanceService.ClockInAsync(employeeId, dto);
             return CreatedAtAction(nameof(GetById), new { id = result.Id },
                 ApiResponse<AttendanceDto>.Ok(result, "Clocked in successfully"));

@@ -166,7 +166,6 @@ export class PayrollAdjustmentsComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err: any) => {
-        console.error(err);
         if (err.status !== 401 && err.status !== 403) {
           Swal.fire('Error', 'Failed to load adjustments', 'error');
         }
@@ -181,7 +180,6 @@ export class PayrollAdjustmentsComponent implements OnInit {
         this.employees = res?.items || [];
       },
       error: (err: any) => {
-        console.error(err);
       },
     });
   }
@@ -256,7 +254,6 @@ export class PayrollAdjustmentsComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        console.error(err);
         Swal.fire('Error', 'Failed to create adjustment', 'error');
         this.isSubmitting = false;
       },
@@ -280,7 +277,6 @@ export class PayrollAdjustmentsComponent implements OnInit {
             this.loadAdjustments();
           },
           error: (err: any) => {
-            console.error(err);
             Swal.fire(
               'Error!',
               'Failed to delete adjustment. It may have already been applied.',

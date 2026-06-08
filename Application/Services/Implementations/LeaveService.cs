@@ -21,6 +21,7 @@ namespace Application.Services.Implementations
     {
         public async Task<PagedResult<LeaveDto>> GetAllAsync(int pageNumber, int pageSize, int? month = null, int? year = null, string? searchQuery = null, int? status = null, int? leaveType = null)
         {
+            pageSize = Math.Min(pageSize, 100);
             var query = uow.Repository<Leave>()
                            .GetAllQueryable()
                            .Include(l => l.Employee).ThenInclude(e => e.User)
@@ -64,6 +65,7 @@ namespace Application.Services.Implementations
         public async Task<PagedResult<LeaveDto>> GetMyLeavesAsync(
             int employeeId, int pageNumber, int pageSize, int? month = null, int? year = null, string? searchQuery = null, int? status = null, int? leaveType = null)
         {
+            pageSize = Math.Min(pageSize, 100);
             var query = uow.Repository<Leave>()
                            .GetAllQueryable()
                            .Include(l => l.Employee).ThenInclude(e => e.User)

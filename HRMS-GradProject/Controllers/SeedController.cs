@@ -13,6 +13,7 @@ namespace HRMS_API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
 public class SeedController : ControllerBase
 {
     private readonly AppDbContext _context;

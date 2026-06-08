@@ -58,11 +58,17 @@ public class MeetingService(
     public async Task<PagedResult<MeetingDto>> GetMyMeetingsAsync(
         int employeeId, int pageNumber, int pageSize)
     {
+        var myMeetLinks = uow.Repository<Meeting>()
+            .GetAllQueryable()
+            .Where(m => m.EmployeeId == employeeId && m.MeetLink != null)
+            .Select(m => m.MeetLink)
+            .Distinct();
+
         var query = uow.Repository<Meeting>()
             .GetAllQueryable()
             .Include(m => m.Employee).ThenInclude(e => e.User)
             .Include(m => m.Organizer)
-            .Where(m => m.EmployeeId == employeeId)
+            .Where(m => m.EmployeeId == employeeId || (m.MeetLink != null && myMeetLinks.Contains(m.MeetLink)))
             .OrderByDescending(m => m.Status == MeetingStatus.Scheduled)
             .ThenByDescending(m => m.ScheduledAt);
 

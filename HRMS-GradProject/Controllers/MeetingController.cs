@@ -14,8 +14,10 @@ namespace HRMS_GradProject.Controllers;
 [Authorize]
 public class MeetingController(IMeetingService meetingService) : ControllerBase
 {
-    private int GetUserId() =>
-        int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+    private int? GetUserId()
+    {
+        return int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var id) ? id : null;
+    }
 
     private int? GetEmployeeId()
     {
@@ -65,7 +67,9 @@ public class MeetingController(IMeetingService meetingService) : ControllerBase
     [ValidateModel]
     public async Task<IActionResult> Create([FromBody] CreateMeetingDto dto)
     {
-        var result = await meetingService.CreateAsync(GetUserId(), dto);
+        var userId = GetUserId();
+        if (userId is null) return Unauthorized();
+        var result = await meetingService.CreateAsync(userId.Value, dto);
         return Ok(ApiResponse<IEnumerable<MeetingDto>>.Ok(result, "Meeting(s) scheduled successfully"));
     }
 

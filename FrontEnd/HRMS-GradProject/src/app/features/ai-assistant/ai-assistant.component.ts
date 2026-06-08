@@ -52,23 +52,23 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
 
   quickActions = [
     {
-      label: '📊 Analyze My Leaves',
+      label: 'Analyze My Leaves',
       icon: 'bi-bar-chart-line',
       action: 'analyze-leave',
     },
     {
-      label: '💰 Salary Insights',
+      label: 'Salary Insights',
       icon: 'bi-graph-up-arrow',
       action: 'salary-insight',
     },
     {
-      label: '📋 Leave Policy',
+      label: 'Leave Policy',
       icon: 'bi-journal-text',
       action: 'chat',
       prompt: 'What is the company leave policy?',
     },
     {
-      label: '🕐 How to Clock In',
+      label: 'How to Clock In',
       icon: 'bi-clock',
       action: 'chat',
       prompt: 'How do I clock in and out for attendance?',
@@ -348,7 +348,6 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   }
 
   setAiMode(mode: number): void {
-    if (mode === 2 && !this.isAdminOrHR) return;
     this.aiMode = mode;
   }
 }

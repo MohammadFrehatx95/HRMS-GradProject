@@ -26,6 +26,7 @@ public class AuthController(IAuthService authService, IUserService userService, 
     // POST api/auth/login
     [HttpPost("login")]
     [ValidateModel]
+    [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto dto)
     {
         var result = await authService.LoginAsync(dto);
@@ -54,7 +55,8 @@ public class AuthController(IAuthService authService, IUserService userService, 
     [ValidateModel]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
     {
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
+            return Unauthorized();
 
         var success = await authService.ChangePasswordAsync(userId, dto);
 
@@ -68,7 +70,8 @@ public class AuthController(IAuthService authService, IUserService userService, 
     [Authorize]
     public async Task<IActionResult> Me()
     {
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
+            return Unauthorized();
         var user = await uow.Repository<User>()
                             .GetAllQueryable()
                             .Include(u => u.Employee)
@@ -100,7 +103,16 @@ public class AuthController(IAuthService authService, IUserService userService, 
         if (file == null || file.Length == 0)
             return BadRequest(ApiResponse.Fail("No file uploaded."));
 
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
+        var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+        if (!allowedExtensions.Contains(ext))
+            return BadRequest(ApiResponse.Fail("Invalid file type. Only JPG, PNG, WebP, or GIF images are allowed."));
+
+        if (file.Length > 5 * 1024 * 1024)
+            return BadRequest(ApiResponse.Fail("File size exceeds 5MB limit."));
+
+        if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
+            return Unauthorized();
         var user = await uow.Repository<User>().GetByIdAsync(userId);
         if (user == null) return NotFound(ApiResponse.Fail("User not found."));
 
@@ -153,9 +165,9 @@ public class AuthController(IAuthService authService, IUserService userService, 
                 return Ok(ApiResponse<string>.Ok(url, "Profile picture submitted for approval."));
             }
         }
-        catch (System.Exception ex)
+        catch (System.Exception)
         {
-            return BadRequest(ApiResponse.Fail(ex.Message));
+            return BadRequest(ApiResponse.Fail("Image upload failed. Please try again."));
         }
     }
 
@@ -254,6 +266,14 @@ public class AuthController(IAuthService authService, IUserService userService, 
         if (file == null || file.Length == 0)
             return BadRequest(ApiResponse.Fail("No file uploaded."));
 
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
+        var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+        if (!allowedExtensions.Contains(ext))
+            return BadRequest(ApiResponse.Fail("Invalid file type. Only JPG, PNG, WebP, or GIF images are allowed."));
+
+        if (file.Length > 5 * 1024 * 1024)
+            return BadRequest(ApiResponse.Fail("File size exceeds 5MB limit."));
+
         var user = await uow.Repository<User>().GetByIdAsync(userId);
         if (user == null) return NotFound(ApiResponse.Fail("User not found."));
 
@@ -271,9 +291,9 @@ public class AuthController(IAuthService authService, IUserService userService, 
 
             return Ok(ApiResponse<string>.Ok(url, "Profile picture updated successfully by admin."));
         }
-        catch (System.Exception ex)
+        catch (System.Exception)
         {
-            return StatusCode(500, ApiResponse.Fail($"Error: {ex.Message}"));
+            return StatusCode(500, ApiResponse.Fail("Image upload failed. Please try again."));
         }
     }
 
@@ -281,7 +301,8 @@ public class AuthController(IAuthService authService, IUserService userService, 
     [Authorize]
     public async Task<IActionResult> DeleteProfilePicture()
     {
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
+            return Unauthorized();
         var user = await uow.Repository<User>().GetByIdAsync(userId);
         if (user == null) return NotFound(ApiResponse.Fail("User not found."));
 

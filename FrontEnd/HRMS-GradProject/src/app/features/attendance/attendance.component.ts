@@ -169,7 +169,6 @@ export class AttendanceComponent implements OnInit, OnDestroy {
           } else d = new Date(temp).toISOString().split('T')[0];
         }
       } catch (e) {
-        console.error(e);
       }
     }
     this.attendanceService
@@ -211,7 +210,6 @@ export class AttendanceComponent implements OnInit, OnDestroy {
           } else d = new Date(temp).toISOString().split('T')[0];
         }
       } catch (e) {
-        console.error(e);
       }
     }
     this.attendanceService
@@ -237,7 +235,6 @@ export class AttendanceComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         },
         error: (err) => {
-          console.error('Error fetching my attendance:', err);
           this.isLoading = false;
         },
       });
@@ -306,7 +303,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
           this.isProcessing = false;
           Swal.fire({
             icon: 'success',
-            title: 'Clocked In ✅',
+            title: 'Clocked In ',
             text: `Clocked in at ${timeString}`,
             timer: 2000,
             showConfirmButton: false,
@@ -348,7 +345,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
           : `Great job today! Clocked out at ${clockOutTime}.${extraMsg}`;
         Swal.fire({
           icon: 'success',
-          title: 'Clocked Out ✅',
+          title: 'Clocked Out ',
           text: msg,
           timer: 2500,
           showConfirmButton: false,

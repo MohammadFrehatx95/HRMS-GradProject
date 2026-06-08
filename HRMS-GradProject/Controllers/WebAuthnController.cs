@@ -60,7 +60,8 @@ public class WebAuthnController : ControllerBase
     [Authorize]
     public async Task<IActionResult> MakeCredentialOptions()
     {
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
+            return Unauthorized();
         var user = await uow.Repository<User>().GetAllQueryable()
             .Include(u => u.FidoCredentials)
             .FirstOrDefaultAsync(u => u.Id == userId);
@@ -106,10 +107,11 @@ public class WebAuthnController : ControllerBase
         AuthenticatorAttestationRawResponse attestationResponse;
         try {
             attestationResponse = JsonSerializer.Deserialize<AuthenticatorAttestationRawResponse>(clientResponse.GetRawText(), _jsonOptions);
-        } catch (Exception ex) {
-            return Ok(new { status = "error", message = "Invalid registration JSON: " + ex.Message });
+        } catch (Exception) {
+            return BadRequest(ApiResponse.Fail("Invalid registration data. Please try again."));
         }
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
+            return Unauthorized();
         
         var jsonOptions = cache.Get<string>(GetCacheKey("fido2_register", userId.ToString()));
         if (string.IsNullOrEmpty(jsonOptions))
@@ -149,9 +151,9 @@ public class WebAuthnController : ControllerBase
 
             return Ok(new { status = "ok", message = "Fingerprint added successfully." });
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return Ok(new { status = "error", message = $"Error creating credential: {ex.Message}" });
+            return BadRequest(ApiResponse.Fail("Fingerprint registration failed. Please try again."));
         }
     }
 
@@ -198,8 +200,8 @@ public class WebAuthnController : ControllerBase
             string rawJson = clientResponse.GetRawText();
             rawJson = rawJson.Replace("\"public-key\"", "\"PublicKey\"");
             assertionResponse = JsonSerializer.Deserialize<AuthenticatorAssertionRawResponse>(rawJson, _jsonOptions);
-        } catch (Exception ex) {
-            return Ok(new { status = "error", message = "Invalid login JSON: " + ex.Message });
+        } catch (Exception) {
+            return BadRequest(ApiResponse.Fail("Invalid login data. Please try again."));
         }
 
         var cacheKey = string.IsNullOrEmpty(email) ? "anonymous" : email;
@@ -250,9 +252,9 @@ public class WebAuthnController : ControllerBase
 
             return Ok(ApiResponse<AuthResponseDto>.Ok(result, "Login successful"));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return Ok(new { status = "error", message = $"Error authenticating: {ex.Message}" });
+            return Unauthorized(ApiResponse.Fail("Authentication failed. Please try again."));
         }
     }
 
@@ -260,7 +262,8 @@ public class WebAuthnController : ControllerBase
     [Authorize]
     public async Task<IActionResult> GetFingerprints()
     {
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
+            return Unauthorized();
         var credentials = await uow.Repository<FidoCredential>().GetAllQueryable()
             .Where(c => c.UserId == userId)
             .OrderByDescending(c => c.RegDate)
@@ -274,7 +277,8 @@ public class WebAuthnController : ControllerBase
     [Authorize]
     public async Task<IActionResult> DeleteFingerprint(int id)
     {
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
+            return Unauthorized();
         var credential = await uow.Repository<FidoCredential>().GetByIdAsync(id);
 
         if (credential == null || credential.UserId != userId)

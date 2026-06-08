@@ -30,6 +30,7 @@ export class SidebarComponent implements OnInit {
   isAdminOrHR: boolean = false;
   userName: string = 'User';
   userRole: string = 'Employee';
+  isUserOnly: boolean = false;
   profilePicUrl: string | null = null;
 
   @ViewChild('sidebar') sidebarRef!: ElementRef;
@@ -76,8 +77,9 @@ export class SidebarComponent implements OnInit {
     this.isAdminOrHR = this.authService.isAdminOrHR();
     this.userName = localStorage.getItem('user_name') || 'User';
     this.userRole = localStorage.getItem('user_role') || 'Employee';
+    this.isUserOnly = this.userRole.toLowerCase() === 'user';
 
-    if (!this.isAdmin) {
+    if (!this.isAdmin && !this.isUserOnly) {
       this.employeeService.getMyProfile().subscribe({
         next: (profile) => {
           if (profile && profile.positionTitle) {

@@ -112,9 +112,10 @@ namespace HRMS_GradProject.Controllers
         [ValidateModel]
         public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateLeaveStatusDto dto)
         {
-            var reviewerUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-            var result = await leaveService.UpdateStatusAsync(id, reviewerUserId, dto);
-            return Ok(ApiResponse<LeaveDto>.Ok(result, "Leave status updated successfully"));
+        if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var reviewerUserId))
+            return Unauthorized();
+        var result = await leaveService.UpdateStatusAsync(id, reviewerUserId, dto);
+        return Ok(ApiResponse<LeaveDto>.Ok(result, "Leave status updated successfully"));
         }
 
         // DELETE /api/leaves/{id} → Employee (Pending only)

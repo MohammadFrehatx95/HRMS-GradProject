@@ -6,6 +6,7 @@ using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 
 namespace Application.Services.Implementations
@@ -16,10 +17,12 @@ namespace Application.Services.Implementations
         IUnitOfWork uow,
         IMapper mapper,
         INotificationService notificationService,
-        IEmailService emailService) : ISalaryService
+        IEmailService emailService,
+        ILogger<SalaryService> logger) : ISalaryService
     {
     public async Task<PagedResult<SalaryDto>> GetAllAsync(int pageNumber, int pageSize, int? month = null, int? year = null, string? searchQuery = null)
     {
+        pageSize = Math.Min(pageSize, 100);
         var query = uow.Repository<Salary>()
                        .GetAllQueryable()
                        .Include(s => s.Employee).ThenInclude(e => e.User)
@@ -50,6 +53,7 @@ namespace Application.Services.Implementations
 
     public async Task<PagedResult<SalaryDto>> GetMyAsync(int employeeId, int pageNumber, int pageSize, int? month = null, int? year = null, string? searchQuery = null)
     {
+        pageSize = Math.Min(pageSize, 100);
         var query = uow.Repository<Salary>()
                        .GetAllQueryable()
                        .Include(s => s.Employee).ThenInclude(e => e.User)
@@ -180,7 +184,7 @@ namespace Application.Services.Implementations
                         user.Email, employeeName,
                         dto.Month, dto.Year, net);
                 }
-                catch { /* Log if needed */ }
+                catch (Exception ex) { logger.LogWarning(ex, "Failed to send salary-created email to user {UserId}", user.Id); }
             }
 
             return (await GetByIdAsync(salary.Id))!;
@@ -242,7 +246,7 @@ namespace Application.Services.Implementations
                         user.Email, employeeName,
                         salary.Month, salary.Year, salary.NetAmount);
                 }
-                catch { /* Log if needed */ }
+                catch (Exception ex) { logger.LogWarning(ex, "Failed to send salary-updated email to user {UserId}", user.Id); }
             }
 
             return mapper.Map<SalaryDto>(salary);
@@ -373,10 +377,9 @@ namespace Application.Services.Implementations
                     await CreateAsync(createDto);
                     generatedCount++;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // If creation fails for an employee, log it and continue
-                    continue;
+                    logger.LogWarning(ex, "Failed to generate salary for employee {EmployeeId}", emp.Id);
                 }
             }
 

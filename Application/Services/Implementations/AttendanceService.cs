@@ -7,6 +7,7 @@ using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 
@@ -17,13 +18,15 @@ namespace Application.Services.Implementations
         IMapper mapper,
         INotificationService notificationService,
         IEmailService emailService,
-        IOptions<AttendanceSettings> attendanceOptions) : IAttendanceService
+        IOptions<AttendanceSettings> attendanceOptions,
+        ILogger<AttendanceService> logger) : IAttendanceService
     {
         private readonly AttendanceSettings _attendanceSettings = attendanceOptions.Value;
 
         public async Task<PagedResult<AttendanceDto>> GetAllAsync(
             int pageNumber, int pageSize, DateTime? date = null, string? searchQuery = null, string? status = null)
         {
+            pageSize = Math.Min(pageSize, 100);
             if (date.HasValue)
             {
                 var isAbsenceVisible = date.Value.Date < DateTime.UtcNow.Date ||
@@ -138,6 +141,7 @@ namespace Application.Services.Implementations
         public async Task<PagedResult<AttendanceDto>> GetMyAttendanceAsync(
             int employeeId, int pageNumber, int pageSize, DateTime? date = null, string? searchQuery = null, string? status = null)
         {
+            pageSize = Math.Min(pageSize, 100);
             if (date.HasValue)
             {
                 var isAbsenceVisible = date.Value.Date < DateTime.UtcNow.Date ||
@@ -324,7 +328,7 @@ namespace Application.Services.Implementations
                     type: NotificationType.ClockIn);
 
                 try { await emailService.SendClockInAsync(user.Email, employeeName, dto.ClockIn); }
-                catch { /* Log if needed */ }
+                catch (Exception ex) { logger.LogWarning(ex, "Failed to send clock-in email to user {UserId}", user.Id); }
             }
 
             return (await GetByIdAsync(attendance.Id))!;
@@ -382,7 +386,7 @@ namespace Application.Services.Implementations
                         user.Email, employeeName,
                         attendance.ClockIn, dto.ClockOut);
                 }
-                catch { /* Log if needed */ }
+                catch (Exception ex) { logger.LogWarning(ex, "Failed to send clock-out email to user {UserId}", user.Id); }
             }
 
             return mapper.Map<AttendanceDto>(attendance);

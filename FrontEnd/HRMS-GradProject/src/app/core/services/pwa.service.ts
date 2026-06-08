@@ -1,4 +1,4 @@
-﻿import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import Swal from 'sweetalert2';
 
 @Injectable({
@@ -83,7 +83,7 @@ export class PwaService {
 
       Swal.fire({
         icon: 'info',
-        title: '📲 Install Kawadir',
+        title: 'Install Kawadir',
         html: instructionsHtml,
         confirmButtonText: 'Got it!',
         confirmButtonColor: '#0d6efd',

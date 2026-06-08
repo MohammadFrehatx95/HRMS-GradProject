@@ -47,6 +47,7 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
 
     public async Task<PagedResult<EmployeeDto>> GetAllAsync(int pageNumber, int pageSize, string? searchQuery = null, int? departmentId = null, bool? isActive = null)
     {
+        pageSize = Math.Min(pageSize, 100);
         var query = uow.Repository<Employee>()
                        .GetAllQueryable()
                        .Include(e => e.Department)
@@ -156,9 +157,15 @@ public class EmployeeService(IUnitOfWork uow, IMapper mapper) : IEmployeeService
     {
         var employee = await uow.Repository<Employee>()
                                 .GetAllQueryable()
+                                .Include(e => e.User)
                                 .FirstOrDefaultAsync(e => e.Id == id);
 
         if (employee is null) return false;
+
+        if (employee.User != null)
+        {
+            uow.Repository<User>().Delete(employee.User);
+        }
 
         uow.Repository<Employee>().Delete(employee);
         await uow.SaveChangesAsync();

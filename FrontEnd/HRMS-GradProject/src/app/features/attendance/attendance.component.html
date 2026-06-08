@@ -140,6 +140,7 @@
                     <tr>
                         <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Date' | t }}</th>
                         <th *ngIf="isAdminOrHR" class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Employee' | t }}</th>
+
                         <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Clock In' | t }}</th>
                         <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Clock Out' | t }}</th>
                         <th class="py-3 px-4 border-bottom-0 fw-semibold text-center">{{ 'Status' | t }}</th>
@@ -183,6 +184,7 @@
                                 <span class="fw-bold text-dark">{{ record.employeeName || ('Emp #' + record.employeeId) }}</span>
                             </div>
                         </td>
+
                         <td data-label="Clock-in Time" class="py-3 px-3 text-success fw-medium">
                             <i class="bi bi-arrow-down-right-circle me-1"></i>
                             {{ record.clockIn || '--:--' }}

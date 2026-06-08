@@ -134,7 +134,6 @@ export class DepartmentsComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching departments:', err);
         this.isLoading = false;
       },
     });
@@ -295,7 +294,6 @@ export class DepartmentsComponent implements OnInit {
             this.loadDepartments();
           },
           error: (err) => {
-            console.error('Delete error:', err);
             Swal.fire(
               'Error!',
               getFriendlyErrorMessage(

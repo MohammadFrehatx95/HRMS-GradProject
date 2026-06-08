@@ -19,7 +19,7 @@ namespace Application.Services.Implementations
                                 .Include(u => u.Employee)
                                 .FirstOrDefaultAsync(u => u.Email == dto.Email);
 
-            if (user is null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
+            if (user is null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash) || !user.IsActive)
             {
                 return null;
             }

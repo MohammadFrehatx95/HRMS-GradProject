@@ -162,7 +162,6 @@ export class EmployeeFormComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        console.error('Error fetching employee', err);
         Swal.fire('Error', 'Failed to load employee details', 'error');
       },
     });
@@ -184,7 +183,6 @@ export class EmployeeFormComponent implements OnInit {
         this.unassignedUsers = res?.items ?? (Array.isArray(res) ? res : []);
       },
       error: (err) => {
-        console.error('Failed to load unassigned users:', err);
       },
     });
   }
@@ -298,7 +296,6 @@ export class EmployeeFormComponent implements OnInit {
           error: (err) => {
             this.isLoading = false;
             Swal.fire('Error', 'Failed to delete picture.', 'error');
-            console.error(err);
           }
         });
       }
@@ -362,7 +359,6 @@ export class EmployeeFormComponent implements OnInit {
             text: msg,
             confirmButtonText: 'OK',
           });
-          console.error('Update error:', err);
         },
       });
     } else {
@@ -379,7 +375,6 @@ export class EmployeeFormComponent implements OnInit {
             text: msg,
             confirmButtonText: 'OK',
           });
-          console.error('Add error:', err);
         },
       });
     }
