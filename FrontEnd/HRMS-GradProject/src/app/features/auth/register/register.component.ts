@@ -1,4 +1,4 @@
-﻿import { Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -23,6 +23,7 @@ export class RegisterComponent {
   private router = inject(Router);
 
   isLoading = false;
+  showPassword = false;
 
   registerForm = new FormGroup({
     username: new FormControl('', [
@@ -38,6 +39,10 @@ export class RegisterComponent {
   });
 
   roles = ['Employee', 'Admin', 'HR'];
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
 
   onSubmit() {
 
