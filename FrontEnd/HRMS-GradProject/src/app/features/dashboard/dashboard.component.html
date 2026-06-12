@@ -359,7 +359,7 @@
 </div>
 
 <div class="modal fade show" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0,0,0,0.5);" *ngIf="showAnnouncementModal">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
         <div class="modal-header border-0 py-3" style="background-color: rgba(var(--bs-primary-rgb), 0.05);">
         <h5 class="modal-title fw-bold d-flex align-items-center gap-2">
@@ -392,7 +392,7 @@
               <div class="d-flex gap-2">
                 <input type="date" class="form-control shadow-sm"
                     formControlName="expiryDate" required>
-                <input type="time" class="form-control shadow-sm" formControlName="expiryTime" style="max-width: 120px;" required>
+                <input type="time" class="form-control shadow-sm" formControlName="expiryTime" required>
               </div>
               <div *ngIf="announcementForm.get('expiryDate')?.invalid && announcementForm.get('expiryDate')?.touched" class="text-danger small mt-1">Expiry date is required</div>
               <div *ngIf="announcementForm.get('expiryTime')?.invalid && announcementForm.get('expiryTime')?.touched" class="text-danger small mt-1">Expiry time is required</div>
