@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Application.Common;
 
 public class CreateEmployeeDto
 {
@@ -13,6 +14,7 @@ public class CreateEmployeeDto
     [RegularExpression(@"^\+?\d{10,15}$", ErrorMessage = "Invalid phone number format.")]
     public string PhoneNumber { get; set; } = string.Empty;
     [Required]
+    [MinimumAge(18)]
     public DateTime BirthDate { get; set; }
     [Required]
     public DateTime HireDate { get; set; }

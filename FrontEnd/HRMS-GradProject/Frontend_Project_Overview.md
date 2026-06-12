@@ -4,7 +4,7 @@
 
 ```text
 Folder PATH listing for volume New Volume
-Volume serial number is 8A82-F2A5
+Volume serial number is 00000241 8A82:F2A5
 D:\PROJECTS\HRMS-TEAM\FRONTEND\HRMS-GRADPROJECT\SRC
 |   index.html
 |   main.ts
@@ -29,6 +29,7 @@ D:\PROJECTS\HRMS-TEAM\FRONTEND\HRMS-GRADPROJECT\SRC
 |   |   |       
 |   |   +---interceptors
 |   |   |       auth.interceptor.ts
+|   |   |       error.interceptor.ts
 |   |   |       
 |   |   +---models
 |   |   |       announcement.model.ts
@@ -41,6 +42,7 @@ D:\PROJECTS\HRMS-TEAM\FRONTEND\HRMS-GRADPROJECT\SRC
 |   |   |       
 |   |   +---services
 |   |   |       ai.service.ts
+|   |   |       alert.service.ts
 |   |   |       announcement.service.ts
 |   |   |       attendance.service.ts
 |   |   |       auth.service.ts
@@ -265,7 +267,7 @@ D:\PROJECTS\HRMS-TEAM\FRONTEND\HRMS-GRADPROJECT\SRC
 
 ### File: src\app\app.component.ts
 ```typescript
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from './core/services/auth.service';
@@ -282,12 +284,26 @@ import { PwaService } from './core/services/pwa.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
   authService = inject(AuthService);
   sidebarService = inject(SidebarService);
   updateService = inject(UpdateService);
   pwaService = inject(PwaService);
   router = inject(Router);
+  renderer = inject(Renderer2);
+  private unlistenHideModal!: () => void;
+
+  ngOnInit() {
+    this.unlistenHideModal = this.renderer.listen('document', 'hide.bs.modal', () => {
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.unlistenHideModal) {
+      this.unlistenHideModal();
+    }
+  }
 
   get isAiRoute(): boolean {
     return this.router.url.includes('/ai-assistant');
@@ -318,12 +334,13 @@ import { provideRouter, withHashLocation } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { AuthService } from './core/services/auth.service';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideNativeDateAdapter } from '@angular/material/core';
+import { provideNativeDateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { provideEnvironmentNgxMask } from 'ngx-mask';
 
 function initializeApp(authService: AuthService) {
@@ -344,10 +361,11 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimationsAsync(),
     provideNativeDateAdapter(),
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
     provideEnvironmentNgxMask(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withHashLocation()),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
     {
       provide: APP_INITIALIZER,
       useFactory: initializeApp,
@@ -364,6 +382,125 @@ export const appConfig: ApplicationConfig = {
 
 ### File: src\app\app.routes.ts
 ```typescript
+import { Routes } from '@angular/router';
+import { DashboardComponent } from './features/dashboard/dashboard.component';
+import { EmployeesComponent } from './features/employees/employees.component';
+import { DepartmentsComponent } from './features/departments/departments.component';
+import { LeaveComponent } from './features/leave/leave.component';
+import { AttendanceComponent } from './features/attendance/attendance.component';
+import { SalaryComponent } from './features/salary/salary.component';
+import { EmployeeFormComponent } from './features/employee-form/employee-form.component';
+import { LoginComponent } from './features/auth/login/login.component';
+import { authGuard, noAuthGuard } from './core/guards/auth.guard';
+import { adminGuard } from './core/guards/admin.guard';
+import { hrGuard } from './core/guards/hr.guard';
+import { AllAttendanceComponent } from './features/all-attendance/all-attendance.component';
+import { PositionsComponent } from './features/positions/positions.component';
+import { RegisterComponent } from './features/auth/register/register.component';
+
+export const routes: Routes = [
+  { path: 'login', component: LoginComponent, canActivate: [noAuthGuard] },
+
+  {
+    path: 'register',
+    component: RegisterComponent,
+    canActivate: [authGuard, adminGuard],
+  },
+
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'events',
+    loadComponent: () => import('./features/events/events.component').then(m => m.EventsComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'meetings',
+    loadComponent: () => import('./features/meetings/meetings.component').then(c => c.MeetingsComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'leave-form',
+    loadComponent: () =>
+      import('./features/leave-form/leave-form.component').then(
+        (m) => m.LeaveFormComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'employees',
+    component: EmployeesComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'departments',
+    component: DepartmentsComponent,
+    canActivate: [authGuard, hrGuard],
+  },
+
+  { path: 'leave', component: LeaveComponent, canActivate: [authGuard] },
+  {
+    path: 'attendance',
+    component: AttendanceComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'all-attendance',
+    component: AllAttendanceComponent,
+    canActivate: [authGuard, hrGuard],
+  },
+
+  { path: 'salary', component: SalaryComponent, canActivate: [authGuard] },
+  {
+    path: 'employee-form',
+    component: EmployeeFormComponent,
+    canActivate: [authGuard, hrGuard],
+  },
+  {
+    path: 'positions',
+    component: PositionsComponent,
+    canActivate: [authGuard, hrGuard],
+  },
+  {
+    path: 'my-profile',
+    loadComponent: () =>
+      import('./features/my-profile/my-profile.component').then(
+        (m) => m.MyProfileComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'ai-assistant',
+    loadComponent: () =>
+      import('./features/ai-assistant/ai-assistant.component').then(
+        (m) => m.AiAssistantComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'payroll-adjustments',
+    loadComponent: () =>
+      import('./features/payroll-adjustments/payroll-adjustments.component').then(
+        (m) => m.PayrollAdjustmentsComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'pending-approvals',
+    loadComponent: () =>
+      import('./features/pending-approvals/pending-approvals.component').then(
+        (m) => m.PendingApprovalsComponent,
+      ),
+    canActivate: [authGuard, hrGuard],
+  },
+  { path: '**', redirectTo: 'login' },
+];
+
 ```
 
 ### File: src\app\core\guards\admin.guard.ts
@@ -494,6 +631,32 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   );
 };
 
+
+```
+
+### File: src\app\core\interceptors\error.interceptor.ts
+```typescript
+import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { catchError, throwError } from 'rxjs';
+import { Router } from '@angular/router';
+
+export const errorInterceptor: HttpInterceptorFn = (req, next) => {
+  const router = inject(Router);
+
+  return next(req).pipe(
+    catchError((error: HttpErrorResponse) => {
+      if (error.status === 401) {
+        if (!req.url.includes('/login')) {
+          router.navigate(['/login']);
+        }
+      } else if (error.status >= 500) {
+      }
+
+      return throwError(() => error);
+    }),
+  );
+};
 
 ```
 
@@ -639,16 +802,9 @@ export class TranslatePipe implements PipeTransform {
 ```typescript
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import * as signalR from '@microsoft/signalr';
-
-export interface TokenStatsDto {
-  usedTokens: number;
-  maxTokensPerMinute: number;
-  secondsUntilReset: number;
-}
 
 export interface ChatMessageDto {
   role: string;
@@ -672,33 +828,6 @@ export class AiService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/ai`;
 
-  private hubConnection: signalR.HubConnection | undefined;
-  private tokenStatsSubject = new Subject<TokenStatsDto>();
-  public tokenStats$ = this.tokenStatsSubject.asObservable();
-
-  constructor() {
-    this.startSignalRConnection();
-  }
-
-  private startSignalRConnection() {
-
-    const baseUrl = environment.apiUrl.replace(/\/api$/, '');
-    
-    this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`${baseUrl}/hubs/ai`)
-      .withAutomaticReconnect()
-      .build();
-
-    this.hubConnection
-      .start()
-      .then(() => console.log('SignalR Hub Connection Started'))
-      .catch(err => console.log('Error while starting connection: ' + err));
-
-    this.hubConnection.on('ReceiveTokenUpdate', (stats: TokenStatsDto) => {
-      this.tokenStatsSubject.next(stats);
-    });
-  }
-
   chat(message: string, mode: number = 0, history: ChatMessageDto[] = []): Observable<AiResponseDto> {
     return this.http.post<any>(`${this.apiUrl}/chat`, { message, mode, history }).pipe(
       map((res) => res?.data ?? res)
@@ -715,6 +844,69 @@ export class AiService {
     return this.http.get<any>(`${this.apiUrl}/salary-insight`).pipe(
       map((res) => res?.data ?? res)
     );
+  }
+}
+
+```
+
+### File: src\app\core\services\alert.service.ts
+```typescript
+import { Injectable } from '@angular/core';
+import Swal, { SweetAlertIcon } from 'sweetalert2';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AlertService {
+  success(title: string, text: string, timer: number = 2000) {
+    return Swal.fire({
+      icon: 'success',
+      title,
+      text,
+      timer,
+      showConfirmButton: false,
+    });
+  }
+
+  error(title: string, text: string) {
+    return Swal.fire({
+      icon: 'error',
+      title,
+      text,
+      confirmButtonColor: '#0d6efd'
+    });
+  }
+
+  warning(title: string, text: string) {
+    return Swal.fire({
+      icon: 'warning',
+      title,
+      text,
+      confirmButtonColor: '#f59e0b'
+    });
+  }
+
+  info(title: string, text: string) {
+    return Swal.fire({
+      icon: 'info',
+      title,
+      text,
+      confirmButtonColor: '#0d6efd'
+    });
+  }
+
+  confirmDelete(itemName: string = 'this item', customTitle?: string, customText?: string): Promise<boolean> {
+    return Swal.fire({
+      title: customTitle || 'Are you sure?',
+      text: customText || `You won't be able to revert this!`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Delete'
+    }).then((result) => {
+      return result.isConfirmed;
+    });
   }
 }
 
@@ -1900,7 +2092,7 @@ export class PwaService {
 
       Swal.fire({
         icon: 'info',
-        title: '📲 Install Kawadir',
+        title: 'Install Kawadir',
         html: instructionsHtml,
         confirmButtonText: 'Got it!',
         confirmButtonColor: '#0d6efd',
@@ -2015,6 +2207,68 @@ export class SalaryService {
 
 ### File: src\app\core\services\settings.service.ts
 ```typescript
+import { Injectable, signal } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class SettingsService {
+
+  private _isDarkMode = signal(false);
+
+  private _language = signal<'en' | 'ar'>('en');
+
+  get isDarkMode() {
+    return this._isDarkMode();
+  }
+
+  get language() {
+    return this._language();
+  }
+
+  constructor() {
+    const savedTheme = localStorage.getItem('hrms_theme');
+    const savedLang = localStorage.getItem('hrms_language') as 'en' | 'ar';
+
+    if (savedTheme === 'dark') {
+      this._isDarkMode.set(true);
+      this.applyTheme(true);
+    }
+
+    if (savedLang === 'ar' || savedLang === 'en') {
+      this._language.set(savedLang);
+      this.applyLanguage(savedLang);
+    }
+  }
+
+  toggleTheme() {
+    const newMode = !this._isDarkMode();
+    this._isDarkMode.set(newMode);
+    localStorage.setItem('hrms_theme', newMode ? 'dark' : 'light');
+    this.applyTheme(newMode);
+  }
+
+  toggleLanguage() {
+    const newLang = this._language() === 'en' ? 'ar' : 'en';
+    this._language.set(newLang);
+    localStorage.setItem('hrms_language', newLang);
+    this.applyLanguage(newLang);
+  }
+
+  private applyTheme(isDark: boolean) {
+    document.documentElement.setAttribute(
+      'data-theme',
+      isDark ? 'dark' : 'light',
+    );
+    document.body.classList.toggle('dark-mode', isDark);
+  }
+
+  private applyLanguage(lang: 'en' | 'ar') {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  }
+}
+
 ```
 
 ### File: src\app\core\services\sidebar.service.ts
@@ -2088,7 +2342,6 @@ export class UpdateService {
             : 'Already on the latest version.',
         );
       } catch (err) {
-        console.error('Failed to check for updates:', err);
       }
     });
   }
@@ -2139,29 +2392,12 @@ export class UpdateService {
 ```typescript
 export function getFriendlyErrorMessage(
   err: any,
-  fallback: string = 'Something went wrong. Please try again later.',
+  fallback: string = 'An unexpected error occurred. Please try again.',
 ): string {
   const status: number = err?.status ?? 0;
-  const rawMessage: string =
-    err?.error?.message || err?.error?.title || err?.message || '';
 
-  if (
-    status === 0 ||
-    (err?.name === 'HttpErrorResponse' && !navigator.onLine)
-  ) {
-    return 'No internet connection. Please check your network and try again.';
-  }
-
-  if (
-    rawMessage.includes('EADDRNOTALLOWED') ||
-    rawMessage.includes('allow_list') ||
-    rawMessage.includes('tenant') ||
-    rawMessage.includes('XX000') ||
-    rawMessage.includes('PGRST') ||
-    rawMessage.includes('connection refused') ||
-    rawMessage.includes('ECONNREFUSED')
-  ) {
-    return 'Unable to connect to the server. Please contact support or try again later.';
+  if (status === 0 || (err?.name === 'HttpErrorResponse' && !navigator.onLine)) {
+    return 'No internet connection. Please check your network.';
   }
 
   if (status === 401) {
@@ -2169,58 +2405,23 @@ export function getFriendlyErrorMessage(
   }
 
   if (status === 403) {
-    return 'You do not have permission to perform this action.';
+    return 'You do not have permission for this action.';
   }
 
   if (status === 404) {
-    return 'The requested resource was not found.';
+    return 'The requested information was not found.';
   }
 
   if (status === 400) {
-    if (Array.isArray(err?.error)) {
-      const msgs = err.error
-        .map((e: any) => e.description || e.errorMessage || e)
-        .filter((e: any) => typeof e === 'string');
-      if (msgs.length > 0) return msgs.join('\n');
-    }
-
-    if (err?.error?.errors && typeof err.error.errors === 'object') {
-      const errorMessages: string[] = [];
-      for (const key in err.error.errors) {
-        if (Object.prototype.hasOwnProperty.call(err.error.errors, key)) {
-          const messages = err.error.errors[key];
-          if (Array.isArray(messages)) {
-            errorMessages.push(...messages);
-          } else if (typeof messages === 'string') {
-            errorMessages.push(messages);
-          }
-        }
-      }
-      if (errorMessages.length > 0) {
-        return errorMessages.join('\n');
-      }
-    }
-
-    if (
-      rawMessage &&
-      rawMessage.length < 150 &&
-      !looksLikeTechError(rawMessage) &&
-      rawMessage !== 'One or more validation errors occurred.'
-    ) {
-      return rawMessage;
-    }
-    return 'Invalid input. Please check the form and try again.';
+    return 'Invalid input. Please ensure all fields are filled correctly.';
   }
 
   if (status >= 500) {
     return 'A server error occurred. Please try again later.';
   }
 
-  if (
-    rawMessage &&
-    rawMessage.length < 150 &&
-    !looksLikeTechError(rawMessage)
-  ) {
+  const rawMessage: string = err?.error?.message || err?.error?.title || err?.message || '';
+  if (rawMessage && rawMessage.length < 80 && !looksLikeTechError(rawMessage) && rawMessage !== 'One or more validation errors occurred.') {
     return rawMessage;
   }
 
@@ -2405,7 +2606,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AiService, AiResponseDto, TokenStatsDto } from '../../core/services/ai.service';
+import { AiService, AiResponseDto } from '../../core/services/ai.service';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
@@ -2439,33 +2640,29 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   cooldownSeconds: number = 0;
   totalTokensUsed: number = 0;
   isAdminOrHR: boolean = false;
-  
-  tokenStats: TokenStatsDto = { usedTokens: 0, maxTokensPerMinute: 14400, secondsUntilReset: 60 };
-  private tokenSub: Subscription | undefined;
-  private timerInterval: any;
 
   readonly MAX_CHARS = 250;
   readonly COOLDOWN_DURATION = 4;
 
   quickActions = [
     {
-      label: '📊 Analyze My Leaves',
+      label: 'Analyze My Leaves',
       icon: 'bi-bar-chart-line',
       action: 'analyze-leave',
     },
     {
-      label: '💰 Salary Insights',
+      label: 'Salary Insights',
       icon: 'bi-graph-up-arrow',
       action: 'salary-insight',
     },
     {
-      label: '📋 Leave Policy',
+      label: 'Leave Policy',
       icon: 'bi-journal-text',
       action: 'chat',
       prompt: 'What is the company leave policy?',
     },
     {
-      label: '🕐 How to Clock In',
+      label: 'How to Clock In',
       icon: 'bi-clock',
       action: 'chat',
       prompt: 'How do I clock in and out for attendance?',
@@ -2475,16 +2672,6 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.isAdminOrHR = this.authService.isAdminOrHR();
     this.loadChat();
-
-    this.tokenSub = this.aiService.tokenStats$.subscribe(stats => {
-      this.tokenStats = stats;
-    });
-
-    this.timerInterval = setInterval(() => {
-      if (this.tokenStats.secondsUntilReset > 0) {
-        this.tokenStats.secondsUntilReset--;
-      }
-    }, 1000);
 
     if (this.messages.length === 0) {
       this.messages.push({
@@ -2527,8 +2714,6 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.tokenSub) this.tokenSub.unsubscribe();
-    if (this.timerInterval) clearInterval(this.timerInterval);
   }
 
   scrollToBottom(): void {
@@ -2731,7 +2916,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, clear it',
+      confirmButtonText: 'Clear',
       cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {
@@ -2745,7 +2930,6 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   }
 
   setAiMode(mode: number): void {
-    if (mode === 2 && !this.isAdminOrHR) return;
     this.aiMode = mode;
   }
 }
@@ -2754,182 +2938,6 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
 
 ### File: src\app\features\all-attendance\all-attendance.component.html
 ```html
-<div class="page-container p-4">
-
-    
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <div class="d-flex align-items-center">
-            <div class="icon-box bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
-                <i class="bi bi-clock-history fs-4"></i>
-            </div>
-            <div>
-                <h2 class="fw-bold text-dark mb-1">{{ 'All Employees Attendance' | t }}</h2>
-                <p class="text-muted small mb-0">{{ 'Overview of all employees clock-in and clock-out records' | t }}</p>
-            </div>
-        </div>
-        <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-end flex-wrap">
-            <div class="input-group shadow-sm" style="max-width: 350px; min-width: 200px; flex: 1;">
-                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                <input type="text" class="form-control border-start-0 ps-0" 
-                    placeholder="Search by name, ID, or date..." 
-                    [(ngModel)]="searchQuery" 
-                    (input)="filterRecords()">
-            </div>
-
-            <div class="dropdown">
-                <button class="btn btn-outline-secondary shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Filter Attendance">
-                    <i class="bi bi-funnel-fill"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 rounded-4" style="width: 250px;">
-                    <h6 class="dropdown-header px-0 text-primary fw-bold mb-2">Filter Options</h6>
-                    
-                    <div class="mb-2">
-                        <label class="form-label small fw-semibold text-muted mb-1">Status</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="selectedStatus" (change)="filterRecords()">
-                            <option value="">All Statuses</option>
-                            <option value="Working">Working</option>
-                            <option value="Completed">Completed</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-danger shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToPDF()" title="Export to PDF">
-                    <i class="bi bi-file-earmark-pdf-fill" [class.me-md-1]="true"></i> 
-                    <span class="d-none d-md-inline">{{ 'Export to PDF' | t }}</span>
-                </button>
-                <button class="btn btn-outline-success shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" (click)="exportToExcel()" title="Export to Excel">
-                    <i class="bi bi-file-earmark-excel-fill" [class.me-md-1]="true"></i> 
-                    <span class="d-none d-md-inline">{{ 'Export to Excel' | t }}</span>
-                </button>
-            </div>
-            <a routerLink="/employees" class="btn btn-outline-secondary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap">
-                <i class="bi bi-arrow-left" [class.me-md-1]="true"></i> 
-                <span class="d-none d-md-inline">{{ 'Back to Employees' | t }}</span>
-            </a>
-        </div>
-    </div>
-
-    
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0 text-nowrap">
-
-                <thead class="bg-light text-muted small text-uppercase" style="letter-spacing: 0.5px;">
-                    <tr>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">Employee</th>
-                        <th class="py-3 px-3 border-bottom-0 fw-semibold">Date</th>
-                        <th class="py-3 px-3 border-bottom-0 fw-semibold text-success">Clock In</th>
-                        <th class="py-3 px-3 border-bottom-0 fw-semibold text-danger">Clock Out</th>
-                        <th class="py-3 px-3 border-bottom-0 fw-semibold text-primary">Total Hours</th>
-                        <th class="py-3 px-4 border-bottom-0 fw-semibold">Status</th>
-                    </tr>
-                </thead>
-
-                <tbody class="border-top-0">
-
-                    
-                    <tr *ngIf="isLoading">
-                        <td colspan="6" class="text-center py-5 text-muted no-data-td">
-                            <span class="spinner-border spinner-border-sm me-2"></span>
-                            Loading attendance records...
-                        </td>
-                    </tr>
-
-                    
-                    <tr *ngIf="!isLoading && records.length === 0">
-                        <td colspan="6" class="text-center py-5 no-data-td">
-                            <div class="d-flex flex-column align-items-center">
-                                <div class="bg-light rounded-circle p-4 mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                                    <i class="bi bi-clock-history fs-1 text-secondary"></i>
-                                </div>
-                                <h5 class="fw-bold text-dark mb-1">No Attendance Records</h5>
-                                <p class="text-muted small">There are no clock-in records available yet matching your criteria.</p>
-                            </div>
-                        </td>
-                    </tr>
-
-                    
-                    <tr *ngFor="let rec of paginatedRecords">
-                        <td data-label="Employee" class="py-3 px-4">
-                            <div class="fw-semibold text-dark">
-                                {{ rec.employeeName || ('Employee #' + rec.employeeId) }}
-                            </div>
-                        </td>
-                        <td data-label="Date" class="py-3 px-3 text-muted">
-                            {{ rec.date | date:'dd MMM yyyy' }}
-                        </td>
-                        <td data-label="Clock In" class="py-3 px-3 text-success fw-medium">
-                            <i class="bi bi-arrow-down-right-circle me-1"></i>
-                            {{ rec.clockIn || '—' }}
-                        </td>
-                        <td data-label="Clock Out" class="py-3 px-3 text-danger fw-medium">
-                            <i class="bi bi-arrow-up-right-circle me-1"></i>
-                            {{ (!rec.clockOut || rec.clockOut === '00:00:00') ? '—' : rec.clockOut }}
-                        </td>
-                        <td data-label="Total Hours" class="py-3 px-3 fw-semibold text-primary">
-                            {{ calcHours(rec) }}
-                        </td>
-                        <td data-label="Status" class="py-3 px-4">
-                            <span class="badge rounded-pill px-3 py-2 shadow-sm text-white"
-                                [class.bg-success]="rec.clockOut && rec.clockOut !== '00:00:00'"
-                                [class.bg-primary]="!rec.clockOut || rec.clockOut === '00:00:00'">
-                                <i class="bi me-1"
-                                   [class.bi-check-circle-fill]="rec.clockOut && rec.clockOut !== '00:00:00'"
-                                   [class.bi-clock-fill]="!rec.clockOut || rec.clockOut === '00:00:00'"></i>
-                                {{ getStatusLabel(rec) }}
-                            </span>
-                        </td>
-                    </tr>
-
-                </tbody>
-            </table>
-        </div>
-
-        
-        <div *ngIf="totalCount > 0" class="card-footer bg-white border-top-0 p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <div class="d-flex align-items-center gap-3 flex-wrap">
-                <div class="d-flex align-items-center gap-2">
-                    <label class="small text-muted mb-0 text-nowrap">{{ 'Per page' | t }}:</label>
-                    <select class="form-select form-select-sm border-light-subtle" style="width: 70px;" [(ngModel)]="itemsPerPage" (change)="filterRecords()">
-                        <option [ngValue]="10">10</option>
-                        <option [ngValue]="25">25</option>
-                        <option [ngValue]="50">50</option>
-                        <option [ngValue]="100">100</option>
-                    </select>
-                </div>
-                <small class="text-muted fw-medium">
-                    Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ getMathMin(currentPage * itemsPerPage, totalCount) }} of {{ totalCount }} entries
-                </small>
-            </div>
-            <ul class="pagination pagination-sm mb-0 shadow-sm rounded-3">
-                <li class="page-item" [class.disabled]="currentPage === 1">
-                    <a class="page-link cursor-pointer px-2" (click)="changePage(1)" title="First Page"><i class="bi bi-chevron-double-left"></i></a>
-                </li>
-                <li class="page-item" [class.disabled]="currentPage === 1">
-                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage - 1)">Previous</a>
-                </li>
-                <li class="page-item active">
-                    <a class="page-link px-3 bg-primary border-primary">{{ currentPage }} / {{ totalPages }}</a>
-                </li>
-                <li class="page-item" [class.disabled]="currentPage === totalPages">
-                    <a class="page-link cursor-pointer px-3" (click)="changePage(currentPage + 1)">Next</a>
-                </li>
-                <li class="page-item" [class.disabled]="currentPage === totalPages">
-                    <a class="page-link cursor-pointer px-2" (click)="changePage(totalPages)" title="Last Page"><i class="bi bi-chevron-double-right"></i></a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
-
-<style>
-.cursor-pointer {
-  cursor: pointer;
-}
-</style>
-
 ```
 
 ### File: src\app\features\all-attendance\all-attendance.component.ts
@@ -3182,16 +3190,8 @@ export class AllAttendanceComponent implements OnInit {
                     [(ngModel)]="searchQuery" 
                     (input)="onFilterChange()">
             </div>
-            <div class="input-group shadow-sm" style="max-width: 250px;">
-                <input class="form-control bg-white border-end-0" matInput
-                    [(ngModel)]="selectedDate" (ngModelChange)="onFilterChange()" (dateChange)="onFilterChange()"
-                    [matDatepicker]="attPicker"
-                    placeholder="DD/MM/YYYY" style="z-index: 1;">
-                <span class="input-group-text bg-white border-start-0 p-0" style="z-index: 2;">
-                    <mat-datepicker-toggle matIconSuffix [for]="attPicker"></mat-datepicker-toggle>
-                </span>
-                <mat-datepicker #attPicker></mat-datepicker>
-            </div>
+            <input type="date" class="form-control bg-white shadow-sm" style="max-width: 250px;"
+                [(ngModel)]="selectedDate" (change)="onFilterChange()">
             <div class="dropdown">
                 <button class="btn btn-outline-secondary shadow-sm px-3 px-md-4 py-2 rounded-3 fw-semibold text-nowrap" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-filter" [class.me-md-1]="true"></i> 
@@ -3234,6 +3234,7 @@ export class AllAttendanceComponent implements OnInit {
                     <tr>
                         <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Date' | t }}</th>
                         <th *ngIf="isAdminOrHR" class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Employee' | t }}</th>
+
                         <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Clock In' | t }}</th>
                         <th class="py-3 px-4 border-bottom-0 fw-semibold">{{ 'Clock Out' | t }}</th>
                         <th class="py-3 px-4 border-bottom-0 fw-semibold text-center">{{ 'Status' | t }}</th>
@@ -3277,6 +3278,7 @@ export class AllAttendanceComponent implements OnInit {
                                 <span class="fw-bold text-dark">{{ record.employeeName || ('Emp #' + record.employeeId) }}</span>
                             </div>
                         </td>
+
                         <td data-label="Clock-in Time" class="py-3 px-3 text-success fw-medium">
                             <i class="bi bi-arrow-down-right-circle me-1"></i>
                             {{ record.clockIn || '--:--' }}
@@ -3359,14 +3361,11 @@ import { ExcelExportService } from '../../core/services/excel-export.service';
 import { PdfExportService } from '../../core/services/pdf-export.service';
 import { SettingsService } from '../../core/services/settings.service';
 import { TRANSLATIONS } from '../../core/i18n/translations';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-attendance',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, RouterLink, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
+  imports: [CommonModule, FormsModule, TranslatePipe, RouterLink],
   templateUrl: './attendance.component.html',
 })
 export class AttendanceComponent implements OnInit, OnDestroy {
@@ -3521,7 +3520,6 @@ export class AttendanceComponent implements OnInit, OnDestroy {
           } else d = new Date(temp).toISOString().split('T')[0];
         }
       } catch (e) {
-        console.error(e);
       }
     }
     this.attendanceService
@@ -3563,7 +3561,6 @@ export class AttendanceComponent implements OnInit, OnDestroy {
           } else d = new Date(temp).toISOString().split('T')[0];
         }
       } catch (e) {
-        console.error(e);
       }
     }
     this.attendanceService
@@ -3589,7 +3586,6 @@ export class AttendanceComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         },
         error: (err) => {
-          console.error('Error fetching my attendance:', err);
           this.isLoading = false;
         },
       });
@@ -3658,7 +3654,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
           this.isProcessing = false;
           Swal.fire({
             icon: 'success',
-            title: 'Clocked In ✅',
+            title: 'Clocked In ',
             text: `Clocked in at ${timeString}`,
             timer: 2000,
             showConfirmButton: false,
@@ -3700,7 +3696,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
           : `Great job today! Clocked out at ${clockOutTime}.${extraMsg}`;
         Swal.fire({
           icon: 'success',
-          title: 'Clocked Out ✅',
+          title: 'Clocked Out ',
           text: msg,
           timer: 2500,
           showConfirmButton: false,
@@ -4253,293 +4249,6 @@ export class AttendanceComponent implements OnInit, OnDestroy {
 
 ### File: src\app\features\auth\login\login.component.ts
 ```typescript
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  ReactiveFormsModule,
-  FormGroup,
-  FormControl,
-  Validators,
-  FormsModule,
-} from '@angular/forms';
-import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
-import { AuthService } from '../../../core/services/auth.service';
-import { getFriendlyErrorMessage } from '../../../core/utils/error-handler.util';
-import { SettingsService } from '../../../core/services/settings.service';
-
-@Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
-})
-export class LoginComponent implements OnInit, OnDestroy {
-  private router = inject(Router);
-  private authService = inject(AuthService);
-  private settingsService = inject(SettingsService);
-
-  isLoading = false;
-  isFingerprintLoading = false;
-  isPasswordVisible = false;
-
-  loginForm = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [
-      Validators.required,
-      Validators.minLength(6),
-    ]),
-    rememberMe: new FormControl(false),
-  });
-
-  togglePasswordVisibility() {
-    this.isPasswordVisible = !this.isPasswordVisible;
-  }
-
-  scrollToOverview(event: Event) {
-    event.preventDefault();
-    document.getElementById('overview')?.scrollIntoView({ behavior: 'smooth' });
-  }
-
-  ngOnInit() {
-    document.documentElement.setAttribute('data-theme', 'light');
-    document.body.classList.remove('dark-mode');
-
-    setTimeout(() => {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('active');
-          } else {
-            entry.target.classList.remove('active');
-          }
-        });
-      }, { threshold: 0.1 });
-
-      document.querySelectorAll('.reveal-fade-up, .reveal-fade-left, .reveal-fade-right, .reveal-typing, .reveal-zoom').forEach((el) => {
-        observer.observe(el);
-      });
-    }, 100);
-  }
-
-  ngOnDestroy() {
-    if (this.settingsService.isDarkMode) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      document.body.classList.add('dark-mode');
-    }
-  }
-
-  onSubmit() {
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
-      return;
-    }
-
-    this.isLoading = true;
-
-    const credentials = {
-      email: this.loginForm.value.email,
-      password: this.loginForm.value.password,
-    };
-
-    this.authService.login(credentials).subscribe({
-      next: (res: any) => {
-        this.isLoading = false;
-        this.router.navigate(['/dashboard']);
-      },
-      error: (err) => {
-        this.isLoading = false;
-        Swal.fire(
-          'Login Failed',
-          getFriendlyErrorMessage(
-            err,
-            'Incorrect email or password. Please try again.',
-          ),
-          'error',
-        );
-      },
-    });
-  }
-
-  async loginWithFingerprint() {
-    this.isFingerprintLoading = true;
-    try {
-      await this.authService.loginWithFingerprint();
-      this.router.navigate(['/dashboard']);
-    } catch (err: any) {
-      this.isFingerprintLoading = false;
-      const errName = err?.name?.toLowerCase() || '';
-      const errMsg = err?.message?.toLowerCase() || '';
-      
-      if (errName === 'notallowederror' || errName === 'aborterror' || errMsg.includes('cancel') || errMsg.includes('abort') || errMsg.includes('timed out')) {
-         return; 
-      }
-
-      const friendlyMsg = this.getFingerprintErrorMessage(err);
-      Swal.fire({
-        icon: 'error',
-        title: 'Fingerprint Login Failed',
-        html: friendlyMsg,
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#4361ee',
-      });
-    } finally {
-      this.isFingerprintLoading = false;
-    }
-  }
-
-  private getFingerprintErrorMessage(err: any): string {
-    if (
-      err?.name === 'NotAllowedError' ||
-      err?.message?.includes('NotAllowedError') ||
-      err?.message?.includes('cancelled') ||
-      err?.message?.includes('canceled')
-    ) {
-      return 'Fingerprint scan was cancelled.<br><small class="text-muted">Please try again and follow your device prompt.</small>';
-    }
-
-    const status = err?.status;
-    const backendMsg: string =
-      err?.error?.message ||
-      (typeof err?.error === 'string' ? err.error : '') ||
-      err?.message ||
-      '';
-
-    if (status === 400) {
-      if (backendMsg.toLowerCase().includes('no fingerprint') || backendMsg.toLowerCase().includes('unknown credential')) {
-        return 'No fingerprint is registered for this account.<br><small class="text-muted">Go to <b>My Profile → Add Fingerprint Login</b> first.</small>';
-      }
-      if (backendMsg.toLowerCase().includes('expired')) {
-        return 'Session expired. Please try again.';
-      }
-      if (backendMsg.length > 0 && backendMsg.length < 300) {
-        return `${backendMsg}<br><small class="text-muted">Go to <b>My Profile → Add Fingerprint Login</b> if you haven't registered yet.</small>`;
-      }
-      return 'No fingerprint is registered for this account.<br><small class="text-muted">Go to <b>My Profile → Add Fingerprint Login</b> first.</small>';
-    }
-
-    if (status === 404) {
-      return 'User not found. Please check your email address.';
-    }
-
-    if (status === 0 || !navigator.onLine) {
-      return 'No internet connection. Please check your network.';
-    }
-
-    if (
-      err?.name === 'NotSupportedError' ||
-      err?.message?.includes('authenticator')
-    ) {
-      return 'Your device does not support fingerprint login, or no biometric is configured.';
-    }
-
-    return `Could not log in with fingerprint.<br><br><b>Debug Info:</b> ${err?.message || JSON.stringify(err)}`;
-  }
-}
-
-```
-
-### File: src\app\features\auth\register\register.component.html
-```html
-<div class="page-container p-4 fade-in">
-    
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <div class="d-flex align-items-center">
-            <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3 shadow-sm" style="width: 52px; height: 52px;">
-                <i class="bi bi-person-plus-fill fs-4"></i>
-            </div>
-            <div>
-                <h2 class="fw-bold text-dark mb-1">{{ 'Register New User' | t }}</h2>
-                <p class="text-muted small mb-0">{{ 'Create secure system credentials and assign appropriate roles for new employees.' | t }}</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="row justify-content-center justify-content-xl-start">
-        <div class="col-12 col-xl-10 col-xxl-8">
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-                <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4 px-md-5">
-                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-shield-lock text-primary me-2"></i>Account Details</h5>
-                </div>
-                <div class="card-body p-4 p-md-5 pt-3">
-                    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="modern-form">
-                        <div class="row g-4 mb-4">
-                            
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary small mb-2">{{ 'Username' | t }} <span class="text-danger">*</span></label>
-                                <div class="input-group input-group-lg shadow-sm rounded-3 overflow-hidden">
-                                    <span class="input-group-text bg-light border-0 text-muted px-3"><i class="bi bi-person"></i></span>
-                                    <input type="text" class="form-control border-0 bg-light fs-6" formControlName="username" placeholder="e.g. johndoe" style="box-shadow: none;">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary small mb-2">{{ 'Email Address' | t }} <span class="text-danger">*</span></label>
-                                <div class="input-group input-group-lg shadow-sm rounded-3 overflow-hidden">
-                                    <span class="input-group-text bg-light border-0 text-muted px-3"><i class="bi bi-envelope"></i></span>
-                                    <input type="email" class="form-control border-0 bg-light fs-6" formControlName="email" placeholder="john@company.com" style="box-shadow: none;">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary small mb-2">{{ 'Password' | t }} <span class="text-danger">*</span></label>
-                                <div class="input-group input-group-lg shadow-sm rounded-3 overflow-hidden">
-                                    <span class="input-group-text bg-light border-0 text-muted px-3"><i class="bi bi-key"></i></span>
-                                    <input type="password" class="form-control border-0 bg-light fs-6" formControlName="password" placeholder="Min. 6 characters" style="box-shadow: none;">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary small mb-2">{{ 'System Role' | t }} <span class="text-danger">*</span></label>
-                                <div class="input-group input-group-lg shadow-sm rounded-3 overflow-hidden">
-                                    <span class="input-group-text bg-light border-0 text-muted px-3"><i class="bi bi-person-badge"></i></span>
-                                    <select class="form-select border-0 bg-light fs-6 text-dark" formControlName="role" style="box-shadow: none; cursor: pointer;">
-                                        <option value="" disabled selected>{{ 'Select Role...' | t }}</option>
-                                        @for (role of roles; track role) {
-                                            <option [value]="role">{{ role | t }}</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <hr class="text-muted opacity-25 my-4">
-
-                        <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary btn-lg px-5 fw-bold shadow rounded-pill submit-btn d-flex align-items-center gap-2" [disabled]="registerForm.invalid || isLoading">
-                                @if (isLoading) {
-                                    <span class="spinner-border spinner-border-sm"></span> {{ 'Registering...' | t }}
-                                } @else {
-                                    <i class="bi bi-check2-circle"></i> {{ 'Create Account' | t }}
-                                }
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<style>
-.input-group-text {
-    min-width: 45px;
-    justify-content: center;
-}
-.form-control:focus, .form-select:focus {
-    background-color: #fff !important;
-    outline: none;
-}
-.input-group:focus-within {
-    border: 1px solid var(--bs-primary);
-    background-color: #fff !important;
-}
-.input-group:focus-within .input-group-text, .input-group:focus-within .form-control, .input-group:focus-within .form-select {
-    background-color: #fff !important;
-}
-</style>
 ```
 
 ### File: src\app\features\auth\register\register.component.ts
@@ -4604,7 +4313,7 @@ export class RegisterComponent {
           title: 'Account Created Successfully',
           text: 'Do you want to complete the employee profile now?',
           showCancelButton: true,
-          confirmButtonText: 'Yes, Complete Profile',
+          confirmButtonText: 'Complete Profile',
           cancelButtonText: 'Later',
         }).then((result) => {
           if (result.isConfirmed) {
@@ -4896,6 +4605,23 @@ export class RegisterComponent {
         </div>
     </div>
 
+    } @else if (isUserOnly) {
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0 rounded-4 p-5 text-center">
+                <i class="bi bi-person-lines-fill text-primary mb-3" style="font-size: 4rem;"></i>
+                <h4 class="fw-bold mb-3">{{ 'Welcome to Kawadir HRMS' | t }}</h4>
+                <p class="text-muted lead mx-auto" style="max-width: 600px;">
+                    {{ 'Your account has been successfully registered. Please wait for the HR department to finalize your employee profile setup. Once your profile is activated, you will automatically gain access to all the system features.' | t }}
+                </p>
+                <div class="d-flex justify-content-center mt-4">
+                    <button class="btn btn-outline-primary px-4 py-2 rounded-pill shadow-sm" routerLink="/my-profile">
+                        <i class="bi bi-person me-2"></i>{{ 'Go to My Profile' | t }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     } @else {
     <div class="row g-4 mb-4">
         <div class="col-md-3">
@@ -4984,8 +4710,8 @@ export class RegisterComponent {
 <div class="modal fade show" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0,0,0,0.5);" *ngIf="showAnnouncementModal">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-      <div class="modal-header bg-light border-0 py-3">
-        <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2">
+        <div class="modal-header border-0 py-3" style="background-color: rgba(var(--bs-primary-rgb), 0.05);">
+        <h5 class="modal-title fw-bold d-flex align-items-center gap-2">
           <i class="bi bi-megaphone-fill text-primary"></i> {{ 'Post Announcement' | t }}
         </h5>
         <button type="button" class="btn-close" (click)="closeAnnouncementModal()"></button>
@@ -5011,33 +4737,26 @@ export class RegisterComponent {
               </select>
             </div>
             <div class="col-md-6 d-flex flex-column justify-content-end">
-              <label class="form-label fw-semibold text-dark">{{ 'Expiry Date & Time' | t }} <small class="text-muted fw-normal">({{ 'Optional' | t }})</small></label>
+              <label class="form-label fw-semibold">{{ 'Expiry Date & Time' | t }}</label>
               <div class="d-flex gap-2">
-                <div class="input-group shadow-sm">
-                    <input class="form-control bg-white border-end-0" matInput
-                        formControlName="expiryDate"
-                        [matDatepicker]="expiryPicker"
-                        mask="00/00/0000" [dropSpecialCharacters]="false"
-                        placeholder="DD/MM/YYYY" style="z-index: 1;">
-                    <span class="input-group-text bg-white border-start-0 p-0" style="z-index: 2;">
-                        <mat-datepicker-toggle matIconSuffix [for]="expiryPicker"></mat-datepicker-toggle>
-                    </span>
-                    <mat-datepicker #expiryPicker></mat-datepicker>
-                </div>
-                <input type="time" class="form-control shadow-sm" formControlName="expiryTime" style="max-width: 120px;">
+                <input type="date" class="form-control shadow-sm"
+                    formControlName="expiryDate" required>
+                <input type="time" class="form-control shadow-sm" formControlName="expiryTime" style="max-width: 120px;" required>
               </div>
+              <div *ngIf="announcementForm.get('expiryDate')?.invalid && announcementForm.get('expiryDate')?.touched" class="text-danger small mt-1">Expiry date is required</div>
+              <div *ngIf="announcementForm.get('expiryTime')?.invalid && announcementForm.get('expiryTime')?.touched" class="text-danger small mt-1">Expiry time is required</div>
             </div>
           </div>
 
           <div class="mb-3">
             <div class="form-check form-switch mb-2">
               <input class="form-check-input" type="checkbox" id="isGeneralSwitch" formControlName="isGeneral">
-              <label class="form-check-label fw-semibold text-dark" for="isGeneralSwitch">{{ 'General Announcement (All Employees)' | t }}</label>
+              <label class="form-check-label fw-semibold" for="isGeneralSwitch">{{ 'General Announcement (All Employees)' | t }}</label>
             </div>
           </div>
 
           <div class="mb-4" *ngIf="!announcementForm.get('isGeneral')?.value">
-            <label class="form-label fw-semibold text-dark">{{ 'Select Target Employees' | t }}</label>
+            <label class="form-label fw-semibold">{{ 'Select Target Employees' | t }}</label>
             
             
             <div class="d-flex gap-2 mb-2">
@@ -5049,16 +4768,16 @@ export class RegisterComponent {
             </div>
             
             
-            <div class="form-check mb-2 bg-light p-2 rounded border">
+            <div class="form-check mb-2 p-2 rounded border" style="background-color: rgba(var(--bs-primary-rgb), 0.05);">
                 <input class="form-check-input ms-1" type="checkbox" id="selectAllAnn"
                     [checked]="isAllFilteredAnnouncementEmployeesSelected"
                     (change)="selectAllFilteredAnnouncementEmployees($event)" style="cursor: pointer;">
-                <label class="form-check-label fw-bold text-dark ms-2" for="selectAllAnn" style="cursor: pointer;">
+                <label class="form-check-label fw-bold ms-2" for="selectAllAnn" style="cursor: pointer;">
                     Select All Filtered Employees
                 </label>
             </div>
 
-            <div class="border rounded p-2 overflow-auto" style="max-height: 250px; background: #fff; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);">
+            <div class="border rounded p-2 overflow-auto" style="max-height: 250px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);">
               <div class="form-check mb-2" *ngFor="let emp of filteredAnnouncementEmployees">
                 <input class="form-check-input" type="checkbox" [id]="'empAnn' + emp.id" 
                        [checked]="announcementForm.get('targetEmployeeIds')?.value?.includes(emp.id)"
@@ -5068,8 +4787,8 @@ export class RegisterComponent {
                   <div class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 10px;">
                     {{ emp.firstName.charAt(0).toUpperCase() }}
                   </div>
-                  <span class="fw-medium text-dark">{{ emp.firstName }} {{ emp.lastName }}</span>
-                  <span class="ms-auto badge bg-light text-secondary border">{{ emp.departmentName || 'No Dept' }}</span>
+                  <span class="fw-medium">{{ emp.firstName }} {{ emp.lastName }}</span>
+                  <span class="ms-auto badge text-secondary border">{{ emp.departmentName || 'No Dept' }}</span>
                 </label>
               </div>
               <div *ngIf="filteredAnnouncementEmployees.length === 0" class="text-center text-muted small py-2">
@@ -5134,10 +4853,6 @@ import { ExcelExportService } from '../../core/services/excel-export.service';
 
 Chart.register(...registerables);
 
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { NgxMaskDirective } from 'ngx-mask';
-
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -5146,10 +4861,7 @@ import { NgxMaskDirective } from 'ngx-mask';
     TranslatePipe,
     RouterLink,
     ReactiveFormsModule,
-    FormsModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    NgxMaskDirective
+    FormsModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
@@ -5180,6 +4892,7 @@ export class DashboardComponent implements OnInit {
   allAttendances: any[] = [];
   isAdmin: boolean = false;
   isAdminOrHR: boolean = false;
+  isUserOnly: boolean = false;
 
   annualLeavePercent: number = 0;
   sickLeavePercent: number = 0;
@@ -5201,7 +4914,8 @@ export class DashboardComponent implements OnInit {
   attendanceRateChartInstance: any;
 
   downloadSystemReport() {
-    const doc = new jsPDF({
+    try {
+      const doc = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
       format: 'a4',
@@ -5461,6 +5175,9 @@ export class DashboardComponent implements OnInit {
     }
 
     doc.save(`System_Summary_Report_${todayStr}.pdf`);
+    } catch (error) {
+      Swal.fire('Error', 'Failed to generate PDF report. Please try again.', 'error');
+    }
   }
 
   private _pdfSectionHeader(
@@ -5543,19 +5260,20 @@ export class DashboardComponent implements OnInit {
       priority: ['Normal', Validators.required],
       isGeneral: [true],
       targetEmployeeIds: [[]],
-      expiryDate: [''],
-      expiryTime: [''],
+      expiryDate: ['', Validators.required],
+      expiryTime: ['', Validators.required],
     });
   }
 
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
+    this.isUserOnly = this.authService.getUserRole()?.toLowerCase() === 'user';
 
     if (this.isAdminOrHR) {
       this.loadAdminStats();
       this.loadEmployeesForSelect();
-    } else {
+    } else if (!this.isUserOnly) {
       this.loadEmployeeStats();
     }
 
@@ -5577,7 +5295,6 @@ export class DashboardComponent implements OnInit {
       next: (res) => {
         this.announcements = res.items;
       },
-      error: (err) => console.error('Failed to load announcements', err),
     });
   }
 
@@ -5680,7 +5397,6 @@ export class DashboardComponent implements OnInit {
             this.pendingPayrollCount = preview.employeeCount;
           }
         },
-        error: (err) => console.error('Error fetching payroll preview:', err),
       });
     }
 
@@ -5690,7 +5406,6 @@ export class DashboardComponent implements OnInit {
         this.totalEmployees = employees.length;
         this.calculateAttendanceRate();
       },
-      error: (err) => console.error('Error fetching employees:', err),
     });
 
     this.leaveService.getAllLeaves(undefined, undefined, 1, 1000).subscribe({
@@ -5737,14 +5452,12 @@ export class DashboardComponent implements OnInit {
           this.renderLeaveChart(annual, sick, emergency, unpaid);
         }, 100);
       },
-      error: (err) => console.error('Error fetching leaves:', err),
     });
 
     this.deptService.getDepartments().subscribe({
       next: (departments: any[]) => {
         this.departmentsCount = departments.length;
       },
-      error: (err) => console.error('Error fetching departments:', err),
     });
 
     this.salaryService.getAllSalaries(undefined, undefined, 1, 1000).subscribe({
@@ -5755,7 +5468,6 @@ export class DashboardComponent implements OnInit {
           0,
         );
       },
-      error: (err) => console.error('Error fetching salaries:', err),
     });
 
     this.attendanceService.getAllAttendance(undefined, 1, 1000).subscribe({
@@ -5768,7 +5480,6 @@ export class DashboardComponent implements OnInit {
         this.allAttendances = attendances;
         this.calculateAttendanceRate();
       },
-      error: (err) => console.error('Error fetching attendance overview:', err),
     });
   }
 
@@ -5869,7 +5580,6 @@ export class DashboardComponent implements OnInit {
 
         this.employeeAnnualLeaveBalance = 14 - approvedAnnualLeavesDays;
       },
-      error: (err) => console.error('Error fetching my leaves:', err),
     });
 
     this.attendanceService.getMyAttendance(undefined, 1, 1000).subscribe({
@@ -5909,7 +5619,6 @@ export class DashboardComponent implements OnInit {
 
         this.employeeHoursWorked = Math.round(totalHours);
       },
-      error: (err) => console.error('Error fetching my attendance:', err),
     });
   }
 
@@ -6105,19 +5814,23 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
-    const headers = ['Employee', 'Date', 'Clock In', 'Clock Out'];
-    const data = this.recentAttendances.map((att) => [
+    try {
+      const headers = ['Employee', 'Date', 'Clock In', 'Clock Out'];
+      const data = this.recentAttendances.map((att) => [
       att.employeeName || 'Emp #' + att.employeeId,
       att.date ? new Date(att.date).toLocaleDateString() : '',
       att.clockIn || '--:--',
       att.clockOut && att.clockOut !== '00:00:00' ? att.clockOut : '--:--',
     ]);
 
-    this.excelExportService.exportTableToExcel(
-      headers,
-      data,
-      'Recent_Attendances',
-    );
+      this.excelExportService.exportTableToExcel(
+        headers,
+        data,
+        'Recent_Attendances',
+      );
+    } catch (error) {
+      Swal.fire('Error', 'Failed to export to Excel. Please try again.', 'error');
+    }
   }
 
   exportMyRecentAttendancesToExcel() {
@@ -6130,18 +5843,22 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
-    const headers = ['Date', 'Clock In', 'Clock Out'];
-    const data = this.myRecentAttendances.map((att) => [
+    try {
+      const headers = ['Date', 'Clock In', 'Clock Out'];
+      const data = this.myRecentAttendances.map((att) => [
       att.date ? new Date(att.date).toLocaleDateString() : '',
       att.clockIn || '--:--',
       att.clockOut && att.clockOut !== '00:00:00' ? att.clockOut : '--:--',
     ]);
 
-    this.excelExportService.exportTableToExcel(
-      headers,
-      data,
-      'My_Recent_Attendances',
-    );
+      this.excelExportService.exportTableToExcel(
+        headers,
+        data,
+        'My_Recent_Attendances',
+      );
+    } catch (error) {
+      Swal.fire('Error', 'Failed to export to Excel. Please try again.', 'error');
+    }
   }
 }
 
@@ -6520,7 +6237,8 @@ export class DashboardComponent implements OnInit {
     </div>
 </div>
 <style>
-</style>
+</style>
+
 ```
 
 ### File: src\app\features\departments\departments.component.ts
@@ -6661,7 +6379,6 @@ export class DepartmentsComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching departments:', err);
         this.isLoading = false;
       },
     });
@@ -6822,7 +6539,6 @@ export class DepartmentsComponent implements OnInit {
             this.loadDepartments();
           },
           error: (err) => {
-            console.error('Delete error:', err);
             Swal.fire(
               'Error!',
               getFriendlyErrorMessage(
@@ -7046,17 +6762,9 @@ export class DepartmentsComponent implements OnInit {
               <i class="bi bi-calendar-event text-primary"></i>
               Date of Birth <span class="text-danger">*</span>
             </label>
-            <div class="input-group shadow-sm" [class.is-invalid]="employeeForm.get('birthDate')?.invalid && employeeForm.get('birthDate')?.touched">
-                <input class="form-control field-input border-end-0" matInput
-                    formControlName="birthDate"
-                    [matDatepicker]="birthPicker"
-                    mask="00/00/0000" [dropSpecialCharacters]="false"
-                    placeholder="DD/MM/YYYY" style="z-index: 1;">
-                <span class="input-group-text bg-white border-start-0 p-0" style="z-index: 2;">
-                    <mat-datepicker-toggle matIconSuffix [for]="birthPicker"></mat-datepicker-toggle>
-                </span>
-                <mat-datepicker #birthPicker></mat-datepicker>
-            </div>
+            <input type="date" class="form-control field-input shadow-sm"
+                formControlName="birthDate"
+                [class.is-invalid]="employeeForm.get('birthDate')?.invalid && employeeForm.get('birthDate')?.touched">
             <div class="invalid-feedback">Date of Birth is required.</div>
           </div>
         </div>
@@ -7180,17 +6888,9 @@ export class DepartmentsComponent implements OnInit {
               <i class="bi bi-calendar-date text-primary"></i>
               Hire Date <span class="text-danger">*</span>
             </label>
-            <div class="input-group shadow-sm" [class.is-invalid]="employeeForm.get('hireDate')?.invalid && employeeForm.get('hireDate')?.touched">
-                <input class="form-control field-input border-end-0" matInput
-                    formControlName="hireDate"
-                    [matDatepicker]="hirePicker"
-                    mask="00/00/0000" [dropSpecialCharacters]="false"
-                    placeholder="DD/MM/YYYY" style="z-index: 1;">
-                <span class="input-group-text bg-white border-start-0 p-0" style="z-index: 2;">
-                    <mat-datepicker-toggle matIconSuffix [for]="hirePicker"></mat-datepicker-toggle>
-                </span>
-                <mat-datepicker #hirePicker></mat-datepicker>
-            </div>
+            <input type="date" class="form-control field-input shadow-sm"
+                formControlName="hireDate"
+                [class.is-invalid]="employeeForm.get('hireDate')?.invalid && employeeForm.get('hireDate')?.touched">
             <div class="invalid-feedback">Hire date is required.</div>
           </div>
           <div class="col-md-4">
@@ -7334,14 +7034,11 @@ import { PositionService } from '../../core/services/position.service';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-employee-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, ImageCropperModalComponent, TranslatePipe, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, ImageCropperModalComponent, TranslatePipe],
   templateUrl: './employee-form.component.html',
   styleUrl: './employee-form.component.css',
 })
@@ -7485,7 +7182,6 @@ export class EmployeeFormComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        console.error('Error fetching employee', err);
         Swal.fire('Error', 'Failed to load employee details', 'error');
       },
     });
@@ -7507,7 +7203,6 @@ export class EmployeeFormComponent implements OnInit {
         this.unassignedUsers = res?.items ?? (Array.isArray(res) ? res : []);
       },
       error: (err) => {
-        console.error('Failed to load unassigned users:', err);
       },
     });
   }
@@ -7600,7 +7295,7 @@ export class EmployeeFormComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: 'Delete'
     }).then((result) => {
       if (result.isConfirmed) {
         if (!this.isEditMode || !this.employeeForm.getRawValue().userId) {
@@ -7621,7 +7316,6 @@ export class EmployeeFormComponent implements OnInit {
           error: (err) => {
             this.isLoading = false;
             Swal.fire('Error', 'Failed to delete picture.', 'error');
-            console.error(err);
           }
         });
       }
@@ -7685,7 +7379,6 @@ export class EmployeeFormComponent implements OnInit {
             text: msg,
             confirmButtonText: 'OK',
           });
-          console.error('Update error:', err);
         },
       });
     } else {
@@ -7702,7 +7395,6 @@ export class EmployeeFormComponent implements OnInit {
             text: msg,
             confirmButtonText: 'OK',
           });
-          console.error('Add error:', err);
         },
       });
     }
@@ -8241,7 +7933,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.departmentsList = data;
       },
-      error: (err) => console.error('Error fetching departments:', err)
     });
   }
 
@@ -8313,7 +8004,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching employees:', err);
         this.isLoading = false;
       },
     });
@@ -8341,7 +8031,6 @@ export class EmployeesComponent implements OnInit, OnDestroy {
             this.showToast('Employee deleted successfully', 'success');
           },
           error: (err) => {
-            console.error('Error deleting employee:', err);
             this.showToast('Failed to delete employee', 'error');
           },
         });
@@ -8837,17 +8526,8 @@ export class EmployeesComponent implements OnInit, OnDestroy {
           </div>
           <div class="mb-3">
             <label class="form-label fw-semibold text-muted small">{{ 'Event Date' | t }} <span class="text-danger">*</span></label>
-            <div class="input-group shadow-sm">
-                <input class="form-control bg-light border-end-0" matInput
-                    [(ngModel)]="newEvent.eventDate" name="eventDate" [required]="true"
-                    [matDatepicker]="eventPicker"
-                    mask="00/00/0000" [dropSpecialCharacters]="false"
-                    placeholder="DD/MM/YYYY" style="z-index: 1;">
-                <span class="input-group-text bg-light border-start-0 p-0" style="z-index: 2;">
-                    <mat-datepicker-toggle matIconSuffix [for]="eventPicker"></mat-datepicker-toggle>
-                </span>
-                <mat-datepicker #eventPicker></mat-datepicker>
-            </div>
+            <input type="date" class="form-control bg-light rounded-3 shadow-sm"
+                [(ngModel)]="newEvent.eventDate" name="eventDate" required>
           </div>
           <div class="mb-3">
             <label class="form-label fw-semibold text-muted small">{{ 'Description' | t }}</label>
@@ -8879,14 +8559,11 @@ import { EventService } from '../../core/services/event.service';
 import { AuthService } from '../../core/services/auth.service';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import Swal from 'sweetalert2';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './events.component.html',
   styleUrl: './events.component.css'
 })
@@ -8919,7 +8596,6 @@ export class EventsComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error loading events:', err);
         this.isLoading = false;
         Swal.fire('Error', 'Failed to load upcoming events.', 'error');
       }
@@ -8963,7 +8639,6 @@ export class EventsComponent implements OnInit {
       },
       error: (err) => {
         this.isSubmitting = false;
-        console.error(err);
         Swal.fire('Error', 'Failed to add event.', 'error');
       }
     });
@@ -8986,7 +8661,6 @@ export class EventsComponent implements OnInit {
             this.loadEvents();
           },
           error: (err) => {
-            console.error(err);
             Swal.fire('Error', 'Failed to delete event.', 'error');
           }
         });
@@ -9333,35 +9007,17 @@ export class EventsComponent implements OnInit {
                     <div class="row mb-4">
                         <div class="col-6">
                             <label class="form-label fw-semibold text-secondary small">Start Date *</label>
-                            <div class="input-group shadow-sm">
-                                <input class="form-control bg-light border-end-0" matInput
-                                    name="startDate"
-                                    [(ngModel)]="leaveData.startDate"
-                                    [min]="getToday()" [required]="true"
-                                    [matDatepicker]="startPicker"
-                                    mask="00/00/0000" [dropSpecialCharacters]="false"
-                                    placeholder="DD/MM/YYYY" style="z-index: 1;">
-                                <span class="input-group-text bg-light border-start-0 p-0" style="z-index: 2;">
-                                    <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
-                                </span>
-                                <mat-datepicker #startPicker></mat-datepicker>
-                            </div>
+                            <input type="date" class="form-control bg-light shadow-sm"
+                                name="startDate"
+                                [(ngModel)]="leaveData.startDate"
+                                [min]="getToday()" required>
                         </div>
                         <div class="col-6">
                             <label class="form-label fw-semibold text-secondary small">End Date *</label>
-                            <div class="input-group shadow-sm">
-                                <input class="form-control bg-light border-end-0" matInput
-                                    name="endDate"
-                                    [(ngModel)]="leaveData.endDate"
-                                    [min]="leaveData.startDate || getToday()" [required]="true"
-                                    [matDatepicker]="endPicker"
-                                    mask="00/00/0000" [dropSpecialCharacters]="false"
-                                    placeholder="DD/MM/YYYY" style="z-index: 1;">
-                                <span class="input-group-text bg-light border-start-0 p-0" style="z-index: 2;">
-                                    <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
-                                </span>
-                                <mat-datepicker #endPicker></mat-datepicker>
-                            </div>
+                            <input type="date" class="form-control bg-light shadow-sm"
+                                name="endDate"
+                                [(ngModel)]="leaveData.endDate"
+                                [min]="leaveData.startDate || getToday()" required>
                         </div>
                     </div>
                     <div class="mb-3">
@@ -9472,16 +9128,13 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { ExcelExportService } from '../../core/services/excel-export.service';
 import { PdfExportService } from '../../core/services/pdf-export.service';
 import { ImageCropperModalComponent } from '../../shared/image-cropper-modal/image-cropper-modal.component';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { NgxMaskDirective } from 'ngx-mask';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-leave',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, ImageCropperModalComponent, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
+  imports: [CommonModule, FormsModule, TranslatePipe, ImageCropperModalComponent],
   templateUrl: './leave.component.html',
 })
 export class LeaveComponent implements OnInit {
@@ -9603,7 +9256,6 @@ export class LeaveComponent implements OnInit {
           this.leaveSettings = res;
         }
       },
-      error: (err) => console.error('Failed to load leave settings', err)
     });
   }
 
@@ -9640,7 +9292,6 @@ export class LeaveComponent implements OnInit {
           this.sickLeaveBalance = res?.sickLeaveBalance ?? 0;
           this.emergencyLeaveBalance = res?.emergencyLeaveBalance ?? 0;
         },
-        error: (err) => console.error('Error fetching balances:', err)
       });
     }
   }
@@ -9672,7 +9323,6 @@ export class LeaveComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching leaves:', err);
         this.isLoading = false;
         this.leavesList = [];
       },
@@ -9736,12 +9386,20 @@ export class LeaveComponent implements OnInit {
   }
 
   submitLeaveRequest() {
-    if (this.leaveData.startDate < this.getToday()) {
+    const reqStart = new Date(this.leaveData.startDate);
+    reqStart.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (reqStart.getTime() < today.getTime()) {
       Swal.fire('Invalid Date', 'Start Date cannot be in the past.', 'warning');
       return;
     }
 
-    if (this.leaveData.endDate < this.leaveData.startDate) {
+    const reqEnd = new Date(this.leaveData.endDate);
+    reqEnd.setHours(0, 0, 0, 0);
+
+    if (reqEnd.getTime() < reqStart.getTime()) {
       Swal.fire(
         'Invalid Date',
         'End Date cannot be before the Start Date.',
@@ -9857,7 +9515,6 @@ export class LeaveComponent implements OnInit {
           this.loadLeaves();
         },
         error: (err) => {
-          console.error('Status update error:', err);
           Swal.fire(
             'Error!',
             getFriendlyErrorMessage(
@@ -9970,31 +9627,13 @@ export class LeaveComponent implements OnInit {
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold text-muted small">Start Date</label>
-                        <div class="input-group shadow-sm">
-                            <input class="form-control bg-light border-end-0" matInput
-                                formControlName="startDate"
-                                [matDatepicker]="startPicker"
-                                mask="00/00/0000" [dropSpecialCharacters]="false"
-                                placeholder="DD/MM/YYYY" style="z-index: 1;">
-                            <span class="input-group-text bg-light border-start-0 p-0" style="z-index: 2;">
-                                <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
-                            </span>
-                            <mat-datepicker #startPicker></mat-datepicker>
-                        </div>
+                        <input type="date" class="form-control bg-light shadow-sm"
+                            formControlName="startDate">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold text-muted small">End Date</label>
-                        <div class="input-group shadow-sm">
-                            <input class="form-control bg-light border-end-0" matInput
-                                formControlName="endDate"
-                                [matDatepicker]="endPicker"
-                                mask="00/00/0000" [dropSpecialCharacters]="false"
-                                placeholder="DD/MM/YYYY" style="z-index: 1;">
-                            <span class="input-group-text bg-light border-start-0 p-0" style="z-index: 2;">
-                                <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
-                            </span>
-                            <mat-datepicker #endPicker></mat-datepicker>
-                        </div>
+                        <input type="date" class="form-control bg-light shadow-sm"
+                            formControlName="endDate">
                     </div>
                 </div>
 
@@ -10031,14 +9670,11 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { LeaveService } from '../../core/services/leave.service';
 import Swal from 'sweetalert2';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-leave-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './leave-form.component.html',
 })
 export class LeaveFormComponent {
@@ -10171,19 +9807,27 @@ export class LeaveFormComponent {
                                 <span class="fw-medium text-dark">{{ group.organizerName }}</span>
                             </td>
                             <td>
-                                <div class="dropdown">
-                                    <button class="btn btn-light btn-sm rounded-pill fw-semibold dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bi bi-people-fill text-primary"></i> 
-                                        {{ group.attendees.length }} {{ group.attendees.length === 1 ? ('Employee' | t) : ('Employees' | t) }}
-                                    </button>
-                                    <ul class="dropdown-menu shadow-sm border-0 rounded-3">
-                                        <li *ngFor="let attendee of group.attendees">
-                                            <span class="dropdown-item d-flex align-items-center gap-2">
-                                                <i class="bi bi-person-circle text-muted"></i> {{ attendee }}
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
+                                <ng-container *ngIf="group.attendees.length > 1; else singleAttendee">
+                                    <div class="dropdown">
+                                        <button class="btn btn-light btn-sm rounded-pill fw-semibold dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-boundary="window">
+                                            <i class="bi bi-people-fill text-primary"></i> 
+                                            {{ group.attendees.length }} {{ 'Employees' | t }}
+                                        </button>
+                                        <ul class="dropdown-menu shadow-sm border-0 rounded-3">
+                                            <li *ngFor="let attendee of group.attendees">
+                                                <span class="dropdown-item d-flex align-items-center gap-2">
+                                                    <i class="bi bi-person-circle text-muted"></i> {{ attendee }}
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </ng-container>
+                                <ng-template #singleAttendee>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-person-circle text-primary fs-5"></i>
+                                        <span class="fw-medium text-dark">{{ group.attendees[0] }}</span>
+                                    </div>
+                                </ng-template>
                             </td>
                             <td>
                                 <div class="d-flex align-items-center gap-2"><i class="bi bi-calendar-event text-muted"></i>{{ group.scheduledAt | date:'mediumDate' }}</div>
@@ -10323,17 +9967,8 @@ export class LeaveFormComponent {
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold text-secondary">{{ 'Date' | t }} <span class="text-danger">*</span></label>
-                            <div class="input-group shadow-sm">
-                                <input class="form-control bg-light border-end-0" matInput
-                                    formControlName="meetingDate" [required]="true"
-                                    [matDatepicker]="meetPicker"
-                                    mask="00/00/0000" [dropSpecialCharacters]="false"
-                                    placeholder="DD/MM/YYYY" style="z-index: 1;">
-                                <span class="input-group-text bg-light border-start-0 p-0" style="z-index: 2;">
-                                    <mat-datepicker-toggle matIconSuffix [for]="meetPicker"></mat-datepicker-toggle>
-                                </span>
-                                <mat-datepicker #meetPicker></mat-datepicker>
-                            </div>
+                            <input type="date" class="form-control bg-light shadow-sm"
+                                formControlName="meetingDate" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold text-secondary">{{ 'Time' | t }} <span class="text-danger">*</span></label>
@@ -10395,9 +10030,6 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { Observable, forkJoin } from 'rxjs';
 import { ExcelExportService } from '../../core/services/excel-export.service';
 import { PdfExportService } from '../../core/services/pdf-export.service';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { NgxMaskDirective } from 'ngx-mask';
 
 export interface GroupedMeeting {
   meetLink: string;
@@ -10416,7 +10048,7 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-meetings',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe],
   templateUrl: './meetings.component.html',
   styleUrls: ['./meetings.component.css']
 })
@@ -11363,7 +10995,6 @@ export class MyProfileComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching my profile:', err);
         this.isLoading = false;
       },
     });
@@ -11440,7 +11071,7 @@ export class MyProfileComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: 'Delete'
     }).then((result) => {
       if (result.isConfirmed) {
         this.isUploadingPic = true;
@@ -11478,13 +11109,27 @@ export class MyProfileComponent implements OnInit {
     let requestsPending = 0;
     let hasError = false;
 
-    if (this.pwdData.oldPassword && this.pwdData.newPassword) {
+    if (this.pwdData.newPassword || this.pwdData.confirmNewPassword || this.pwdData.oldPassword) {
+      if (!this.pwdData.oldPassword) {
+        Swal.fire('Validation Error', 'Current password is required to change your password.', 'warning');
+        return;
+      }
+      if (!this.pwdData.newPassword || !this.pwdData.confirmNewPassword) {
+        Swal.fire('Validation Error', 'Please enter and confirm your new password.', 'warning');
+        return;
+      }
+      if (this.pwdData.newPassword !== this.pwdData.confirmNewPassword) {
+        Swal.fire('Validation Error', 'New passwords do not match.', 'warning');
+        return;
+      }
+      
       requestsPending++;
       this.isChangingPwd = true;
       this.authService
         .changePassword({
-          oldPassword: this.pwdData.oldPassword,
+          currentPassword: this.pwdData.oldPassword,
           newPassword: this.pwdData.newPassword,
+          confirmNewPassword: this.pwdData.confirmNewPassword
         })
         .subscribe({
           next: () => {
@@ -11628,7 +11273,6 @@ export class MyProfileComponent implements OnInit {
         this.isLoadingFingerprints = false;
       })
       .catch(err => {
-        console.error('Failed to load fingerprints:', err);
         this.isLoadingFingerprints = false;
       });
   }
@@ -12184,7 +11828,6 @@ export class PayrollAdjustmentsComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err: any) => {
-        console.error(err);
         if (err.status !== 401 && err.status !== 403) {
           Swal.fire('Error', 'Failed to load adjustments', 'error');
         }
@@ -12199,7 +11842,6 @@ export class PayrollAdjustmentsComponent implements OnInit {
         this.employees = res?.items || [];
       },
       error: (err: any) => {
-        console.error(err);
       },
     });
   }
@@ -12274,7 +11916,6 @@ export class PayrollAdjustmentsComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        console.error(err);
         Swal.fire('Error', 'Failed to create adjustment', 'error');
         this.isSubmitting = false;
       },
@@ -12298,7 +11939,6 @@ export class PayrollAdjustmentsComponent implements OnInit {
             this.loadAdjustments();
           },
           error: (err: any) => {
-            console.error(err);
             Swal.fire(
               'Error!',
               'Failed to delete adjustment. It may have already been applied.',
@@ -12586,7 +12226,7 @@ export class PendingApprovalsComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#198754',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, Approve',
+      confirmButtonText: 'Approve',
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
@@ -12609,7 +12249,7 @@ export class PendingApprovalsComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, Reject',
+      confirmButtonText: 'Reject',
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
@@ -12922,7 +12562,6 @@ export class PositionsComponent implements OnInit {
         const extracted = Array.isArray(res) ? res : res?.data || [];
         this.departmentsList = Array.isArray(extracted) ? extracted : [];
       },
-      error: (err) => console.error('Error fetching departments:', err),
     });
   }
 
@@ -12935,7 +12574,6 @@ export class PositionsComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching positions:', err);
         this.isLoading = false;
       },
     });
@@ -13013,7 +12651,6 @@ export class PositionsComponent implements OnInit {
             this.loadPositions();
           },
           error: (err) => {
-            console.error('Delete error:', err);
             Swal.fire('Error!', 'Failed to delete position.', 'error');
           },
         });
@@ -13035,7 +12672,6 @@ export class PositionsComponent implements OnInit {
 
   private handleError(err: any) {
     this.isProcessing = false;
-    console.error('Position save error:', err);
     Swal.fire(
       'Error',
       getFriendlyErrorMessage(err, 'Failed to save position data.'),
@@ -13533,21 +13169,10 @@ export class PositionsComponent implements OnInit {
                         </div>
                     </div>
                     <div class="mb-2">
-                        <label
-                            class="form-label fw-semibold text-secondary small">Effective
-                            Date <span class="text-danger">*</span></label>
-                        <div class="input-group shadow-sm">
-                            <input class="form-control bg-light border-end-0" matInput
-                                name="effectiveDate"
-                                [(ngModel)]="salaryData.effectiveDate" [required]="true"
-                                [matDatepicker]="effPicker"
-                                mask="00/00/0000" [dropSpecialCharacters]="false"
-                                placeholder="DD/MM/YYYY" style="z-index: 1;">
-                            <span class="input-group-text bg-light border-start-0 p-0" style="z-index: 2;">
-                                <mat-datepicker-toggle matIconSuffix [for]="effPicker"></mat-datepicker-toggle>
-                            </span>
-                            <mat-datepicker #effPicker></mat-datepicker>
-                        </div>
+                        <label class="form-label fw-semibold text-secondary small">Effective Date <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control bg-light shadow-sm"
+                            name="effectiveDate"
+                            [(ngModel)]="salaryData.effectiveDate" required>
                     </div>
                 </form>
             </div>
@@ -13721,7 +13346,8 @@ export class PositionsComponent implements OnInit {
     .cursor-pointer {
         cursor: pointer;
     }
-</style>
+</style>
+
 ```
 
 ### File: src\app\features\salary\salary.component.ts
@@ -13740,16 +13366,13 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
 import { PdfExportService } from '../../core/services/pdf-export.service';
 import { ExcelExportService } from '../../core/services/excel-export.service';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { NgxMaskDirective } from 'ngx-mask';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-salary',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, MatDatepickerModule, MatNativeDateModule, NgxMaskDirective],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './salary.component.html',
 })
 export class SalaryComponent implements OnInit {
@@ -13866,7 +13489,6 @@ export class SalaryComponent implements OnInit {
         this.filteredEmployeesList = [...this.employeesList];
       },
       error: (err: any) => {
-        console.error('Error fetching employees:', err);
       },
     });
   }
@@ -13919,7 +13541,6 @@ export class SalaryComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching salaries:', err);
         this.isLoading = false;
       },
     });
@@ -14070,7 +13691,7 @@ export class SalaryComponent implements OnInit {
       text: `This will lock all draft salaries for ${this.selectedMonth}/${this.selectedYear}. This action cannot be undone!`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, Approve!',
+      confirmButtonText: 'Approve',
       cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {
@@ -14142,7 +13763,6 @@ export class SalaryComponent implements OnInit {
 
   private handleError(err: any) {
     this.isProcessing = false;
-    console.error('Salary save error:', err);
     Swal.fire('Error', getFriendlyErrorMessage(err, 'Failed to save salary data.'), 'error');
   }
 
@@ -14154,7 +13774,7 @@ export class SalaryComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: 'Delete'
     }).then((result) => {
       if (result.isConfirmed) {
         this.salaryService.deleteSalary(id).subscribe({
@@ -14176,7 +13796,7 @@ export class SalaryComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#198754',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, Approve'
+      confirmButtonText: 'Approve'
     }).then((result) => {
       if (result.isConfirmed) {
         this.salaryService.approveSalary(id).subscribe({
@@ -14381,7 +14001,7 @@ export class SalaryComponent implements OnInit {
                             <span class="badge bg-primary rounded-pill ms-2">{{ unreadCount }} {{ 'New' | t }}</span>
                             }
                         </div>
-                        <div class="d-flex gap-1">
+                        <div class="d-flex gap-2">
                             <button class="btn btn-link action-icon-btn text-decoration-none p-0 text-primary" 
                                     (click)="markAllAsRead($event)" 
                                     [disabled]="unreadCount === 0"
@@ -14414,9 +14034,14 @@ export class SalaryComponent implements OnInit {
                                         style="font-size: 0.75rem;">{{
                                         note.createdAt | date:'shortTime' }}</small>
                                 </div>
-                                <button class="btn btn-link action-icon-btn text-danger p-0 ms-2" (click)="deleteNotification($event, note.id)" title="Delete">
-                                    <i class="bi bi-x-circle fs-6"></i>
-                                </button>
+                                <div class="d-flex align-items-center">
+                                    <button *ngIf="!note.isRead" class="btn btn-link p-0 me-2 unread-indicator" (click)="markAsRead(note, $event)" title="Mark as read">
+                                        <i class="bi bi-circle-fill text-primary" style="font-size: 10px;"></i>
+                                    </button>
+                                    <button class="btn btn-link action-icon-btn text-danger p-0 ms-2" (click)="deleteNotification($event, note.id)" title="Delete">
+                                        <i class="bi bi-x-circle fs-6"></i>
+                                    </button>
+                                </div>
                             </div>
                             <p class="mb-0 text-secondary text-wrap pe-4"
                                 style="font-size: 0.85rem;">
@@ -14516,13 +14141,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.notifications = extracted;
         this.unreadCount = this.notifications.filter((n) => !n.isRead).length;
       },
-      error: (err) => console.error('Error fetching notifications:', err),
     });
   }
 
-  markAsRead(notification: any) {
+  markAsRead(notification: any, event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    
     if (notification.isRead) {
-      this.navigateBasedOnNotification(notification);
+      if (!event) this.navigateBasedOnNotification(notification);
       return;
     }
 
@@ -14530,9 +14158,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
       next: () => {
         notification.isRead = true;
         this.unreadCount = Math.max(0, this.unreadCount - 1);
-        this.navigateBasedOnNotification(notification);
+        if (!event) this.navigateBasedOnNotification(notification);
       },
-      error: (err) => console.error('Error marking as read:', err),
     });
   }
 
@@ -14545,7 +14172,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.notifications.forEach(n => n.isRead = true);
         this.unreadCount = 0;
       },
-      error: (err) => console.error('Error marking all as read:', err),
     });
   }
 
@@ -14567,7 +14193,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
             this.notifications = this.notifications.filter(n => n.id !== id);
             this.unreadCount = this.notifications.filter((n) => !n.isRead).length;
           },
-          error: (err) => console.error('Error deleting notification:', err)
         });
       }
     });
@@ -14584,7 +14209,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete all',
+      confirmButtonText: 'Delete all',
       cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {
@@ -14593,7 +14218,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
             this.notifications = [];
             this.unreadCount = 0;
           },
-          error: (err) => console.error('Error deleting all notifications:', err)
         });
       }
     });
@@ -14668,6 +14292,69 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 ### File: src\app\shared\image-cropper-modal\image-cropper-modal.component.html
 ```html
+<div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0,0,0,0.5); z-index: 1070;" *ngIf="showModal">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+      <div class="modal-header bg-light border-bottom-0 pb-3">
+        <h5 class="modal-title fw-bold text-dark"><i class="bi bi-crop me-2"></i>{{ title }}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="onCancel()"></button>
+      </div>
+      <div class="modal-body p-4 bg-white text-center">
+        
+        <div *ngIf="isLoading" class="py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2 text-muted">Loading image...</p>
+        </div>
+
+        <div class="cropper-container bg-light rounded-3 p-2 border" [class.d-none]="isLoading">
+            <image-cropper
+              [imageChangedEvent]="imageChangedEvent"
+              [maintainAspectRatio]="maintainAspectRatio"
+              [aspectRatio]="aspectRatio"
+              [transform]="transform"
+              [canvasRotation]="rotation"
+              format="png"
+              (imageCropped)="imageCropped($event)"
+              (imageLoaded)="imageLoaded($event)"
+              (cropperReady)="cropperReady()"
+              (loadImageFailed)="loadImageFailed()"
+              style="max-height: 50vh;">
+            </image-cropper>
+            <div class="d-flex justify-content-center gap-2 mt-3 mb-2 flex-wrap">
+                <button type="button" class="btn btn-sm btn-outline-secondary" (click)="zoomOut()" title="Zoom Out">
+                    <i class="bi bi-zoom-out"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" (click)="zoomIn()" title="Zoom In">
+                    <i class="bi bi-zoom-in"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" (click)="rotateLeft()" title="Rotate Left">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" (click)="rotateRight()" title="Rotate Right">
+                    <i class="bi bi-arrow-clockwise"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-danger" (click)="resetImage()" title="Reset">
+                    <i class="bi bi-arrow-counterclockwise"></i> Reset
+                </button>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer bg-light border-top-0 pt-3">
+        <button type="button" class="btn btn-outline-secondary px-4 rounded-3 fw-medium" (click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-primary px-4 rounded-3 fw-medium" (click)="onSave()">
+            <i class="bi bi-check2 me-1"></i> Crop & Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+```
+
+### File: src\app\shared\image-cropper-modal\image-cropper-modal.component.ts
+```typescript
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImageCroppedEvent, ImageCropperComponent, LoadedImage, ImageTransform } from 'ngx-image-cropper';
@@ -14790,6 +14477,7 @@ export class ImageCropperModalComponent {
                         class="bi bi-person icon-blue-dark"></i> {{ 'My Profile'
                     | t
                     }}</a></li>
+            @if (!isUserOnly) {
             @if (isAdminOrHR) {
             <li><a routerLink="/employees" routerLinkActive="active"
                     (click)="closeMobileSidebar()"><i
@@ -14833,6 +14521,7 @@ export class ImageCropperModalComponent {
                     (click)="closeMobileSidebar()" class="ai-nav-link"><i
                         class="bi bi-stars"></i> {{ 'AI Assistant' | t
                     }}</a></li>
+            }
 
             @if (isAdminOrHR) {
             <li class="section-title">{{ 'System Control' | t }}</li>
@@ -14917,6 +14606,7 @@ export class SidebarComponent implements OnInit {
   isAdminOrHR: boolean = false;
   userName: string = 'User';
   userRole: string = 'Employee';
+  isUserOnly: boolean = false;
   profilePicUrl: string | null = null;
 
   @ViewChild('sidebar') sidebarRef!: ElementRef;
@@ -14963,8 +14653,9 @@ export class SidebarComponent implements OnInit {
     this.isAdminOrHR = this.authService.isAdminOrHR();
     this.userName = localStorage.getItem('user_name') || 'User';
     this.userRole = localStorage.getItem('user_role') || 'Employee';
+    this.isUserOnly = this.userRole.toLowerCase() === 'user';
 
-    if (!this.isAdmin) {
+    if (!this.isAdmin && !this.isUserOnly) {
       this.employeeService.getMyProfile().subscribe({
         next: (profile) => {
           if (profile && profile.positionTitle) {

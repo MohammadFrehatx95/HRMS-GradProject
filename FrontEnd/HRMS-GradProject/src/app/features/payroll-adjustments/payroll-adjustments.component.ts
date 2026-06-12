@@ -358,4 +358,13 @@ export class PayrollAdjustmentsComponent implements OnInit {
 
     this.excelExportService.exportTableToExcel(headers, data, 'Adjustments');
   }
+
+  showReason(reason: string) {
+    Swal.fire({
+      title: 'Adjustment Reason',
+      text: reason,
+      icon: 'info',
+      confirmButtonText: 'Close',
+    });
+  }
 }

@@ -5,6 +5,8 @@ import {
   FormGroup,
   FormControl,
   Validators,
+  AbstractControl,
+  ValidationErrors,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ImageCropperModalComponent } from '../../shared/image-cropper-modal/image-cropper-modal.component';
@@ -54,7 +56,7 @@ export class EmployeeFormComponent implements OnInit {
       Validators.required,
       Validators.pattern(/^[0-9]{10}$/),
     ]),
-    birthDate: new FormControl('', Validators.required),
+    birthDate: new FormControl('', [Validators.required, this.minimumAgeValidator(18)]),
     hireDate: new FormControl('', Validators.required),
     departmentId: new FormControl('', Validators.required),
     positionId: new FormControl(
@@ -399,5 +401,18 @@ export class EmployeeFormComponent implements OnInit {
       Swal.fire('Success', 'Employee saved successfully', 'success');
       this.router.navigate(['/employees']);
     }
+  }
+  minimumAgeValidator(minAge: number) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) return null;
+      const today = new Date();
+      const birthDate = new Date(control.value);
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      return age < minAge ? { minimumAge: true } : null;
+    };
   }
 }

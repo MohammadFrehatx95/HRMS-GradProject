@@ -131,7 +131,7 @@
           <span class="spinner-border spinner-border-sm text-primary"></span>
         </div>
         
-        <div *ngIf="!isLoadingFingerprints && fingerprints.length === 0" class="alert alert-light text-center rounded-3 border">
+        <div *ngIf="!isLoadingFingerprints && fingerprints.length === 0" class="bg-light p-4 text-center rounded-3 border">
           <i class="bi bi-info-circle text-muted mb-2 d-block fs-4"></i>
           <p class="text-muted small mb-0">No fingerprints registered yet.</p>
         </div>
@@ -140,7 +140,7 @@
           <div class="col-md-6" *ngFor="let fp of fingerprints; let i = index">
             <div class="bg-light rounded-3 p-3 d-flex align-items-center justify-content-between border border-opacity-50">
               <div class="d-flex align-items-center gap-3">
-                <div class="bg-white rounded p-2 text-primary shadow-sm border border-opacity-25">
+                <div class="bg-body rounded p-2 text-primary shadow-sm border border-opacity-25">
                   <i class="bi bi-fingerprint fs-4"></i>
                 </div>
                 <div>
@@ -148,7 +148,7 @@
                   <p class="text-muted mb-0" style="font-size: 0.75rem;">Added {{ fp.regDate | date:'mediumDate' }}</p>
                 </div>
               </div>
-              <button class="btn btn-sm btn-light text-danger bg-white border shadow-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" (click)="deleteFingerprint(fp.id)" title="Remove Fingerprint">
+              <button class="btn btn-sm btn-light text-danger border shadow-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" (click)="deleteFingerprint(fp.id)" title="Remove Fingerprint">
                 <i class="bi bi-trash"></i>
               </button>
             </div>
@@ -275,7 +275,7 @@
           <span class="spinner-border spinner-border-sm text-primary"></span>
         </div>
         
-        <div *ngIf="!isLoadingFingerprints && fingerprints.length === 0" class="alert alert-light text-center rounded-3 border">
+        <div *ngIf="!isLoadingFingerprints && fingerprints.length === 0" class="bg-light p-4 text-center rounded-3 border">
           <i class="bi bi-info-circle text-muted mb-2 d-block fs-4"></i>
           <p class="text-muted small mb-0">No fingerprints registered yet.</p>
         </div>
@@ -284,7 +284,7 @@
           <div class="col-md-6" *ngFor="let fp of fingerprints; let i = index">
             <div class="bg-light rounded-3 p-3 d-flex align-items-center justify-content-between border border-opacity-50">
               <div class="d-flex align-items-center gap-3">
-                <div class="bg-white rounded p-2 text-primary shadow-sm border border-opacity-25">
+                <div class="bg-body rounded p-2 text-primary shadow-sm border border-opacity-25">
                   <i class="bi bi-fingerprint fs-4"></i>
                 </div>
                 <div>
@@ -292,7 +292,7 @@
                   <p class="text-muted mb-0" style="font-size: 0.75rem;">Added {{ fp.regDate | date:'mediumDate' }}</p>
                 </div>
               </div>
-              <button class="btn btn-sm btn-light text-danger bg-white border shadow-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" (click)="deleteFingerprint(fp.id)" title="Remove Fingerprint">
+              <button class="btn btn-sm btn-light text-danger border shadow-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" (click)="deleteFingerprint(fp.id)" title="Remove Fingerprint">
                 <i class="bi bi-trash"></i>
               </button>
             </div>

@@ -166,7 +166,13 @@
             <input type="date" class="form-control field-input shadow-sm"
                 formControlName="birthDate"
                 [class.is-invalid]="employeeForm.get('birthDate')?.invalid && employeeForm.get('birthDate')?.touched">
-            <div class="invalid-feedback">Date of Birth is required.</div>
+            @if (employeeForm.get('birthDate')?.touched) {
+              @if (employeeForm.get('birthDate')?.errors?.['required']) {
+                <div class="invalid-feedback d-block">Date of Birth is required.</div>
+              } @else if (employeeForm.get('birthDate')?.errors?.['minimumAge']) {
+                <div class="invalid-feedback d-block">Employee must be at least 18 years old.</div>
+              }
+            }
           </div>
         </div>
       </div>

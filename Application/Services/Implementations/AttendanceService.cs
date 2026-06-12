@@ -263,6 +263,11 @@ namespace Application.Services.Implementations
                 throw new InvalidOperationException($"You cannot clock in before the official start time ({_attendanceSettings.WorkStartTime:HH:mm}).");
             }
 
+            if (dto.ClockIn > _attendanceSettings.WorkEndTime)
+            {
+                throw new InvalidOperationException($"You cannot clock in after the official end time ({_attendanceSettings.WorkEndTime:HH:mm}).");
+            }
+
             var date = DateTime.SpecifyKind(dto.Date.Date, DateTimeKind.Utc);
 
             var openSession = await uow.Repository<Attendance>()
@@ -277,8 +282,7 @@ namespace Application.Services.Implementations
                     throw new InvalidOperationException(
                         "You have already clocked in today. Please clock out first.");
 
-                // ✅ Bug #5 Fix: Use configurable end time instead of hardcoded 23:59
-                openSession.ClockOut = _attendanceSettings.WorkDayEndTime;
+                openSession.ClockOut = _attendanceSettings.WorkEndTime;
 
                 var staleDuration = openSession.ClockOut.Value.ToTimeSpan()
                                     - openSession.ClockIn.ToTimeSpan();
@@ -354,7 +358,8 @@ namespace Application.Services.Implementations
 
             attendance.ClockOut = dto.ClockOut;
 
-            var duration = dto.ClockOut.ToTimeSpan() - attendance.ClockIn.ToTimeSpan();
+            var effectiveEndTime = dto.ClockOut > _attendanceSettings.WorkEndTime ? _attendanceSettings.WorkEndTime : dto.ClockOut;
+            var duration = effectiveEndTime.ToTimeSpan() - attendance.ClockIn.ToTimeSpan();
             attendance.TotalHours = duration.TotalHours > 0 ? (int)Math.Round(duration.TotalHours) : 0;
 
             uow.Repository<Attendance>().Update(attendance);

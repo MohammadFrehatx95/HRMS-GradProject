@@ -120,12 +120,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     return this.calculateTimeDifference(this.attendanceSettings.workStartTime, nowStr);
   }
 
-  get overtimeText(): string {
-    if (!this.attendanceSettings?.workEndTime) return '';
-    const nowStr = this.currentTime.toTimeString().split(' ')[0];
-    if (nowStr <= this.attendanceSettings.workEndTime) return '';
-    return this.calculateTimeDifference(this.attendanceSettings.workEndTime, nowStr);
-  }
+
 
   private calculateTimeDifference(start: string, end: string): string {
     const startParts = start.split(':').map(Number);
@@ -336,13 +331,9 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     this.attendanceService.clockOut({ clockOut: clockOutTime }).subscribe({
       next: () => {
         this.isProcessing = false;
-        let extraMsg = '';
-        if (!isOldSession && this.isAfterEndTime) {
-          extraMsg = `\nOvertime recorded: ${this.overtimeText}`;
-        }
         const msg = isOldSession
-          ? `Previous session automatically closed at 23:59.`
-          : `Great job today! Clocked out at ${clockOutTime}.${extraMsg}`;
+          ? `Previous session automatically closed.`
+          : `Great job today! Clocked out at ${clockOutTime}.`;
         Swal.fire({
           icon: 'success',
           title: 'Clocked Out ',

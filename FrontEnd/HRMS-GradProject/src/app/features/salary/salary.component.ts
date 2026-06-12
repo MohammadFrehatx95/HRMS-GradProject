@@ -97,14 +97,14 @@ export class SalaryComponent implements OnInit {
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
     this.isAdminOrHR = this.authService.isAdminOrHR();
-    
+
     if (this.isAdmin) {
-        this.isViewingAll = true;
+      this.isViewingAll = true;
     }
 
     const currentYear = new Date().getFullYear();
-    for(let i = 0; i < 5; i++) {
-        this.uniqueYears.push(currentYear - i);
+    for (let i = 0; i < 5; i++) {
+      this.uniqueYears.push(currentYear - i);
     }
 
     this.loadInitialData();
@@ -171,7 +171,7 @@ export class SalaryComponent implements OnInit {
 
   loadSalaries() {
     this.isLoading = true;
-    
+
     const m = this.selectedMonth ? Number(this.selectedMonth) : undefined;
     const y = this.selectedYear ? Number(this.selectedYear) : undefined;
 
@@ -331,13 +331,13 @@ export class SalaryComponent implements OnInit {
       Swal.fire('Filter Required', 'Please filter by a specific Month and Year before approving salaries.', 'warning');
       return;
     }
-    
+
     Swal.fire({
       title: 'Approve Salaries',
       text: `This will lock all draft salaries for ${this.selectedMonth}/${this.selectedYear}. This action cannot be undone!`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, Approve!',
+      confirmButtonText: 'Approve!',
       cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {
@@ -420,7 +420,7 @@ export class SalaryComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: 'Delete'
     }).then((result) => {
       if (result.isConfirmed) {
         this.salaryService.deleteSalary(id).subscribe({
@@ -442,7 +442,7 @@ export class SalaryComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#198754',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, Approve'
+      confirmButtonText: 'Approve'
     }).then((result) => {
       if (result.isConfirmed) {
         this.salaryService.approveSalary(id).subscribe({

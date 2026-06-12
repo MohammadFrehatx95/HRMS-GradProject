@@ -122,7 +122,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
     try {
       const el = this.messagesContainer?.nativeElement;
       if (el) el.scrollTop = el.scrollHeight;
-    } catch {}
+    } catch { }
   }
 
   get charCount(): number {
@@ -171,12 +171,12 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
 
   private callChat(text: string): void {
     this.addLoadingMessage();
-    
-    
+
+
     const historyMessages = this.messages
       .filter(m => !m.loading)
-      .slice(0, -1) 
-      .slice(-4)    
+      .slice(0, -1)
+      .slice(-4)
       .map(m => ({ role: m.role, content: m.content }));
 
     this.aiService.chat(text, this.aiMode, historyMessages).subscribe({
@@ -226,7 +226,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
 
     if (err?.error?.message) {
       const rawMessage = err.error.message as string;
-      
+
       if (rawMessage.includes('Invalid API Key') || rawMessage.includes('invalid_api_key')) {
         errMsg = 'The AI service is not properly configured (Invalid API Key). Please contact the system administrator.';
       } else if (rawMessage.includes('rate_limit_exceeded')) {
@@ -234,22 +234,22 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
       } else if (rawMessage.includes('insufficient_quota')) {
         errMsg = 'The AI service quota has been exceeded. Please contact the system administrator.';
       } else if (rawMessage.includes('Groq API error')) {
-         try {
-           const jsonStart = rawMessage.indexOf('{');
-           if (jsonStart !== -1) {
-             const jsonPart = rawMessage.substring(jsonStart);
-             const parsed = JSON.parse(jsonPart);
-             if (parsed?.error?.message) {
-               errMsg = `AI Error: ${parsed.error.message}`;
-             } else {
-               errMsg = 'The AI service encountered an error processing your request.';
-             }
-           } else {
-             errMsg = 'The AI service encountered a connection error. Please try again.';
-           }
-         } catch(e) {
-           errMsg = 'The AI service encountered an unexpected error. Please try again later.';
-         }
+        try {
+          const jsonStart = rawMessage.indexOf('{');
+          if (jsonStart !== -1) {
+            const jsonPart = rawMessage.substring(jsonStart);
+            const parsed = JSON.parse(jsonPart);
+            if (parsed?.error?.message) {
+              errMsg = `AI Error: ${parsed.error.message}`;
+            } else {
+              errMsg = 'The AI service encountered an error processing your request.';
+            }
+          } else {
+            errMsg = 'The AI service encountered a connection error. Please try again.';
+          }
+        } catch (e) {
+          errMsg = 'The AI service encountered an unexpected error. Please try again later.';
+        }
       } else {
         errMsg = rawMessage;
       }
@@ -310,7 +310,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
 
   clearChat(): void {
     if (this.messages.length <= 1) return;
-    
+
     Swal.fire({
       title: 'Clear Chat History?',
       text: 'Are you sure you want to delete all messages? This cannot be undone.',
@@ -318,7 +318,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, clear it',
+      confirmButtonText: 'Clear',
       cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {

@@ -136,8 +136,17 @@
                             </span>
                             }
                         </td>
-                        <td class="py-3 px-4 text-muted text-wrap">
-                            {{ adj.reason }}
+                        <td class="py-3 px-4 text-secondary">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="d-inline-block text-truncate"
+                                    style="max-width: 150px;"
+                                    [title]="adj.reason">
+                                    {{ adj.reason || ('No reason provided' | t) }}
+                                </span>
+                                <button *ngIf="adj.reason" class="btn btn-sm btn-link text-primary p-0 m-0 border-0" (click)="showReason(adj.reason)" title="View Full Reason">
+                                    <i class="bi bi-chat-text-fill"></i>
+                                </button>
+                            </div>
                         </td>
                         @if (isAdminOrHR) {
                         <td class="py-3 px-4 text-end">

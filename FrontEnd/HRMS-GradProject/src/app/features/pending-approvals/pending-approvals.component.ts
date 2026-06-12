@@ -51,7 +51,7 @@ export class PendingApprovalsComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#198754',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, Approve',
+      confirmButtonText: 'Approve',
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
@@ -74,7 +74,7 @@ export class PendingApprovalsComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, Reject',
+      confirmButtonText: 'Reject',
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {

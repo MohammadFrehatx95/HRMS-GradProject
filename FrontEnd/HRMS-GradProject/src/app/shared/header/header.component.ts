@@ -78,7 +78,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (event) {
       event.stopPropagation();
     }
-    
+
     if (notification.isRead) {
       if (!event) this.navigateBasedOnNotification(notification);
       return;
@@ -139,7 +139,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete all',
+      confirmButtonText: 'Delete All',
       cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {

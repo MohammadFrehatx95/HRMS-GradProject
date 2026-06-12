@@ -58,7 +58,7 @@ export class RegisterComponent {
           title: 'Account Created Successfully',
           text: 'Do you want to complete the employee profile now?',
           showCancelButton: true,
-          confirmButtonText: 'Yes, Complete Profile',
+          confirmButtonText: 'Complete Profile',
           cancelButtonText: 'Later',
         }).then((result) => {
           if (result.isConfirmed) {

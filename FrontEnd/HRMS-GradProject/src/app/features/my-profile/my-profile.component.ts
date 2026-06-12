@@ -187,7 +187,7 @@ export class MyProfileComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: 'Delete'
     }).then((result) => {
       if (result.isConfirmed) {
         this.isUploadingPic = true;
@@ -238,7 +238,7 @@ export class MyProfileComponent implements OnInit {
         Swal.fire('Validation Error', 'New passwords do not match.', 'warning');
         return;
       }
-      
+
       requestsPending++;
       this.isChangingPwd = true;
       this.authService
@@ -365,9 +365,9 @@ export class MyProfileComponent implements OnInit {
     } catch (err: any) {
       const errName = err?.name?.toLowerCase() || '';
       const errMsg = err?.message?.toLowerCase() || '';
-      
+
       if (errName === 'notallowederror' || errName === 'aborterror' || errMsg.includes('cancel') || errMsg.includes('abort') || errMsg.includes('timed out')) {
-         return;
+        return;
       }
 
       const msg = this.getFingerprintRegisterError(err);
