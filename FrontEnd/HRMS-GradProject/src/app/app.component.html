@@ -1,4 +1,4 @@
-﻿@if (authService.isLoggedIn()) {
+@if (authService.isLoggedIn() && !isAuthRoute) {
 <div class="wrapper">
     @if (isMobileSidebarOpen) {
         <div class="sidebar-overlay" (click)="closeMobileSidebar()"></div>

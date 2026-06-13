@@ -40,6 +40,10 @@ export class AppComponent implements OnInit, OnDestroy {
     return this.router.url.includes('/ai-assistant');
   }
 
+  get isAuthRoute(): boolean {
+    return this.router.url.includes('/login') || this.router.url.includes('/register');
+  }
+
   get isSidebarHidden() {
 
     return this.sidebarService.isSidebarHidden();
