@@ -10,6 +10,7 @@ import {
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../core/services/auth.service';
+import { EmployeeService } from '../../../core/services/employee.service';
 import { getFriendlyErrorMessage } from '../../../core/utils/error-handler.util';
 import { SettingsService } from '../../../core/services/settings.service';
 
@@ -24,6 +25,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private authService = inject(AuthService);
   private settingsService = inject(SettingsService);
+  private employeeService = inject(EmployeeService);
 
   isLoading = false;
   isFingerprintLoading = false;
@@ -90,8 +92,29 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.authService.login(credentials).subscribe({
       next: (res: any) => {
-        this.isLoading = false;
-        this.router.navigate(['/dashboard']);
+        if (this.authService.isAdmin()) {
+          this.isLoading = false;
+          localStorage.setItem('is_linked', 'true');
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.employeeService.getMyProfile().subscribe({
+            next: (profile) => {
+              this.isLoading = false;
+              if (profile) {
+                localStorage.setItem('is_linked', 'true');
+                this.router.navigate(['/dashboard']);
+              } else {
+                localStorage.setItem('is_linked', 'false');
+                this.router.navigate(['/my-profile']);
+              }
+            },
+            error: () => {
+              this.isLoading = false;
+              localStorage.setItem('is_linked', 'false');
+              this.router.navigate(['/my-profile']);
+            }
+          });
+        }
       },
       error: (err) => {
         this.isLoading = false;
@@ -111,7 +134,25 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.isFingerprintLoading = true;
     try {
       await this.authService.loginWithFingerprint();
-      this.router.navigate(['/dashboard']);
+      
+      if (this.authService.isAdmin()) {
+        localStorage.setItem('is_linked', 'true');
+        this.router.navigate(['/dashboard']);
+      } else {
+        try {
+          const profile = await this.employeeService.getMyProfile().toPromise();
+          if (profile) {
+            localStorage.setItem('is_linked', 'true');
+            this.router.navigate(['/dashboard']);
+          } else {
+            localStorage.setItem('is_linked', 'false');
+            this.router.navigate(['/my-profile']);
+          }
+        } catch {
+          localStorage.setItem('is_linked', 'false');
+          this.router.navigate(['/my-profile']);
+        }
+      }
     } catch (err: any) {
       this.isFingerprintLoading = false;
       const errName = err?.name?.toLowerCase() || '';
