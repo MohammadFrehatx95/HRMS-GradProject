@@ -41,7 +41,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   get isAuthRoute(): boolean {
-    return this.router.url.includes('/login') || this.router.url.includes('/register');
+    return this.router.url.includes('/login');
   }
 
   get isSidebarHidden() {
