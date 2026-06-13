@@ -22,16 +22,18 @@
     
     <nav class="sidebar-nav">
         <ul>
+            @if (isLinkedToProfile) {
             <li><a routerLink="/dashboard" routerLinkActive="active"
                     (click)="closeMobileSidebar()"><i
                         class="bi bi-house icon-blue"></i> {{ 'Dashboard' | t
                     }}</a></li>
+            }
             <li><a routerLink="/my-profile" routerLinkActive="active"
                     (click)="closeMobileSidebar()"><i
                         class="bi bi-person icon-blue-dark"></i> {{ 'My Profile'
                     | t
                     }}</a></li>
-            @if (!isUserOnly) {
+            @if (!isUserOnly && isLinkedToProfile) {
             @if (isAdminOrHR) {
             <li><a routerLink="/employees" routerLinkActive="active"
                     (click)="closeMobileSidebar()"><i

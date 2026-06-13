@@ -31,6 +31,7 @@ export class SidebarComponent implements OnInit {
   userName: string = 'User';
   userRole: string = 'Employee';
   isUserOnly: boolean = false;
+  isLinkedToProfile: boolean = false;
   profilePicUrl: string | null = null;
 
   @ViewChild('sidebar') sidebarRef!: ElementRef;
@@ -78,15 +79,23 @@ export class SidebarComponent implements OnInit {
     this.userName = localStorage.getItem('user_name') || 'User';
     this.userRole = localStorage.getItem('user_role') || 'Employee';
     this.isUserOnly = this.userRole.toLowerCase() === 'user';
+    this.isLinkedToProfile = this.isAdmin; // Admins are always considered linked/authorized
 
-    if (!this.isAdmin && !this.isUserOnly) {
+    if (!this.isAdmin) {
       this.employeeService.getMyProfile().subscribe({
         next: (profile) => {
-          if (profile && profile.positionTitle) {
-            this.userRole = profile.positionTitle;
+          if (profile) {
+            this.isLinkedToProfile = true;
+            if (profile.positionTitle) {
+              this.userRole = profile.positionTitle;
+            }
+          } else {
+            this.isLinkedToProfile = false;
           }
         },
-        error: () => {},
+        error: () => {
+          this.isLinkedToProfile = false;
+        },
       });
     }
 
