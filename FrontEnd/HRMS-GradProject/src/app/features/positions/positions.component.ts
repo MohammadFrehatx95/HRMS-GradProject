@@ -18,7 +18,6 @@ declare var bootstrap: any;
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe],
   templateUrl: './positions.component.html',
-  styleUrls: ['./positions.component.css']
 })
 export class PositionsComponent implements OnInit {
   private positionService = inject(PositionService);
