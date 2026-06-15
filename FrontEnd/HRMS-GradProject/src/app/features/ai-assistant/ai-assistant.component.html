@@ -89,7 +89,7 @@
             (click)="setAiMode(0)" title="Normal Mode (Fast)">
             <i class="bi bi-lightning"></i> <span class="d-none d-sm-inline">Normal</span>
           </button>
-          <button class="mode-btn deep-think" [class.active]="aiMode === 1"
+          <button class="mode-btn deep-think" *ngIf="isAdminOrHR" [class.active]="aiMode === 1"
             (click)="setAiMode(1)" title="Deep Think (Read-Only Search)">
             <i class="bi bi-cpu"></i> <span class="d-none d-sm-inline">Deep Think</span>
           </button>
