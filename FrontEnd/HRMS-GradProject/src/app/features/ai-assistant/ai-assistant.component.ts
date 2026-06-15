@@ -46,31 +46,6 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   readonly MAX_CHARS = 250;
   readonly COOLDOWN_DURATION = 4;
 
-  quickActions = [
-    {
-      label: 'Analyze My Leaves',
-      icon: 'bi-bar-chart-line',
-      action: 'analyze-leave',
-    },
-    {
-      label: 'Salary Insights',
-      icon: 'bi-graph-up-arrow',
-      action: 'salary-insight',
-    },
-    {
-      label: 'Leave Policy',
-      icon: 'bi-journal-text',
-      action: 'chat',
-      prompt: 'What is the company leave policy?',
-    },
-    {
-      label: 'How to Clock In',
-      icon: 'bi-clock',
-      action: 'chat',
-      prompt: 'How do I clock in and out for attendance?',
-    },
-  ];
-
   ngOnInit(): void {
     this.isAdminOrHR = this.authService.isAdminOrHR();
     this.loadChat();
@@ -144,29 +119,6 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
     this.userInput = '';
     this.addUserMessage(text);
     this.callChat(text);
-  }
-
-  triggerQuickAction(action: any): void {
-    if (this.isLoading || this.cooldown) return;
-
-    if (action.action === 'analyze-leave') {
-      this.addUserMessage('📊 Analyze my leave history');
-      this.addLoadingMessage();
-      this.aiService.analyzeLeave().subscribe({
-        next: (res) => this.handleResponse(res),
-        error: (err) => this.handleError(err),
-      });
-    } else if (action.action === 'salary-insight') {
-      this.addUserMessage('💰 Give me salary insights');
-      this.addLoadingMessage();
-      this.aiService.salaryInsight().subscribe({
-        next: (res) => this.handleResponse(res),
-        error: (err) => this.handleError(err),
-      });
-    } else if (action.action === 'chat' && action.prompt) {
-      this.addUserMessage(action.prompt);
-      this.callChat(action.prompt);
-    }
   }
 
   private callChat(text: string): void {
