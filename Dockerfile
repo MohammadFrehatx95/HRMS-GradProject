@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0-jammy AS build
 WORKDIR /src
 
 # Copy csproj and restore as distinct layers
@@ -17,7 +17,7 @@ FROM build AS publish
 RUN dotnet publish "HRMS_API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy
 WORKDIR /app
 COPY --from=publish /app/publish .
 
