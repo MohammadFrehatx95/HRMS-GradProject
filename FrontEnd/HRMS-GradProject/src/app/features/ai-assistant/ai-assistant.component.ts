@@ -42,6 +42,8 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   cooldownSeconds: number = 0;
   totalTokensUsed: number = 0;
   isAdminOrHR: boolean = false;
+  private chatSub?: Subscription;
+  private cooldownInterval?: any;
 
   readonly MAX_CHARS = 250;
   readonly COOLDOWN_DURATION = 4;
@@ -91,6 +93,12 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this.chatSub) {
+      this.chatSub.unsubscribe();
+    }
+    if (this.cooldownInterval) {
+      clearInterval(this.cooldownInterval);
+    }
   }
 
   scrollToBottom(): void {
@@ -131,7 +139,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
       .slice(-4)
       .map(m => ({ role: m.role, content: m.content }));
 
-    this.aiService.chat(text, this.aiMode, historyMessages).subscribe({
+    this.chatSub = this.aiService.chat(text, this.aiMode, historyMessages).subscribe({
       next: (res) => this.handleResponse(res),
       error: (err) => this.handleError(err),
     });
@@ -234,11 +242,16 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   private startCooldown(): void {
     this.cooldown = true;
     this.cooldownSeconds = this.COOLDOWN_DURATION;
-    const interval = setInterval(() => {
+    
+    if (this.cooldownInterval) {
+      clearInterval(this.cooldownInterval);
+    }
+
+    this.cooldownInterval = setInterval(() => {
       this.cooldownSeconds--;
       if (this.cooldownSeconds <= 0) {
         this.cooldown = false;
-        clearInterval(interval);
+        clearInterval(this.cooldownInterval);
       }
     }, 1000);
   }
