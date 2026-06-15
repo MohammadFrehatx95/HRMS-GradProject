@@ -157,11 +157,10 @@ export class AttendanceComponent implements OnInit, OnDestroy {
         if (temp instanceof Date && !isNaN(temp.getTime())) {
           d = new Date(temp.getTime() - (temp.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
         } else if (typeof temp === 'string') {
-          const parts = temp.split('/');
-          if (parts.length === 3) {
-            d = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-            if (isNaN(new Date(d).getTime())) d = new Date(temp).toISOString().split('T')[0];
-          } else d = new Date(temp).toISOString().split('T')[0];
+          const parsed = new Date(temp);
+          if (!isNaN(parsed.getTime())) {
+            d = new Date(parsed.getTime() - (parsed.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+          }
         }
       } catch (e) {
       }
@@ -198,11 +197,10 @@ export class AttendanceComponent implements OnInit, OnDestroy {
         if (temp instanceof Date && !isNaN(temp.getTime())) {
           d = new Date(temp.getTime() - (temp.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
         } else if (typeof temp === 'string') {
-          const parts = temp.split('/');
-          if (parts.length === 3) {
-            d = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-            if (isNaN(new Date(d).getTime())) d = new Date(temp).toISOString().split('T')[0];
-          } else d = new Date(temp).toISOString().split('T')[0];
+          const parsed = new Date(temp);
+          if (!isNaN(parsed.getTime())) {
+            d = new Date(parsed.getTime() - (parsed.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+          }
         }
       } catch (e) {
       }
