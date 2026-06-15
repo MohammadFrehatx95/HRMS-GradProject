@@ -567,7 +567,7 @@ public class HrAiService(
                     {
                         toolResult = "The user is not authorized to perform this action. Politely explain that they lack the required permissions.";
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         toolResult = $"Action failed. Politely tell the user you cannot perform this action at the moment due to an internal issue.";
                     }

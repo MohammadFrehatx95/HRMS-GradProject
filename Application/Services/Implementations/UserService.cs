@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Application.Services.Implementations
 {
-    public class UserService(IUnitOfWork uow, IMapper mapper) : IUserService
+    public class UserService(IUnitOfWork uow) : IUserService
     {
         public async Task<PagedResult<UserDto>> GetAllEmployeesAsync(int pageNumber, int pageSize)
         {
