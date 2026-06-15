@@ -84,7 +84,7 @@
             <h5 class="fw-bold mb-1">{{ event.title }}</h5>
             <div class="text-primary fw-medium small">
               <i class="bi bi-calendar-event me-1"></i>
-              {{ event.eventDate | date:'mediumDate' }}
+              {{ event.eventDate | date:'dd/MM/yyyy' }}
               <span class="badge bg-danger-subtle text-danger ms-2">{{
                 getDaysLabel(getDaysUntil(event.eventDate)) | t }}</span>
             </div>
