@@ -503,8 +503,11 @@ export class DashboardComponent implements OnInit {
     this.announcementForm.get('targetEmployeeIds')?.setValue(currentSelected);
   }
 
+  isSubmittingAnnouncement: boolean = false;
+
   submitAnnouncement() {
-    if (this.announcementForm.invalid) return;
+    if (this.announcementForm.invalid || this.isSubmittingAnnouncement) return;
+    this.isSubmittingAnnouncement = true;
 
     let formValue = { ...this.announcementForm.value };
     if (formValue.isGeneral) {
@@ -522,11 +525,13 @@ export class DashboardComponent implements OnInit {
 
     this.announcementService.createAnnouncement(formValue).subscribe({
       next: () => {
+        this.isSubmittingAnnouncement = false;
         this.closeAnnouncementModal();
         this.loadAnnouncements();
         Swal.fire('Success', 'Announcement posted successfully', 'success');
       },
       error: (err) => {
+        this.isSubmittingAnnouncement = false;
         Swal.fire('Error', 'Failed to post announcement', 'error');
       },
     });

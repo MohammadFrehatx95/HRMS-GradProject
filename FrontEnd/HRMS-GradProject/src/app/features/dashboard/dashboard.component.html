@@ -450,7 +450,10 @@
 
           <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
             <button type="button" class="btn btn-light px-4" (click)="closeAnnouncementModal()">{{ 'Cancel' | t }}</button>
-            <button type="submit" class="btn btn-primary px-4" [disabled]="announcementForm.invalid">{{ 'Post' | t }}</button>
+            <button type="submit" class="btn btn-primary px-4" [disabled]="announcementForm.invalid || isSubmittingAnnouncement">
+              <span *ngIf="isSubmittingAnnouncement" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              {{ (isSubmittingAnnouncement ? 'Posting...' : 'Post') | t }}
+            </button>
           </div>
         </form>
       </div>
