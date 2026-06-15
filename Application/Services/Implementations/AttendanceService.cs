@@ -43,10 +43,11 @@ namespace Application.Services.Implementations
                         e.Id.ToString().Contains(searchQuery));
                 }
 
+                var targetDate = date.Value.Date;
                 var query = employeesQuery.Select(e => new
                 {
                     Employee = e,
-                    Attendance = e.Attendances.FirstOrDefault(a => a.Date.Date == date.Value.Date)
+                    Attendance = e.Attendances.FirstOrDefault(a => a.Date == targetDate)
                 });
 
                 if (!isAbsenceVisible)
@@ -59,7 +60,11 @@ namespace Application.Services.Implementations
                     var sLower = status.ToLower();
                     if (sLower == "completed") query = query.Where(x => x.Attendance != null && x.Attendance.ClockOut != null);
                     else if (sLower == "working") query = query.Where(x => x.Attendance != null && x.Attendance.ClockOut == null);
-                    else if (sLower == "absent" && isAbsenceVisible) query = query.Where(x => x.Attendance == null);
+                    else if (sLower == "absent") 
+                    {
+                        if (isAbsenceVisible) query = query.Where(x => x.Attendance == null);
+                        else query = query.Where(x => false); // no one is absent yet
+                    }
                 }
 
                 query = query.OrderBy(x => x.Employee.FirstName);
@@ -110,7 +115,7 @@ namespace Application.Services.Implementations
                     var sLower = status.ToLower();
                     if (sLower == "completed") query = query.Where(a => a.ClockOut != null);
                     else if (sLower == "working") query = query.Where(a => a.ClockOut == null);
-                    // if sLower == "absent", we can't filter here efficiently since date is not provided
+                    else if (sLower == "absent") query = query.Where(a => false); // Cannot search absent without date
                 }
 
                 if (!string.IsNullOrWhiteSpace(searchQuery))
@@ -151,10 +156,11 @@ namespace Application.Services.Implementations
                     .Include(e => e.User)
                     .Where(e => e.Id == employeeId && e.HireDate.Date <= date.Value.Date);
 
+                var targetDate = date.Value.Date;
                 var query = employeesQuery.Select(e => new
                 {
                     Employee = e,
-                    Attendance = e.Attendances.FirstOrDefault(a => a.Date.Date == date.Value.Date)
+                    Attendance = e.Attendances.FirstOrDefault(a => a.Date == targetDate)
                 });
 
                 if (!isAbsenceVisible)
@@ -167,7 +173,11 @@ namespace Application.Services.Implementations
                     var sLower = status.ToLower();
                     if (sLower == "completed") query = query.Where(x => x.Attendance != null && x.Attendance.ClockOut != null);
                     else if (sLower == "working") query = query.Where(x => x.Attendance != null && x.Attendance.ClockOut == null);
-                    else if (sLower == "absent" && isAbsenceVisible) query = query.Where(x => x.Attendance == null);
+                    else if (sLower == "absent") 
+                    {
+                        if (isAbsenceVisible) query = query.Where(x => x.Attendance == null);
+                        else query = query.Where(x => false);
+                    }
                 }
 
                 var total = await query.CountAsync();
@@ -226,6 +236,7 @@ namespace Application.Services.Implementations
                     var sLower = status.ToLower();
                     if (sLower == "completed") query = query.Where(a => a.ClockOut != null);
                     else if (sLower == "working") query = query.Where(a => a.ClockOut == null);
+                    else if (sLower == "absent") query = query.Where(a => false); // Cannot search absent without date
                 }
 
                 query = query.OrderByDescending(a => a.Date);
