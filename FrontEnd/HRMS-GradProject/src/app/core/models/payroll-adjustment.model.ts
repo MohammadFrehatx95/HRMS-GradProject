@@ -1,6 +1,6 @@
 export enum AdjustmentType {
-  Penalty = 0,
-  Bonus = 1
+  Bonus = 1,
+  Penalty = 2
 }
 
 export interface PayrollAdjustmentDto {

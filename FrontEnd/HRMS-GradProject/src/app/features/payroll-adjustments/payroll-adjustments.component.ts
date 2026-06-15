@@ -305,7 +305,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
       this.isAdminOrHR
         ? this.getEmployeeName(adj.employeeId)
         : `Emp #${adj.employeeId}`,
-      adj.type === 0 ? 'Penalty' : 'Bonus',
+      adj.type === 2 ? 'Penalty' : 'Bonus',
       `JD ${adj.amount.toFixed(2)}`,
       adj.reason || '—',
       adj.isApplied ? 'Yes' : 'No',
@@ -316,7 +316,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
       {
         label: 'Total Penalties',
         value: `JD ${this.adjustments
-          .filter((a) => a.type === 0)
+          .filter((a) => a.type === 2)
           .reduce((sum, a) => sum + a.amount, 0)
           .toFixed(2)}`,
       },
@@ -350,7 +350,7 @@ export class PayrollAdjustmentsComponent implements OnInit {
       this.isAdminOrHR
         ? this.getEmployeeName(adj.employeeId)
         : `Emp #${adj.employeeId}`,
-      adj.type === 0 ? 'Penalty' : 'Bonus',
+      adj.type === 2 ? 'Penalty' : 'Bonus',
       `JD ${adj.amount.toFixed(2)}`,
       adj.reason || '—',
       adj.isApplied ? 'Yes' : 'No',
