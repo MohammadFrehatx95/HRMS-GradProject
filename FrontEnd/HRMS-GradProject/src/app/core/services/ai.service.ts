@@ -31,16 +31,4 @@ export class AiService {
       map((res) => res?.data ?? res)
     );
   }
-
-  analyzeLeave(): Observable<AiResponseDto> {
-    return this.http.get<any>(`${this.apiUrl}/analyze-leave`).pipe(
-      map((res) => res?.data ?? res)
-    );
-  }
-
-  salaryInsight(): Observable<AiResponseDto> {
-    return this.http.get<any>(`${this.apiUrl}/salary-insight`).pipe(
-      map((res) => res?.data ?? res)
-    );
-  }
 }

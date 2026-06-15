@@ -41,29 +41,5 @@ public class HrAiController(IHrAiService aiService) : ControllerBase
         return Ok(ApiResponse<AiResponseDto>.Ok(result));
     }
 
-    // GET /api/ai/analyze-leave
-    [HttpGet("analyze-leave")]
-    public async Task<IActionResult> AnalyzeLeave()
-    {
-        var employeeId = GetEmployeeId();
-        if (employeeId is null)
-            return BadRequest(ApiResponse.Fail(
-                "Your account is not linked to an employee profile"));
 
-        var result = await aiService.AnalyzeLeaveAsync(employeeId.Value);
-        return Ok(ApiResponse<AiResponseDto>.Ok(result));
-    }
-
-    // GET /api/ai/salary-insight
-    [HttpGet("salary-insight")]
-    public async Task<IActionResult> SalaryInsight()
-    {
-        var employeeId = GetEmployeeId();
-        if (employeeId is null)
-            return BadRequest(ApiResponse.Fail(
-                "Your account is not linked to an employee profile"));
-
-        var result = await aiService.SalaryInsightAsync(employeeId.Value);
-        return Ok(ApiResponse<AiResponseDto>.Ok(result));
-    }
 }
