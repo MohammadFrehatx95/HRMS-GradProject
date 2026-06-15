@@ -40,7 +40,6 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   aiMode: number = 0;
   cooldown: boolean = false;
   cooldownSeconds: number = 0;
-  totalTokensUsed: number = 0;
   isAdminOrHR: boolean = false;
   private chatSub?: Subscription;
   private cooldownInterval?: any;
@@ -67,28 +66,18 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
     return `hrms_ai_chat_${keyId}`;
   }
 
-  private getTokenStorageKey(): string {
-    const keyId = this.authService.getCurrentUserEmail() || this.authService.getCurrentUserName() || 'guest';
-    return `hrms_ai_tokens_${keyId}`;
-  }
-
   private saveChat(): void {
     localStorage.setItem(this.getChatStorageKey(), JSON.stringify(this.messages));
-    localStorage.setItem(this.getTokenStorageKey(), this.totalTokensUsed.toString());
   }
 
   private loadChat(): void {
     const saved = localStorage.getItem(this.getChatStorageKey());
-    const tokens = localStorage.getItem(this.getTokenStorageKey());
     if (saved) {
       try {
         this.messages = JSON.parse(saved);
       } catch (e) {
         this.messages = [];
       }
-    }
-    if (tokens) {
-      this.totalTokensUsed = parseInt(tokens, 10) || 0;
     }
   }
 
@@ -173,7 +162,6 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
         loading: false,
       };
     }
-    this.totalTokensUsed += res.tokens || 0;
     this.isLoading = false;
     this.saveChat();
     this.startCooldown();
@@ -288,9 +276,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
     }).then((result) => {
       if (result.isConfirmed) {
         this.messages = [];
-        this.totalTokensUsed = 0;
         localStorage.removeItem(this.getChatStorageKey());
-        localStorage.removeItem(this.getTokenStorageKey());
         this.ngOnInit();
       }
     });
