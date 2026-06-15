@@ -110,16 +110,16 @@
                             </div>
                         </td>
                         <td class="py-3 px-4">
-                            @if (adj.type === 0) {
+                            @if (adj.type === 2) {
                             <span class="status-badge status-rejected rounded-2 px-2 py-1" style="font-size: 0.8rem;">Penalty</span>
                             } @else {
                             <span class="status-badge status-approved rounded-2 px-2 py-1" style="font-size: 0.8rem;">Bonus</span>
                             }
                         </td>
                         <td class="py-3 px-4 fw-bold"
-                            [class.text-danger]="adj.type === 0"
+                            [class.text-danger]="adj.type === 2"
                             [class.text-success]="adj.type === 1">
-                            {{ adj.type === 0 ? '-' : '+' }}{{ adj.amount |
+                            {{ adj.type === 2 ? '-' : '+' }}{{ adj.amount |
                             number:'1.2-2' }} JD
                         </td>
                         <td class="py-3 px-4 text-muted">
