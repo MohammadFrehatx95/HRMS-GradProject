@@ -6,6 +6,8 @@ namespace HRMS_API.Middleware;
 
 public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
 {
+    // This method is called for each HTTP request.
+    // It tries to execute the next middleware in the pipeline and catches any unhandled exceptions.
     public async Task InvokeAsync(HttpContext context)
     {
         try

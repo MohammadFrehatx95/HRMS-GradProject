@@ -21,6 +21,7 @@ public class EventsController : ControllerBase
         _uow = uow;
     }
 
+    // GET /api/events/upcoming?days=30
     [HttpGet("upcoming")]
     public async Task<IActionResult> GetUpcomingEvents([FromQuery] int days = 30)
     {
@@ -87,6 +88,7 @@ public class EventsController : ControllerBase
         return Ok(ApiResponse<List<UpcomingEventDto>>.Ok(sortedEvents, "Fetched successfully"));
     }
 
+    // POST /api/events
     [HttpPost]
     [Authorize(Roles = "Admin,HR")]
     public async Task<IActionResult> CreateEvent([FromBody] CreateCompanyEventDto dto)
@@ -105,6 +107,7 @@ public class EventsController : ControllerBase
         return Ok(ApiResponse<int>.Ok(newEvent.Id, "Event created successfully"));
     }
 
+    // DELETE /api/events/{id}
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin,HR")]
     public async Task<IActionResult> DeleteEvent(int id)

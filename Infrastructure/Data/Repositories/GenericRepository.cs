@@ -23,6 +23,7 @@ namespace Infrastructure.Data.Repositories
            
         }
 
+        
         public async Task<IEnumerable<T>> GetAllAsync(params Expression<Func<T, object>>[] includes) 
         {
 
@@ -39,12 +40,17 @@ namespace Infrastructure.Data.Repositories
 
         }
 
-        public IQueryable<T> GetAllQueryable() => context.Set<T>().AsQueryable();
+        
+        
+        public IQueryable<T> GetAllQueryable() => context.Set<T>().AsQueryable(); 
+
+        
         public async Task<T?> GetByIdAsync(params object[] keyValues)
         {
             return await dbSet.FindAsync(keyValues);
         }
 
+        // this method retrieves a single entity based on a specified predicate and optional related entities to include in the query.
         public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
         {
             IQueryable<T> query = dbSet;
@@ -58,11 +64,12 @@ namespace Infrastructure.Data.Repositories
             return await query.FirstOrDefaultAsync(predicate);
         }
 
+        // this method checks if any entity exists in the database that matches a specified predicate.
         public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate)
         {
             return await dbSet.AnyAsync(predicate);
         }   
-
+        
         public async Task AddAsync(T entity)
         {
             await dbSet.AddAsync(entity);

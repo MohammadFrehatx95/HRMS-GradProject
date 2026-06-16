@@ -9,7 +9,7 @@ using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using HRMS_API.Middleware;
 
-AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,7 +66,9 @@ builder.Services.AddControllers()
 
 
 
-       var jwtKey = builder.Configuration["Jwt:Key"];
+// JWT Configuration Validation
+
+var jwtKey = builder.Configuration["Jwt:Key"];
       var jwtIssuer = builder.Configuration["Jwt:Issuer"];
       var jwtAudience = builder.Configuration["Jwt:Audience"];
    
@@ -83,7 +85,7 @@ builder.Services.AddControllers()
        throw new InvalidOperationException(
            "JWT configuration error: 'Jwt:Audience' is missing or empty.");
 
-
+// Log the JWT configuration status (for development visibility)
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -105,6 +107,9 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+
+// FIDO2 Configuration => fast identity online authentication, for passwordless login and 2FA
+
 builder.Services.AddFido2(options =>
 {
     var serverDomain = builder.Configuration["Fido2:ServerDomain"] ?? "localhost";
@@ -123,14 +128,15 @@ builder.Services.AddApplication(builder.Configuration);
 
 var app = builder.Build();
 
-// ─── Startup Diagnostic ───────────────────────────────────────────────────
+// Groq API Key Check (for development visibility)
 var groqKey = builder.Configuration["GroqSettings:ApiKey"];
 var keyStatus = string.IsNullOrWhiteSpace(groqKey)
-    ? "⛔ EMPTY / NOT FOUND"
-    : $"✅ Found — starts with: {groqKey[..Math.Min(8, groqKey.Length)]}...";
+    ? " EMPTY / NOT FOUND"
+    : $" Found — starts with: {groqKey[..Math.Min(8, groqKey.Length)]}...";
 app.Logger.LogWarning("=== GROQ API KEY STATUS: {Status} ===", keyStatus);
-// ─────────────────────────────────────────────────────────────────────────
 
+
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -138,8 +144,9 @@ if (app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
+
 app.UseCors("AllowAngular");
-app.UseRateLimiter();
+app.UseRateLimiter();  
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<ExceptionHandlingMiddleware>();

@@ -19,6 +19,7 @@ namespace HRMS_GradProject.Controllers
             _announcementService = announcementService;
         }
 
+        // GET /api/announcement?pageNumber=1&pageSize=10
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
@@ -35,6 +36,7 @@ namespace HRMS_GradProject.Controllers
             return Ok(result);
         }
 
+        // GET /api/announcement/{id}
         [HttpPost]
         [Authorize(Roles = "Admin,HR")]
         public async Task<IActionResult> Create([FromBody] CreateAnnouncementDto dto)
@@ -46,6 +48,7 @@ namespace HRMS_GradProject.Controllers
             return Ok(result);
         }
 
+        // PUT /api/announcement/{id}
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin,HR")]
         public async Task<IActionResult> Delete(int id)

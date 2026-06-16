@@ -18,7 +18,7 @@ public class MeetingService(
     ILogger<MeetingService> logger) : IMeetingService
 {
 
-    // ── توليد Google Meet Link واقعي الشكل ──────────────────
+    //  Google Meet Link 
     private static string GenerateMeetLink()
     {
         const string chars = "abcdefghijklmnopqrstuvwxyz";
@@ -29,7 +29,7 @@ public class MeetingService(
                       .Select(_ => chars[rng.Next(chars.Length)])
                       .ToArray());
 
-        // الشكل: https://meet.google.com/xxx-xxxx-xxx
+       //  https://meet.google.com/xxx-xxxx-xxx
         return $"https://meet.google.com/{Segment(3)}-{Segment(4)}-{Segment(3)}";
     }
 
