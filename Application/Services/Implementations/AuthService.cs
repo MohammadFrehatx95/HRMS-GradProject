@@ -19,9 +19,14 @@ namespace Application.Services.Implementations
                                 .Include(u => u.Employee)
                                 .FirstOrDefaultAsync(u => u.Email == dto.Email);
 
-            if (user is null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash) || !user.IsActive)
+            if (user is null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
             {
                 return null;
+            }
+
+            if (!user.IsActive || (user.Employee != null && !user.Employee.IsActive))
+            {
+                throw new UnauthorizedAccessException("Your account is currently inactive. Please contact HR.");
             }
 
             return new AuthResponseDto

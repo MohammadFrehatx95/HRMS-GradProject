@@ -214,6 +214,7 @@ public class WebAuthnController : ControllerBase
 
         var allCreds = await uow.Repository<FidoCredential>().GetAllQueryable()
             .Include(c => c.User)
+            .ThenInclude(u => u.Employee)
             .ToListAsync();
 
         var creds = allCreds.FirstOrDefault(c => c.DescriptorId.SequenceEqual(assertionResponse.RawId));
@@ -221,6 +222,11 @@ public class WebAuthnController : ControllerBase
             return BadRequest(ApiResponse.Fail("No fingerprint is registered for this account. Go to My Profile → Add Fingerprint Login first."));
 
         var user = creds.User;
+
+        if (!user.IsActive || (user.Employee != null && !user.Employee.IsActive))
+        {
+            throw new UnauthorizedAccessException("Your account is currently inactive. Please contact HR.");
+        }
 
         try
         {

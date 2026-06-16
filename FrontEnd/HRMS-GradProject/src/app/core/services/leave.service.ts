@@ -7,49 +7,64 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class LeaveService {
-
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/leaves`;
 
-  getMyLeaves(month?: number, year?: number, pageNumber: number = 1, pageSize: number = 10, searchQuery: string = '', status?: number | string, leaveType?: number | string): Observable<{items: any[], totalCount: number}> {
+  getMyLeaves(
+    month?: number,
+    year?: number,
+    pageNumber: number = 1,
+    pageSize: number = 10,
+    searchQuery: string = '',
+    status?: number | string,
+    leaveType?: number | string,
+  ): Observable<{ items: any[]; totalCount: number }> {
     let url = `${this.apiUrl}/my?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     if (month) url += `&month=${month}`;
     if (year) url += `&year=${year}`;
     if (searchQuery) url += `&searchQuery=${encodeURIComponent(searchQuery)}`;
     if (status !== undefined && status !== '') url += `&status=${status}`;
-    if (leaveType !== undefined && leaveType !== '') url += `&leaveType=${leaveType}`;
-    return this.http
-      .get<any>(url)
-      .pipe(
-        map((response) => {
-          if (response && response.data) {
-            return {
-              items: response.data.items || [],
-              totalCount: response.data.totalCount || 0
-            };
-          }
-          return { items: [], totalCount: 0 };
-        }),
-      );
+    if (leaveType !== undefined && leaveType !== '')
+      url += `&leaveType=${leaveType}`;
+    return this.http.get<any>(url).pipe(
+      map((response) => {
+        if (response && response.data) {
+          return {
+            items: response.data.items || [],
+            totalCount: response.data.totalCount || 0,
+          };
+        }
+        return { items: [], totalCount: 0 };
+      }),
+    );
   }
 
   applyLeave(payload: any | FormData): Observable<any> {
     return this.http.post<any>(this.apiUrl, payload);
   }
 
-  getAllLeaves(month?: number, year?: number, pageNumber: number = 1, pageSize: number = 10, searchQuery: string = '', status?: number | string, leaveType?: number | string): Observable<{items: any[], totalCount: number}> {
+  getAllLeaves(
+    month?: number,
+    year?: number,
+    pageNumber: number = 1,
+    pageSize: number = 10,
+    searchQuery: string = '',
+    status?: number | string,
+    leaveType?: number | string,
+  ): Observable<{ items: any[]; totalCount: number }> {
     let url = `${this.apiUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     if (month) url += `&month=${month}`;
     if (year) url += `&year=${year}`;
     if (searchQuery) url += `&searchQuery=${encodeURIComponent(searchQuery)}`;
     if (status !== undefined && status !== '') url += `&status=${status}`;
-    if (leaveType !== undefined && leaveType !== '') url += `&leaveType=${leaveType}`;
+    if (leaveType !== undefined && leaveType !== '')
+      url += `&leaveType=${leaveType}`;
     return this.http.get<any>(url).pipe(
       map((response) => {
         if (response && response.data) {
           return {
             items: response.data.items || [],
-            totalCount: response.data.totalCount || 0
+            totalCount: response.data.totalCount || 0,
           };
         }
         return { items: [], totalCount: 0 };
