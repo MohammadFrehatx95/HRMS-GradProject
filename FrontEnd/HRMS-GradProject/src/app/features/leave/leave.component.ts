@@ -2,7 +2,10 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LeaveService } from '../../core/services/leave.service';
-import { LeaveSettingService, LeaveSetting } from '../../core/services/leave-setting.service';
+import {
+  LeaveSettingService,
+  LeaveSetting,
+} from '../../core/services/leave-setting.service';
 import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
 import { getFriendlyErrorMessage } from '../../core/utils/error-handler.util';
@@ -16,7 +19,12 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-leave',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, ImageCropperModalComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TranslatePipe,
+    ImageCropperModalComponent,
+  ],
   templateUrl: './leave.component.html',
 })
 export class LeaveComponent implements OnInit {
@@ -33,7 +41,7 @@ export class LeaveComponent implements OnInit {
   selectedLeaveType: string = '';
   selectedMonth: string = '';
   selectedYear: string = '';
-  
+
   uniqueYears: number[] = [];
 
   isLoading: boolean = true;
@@ -52,7 +60,7 @@ export class LeaveComponent implements OnInit {
     resetDay: 1,
     defaultAnnualLeave: 14,
     defaultSickLeave: 14,
-    defaultEmergencyLeave: 3
+    defaultEmergencyLeave: 3,
   };
   isSavingSettings: boolean = false;
   isAdmin: boolean = false;
@@ -118,10 +126,10 @@ export class LeaveComponent implements OnInit {
   ngOnInit() {
     this.isAdminOrHR = this.authService.isAdminOrHR();
     this.isAdmin = this.authService.isAdmin();
-    
+
     const currentYear = new Date().getFullYear();
-    for(let i = 0; i < 5; i++) {
-        this.uniqueYears.push(currentYear - i);
+    for (let i = 0; i < 5; i++) {
+      this.uniqueYears.push(currentYear - i);
     }
 
     this.loadBalances();
@@ -144,7 +152,7 @@ export class LeaveComponent implements OnInit {
   openSettingsModal() {
     if (!this.settingsModal) {
       this.settingsModal = new bootstrap.Modal(
-        document.getElementById('settingsModal')
+        document.getElementById('settingsModal'),
       );
     }
     this.settingsModal.show();
@@ -162,7 +170,7 @@ export class LeaveComponent implements OnInit {
       error: (err) => {
         this.isSavingSettings = false;
         Swal.fire('Error', getFriendlyErrorMessage(err), 'error');
-      }
+      },
     });
   }
 
@@ -195,8 +203,24 @@ export class LeaveComponent implements OnInit {
     else if (this.selectedLeaveType === 'Unpaid') typeParam = 3;
 
     const request = this.isAdminOrHR
-      ? this.leaveService.getAllLeaves(m, y, this.currentPage, this.itemsPerPage, this.leaveSearchQuery, statusParam, typeParam)
-      : this.leaveService.getMyLeaves(m, y, this.currentPage, this.itemsPerPage, this.leaveSearchQuery, statusParam, typeParam);
+      ? this.leaveService.getAllLeaves(
+        m,
+        y,
+        this.currentPage,
+        this.itemsPerPage,
+        this.leaveSearchQuery,
+        statusParam,
+        typeParam,
+      )
+      : this.leaveService.getMyLeaves(
+        m,
+        y,
+        this.currentPage,
+        this.itemsPerPage,
+        this.leaveSearchQuery,
+        statusParam,
+        typeParam,
+      );
 
     request.subscribe({
       next: (res: any) => {
@@ -245,7 +269,7 @@ export class LeaveComponent implements OnInit {
       title: 'Rejection Reason',
       text: reason || 'No additional reason provided.',
       confirmButtonText: 'Close',
-      confirmButtonColor: '#3085d6'
+      confirmButtonColor: '#3085d6',
     });
   }
 
@@ -312,21 +336,24 @@ export class LeaveComponent implements OnInit {
 
     if (selectedType !== 3 && diffDays > availableBalance) {
       Swal.fire(
-        'Insufficient Balance', 
-        `You are requesting ${diffDays} days, but you only have ${availableBalance} ${typeName} leave days remaining.`, 
-        'warning'
+        'Insufficient Balance',
+        `You are requesting ${diffDays} days, but you only have ${availableBalance} ${typeName} leave days remaining.`,
+        'warning',
       );
       return;
     }
 
     this.isProcessing = true;
-    
+
     const formData = new FormData();
     formData.append('leaveType', this.leaveData.leaveType.toString());
-    formData.append('startDate', new Date(this.leaveData.startDate).toISOString());
+    formData.append(
+      'startDate',
+      new Date(this.leaveData.startDate).toISOString(),
+    );
     formData.append('endDate', new Date(this.leaveData.endDate).toISOString());
     formData.append('reason', this.leaveData.reason);
-    
+
     if (this.selectedFile) {
       formData.append('attachment', this.selectedFile);
     }
@@ -416,15 +443,27 @@ export class LeaveComponent implements OnInit {
       text: reason,
       icon: 'info',
       confirmButtonText: 'Close',
-      confirmButtonColor: '#0d6efd'
+      confirmButtonColor: '#0d6efd',
     });
   }
 
   showLeaveBalance(leave: any) {
-    const annual = leave.employeeAnnualLeaveBalance !== undefined && leave.employeeAnnualLeaveBalance !== null ? leave.employeeAnnualLeaveBalance : '?';
-    const sick = leave.employeeSickLeaveBalance !== undefined && leave.employeeSickLeaveBalance !== null ? leave.employeeSickLeaveBalance : '?';
-    const emergency = leave.employeeEmergencyLeaveBalance !== undefined && leave.employeeEmergencyLeaveBalance !== null ? leave.employeeEmergencyLeaveBalance : '?';
-    
+    const annual =
+      leave.employeeAnnualLeaveBalance !== undefined &&
+        leave.employeeAnnualLeaveBalance !== null
+        ? leave.employeeAnnualLeaveBalance
+        : '?';
+    const sick =
+      leave.employeeSickLeaveBalance !== undefined &&
+        leave.employeeSickLeaveBalance !== null
+        ? leave.employeeSickLeaveBalance
+        : '?';
+    const emergency =
+      leave.employeeEmergencyLeaveBalance !== undefined &&
+        leave.employeeEmergencyLeaveBalance !== null
+        ? leave.employeeEmergencyLeaveBalance
+        : '?';
+
     Swal.fire({
       title: `${leave.employeeName}'s Balance`,
       html: `
@@ -444,37 +483,49 @@ export class LeaveComponent implements OnInit {
         </div>
       `,
       confirmButtonText: 'Close',
-      confirmButtonColor: '#0d6efd'
+      confirmButtonColor: '#0d6efd',
     });
   }
 
   exportToExcel() {
     this.excelExportService.exportTableToExcel(
       ['Employee', 'Type', 'Start Date', 'End Date', 'Days', 'Status'],
-      this.leavesList.map(l => [
+      this.leavesList.map((l) => [
         l.employeeName || `Emp #${l.employeeId}`,
         this.getLeaveTypeText(l.leaveType),
         new Date(l.startDate).toLocaleDateString(),
         new Date(l.endDate).toLocaleDateString(),
         l.totalDays || 0,
-        this.getStatusText(l.status)
+        this.getStatusText(l.status),
       ]),
-      'Leave_Records'
+      'Leave_Records',
     );
   }
 
   exportToPDF() {
-    const headers = ['Employee', 'Type', 'Start Date', 'End Date', 'Days', 'Status'];
-    
-    const rows = this.leavesList.map(l => [
+    const headers = [
+      'Employee',
+      'Type',
+      'Start Date',
+      'End Date',
+      'Days',
+      'Status',
+    ];
+
+    const rows = this.leavesList.map((l) => [
       l.employeeName || `Emp #${l.employeeId}`,
       this.getLeaveTypeText(l.leaveType),
       new Date(l.startDate).toLocaleDateString(),
       new Date(l.endDate).toLocaleDateString(),
       l.totalDays || 0,
-      this.getStatusText(l.status)
+      this.getStatusText(l.status),
     ]);
-    
-    this.pdfExportService.generateTableReport('Leave Records Report', headers, rows, 'Leave_Records');
+
+    this.pdfExportService.generateTableReport(
+      'Leave Records Report',
+      headers,
+      rows,
+      'Leave_Records',
+    );
   }
 }

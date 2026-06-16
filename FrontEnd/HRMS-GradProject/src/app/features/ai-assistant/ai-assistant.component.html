@@ -63,9 +63,6 @@
           
           <div class="msg-meta" *ngIf="!msg.loading">
             <span>{{ msg.timestamp | date : 'HH:mm' }}</span>
-            <span *ngIf="msg.tokens && msg.tokens > 0" class="token-tag">
-              <i class="bi bi-lightning-charge"></i> {{ msg.tokens }}
-            </span>
           </div>
         </div>
       </div>

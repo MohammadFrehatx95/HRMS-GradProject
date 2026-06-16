@@ -40,14 +40,7 @@ export const routes: Routes = [
     loadComponent: () => import('./features/meetings/meetings.component').then(c => c.MeetingsComponent),
     canActivate: [authGuard]
   },
-  {
-    path: 'leave-form',
-    loadComponent: () =>
-      import('./features/leave-form/leave-form.component').then(
-        (m) => m.LeaveFormComponent,
-      ),
-    canActivate: [authGuard],
-  },
+
   {
     path: 'employees',
     component: EmployeesComponent,

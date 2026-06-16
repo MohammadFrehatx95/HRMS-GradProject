@@ -122,11 +122,6 @@ export class EmployeeFormComponent implements OnInit {
       next: (profile: any) => {
         this.isLoading = false;
 
-        if (profile.departmentId) {
-          this.loadPositions(profile.departmentId);
-          this.employeeForm.get('positionId')?.enable();
-        }
-
         this.employeeForm.patchValue({
           firstName: profile.firstName || profile.fullName?.split(' ')[0] || '',
           lastName:
@@ -146,7 +141,12 @@ export class EmployeeFormComponent implements OnInit {
           userId: profile.userId || '',
           role: profile.role || '',
           isActive: profile.isActive !== false,
-        });
+        }, { emitEvent: false });
+
+        if (profile.departmentId) {
+          this.loadPositions(profile.departmentId, true);
+          this.employeeForm.get('positionId')?.enable({ emitEvent: false });
+        }
 
         this.linkedUserInfo = {
           username:
@@ -189,12 +189,14 @@ export class EmployeeFormComponent implements OnInit {
     });
   }
 
-  loadPositions(deptId: number) {
+  loadPositions(deptId: number, preserveValue: boolean = false) {
 
     this.positionService.getPositionsByDepartment(deptId).subscribe({
       next: (res: any) => {
         this.positions = Array.isArray(res) ? res : res?.data || [];
-        this.employeeForm.get('positionId')?.setValue('');
+        if (!preserveValue) {
+          this.employeeForm.get('positionId')?.setValue('');
+        }
       },
     });
   }
