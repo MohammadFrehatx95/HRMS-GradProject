@@ -1,3 +1,8 @@
+// <summary>
+// This controller handles WebAuthn (FIDO2) authentication for the HRMS API.
+// It provides endpoints for registering and logging in users using biometric authentication methods such as fingerprints. 
+// </summary>
+
 using Application.Common;
 using Application.DTOs.Auth;
 using Application.Interfaces;

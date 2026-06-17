@@ -11,6 +11,7 @@ namespace HRMS_API.Controllers;
 [Route("api/payroll-adjustments")]
 public class PayrollAdjustmentController(IPayrollAdjustmentService service) : ControllerBase
 {
+    
     [HttpGet]
     [Authorize(Roles = "Admin,HR")]
     public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] int? month = null, [FromQuery] int? year = null)
@@ -50,6 +51,7 @@ public class PayrollAdjustmentController(IPayrollAdjustmentService service) : Co
         return Ok(ApiResponse.Ok("Adjustment created successfully."));
     }
 
+   
     [HttpPost("bulk")]
     [Authorize(Roles = "Admin,HR")]
     public async Task<IActionResult> CreateBulk([FromBody] CreateBulkPayrollAdjustmentDto dto)

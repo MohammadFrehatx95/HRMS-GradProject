@@ -6,6 +6,8 @@ namespace Infrastructure.Repositories;
 
 public class UnitOfWork(AppDbContext context) : IUnitOfWork
 {
+    // Dictionary to hold repositories for different entity types
+    
     private readonly Dictionary<Type, object> _repositories = [];
 
     public IGenericRepository<T> Repository<T>() where T : class
@@ -21,5 +23,6 @@ public class UnitOfWork(AppDbContext context) : IUnitOfWork
     public async Task<int> SaveChangesAsync() =>
         await context.SaveChangesAsync();
 
+    // Dispose method to release resources used by the context
     public void Dispose() => context.Dispose();
 }

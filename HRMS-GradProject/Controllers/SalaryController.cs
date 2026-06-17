@@ -42,8 +42,11 @@ namespace HRMS_GradProject.Controllers
 
             if (string.IsNullOrWhiteSpace(employeeIdClaim) ||
                 !int.TryParse(employeeIdClaim, out int employeeId))
+            {
                 return BadRequest(ApiResponse.Fail(
                     "Your account is not linked to an employee profile"));
+            }
+
 
             var result = await salaryService.GetMyAsync(employeeId, pageNumber, pageSize, month, year, searchQuery);
             return Ok(ApiResponse<PagedResult<SalaryDto>>.Ok(result));
@@ -89,7 +92,7 @@ namespace HRMS_GradProject.Controllers
             await salaryService.DeleteAsync(id);
             return Ok(ApiResponse.Ok("Salary deleted successfully"));
         }
-
+        
         // POST /api/salaries/preview-batch → Admin
         [HttpPost("preview-batch")]
         [Authorize(Roles = "Admin")]
@@ -100,6 +103,7 @@ namespace HRMS_GradProject.Controllers
             return Ok(ApiResponse<PayrollPreviewResultDto>.Ok(result, "Preview generated successfully"));
         }
 
+        
         // POST /api/salaries/generate-batch → Admin
         [HttpPost("generate-batch")]
         [Authorize(Roles = "Admin")]

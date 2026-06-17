@@ -21,7 +21,7 @@ public class HrAiService(
     private readonly GroqSettings _cfg = options.Value;
 
    
-    //  SYSTEM PROMPT
+    // system Prompt
 
     private static string BuildSystemPrompt(string? employeeContext = null)
     {
@@ -145,9 +145,9 @@ public class HrAiService(
     }
 
 
-    // ════════════════════════════════════════════════════════════════════════
+    
     //  CONTEXT BUILDER
-    // ════════════════════════════════════════════════════════════════════════
+    
     private async Task<string> BuildEmployeeContextAsync(int employeeId)
     {
         var employee = await uow.Repository<Employee>()
@@ -232,9 +232,9 @@ public class HrAiService(
     }
 
 
-    // ════════════════════════════════════════════════════════════════════════
+    
     //  GROQ API CALL
-    // ════════════════════════════════════════════════════════════════════════
+   
     private async Task<AiResponseDto> CallGroqAsync(List<object> messages)
     {
         // Validate key is present before making HTTP request
@@ -305,9 +305,9 @@ public class HrAiService(
     }
 
 
-    // ════════════════════════════════════════════════════════════════════════
+    
     //  PUBLIC METHODS
-    // ════════════════════════════════════════════════════════════════════════
+    
 
     public async Task<AiResponseDto> ChatAsync(
         string message,
