@@ -605,12 +605,12 @@ public class HrAiService(
 
     private async Task<string> SearchEmployeeByNameAsync(string name)
     {
-        name = name.ToLower();
+        var normalizedSearch = name.ToLower().Replace(" ", "");
         var employees = await uow.Repository<Employee>()
             .GetAllQueryable()
             .Include(e => e.Department)
             .Include(e => e.Position)
-            .Where(e => e.FirstName.ToLower().Contains(name) || e.LastName.ToLower().Contains(name))
+            .Where(e => (e.FirstName.ToLower() + e.LastName.ToLower()).Contains(normalizedSearch))
             .Take(5)
             .ToListAsync();
 
