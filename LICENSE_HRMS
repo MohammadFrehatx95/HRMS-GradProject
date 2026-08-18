@@ -1,0 +1,133 @@
+PROPRIETARY SOFTWARE LICENSE
+Copyright (c) 2026 Mohammad Alghazo. All Rights Reserved.
+
+================================================================================
+                        IMPORTANT - READ CAREFULLY
+================================================================================
+
+This software and its source code ("Software") is the exclusive intellectual
+property of Mohammad Alghazo ("Owner"). By accessing, cloning, downloading,
+or using this Software in any form, you ("User") agree to be bound by the
+following terms. If you do not agree, you must immediately delete all copies.
+
+================================================================================
+                              AUTHOR & OWNERSHIP
+================================================================================
+
+This Software was solely designed, architected, and developed by:
+
+    Full Name  : Mohammad Alghazo
+    GitHub     : https://github.com/MohammadAlghazo
+    Email      : [your-email@example.com]
+    Country    : Jordan
+
+Institution : Al-Balqa Applied University — Faculty of Computer Science
+Year        : 2026
+Project     : Kawādir — Human Resource Management System
+
+Copyright (c) 2026 Mohammad Alghazo. All Rights Reserved.
+
+================================================================================
+                              GRANT OF RIGHTS
+================================================================================
+
+The Owners grant NO license, expressed or implied, to any party to:
+
+  1. Copy, reproduce, or duplicate the Software or any portion thereof.
+  2. Modify, adapt, translate, or create derivative works based on the Software.
+  3. Distribute, publish, sublicense, sell, resell, rent, lease, or transfer
+     the Software or any rights in the Software to any third party.
+  4. Use the Software or any part of it to build a competing product or service.
+  5. Remove, alter, or obscure any copyright, trademark, or proprietary notices.
+  6. Decompile, disassemble, or reverse-engineer the Software.
+
+================================================================================
+                          PERMITTED VIEWING ONLY
+================================================================================
+
+This repository is made PUBLIC solely for PORTFOLIO, ACADEMIC SHOWCASE, and
+GRADUATION PROJECT DEMONSTRATION purposes. Viewing the source code on GitHub
+does NOT grant any license or right to use, copy, modify, or distribute the
+Software.
+
+================================================================================
+                        PROOF OF AUTHORSHIP & TIMELINE
+================================================================================
+
+Authorship of this Software is established and verifiable through:
+
+  1. Git Commit History — Full chronological record of all code contributions,
+     timestamps, and authorship metadata stored immutably in this repository.
+
+  2. GitHub Repository Creation Date — The repository was created under the
+     GitHub account: MohammadAlghazo, with verifiable timestamps.
+
+  3. Source Code Architecture — The unique Clean Architecture design, SignalR
+     real-time integration, 3-mode AI assistant (Normal/DeepThink/Executive),
+     custom Employee ID generation system, and 13 HTML email templates serve
+     as distinctive identifiers of original authorship.
+
+  4. Postman Collections — Dated API test collections authored and committed
+     by the Owner during development.
+
+  5. PRD & Documentation — Product Requirements Document (Kawadir_PRD.md) and
+     technical README solely authored and committed by the Owner.
+
+  6. Offline Records — Additional proof of authorship including design drafts,
+     development notes, and timeline evidence maintained by the Owner.
+
+================================================================================
+                        COPYRIGHT PROTECTION
+================================================================================
+
+This copyright is protected under:
+  - The Berne Convention for the Protection of Literary and Artistic Works
+  - The World Intellectual Property Organization (WIPO) Copyright Treaty
+  - Jordanian Intellectual Property Law No. 22 of 1992 and its amendments
+  - The TRIPS Agreement (Trade-Related Aspects of Intellectual Property Rights)
+
+================================================================================
+                              ENFORCEMENT
+================================================================================
+
+Any unauthorized use, reproduction, distribution, or sale of this Software,
+in whole or in part, constitutes COPYRIGHT INFRINGEMENT and will result in:
+
+  1. Immediate takedown requests filed with the hosting platform (GitHub,
+     npm, or any other platform where infringement is found).
+
+  2. DMCA (Digital Millennium Copyright Act) takedown notices filed with:
+     - The platform hosting the infringing content
+     - Internet Service Providers (ISPs)
+     - Search engines (Google, Bing, etc.) for de-indexing
+
+  3. Civil legal action seeking:
+     - Injunctive Relief to stop the infringement immediately
+     - Actual damages and lost profits
+     - Statutory damages (up to $150,000 per infringement under US law)
+     - Attorney's fees and court costs
+
+  4. Criminal referral where applicable under national and international law.
+
+  5. Notification to the infringer's employer, university, or clients.
+
+The Owners reserve the right to pursue all available legal remedies in any
+jurisdiction where infringement occurs.
+
+================================================================================
+                             COMMERCIAL LICENSING
+================================================================================
+
+If you wish to use this Software commercially, obtain a license, or discuss
+any authorized use, contact the team:
+
+    GitHub : https://github.com/MohammadAlghazo
+    Email  : [your-email@example.com]
+
+================================================================================
+
+    "This is the result of months of hard work. Respect it."
+
+================================================================================
+
+Copyright (c) 2026 Kawādir HRMS Team — ALL RIGHTS RESERVED.
